@@ -9,7 +9,6 @@ void Operators_MatMul_int(const int *in, const int *matrix, int m, int n, int k,
 void Operators_Add_float(float *inOut, float *matrix, int m);
 void Operators_Add_int(int *inOut, int *matrix, int m);
 
-void Operators_Relu(float *inOut, int size);
-void Operators_ArgMax(float todo);
+
 
 #endif

@@ -17,6 +17,11 @@ int main()
     exit(-1);
   }
 
+  if (DUMMY_FLAG==1)
+  {
+    printf("dummyflag is 1");
+  }
+
   /*This is model specific for digits.onnx and should be generalized. In this
   case the input dimensions are 1x64, so first dimension 1 is ignored*/
   //model->graph->input[0]->type->tensor_type->shape->n_dim

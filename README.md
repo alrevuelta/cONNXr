@@ -25,6 +25,13 @@ cd src
 make main
 ```
 
+# Protocol Buffers
+`onnx` uses protocol buffers to serialize the models data. Note that `protobuf-c` is used to generate the `onnx.pb-c.c` and `onnx.pb-c.h`. Files are already provided, but you can generate it like this:
+
+```
+protoc --c_out=. onnx.proto
+```
+
 # Tests
 `cunit` is used to test the code.
 
@@ -33,3 +40,6 @@ In `models` folder, you will find a bunch of models that can be used for testing
 
 # Ideas/Help needed
 * x
+
+# TODO
+*

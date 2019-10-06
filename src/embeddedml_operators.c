@@ -49,20 +49,3 @@ void Operators_Add_int(int *inOut, int *matrix, int m)
     inOut[i] += matrix[i];
   }
 }
-
-
-void Operators_Relu(float *inOut, int size)
-{
-  for (int i = 0; i < size; i++)
-  {
-    if (inOut[i] < 0)
-    {
-      inOut[i] = 0;
-    }
-  }
-}
-
-void Operators_ArgMax(float todo)
-{
-
-}
