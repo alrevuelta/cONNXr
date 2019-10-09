@@ -284,7 +284,7 @@ void Operators_LpPool(void *todo)
  * @param[in]  xx xx
  * @param[in]  xx xx
  */
-void Operators_MatMul(void *in, void *matrix, int m, int n, int k, void *out, enum _Onnx__TensorProto__DataType type)
+void Operators_MatMul(void *a, void *b, int m, int n, int k, void *c, enum _Onnx__TensorProto__DataType type)
 {
   /* *todo There is not need to have a switch with all the cases nor to
   define a function (i.e. _float) for everytype. Some functions can be reused
@@ -295,14 +295,14 @@ void Operators_MatMul(void *in, void *matrix, int m, int n, int k, void *out, en
     case ONNX__TENSOR_PROTO__DATA_TYPE__UNDEFINED:
       break;
     case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:
-      Operators_MatMul_float(in, matrix, m, n, k, out);
+      Operators_MatMul_float(a, b, m, n, k, c);
       break;
     case ONNX__TENSOR_PROTO__DATA_TYPE__UINT8:
       break;
     case ONNX__TENSOR_PROTO__DATA_TYPE__INT8:
       break;
     case ONNX__TENSOR_PROTO__DATA_TYPE__UINT16:
-      Operators_MatMul_int(in,matrix, m, n, k, out);
+      Operators_MatMul_int(a, b, m, n, k, c);
       break;
     case ONNX__TENSOR_PROTO__DATA_TYPE__INT16:
       break;
@@ -681,5 +681,5 @@ void Operators_Where(void *todo)
 }
 void Operators_Xor(void *todo)
 {
-  
+
 }
