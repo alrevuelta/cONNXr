@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 #include "onnx.pb-c.h"
 #include "embeddedml_opwrapper.h"
 #include "embeddedml_debug.h"
@@ -25,7 +26,8 @@ void Operators_Acosh(void *todo)
 
 void Operators_Add(void *inOut, void *matrix, int m, enum _Onnx__TensorProto__DataType type)
 {
-
+  // TODO Using float by default
+  Operators_Add_float(inOut, matrix, m);
 }
 
 void Operators_And(void *todo)
@@ -567,9 +569,13 @@ void Operators_Shrink(void *todo)
 {
 
 }
-void Operators_Sigmoid(void *todo)
+void Operators_Sigmoid(void *x, int size)
 {
-
+  float *xf = (float*)x;
+  while (size > 0) {
+    size--;
+    xf[size] = (1/(1 + exp(-(xf[size]))));
+  }
 }
 void Operators_Sign(void *todo)
 {
@@ -591,9 +597,20 @@ void Operators_Slice(void *todo)
 {
 
 }
-void Operators_Softmax(void *todo)
-{
 
+// Works with 1 dimension.
+void Operators_Softmax(void *x, int dimx, int dimy)
+{
+  // TODO Use dimy to work with 2 dimensions.
+  float sumExp = 0;
+  float *xf = (float*) x;
+  for (int i = 0; i < dimx; i++) {
+    sumExp += exp(xf[i]);
+  }
+
+  for (int i = 0; i < dimx; i++) {
+    xf[i] = exp(xf[i])/sumExp;
+  }
 }
 void Operators_Softplus(void *todo)
 {

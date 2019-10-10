@@ -14,6 +14,7 @@ other types.
 
 void Operators_MatMul_float(const float *a, const float *b, int m, int n, int k, float *c)
 {
+  // Saturate the value?
   for (int i = 0; i < m; i++) {
     for (int j = 0; j < k; j++) {
       float sum = 0;
@@ -31,16 +32,12 @@ void Operators_MatMul_int(const int *a, const int *b, int m, int n, int k, int *
 
 void Operators_Add_float(float *inOut, float *matrix, int m)
 {
-  for (int i = 0; i < m; i++)
-  {
-    inOut[i] += matrix[i];
+  while (m > 0) {
+    m--;
+    inOut[m] = inOut[m] + matrix[m];
   }
 }
 
 void Operators_Add_int(int *inOut, int *matrix, int m)
 {
-  for (int i = 0; i < m; i++)
-  {
-    inOut[i] += matrix[i];
-  }
 }
