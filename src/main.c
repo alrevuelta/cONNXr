@@ -10,7 +10,7 @@
 
 int main()
 {
-  Onnx__ModelProto *model = openOnnxFile("../models/digits.onnx");
+  Onnx__ModelProto *model = openOnnxFile("../models/mnist_onnx_repo.onnx");
   if (model == NULL)
   {
     perror("Error when opening the onnx file\n");
@@ -19,14 +19,12 @@ int main()
 
   if (DUMMY_FLAG==1)
   {
-    printf("dummyflag is 1");
+    printf("dummyflag is 1\n");
   }
 
-  /*This is model specific for digits.onnx and should be generalized. In this
-  case the input dimensions are 1x64, so first dimension 1 is ignored*/
-  //model->graph->input[0]->type->tensor_type->shape->n_dim
-  //model->graph->input[0]->type->tensor_type->shape->dim[0]->dim_value
-  //model->graph->input[0]->type->tensor_type->shape->dim[1]->dim_value
+  Debug_PrintModelInformation(model);
+
+  /*
   int inputDim = model->graph->input[0]->type->tensor_type->shape->dim[1]->dim_value;
   float *input = malloc(inputDim * sizeof(float));
 
@@ -42,7 +40,7 @@ int main()
   {
     perror("There was an error during the inference\n");
     exit(-1);
-  }
+  }*/
 
   // TODO Declare inputDim as a pointer and modify it
   // within inference function

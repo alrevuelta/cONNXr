@@ -8,7 +8,7 @@ void Operators_Acos(void *todo);
 void Operators_Acosh(void *todo);
 void Operators_Add(void *inOut, void *matrix, int m, enum _Onnx__TensorProto__DataType type);
 void Operators_And(void *todo);
-void Operators_ArgMax(void *todo);
+void Operators_ArgMax(void *x, int dimx, int dimy, int axis, int keepdims, int* out);
 void Operators_ArgMin(void *todo);
 void Operators_Asin(void *todo);
 void Operators_Asinh(void *todo);
