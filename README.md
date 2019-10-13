@@ -36,6 +36,8 @@ protoc --c_out=. onnx.proto
 # Tests
 `cunit` is used to test the code.
 
+* Have a look to https://github.com/onnx/onnx/blob/master/docs/OnnxBackendTest.md and https://github.com/onnx/onnx/tree/master/onnx/backend/test/data/node. onnx has some tools and guidelines on how to test a new backend implementation.
+
 # Models
 In `models` folder, you will find a bunch of models that can be used for testing or debugging. Note that there are also some python scripts to generate that models. The idea here is to generate several types of models, that represent a wide variety of machine learning algorithms, and verify the C output against the Python one.
 
