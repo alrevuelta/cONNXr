@@ -67,7 +67,7 @@ void Debug_PrintModelInformation(Onnx__ModelProto *model)
     }
 
   }
-
+  /*
   for (int i = 0; i < model->graph->n_output; i++) {
     printf("model->graph->output[%d]->name %s\n", i, model->graph->output[i]->name);
     printf("model->graph->output[%d]->type->tensor_type->has_elem_type %d\n", i, model->graph->output[i]->type->tensor_type->has_elem_type);
@@ -89,7 +89,7 @@ void Debug_PrintModelInformation(Onnx__ModelProto *model)
       }
       //printf("model->graph->output[%d]->type->tensor_type->shape->dim[%d]->denotation %s\n", i, j, model->graph->output[i]->type->tensor_type->shape->dim[j]->denotation);
     }
-  }
+  }*/
 
   //--------------------------------------------------------------------------//
   // NODES
@@ -97,7 +97,13 @@ void Debug_PrintModelInformation(Onnx__ModelProto *model)
   for (int i = 0; i < model->graph->n_node; i++)
   {
     printf("model->graph->node[%d]->n_input %zu\n", i, model->graph->node[i]->n_input);
+    for (int j = 0; j < model->graph->node[i]->n_input; j++) {
+      printf("model->graph->node[%d]->input[%d] %s\n", i, j, model->graph->node[i]->input[j]);
+    }
     printf("model->graph->node[%d]->n_output %zu\n", i, model->graph->node[i]->n_output);
+    for (int j = 0; j < model->graph->node[i]->n_output; j++) {
+      printf("model->graph->node[%d]->output[%d] %s\n", i, j, model->graph->node[i]->output[j]);
+    }
     printf("model->graph->node[%d]->name %s\n", i, model->graph->node[i]->name);
     printf("model->graph->node[%d]->op_type %s\n", i, model->graph->node[i]->op_type);
   }

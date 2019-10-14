@@ -4,6 +4,8 @@
 #include "onnx.pb-c.h"
 #include "embeddedml_operators.h"
 
+// TODO: This file can be removed and rename opwrapper to operators
+
 /*
 For the first release only float will be supported. This means that other
 types can work casting, but the performance will be bad, i.e. if int is used

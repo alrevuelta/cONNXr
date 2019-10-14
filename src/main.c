@@ -10,21 +10,18 @@
 
 int main()
 {
-  Onnx__ModelProto *model = openOnnxFile("../models/mnist_onnx_repo.onnx");
+  Onnx__ModelProto *model = openOnnxFile("../models/mnist/model.onnx");
   if (model == NULL)
   {
     perror("Error when opening the onnx file\n");
     exit(-1);
   }
 
-  if (DUMMY_FLAG==1)
-  {
-    printf("dummyflag is 1\n");
-  }
+  DEBUG_PRINT("Debugging is on");
 
   Debug_PrintModelInformation(model);
 
-  /*
+
   int inputDim = model->graph->input[0]->type->tensor_type->shape->dim[1]->dim_value;
   float *input = malloc(inputDim * sizeof(float));
 
@@ -40,11 +37,12 @@ int main()
   {
     perror("There was an error during the inference\n");
     exit(-1);
-  }*/
+  }
 
   // TODO Declare inputDim as a pointer and modify it
   // within inference function
   //Debug_PrintArray(input, 1, 7);
+  // TODO Free all resources
 
   return 0;
 }

@@ -7,8 +7,26 @@
 #include "embeddedml_debug.h"
 #include "embeddedml_operators.h"
 
-// See https://github.com/onnx/onnx/blob/master/docs/Operators.md
+/* Important Notes
+ *  If you are contributing by implementing an operator, make sure that you follow
+ *  onnx specifications in https://github.com/onnx/onnx/blob/master/docs/Operators.md
+ *  Remember to copy the documentation, like inputs, outputs and type constraints.
+ *  See previosly implemented operators as example.
+ */
 
+// Template example
+ /*! \fn COPY_PASTE_FUNCTION_DECLARATION
+  *  \brief COPY_PASTE_AND_FORMAT_ONNX_DOCUMENTATION. INPUTS/OUTPUTS/CONSTRAINTS
+  *
+  *         Limitations: There might be some limitations with respect to the onnx
+  *           official operator. Write here possible limitations, i.e. if the
+  *           function doesnt work with all types, or if it works with a specific
+  *           number of dimensions only
+  *  \param[in]  xx xx
+  *  \param[in]  xx xx
+  *  \param[out] xx xx
+  *  \return     xx
+  */
 void Operators_Abs(void *todo)
 {
 
@@ -293,32 +311,58 @@ void Operators_LpPool(void *todo)
 
 }
 
-/*!
- * xx
- * xx
- * @param[out] xx xx
- * @param[in]  xx xx
- * @param[in]  xx xx
+/*! \fn void Operators_MatMul(Onnx__TensorProto *a, Onnx__TensorProto *b, Onnx__TensorProto *c)
+ *  \brief MatMul: Matrix product that behaves like numpy.matmul:
+ *                 https://docs.scipy.org/doc/numpy-1.13.0/reference/generated/numpy.matmul.html
+ *         Version: This version of the operator has been available since
+ *                  version 9 of the default ONNX operator set. Other versions
+ *                  of this operator: MatMul-1
+ *         Inputs
+ *          A : T. N-dimensional matrix A
+ *          B : T. N-dimensional matrix B
+ *         Outputs
+ *          Y : T. Matrix multiply results from A * B
+ *         Type Constraints
+ *          T : tensor(float16), tensor(float), tensor(double), tensor(uint32),
+ *              tensor(uint64), tensor(int32), tensor(int64)
+ *              Constrain input and output types to float/int tensors.
+ *
+ *         Limitations: There might be some limitations with respect to the onnx
+ *           official operator. Write here possible limitations, i.e. if the
+ *           function doesnt work with all types, or if it works with a specific
+ *           number of dimensions only
+ *  \param[in]  xx xx
+ *  \param[in]  xx xx
+ *  \param[out] xx xx
+ *  \return     xx
  */
-void Operators_MatMul(void *a, void *b, int m, int n, int k, void *c, enum _Onnx__TensorProto__DataType type)
+void Operators_MatMul(Onnx__TensorProto *a, Onnx__TensorProto *b, Onnx__TensorProto *c)
 {
-  /* *todo There is not need to have a switch with all the cases nor to
-  define a function (i.e. _float) for everytype. Some functions can be reused
-  Investigate this.
-  */
+
+  // TODO: Implement
+  /*
+  for (int i = 0; i < m; i++) {
+    for (int j = 0; j < k; j++) {
+      float sum = 0;
+      for (int p = 0; p < n; p++) {
+        sum += (a[i*n+p] * b[p*k+j]);
+        // Saturate the value?
+      }
+      c[i*k+j] = sum;
+    }
+  }*/
+  /*
   switch(type)
   {
     case ONNX__TENSOR_PROTO__DATA_TYPE__UNDEFINED:
       break;
     case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:
-      Operators_MatMul_float(a, b, m, n, k, c);
       break;
     case ONNX__TENSOR_PROTO__DATA_TYPE__UINT8:
       break;
     case ONNX__TENSOR_PROTO__DATA_TYPE__INT8:
       break;
     case ONNX__TENSOR_PROTO__DATA_TYPE__UINT16:
-      Operators_MatMul_int(a, b, m, n, k, c);
       break;
     case ONNX__TENSOR_PROTO__DATA_TYPE__INT16:
       break;
@@ -346,7 +390,7 @@ void Operators_MatMul(void *a, void *b, int m, int n, int k, void *c, enum _Onnx
       break;
     default:
       break;
-  }
+  }*/
 }
 
 void Operators_MatMulInteger(void *todo)
@@ -511,9 +555,14 @@ void Operators_Relu(float *inOut, int size)
     }
   }
 }
-void Operators_Reshape(void *todo)
-{
 
+// tx/ty are the initial tensor dimensions
+// ox/oy are the output tensor dimensions
+// A reshape doesnt modify the input tensor. The reshape is performed
+// by reinterpreting the dimensions
+void Operators_Reshape(float *t, int tx, int ty, int ox, int oy)
+{
+  // Dummy func
 }
 void Operators_Resize(void *todo)
 {

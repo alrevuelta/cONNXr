@@ -6,18 +6,18 @@
 #include "embeddedml_debug.h"
 
 
-Onnx__TensorProto* searchTensorForNode(Onnx__ModelProto *model, int nodeIdx)
+Onnx__TensorProto* searchTensorInInitializers(Onnx__ModelProto *model, char *name)
 {
+  DEBUG_PRINT("Searching for initializer with name=%s", name);
   Onnx__TensorProto *tensor = NULL;
-  for (int input = 0; input < model->graph->node[nodeIdx]->n_input; input++)
+  // Search in initializers
+  for (int initializer = 0; initializer < model->graph->n_initializer; initializer++)
   {
-    for (int initializer = 0; initializer < model->graph->n_initializer; initializer++)
+    if (!strcmp(model->graph->initializer[initializer]->name, name))
     {
-      if (!strcmp(model->graph->initializer[initializer]->name, model->graph->node[nodeIdx]->input[input]))
-      {
-        tensor = model->graph->initializer[initializer];
-        break;
-      }
+      tensor = model->graph->initializer[initializer];
+      DEBUG_PRINT("Found initializer with name=%s", model->graph->initializer[initializer]->name);
+      break;
     }
   }
   return tensor;
@@ -40,7 +40,7 @@ Onnx__ModelProto *openOnnxFile(char *fname){
   if (fl == NULL){
     return model;
   }
-  
+
   fseek(fl, 0, SEEK_END);
   long len = ftell(fl);
   uint8_t *ret = malloc(len);

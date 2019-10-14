@@ -9,13 +9,34 @@
 
 int inferenceFloat(float *input, int inputDim, Onnx__ModelProto *model){
   int error = 0;
+  DEBUG_PRINT("Calling inferenceFloat");
+  DEBUG_PRINT("The graph has nodes=%zu", model->graph->n_node);
 
   // Iterate all nodes in the graph
   for (int nodeIdx = 0; nodeIdx < model->graph->n_node; nodeIdx++)
   {
     char *operation = model->graph->node[nodeIdx]->op_type;
-    int numInputs = model->graph->node[nodeIdx]->n_input;
-    printf("numero inputs al nodo %d\n", numInputs);
+    DEBUG_PRINT("node=%d, operation=%s, n_input=%zu, n_output=%zu",
+                nodeIdx,
+                model->graph->node[nodeIdx]->op_type,
+                model->graph->node[nodeIdx]->n_input,
+                model->graph->node[nodeIdx]->n_output);
+
+/*
+    for (int i = 0; i < model->graph->n_node; i++)
+    {
+      printf("model->graph->node[%d]->n_input %zu\n", i, model->graph->node[i]->n_input);
+      for (int j = 0; j < model->graph->node[i]->n_input; j++) {
+        printf("model->graph->node[%d]->input[%d] %s\n", i, j, model->graph->node[i]->input[j]);
+      }
+      printf("model->graph->node[%d]->n_output %zu\n", i, model->graph->node[i]->n_output);
+      for (int j = 0; j < model->graph->node[i]->n_output; j++) {
+        printf("model->graph->node[%d]->output[%d] %s\n", i, j, model->graph->node[i]->output[j]);
+      }
+      printf("model->graph->node[%d]->name %s\n", i, model->graph->node[i]->name);
+      printf("model->graph->node[%d]->op_type %s\n", i, model->graph->node[i]->op_type);
+    }*/
+
 
   /* This is a bit ugly, just a first draft. The idea in the future is that
    * on compile time the model is known, so only the needed operators are
@@ -35,14 +56,24 @@ int inferenceFloat(float *input, int inputDim, Onnx__ModelProto *model){
     }
     else if (!strcmp(operation, "Add"))
     {
-      printf("Add\n");
+      // Inputs are deterministic given the operation type. Add:
+      // * A: T. First operand
+      // * B: T. Second operand
+      DEBUG_PRINT("operation=%s, input=0 first operand name %s", operation, model->graph->node[nodeIdx]->input[0]);
+      DEBUG_PRINT("operation=%s, input=1 second operand name %s", operation, model->graph->node[nodeIdx]->input[1]);
 
-      Onnx__TensorProto *tensor = searchTensorForNode(model, nodeIdx);
+      Onnx__TensorProto *operandA = searchTensorInInitializers(
+                                          model,
+                                          model->graph->node[nodeIdx]->input[0]);
+      Onnx__TensorProto *operandB = searchTensorInInitializers(
+                                          model,
+                                          model->graph->node[nodeIdx]->input[1]);
 
+/* TODO
       Operators_Add(input,
                     tensor->float_data,
                     tensor->dims[0],
-                    tensor->data_type);
+                    tensor->data_type);*/
     }
     else if (!strcmp(operation, "And"))
     {
@@ -294,13 +325,19 @@ int inferenceFloat(float *input, int inputDim, Onnx__ModelProto *model){
     }
     else if (!strcmp(operation, "MatMul"))
     {
-      printf("MatMul\n");
-      Onnx__TensorProto *tensor = searchTensorForNode(model, nodeIdx);
+      // Inputs are deterministic given the operation type. MatMul:
+      // * A: T. N-dimensional matrix A
+      // * B: T. N-dimensional matrix B
+      DEBUG_PRINT("operation=%s, input=0 first matrix %s", operation, model->graph->node[nodeIdx]->input[0]);
+      DEBUG_PRINT("operation=%s, input=1 second matrix %s", operation, model->graph->node[nodeIdx]->input[1]);
 
-      // TODO ojo que estoy asumiendo siempre 2 dimensiones
-      float *out = malloc(tensor->dims[0] * tensor->dims[1]);
-      inputDim = tensor->dims[1];
-
+      Onnx__TensorProto *matA = searchTensorInInitializers(
+                                          model,
+                                          model->graph->node[nodeIdx]->input[0]);
+      Onnx__TensorProto *matB = searchTensorInInitializers(
+                                          model,
+                                          model->graph->node[nodeIdx]->input[1]);
+      /* TODO
       Operators_MatMul(input,
                        tensor->float_data,
                        1, // Only 1 sample is infered
@@ -311,7 +348,7 @@ int inferenceFloat(float *input, int inputDim, Onnx__ModelProto *model){
 
       // Dont care anymore about the previous output
       free(input);
-      input = out;
+      input = out;*/
     }
     else if (!strcmp(operation, "MatMulInteger"))
     {
@@ -471,7 +508,19 @@ int inferenceFloat(float *input, int inputDim, Onnx__ModelProto *model){
     }
     else if (!strcmp(operation, "Reshape"))
     {
-       // TODO
+      // Inputs are deterministic given the operation type. Reshape:
+      // * data: T. An input tensor
+      // * shape: tensor (int64) Specified shape for output
+      DEBUG_PRINT("operation=%s, input=0 tensor name %s", operation, model->graph->node[nodeIdx]->input[0]);
+      DEBUG_PRINT("operation=%s, input=1 shape for output %s", operation, model->graph->node[nodeIdx]->input[1]);
+
+      Onnx__TensorProto *inputTensor = searchTensorInInitializers(
+                                          model,
+                                          model->graph->node[nodeIdx]->input[0]);
+      Onnx__TensorProto *dimensions = searchTensorInInitializers(
+                                          model,
+                                          model->graph->node[nodeIdx]->input[1]);
+      //Operators_Reshape(float *t, int tx, int ty, int ox, int oy);
     }
     else if (!strcmp(operation, "Resize"))
     {
