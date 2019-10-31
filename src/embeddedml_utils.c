@@ -54,3 +54,25 @@ Onnx__ModelProto *openOnnxFile(char *fname){
 
   return model;
 }
+
+Onnx__TensorProto *openTensorProtoFile(char *fname){
+  Onnx__TensorProto *model = NULL;
+
+  FILE *fl = fopen(fname, "r");
+  if (fl == NULL){
+    return model;
+  }
+
+  fseek(fl, 0, SEEK_END);
+  long len = ftell(fl);
+  uint8_t *ret = malloc(len);
+  fseek(fl, 0, SEEK_SET);
+  fread(ret, 1, len, fl);
+  fclose(fl);
+
+  printf("length of file %ld\n", len);
+
+  model = onnx__tensor_proto__unpack(NULL,len,ret);
+
+  return model;
+}

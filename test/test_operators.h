@@ -1,6 +1,12 @@
 #ifndef TEST_OPERATORS_H
 #define TEST_OPERATORS_H
 
+#include "test_utils.h"
+#include "../src/embeddedml_debug.h"
+#include "../src/embeddedml_inference.h"
+#include "../src/embeddedml_utils.h"
+
+
 int init_Operators_TestSuite(void)
 {
   return 0;
@@ -13,8 +19,10 @@ int clean_Operators_TestSuite(void)
 
 void test_Operators_MatMul(void)
 {
+  // Old test code
   // TODO test different sizes
   // TODO test all variants (float, int,...)
+  /*
   float matrixA[]  = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};  // 4x3
   float matrixB[]  = {9, 8, 7, 6, 5, 4, 3, 2, 1};              // 3x3
   float matrixC[]  = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};     // 4x3
@@ -31,7 +39,31 @@ void test_Operators_MatMul(void)
   for (int i = 0; i < 12; i++)
   {
     CU_ASSERT(matrixC[i]==expected[i]);
-  }
+  }*/
+
+  // Trying ONNX backend testing tools
+  // So far there are 4 matmul tests
+  // node/test_matmul_2d
+  // node/test_matmul_3d
+  // node/test_matmul_4d
+  // node/test_matmulinteger
+
+  // Open ../test/node/test_matmul_2d/model.onnx
+
+  // Open ../test/node/test_matmul_2d/test_data_set_0/input_0.pb
+  // Open ../test/node/test_matmul_2d/test_data_set_0/input_1.pb
+  // Open ../test/node/test_matmul_2d/test_data_set_0/output_0.pb
+  Onnx__ModelProto *model = openOnnxFile("../test/node/test_matmul_2d/model.onnx");
+  Onnx__TensorProto *inp0 = openTensorProtoFile("../test/node/test_matmul_2d/test_data_set_0/input_0.pb");
+  Onnx__TensorProto *inp1 = openTensorProtoFile("../test/node/test_matmul_2d/test_data_set_0/input_1.pb");
+  Onnx__TensorProto *out1 = openTensorProtoFile("../test/node/test_matmul_2d/test_data_set_0/output_0.pb");
+
+  Onnx__TensorProto *inputs[] = {inp0, inp1};
+  int er = inference(model, inputs, 2);
+
+  Debug_PrintModelInformation(model);
+
+  // Free all resources!!
 }
 
 void test_Operators_Add(void)

@@ -1,14 +1,15 @@
 #include <CUnit/CUnit.h>
 #include <CUnit/Basic.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
-#include "../src/embeddedml_opwrapper.h"
 #include "../src/embeddedml_operators.h"
 #include "../src/onnx.pb-c.h"
 
 #include "test_models.h"
 #include "test_operators.h"
+#include "test_utils.h"
 
 int main (void)
 {

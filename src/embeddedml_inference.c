@@ -2,15 +2,18 @@
 #include <stdlib.h>
 #include <string.h>
 #include "onnx.pb-c.h"
-#include "embeddedml_operators.h"
-#include "embeddedml_opwrapper.h"
 #include "embeddedml_utils.h"
 #include "embeddedml_debug.h"
+#include "embeddedml_outputs.h"
 
-int inferenceFloat(float *input, int inputDim, Onnx__ModelProto *model){
+// Investigate what to do with the output. Is it always a set of TensorProto?
+int inference(Onnx__ModelProto *model, Onnx__TensorProto **inptuts, int nInputs)
+{
   int error = 0;
   DEBUG_PRINT("Calling inferenceFloat");
   DEBUG_PRINT("The graph has nodes=%zu", model->graph->n_node);
+
+  // TODO Check that number of inputs provided match the model ones
 
   // Iterate all nodes in the graph
   for (int nodeIdx = 0; nodeIdx < model->graph->n_node; nodeIdx++)
@@ -61,6 +64,18 @@ int inferenceFloat(float *input, int inputDim, Onnx__ModelProto *model){
       // * B: T. Second operand
       DEBUG_PRINT("operation=%s, input=0 first operand name %s", operation, model->graph->node[nodeIdx]->input[0]);
       DEBUG_PRINT("operation=%s, input=1 second operand name %s", operation, model->graph->node[nodeIdx]->input[1]);
+
+      Onnx__TensorProto *result;
+
+
+
+      // Maybe the output tensor should be allocated inside the operator function.
+      /*outputs_allocateOneTensor(result,...); /* TODO:
+                                int32_t data_type,
+                                int *dimensions,
+                                int nDims);*/
+
+
 
       Onnx__TensorProto *operandA = searchTensorInInitializers(
                                           model,
@@ -504,7 +519,7 @@ int inferenceFloat(float *input, int inputDim, Onnx__ModelProto *model){
     }
     else if (!strcmp(operation, "Relu"))
     {
-      Operators_Relu(input, inputDim);
+      //Operators_Relu(input, inputDim);
     }
     else if (!strcmp(operation, "Reshape"))
     {
@@ -711,6 +726,10 @@ int inferenceFloat(float *input, int inputDim, Onnx__ModelProto *model){
       return error;
     }
   }
+
+  // TODO:
+  // Free calculaterTensors memory
+  // Free also extra allocations within the structure (i.e. doubles...)
 
   return error;
 }

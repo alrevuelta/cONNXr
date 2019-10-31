@@ -2,6 +2,7 @@
 #define EMBEDDEDML_INFERENCE_H
 #include "onnx.pb-c.h"
 
-int inferenceFloat(float *input, int inputDim, Onnx__ModelProto *model);
+// Investigate what to do with the output. Is it always a set of TensorProto?
+int inference(Onnx__ModelProto *model, Onnx__TensorProto **inptuts, int nInputs);
 
 #endif

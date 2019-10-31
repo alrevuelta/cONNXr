@@ -5,5 +5,6 @@
 Onnx__TensorProto *searchTensorInInitializers(Onnx__ModelProto *model, char *name);
 int getDimensionsOfTensor(Onnx__TensorProto *tensor);
 Onnx__ModelProto *openOnnxFile(char *fname);
+Onnx__TensorProto *openTensorProtoFile(char *fname);
 
 #endif
