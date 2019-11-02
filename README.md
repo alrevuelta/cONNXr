@@ -12,10 +12,9 @@ Note that this project is in a very early stage so its not production ready yet.
 
 # Current limitations
 
-* The graph should have a set of nodes connected in cascade. So the output of one node is always the input of the following.
 * Very few basic operators are implemented.
 * Onnx supports many types (`fixed-point`, `float`, `int`,...). Few of them are implemented.
-* Only 2 dimensional vectors are supported.
+* `has_raw_data` is not supported. A `TensorProto` is assumed to have the data inside any of the structs (int, float,...) and not in raw_data.
 
 # Run
 

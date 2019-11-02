@@ -58,8 +58,16 @@ void test_Operators_MatMul(void)
   Onnx__TensorProto *inp1 = openTensorProtoFile("../test/node/test_matmul_2d/test_data_set_0/input_1.pb");
   Onnx__TensorProto *out1 = openTensorProtoFile("../test/node/test_matmul_2d/test_data_set_0/output_0.pb");
 
+  convertRawDataOfTensorProto(inp0);
+  convertRawDataOfTensorProto(inp1);
+  convertRawDataOfTensorProto(out1);
+  Debug_PrintTensorProto(inp0);
+
   Onnx__TensorProto *inputs[] = {inp0, inp1};
   int er = inference(model, inputs, 2);
+
+  // TODO Add access to the outputs in inference
+  //compareEqualTensorProto(xxx, out1);
 
   Debug_PrintModelInformation(model);
 

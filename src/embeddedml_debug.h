@@ -12,5 +12,6 @@
 
 void Debug_PrintArray(float *array, int m, int n);
 void Debug_PrintModelInformation(Onnx__ModelProto *model);
+void Debug_PrintTensorProto(Onnx__TensorProto *tp);
 
 #endif

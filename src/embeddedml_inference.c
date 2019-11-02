@@ -5,9 +5,10 @@
 #include "embeddedml_utils.h"
 #include "embeddedml_debug.h"
 #include "embeddedml_outputs.h"
+#include "embeddedml_operators.h"
 
 // Investigate what to do with the output. Is it always a set of TensorProto?
-int inference(Onnx__ModelProto *model, Onnx__TensorProto **inptuts, int nInputs)
+int inference(Onnx__ModelProto *model, Onnx__TensorProto **inputs, int nInputs)
 {
   int error = 0;
   DEBUG_PRINT("Calling inferenceFloat");
@@ -70,19 +71,19 @@ int inference(Onnx__ModelProto *model, Onnx__TensorProto **inptuts, int nInputs)
 
 
       // Maybe the output tensor should be allocated inside the operator function.
-      /*outputs_allocateOneTensor(result,...); /* TODO:
+      /*outputs_allocateOneTensor(result,...);
                                 int32_t data_type,
                                 int *dimensions,
                                 int nDims);*/
 
 
-
+/*
       Onnx__TensorProto *operandA = searchTensorInInitializers(
                                           model,
                                           model->graph->node[nodeIdx]->input[0]);
       Onnx__TensorProto *operandB = searchTensorInInitializers(
                                           model,
-                                          model->graph->node[nodeIdx]->input[1]);
+                                          model->graph->node[nodeIdx]->input[1]);*/
 
 /* TODO
       Operators_Add(input,
@@ -346,24 +347,16 @@ int inference(Onnx__ModelProto *model, Onnx__TensorProto **inptuts, int nInputs)
       DEBUG_PRINT("operation=%s, input=0 first matrix %s", operation, model->graph->node[nodeIdx]->input[0]);
       DEBUG_PRINT("operation=%s, input=1 second matrix %s", operation, model->graph->node[nodeIdx]->input[1]);
 
-      Onnx__TensorProto *matA = searchTensorInInitializers(
-                                          model,
-                                          model->graph->node[nodeIdx]->input[0]);
-      Onnx__TensorProto *matB = searchTensorInInitializers(
-                                          model,
-                                          model->graph->node[nodeIdx]->input[1]);
-      /* TODO
-      Operators_MatMul(input,
-                       tensor->float_data,
-                       1, // Only 1 sample is infered
-                       tensor->dims[0],
-                       tensor->dims[1],
-                       out,
-                       tensor->data_type);
+      // TODO Maybe add some checks that input[0/1] is not null?
 
-      // Dont care anymore about the previous output
-      free(input);
-      input = out;*/
+      Onnx__TensorProto *a = searchTensorProtoByName(model, inputs, nInputs, model->graph->node[nodeIdx]->input[0]);
+      Onnx__TensorProto *b = searchTensorProtoByName(model, inputs, nInputs, model->graph->node[nodeIdx]->input[1]);
+
+      DEBUG_PRINT("Running MatMul operator");
+      Onnx__TensorProto *o = malloc (sizeof(*o));
+      Operators_MatMul(a, b, o);
+      DEBUG_PRINT("Printing ndims o = %zu", o->n_dims);
+      DEBUG_PRINT("Printing name %s", o->name);
     }
     else if (!strcmp(operation, "MatMulInteger"))
     {
@@ -529,12 +522,13 @@ int inference(Onnx__ModelProto *model, Onnx__TensorProto **inptuts, int nInputs)
       DEBUG_PRINT("operation=%s, input=0 tensor name %s", operation, model->graph->node[nodeIdx]->input[0]);
       DEBUG_PRINT("operation=%s, input=1 shape for output %s", operation, model->graph->node[nodeIdx]->input[1]);
 
+/*
       Onnx__TensorProto *inputTensor = searchTensorInInitializers(
                                           model,
                                           model->graph->node[nodeIdx]->input[0]);
       Onnx__TensorProto *dimensions = searchTensorInInitializers(
                                           model,
-                                          model->graph->node[nodeIdx]->input[1]);
+                                          model->graph->node[nodeIdx]->input[1]);*/
       //Operators_Reshape(float *t, int tx, int ty, int ox, int oy);
     }
     else if (!strcmp(operation, "Resize"))

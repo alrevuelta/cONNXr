@@ -6,20 +6,33 @@
 #include "embeddedml_debug.h"
 
 
-Onnx__TensorProto* searchTensorInInitializers(Onnx__ModelProto *model, char *name)
+Onnx__TensorProto* searchTensorProtoByName(Onnx__ModelProto *model, Onnx__TensorProto **inputs, int nInputs, char *name)
 {
-  DEBUG_PRINT("Searching for initializer with name=%s", name);
+  DEBUG_PRINT("Searching for TensorProto with name=%s", name);
   Onnx__TensorProto *tensor = NULL;
+
   // Search in initializers
   for (int initializer = 0; initializer < model->graph->n_initializer; initializer++)
   {
     if (!strcmp(model->graph->initializer[initializer]->name, name))
     {
       tensor = model->graph->initializer[initializer];
-      DEBUG_PRINT("Found initializer with name=%s", model->graph->initializer[initializer]->name);
+      DEBUG_PRINT("Found TensorProto in initializer list with name=%s", model->graph->initializer[initializer]->name);
       break;
     }
   }
+
+  // Search in inputs to the model
+  for (int inIdx = 0; inIdx < nInputs; inIdx++)
+  {
+    if (!strcmp(inputs[inIdx]->name, name))
+    {
+      tensor = inputs[inIdx];
+      DEBUG_PRINT("Found TensorProto in inputs to de model with name=%s", inputs[inIdx]->name);
+      break;
+    }
+  }
+
   return tensor;
 }
 
@@ -75,4 +88,34 @@ Onnx__TensorProto *openTensorProtoFile(char *fname){
   model = onnx__tensor_proto__unpack(NULL,len,ret);
 
   return model;
+}
+
+/*
+Takes as an input a tensor with has_raw_data field TRUE, reads raw_data and
+stores it into "formated" data in the corresponding field. Hardcoded for float
+*/
+int convertRawDataOfTensorProto(Onnx__TensorProto *tensor)
+{
+
+  if (tensor->has_raw_data)
+  {
+    tensor->has_raw_data = 0;
+    tensor->n_float_data = tensor->raw_data.len/4;
+    tensor->float_data = malloc(tensor->n_float_data * sizeof(float));
+    // Hardcoded for float (4)
+    for (int i = 0; i < tensor->n_float_data; i++)
+    {
+      // Once float is 4 bytes.
+      tensor->float_data[i] = *(float *)&tensor->raw_data.data[i+4];
+    }
+    // Free raw_data resources
+    free(tensor->raw_data.data);
+    tensor->raw_data.len = 0;
+  }
+  else
+  {
+    DEBUG_PRINT("Input tensor doesnt have raw_data, doing nothing");
+  }
+
+  return 0;
 }

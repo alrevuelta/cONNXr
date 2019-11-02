@@ -334,15 +334,49 @@ void Operators_LpPool(void *todo)
  *           official operator. Write here possible limitations, i.e. if the
  *           function doesnt work with all types, or if it works with a specific
  *           number of dimensions only
- *  \param[in]  xx xx
- *  \param[in]  xx xx
- *  \param[out] xx xx
- *  \return     xx
+ *  \param[in]  Onnx__TensorProto a
+ *  \param[in]  Onnx__TensorProto b
+ *  \param[out] Onnx__TensorProto c
+ *  \return     void
  */
-void Operators_MatMul(Onnx__TensorProto *in0, Onnx__TensorProto *in1, Onnx__TensorProto *o)
+void Operators_MatMul(Onnx__TensorProto *a, Onnx__TensorProto *b, Onnx__TensorProto *o)
 {
-  DEBUG_PRINT("Calling Operators_MatMul\n");
-  // TODO: Implement
+  DEBUG_PRINT("Calling Operators_MatMul");
+  // Naive 2x2 matrix mult
+  // Allocte memory
+  o->dims = malloc(2 * sizeof(int64_t));
+  o->float_data = malloc(a->dims[0] * b->dims[1] * sizeof(float));
+  o->name = malloc(30 * sizeof(char));
+
+  // Populate some parameters
+  o->n_dims = 2;
+  o->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT; //hardcoded
+  o->n_float_data = a->dims[0] * b->dims[1];
+  o->name = "todo_set_name\0";
+  o->dims[0] = a->dims[0];
+  o->dims[1] = b->dims[1];
+  o->has_raw_data = 0;
+
+  for (int i = 0; i < a->dims[0]; i++) {
+    for (int j = 0; j < b->dims[1]; j++) {
+      float sum = 0;
+      for (int p = 0; p < a->dims[1]; p++) {
+        sum += (a->float_data[i*a->dims[1]+p] * b->float_data[p*b->dims[1]+j]);
+        // Saturate the value?
+      }
+      o->float_data[i*b->dims[1]+j] = sum;
+    }
+  }
+
+  Debug_PrintTensorProto(o);
+
+  // Remove this, for testing
+  for (int i = 0; i < o->n_float_data; i++)
+  {
+    printf("%f\n", o->float_data[i]);
+  }
+
+
   /*
   for (int i = 0; i < m; i++) {
     for (int j = 0; j < k; j++) {

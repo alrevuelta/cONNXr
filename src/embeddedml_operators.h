@@ -69,7 +69,7 @@ void Operators_LogSoftmax(void *todo);
 void Operators_Loop(void *todo);
 void Operators_LpNormalization(void *todo);
 void Operators_LpPool(void *todo);
-void Operators_MatMul(Onnx__TensorProto *in0, Onnx__TensorProto *in1, Onnx__TensorProto *o);
+void Operators_MatMul(Onnx__TensorProto *a, Onnx__TensorProto *b, Onnx__TensorProto *o);
 void Operators_MatMulInteger(void *todo);
 void Operators_Max(void *todo);
 void Operators_MaxPool(void *todo);

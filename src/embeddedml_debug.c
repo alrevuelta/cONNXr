@@ -108,3 +108,70 @@ void Debug_PrintModelInformation(Onnx__ModelProto *model)
     printf("model->graph->node[%d]->op_type %s\n", i, model->graph->node[i]->op_type);
   }
 }
+
+void Debug_PrintTensorProto(Onnx__TensorProto *tp)
+{
+  printf("ndims = %zu\n", tp->n_dims);
+  for (int i = 0; i < tp->n_dims; i++)
+  {
+    printf("dims[%d]=%lld\n", i, tp->dims[i]);
+  }
+  printf("has_data_type = %d\n", tp->has_data_type);
+  printf("data_type = %d\n", tp->data_type);
+
+  // TODO segment
+
+  printf("n_float_data = %zu\n", tp->n_float_data);
+
+  // Print float_data if needed
+
+  printf("n_int32_data = %zu\n", tp->n_int32_data);
+
+  // Print int32_data if needed
+
+  printf("n_string_data = %zu\n", tp->n_string_data);
+
+  // Print string_data if needed
+
+  printf("n_int64_data = %zu\n", tp->n_int64_data);
+
+  // Print int64_data if needed
+
+  printf("name = %s\n", tp->name);
+  printf("docstring = %s\n", tp->doc_string);
+
+  printf("has_raw_data = %d\n", tp->has_raw_data);
+  if (tp->has_raw_data)
+  {
+    printf("raw_data->len = %zu\n", tp->raw_data.len);
+
+    // TODO 4 is hardcoded for a FLOAT case
+    // According to doc this is little endian
+    // Number are stored according to IEEE 754
+    for (int i = 0; i < tp->raw_data.len; i+=4)
+    {
+      printf("merge the following i=%d: %d, %d, %d, %d\n",
+                        i,
+                        tp->raw_data.data[i],
+                        tp->raw_data.data[i+1],
+                        tp->raw_data.data[i+2],
+                        tp->raw_data.data[i+3]);
+      // Once float is 4 bytes.
+      float unserNum = *(float *)&tp->raw_data.data[i];
+      printf("unserialized number = %f\n", unserNum);
+    }
+  }
+
+  // Print has_data_location if needed
+
+  // Print data_location if needed
+
+  printf("n_double_data = %zu\n", tp->n_double_data);
+
+  // Print double_data if needed
+
+  printf("n_uint64_data = %zu\n", tp->n_uint64_data);
+
+  // Print uint64_data if needed
+
+}
