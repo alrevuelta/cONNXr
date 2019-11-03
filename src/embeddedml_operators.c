@@ -26,6 +26,49 @@
  *  \param[out] xx xx
  *  \return     xx
  */
+
+
+ // Template supported Types
+ /*
+ switch(type)
+ {
+   case ONNX__TENSOR_PROTO__DATA_TYPE__UNDEFINED:
+     break;
+   case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:
+     break;
+   case ONNX__TENSOR_PROTO__DATA_TYPE__UINT8:
+     break;
+   case ONNX__TENSOR_PROTO__DATA_TYPE__INT8:
+     break;
+   case ONNX__TENSOR_PROTO__DATA_TYPE__UINT16:
+     break;
+   case ONNX__TENSOR_PROTO__DATA_TYPE__INT16:
+     break;
+   case ONNX__TENSOR_PROTO__DATA_TYPE__INT32:
+     break;
+   case ONNX__TENSOR_PROTO__DATA_TYPE__INT64:
+     break;
+   case ONNX__TENSOR_PROTO__DATA_TYPE__STRING:
+     break;
+   case ONNX__TENSOR_PROTO__DATA_TYPE__BOOL:
+     break;
+   case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT16:
+     break;
+   case ONNX__TENSOR_PROTO__DATA_TYPE__DOUBLE:
+     break;
+   case ONNX__TENSOR_PROTO__DATA_TYPE__UINT32:
+     break;
+   case ONNX__TENSOR_PROTO__DATA_TYPE__UINT64:
+     break;
+   case ONNX__TENSOR_PROTO__DATA_TYPE__COMPLEX64:
+     break;
+   case ONNX__TENSOR_PROTO__DATA_TYPE__COMPLEX128:
+     break;
+   case ONNX__TENSOR_PROTO__DATA_TYPE__BFLOAT16:
+     break;
+   default:
+     break;
+ }*/
 void Operators_Abs(void *todo)
 {
 
@@ -70,40 +113,47 @@ void Operators_Add(Onnx__TensorProto *a, Onnx__TensorProto *b, Onnx__TensorProto
 {
   DEBUG_PRINT("Calling Operators_Add");
 
-  // TODO
+  // TODO Hardcoded for 1 dimension case
+
+  // Check condition?
+  //a->data_type == b->data_type;
 
   // Allocte memory
-  /*
-  o->dims = malloc(2 * sizeof(int64_t));
-  o->float_data = malloc(a->dims[0] * b->dims[1] * sizeof(float));
-  o->name = malloc(30 * sizeof(char));
+  c->dims = malloc(1 * sizeof(int64_t));
 
   // Populate some parameters
-  o->n_dims = 2;
-  o->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT; //hardcoded
-  o->n_float_data = a->dims[0] * b->dims[1];
-  o->name = "todo_set_name\0";
-  o->dims[0] = a->dims[0];
-  o->dims[1] = b->dims[1];
-  o->has_raw_data = 0;*/
+  c->name         = "name_is_set_afterwards\0";
+  c->n_dims       = 1;
+  c->dims[0]      = a->dims[0];
+  c->has_raw_data = 0;
 
-/*
-  for (int i = 0; i < a->dims[0]; i++) {
-    for (int j = 0; j < b->dims[1]; j++) {
-      float sum = 0;
-      for (int p = 0; p < a->dims[1]; p++) {
-        sum += (a->float_data[i*a->dims[1]+p] * b->float_data[p*b->dims[1]+j]);
-        // Saturate the value?
+  switch(a->data_type)
+  {
+    case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:
+    {
+      c->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT;
+      c->n_float_data = a->dims[0];
+      c->float_data = malloc(a->dims[0] * sizeof(float));
+      for (int i = 0; i < a->dims[0]; i++) {
+        c->float_data[i] = a->float_data[i] + b->float_data[i];
       }
-      o->float_data[i*b->dims[1]+j] = sum;
-    }
-  }*/
-  // TODO Using float by default
-/*
-  while (m > 0) {
-    m--;
-    inOut[m] = inOut[m] + matrix[m];
-  }*/
+    } break;
+    case ONNX__TENSOR_PROTO__DATA_TYPE__INT32:
+      // TODO
+      break;
+    case ONNX__TENSOR_PROTO__DATA_TYPE__INT64:
+      break;
+    case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT16:
+      break;
+    case ONNX__TENSOR_PROTO__DATA_TYPE__DOUBLE:
+      break;
+    case ONNX__TENSOR_PROTO__DATA_TYPE__UINT32:
+      break;
+    case ONNX__TENSOR_PROTO__DATA_TYPE__UINT64:
+      break;
+    default:
+      break;
+  }
 }
 
 void Operators_And(void *todo)
@@ -398,72 +448,82 @@ void Operators_MatMul(Onnx__TensorProto *a, Onnx__TensorProto *b, Onnx__TensorPr
 {
   DEBUG_PRINT("Calling Operators_MatMul");
 
-  // Naive 2x2 matrix mult for float
+  // TODO Hardcoded for 2 dimensions
+
+  // Check condition?
+  //a->data_type == b->data_type;
+
   // Allocte memory
   o->dims = malloc(2 * sizeof(int64_t));
-  o->float_data = malloc(a->dims[0] * b->dims[1] * sizeof(float));
-  o->name = malloc(30 * sizeof(char));
 
   // Populate some parameters
-  o->n_dims = 2;
-  o->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT; //hardcoded
-  o->n_float_data = a->dims[0] * b->dims[1];
-  o->name = "todo_set_name\0";
-  o->dims[0] = a->dims[0];
-  o->dims[1] = b->dims[1];
+  o->name         = "name_is_set_afterwards\0";
+  o->n_dims       = 2;
+  o->dims[0]      = a->dims[0];
+  o->dims[1]      = b->dims[1];
   o->has_raw_data = 0;
 
-  for (int i = 0; i < a->dims[0]; i++) {
-    for (int j = 0; j < b->dims[1]; j++) {
-      float sum = 0;
-      for (int p = 0; p < a->dims[1]; p++) {
-        sum += (a->float_data[i*a->dims[1]+p] * b->float_data[p*b->dims[1]+j]);
-        // Saturate the value?
-      }
-      o->float_data[i*b->dims[1]+j] = sum;
-    }
-  }
-
-  /*
-  switch(type)
+  switch(a->data_type)
   {
-    case ONNX__TENSOR_PROTO__DATA_TYPE__UNDEFINED:
-      break;
     case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__UINT8:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__INT8:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__UINT16:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__INT16:
-      break;
+    {
+      o->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT;
+      o->n_float_data = a->dims[0] * b->dims[1];
+      o->float_data = malloc(a->dims[0] * b->dims[1] * sizeof(float));
+      for (int i = 0; i < a->dims[0]; i++) {
+        for (int j = 0; j < b->dims[1]; j++) {
+          float sum = 0;
+          for (int p = 0; p < a->dims[1]; p++) {
+            sum += (a->float_data[i*a->dims[1]+p] * b->float_data[p*b->dims[1]+j]);
+            // Saturate the value?
+          }
+          o->float_data[i*b->dims[1]+j] = sum;
+        }
+      }
+    } break;
     case ONNX__TENSOR_PROTO__DATA_TYPE__INT32:
-      break;
+    {
+      o->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__INT32;
+      o->n_int32_data = a->dims[0] * b->dims[1];
+      o->int32_data = malloc(a->dims[0] * b->dims[1] * sizeof(int32_t));
+      for (int i = 0; i < a->dims[0]; i++) {
+        for (int j = 0; j < b->dims[1]; j++) {
+          int32_t sum = 0;
+          for (int p = 0; p < a->dims[1]; p++) {
+            sum += (a->int32_data[i*a->dims[1]+p] * b->int32_data[p*b->dims[1]+j]);
+            // Saturate the value?
+          }
+          o->int32_data[i*b->dims[1]+j] = sum;
+        }
+      }
+    } break;
     case ONNX__TENSOR_PROTO__DATA_TYPE__INT64:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__STRING:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__BOOL:
-      break;
+    {
+      // TODO
+      // Use n_int64_data, int64_data
+    } break;
     case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT16:
-      break;
+    {
+      // TODO
+    } break;
     case ONNX__TENSOR_PROTO__DATA_TYPE__DOUBLE:
-      break;
+    {
+      // TODO
+      // Use n_double_data, double_data
+    } break;
     case ONNX__TENSOR_PROTO__DATA_TYPE__UINT32:
-      break;
+    {
+      // TODO
+      // Note sure but use n_uint64_data and uint64_data (same as uint64)
+    } break;
     case ONNX__TENSOR_PROTO__DATA_TYPE__UINT64:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__COMPLEX64:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__COMPLEX128:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__BFLOAT16:
-      break;
+    {
+      // TODO
+      // Note sure but use n_uint64_data and uint64_data (same as uint64)
+    } break;
     default:
       break;
-  }*/
+  }
 }
 
 void Operators_MatMulInteger(void *todo)

@@ -24,10 +24,7 @@ void test_Operators_MatMul(void)
   // node/test_matmul_4d
   // node/test_matmulinteger
 
-  // Open ../test/node/test_matmul_2d/model.onnx
-  // Open ../test/node/test_matmul_2d/test_data_set_0/input_0.pb
-  // Open ../test/node/test_matmul_2d/test_data_set_0/input_1.pb
-  // Open ../test/node/test_matmul_2d/test_data_set_0/output_0.pb
+  // Test 1: test_matmul_2d
   Onnx__ModelProto *model = openOnnxFile("../test/node/test_matmul_2d/model.onnx");
   Onnx__TensorProto *inp0 = openTensorProtoFile("../test/node/test_matmul_2d/test_data_set_0/input_0.pb");
   Onnx__TensorProto *inp1 = openTensorProtoFile("../test/node/test_matmul_2d/test_data_set_0/input_1.pb");
@@ -44,10 +41,11 @@ void test_Operators_MatMul(void)
   compareAlmostEqualTensorProto(outputs[0], out1);
 
   // Free resources
+  /*
   onnx__tensor_proto__free_unpacked(inp0, NULL);
   onnx__tensor_proto__free_unpacked(inp1, NULL);
   onnx__tensor_proto__free_unpacked(out1, NULL);
-  onnx__model_proto__free_unpacked(model, NULL);
+  onnx__model_proto__free_unpacked(model, NULL);*/
 }
 
 void test_Operators_Add(void)

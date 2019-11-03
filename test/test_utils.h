@@ -4,6 +4,8 @@
 #include <CUnit/CUnit.h>
 #include <CUnit/Basic.h>
 
+#define FLOAT_TOLERANCE 0.00001f
+
 // Compare if equal with some tolarenace
 void compareAlmostEqualTensorProto(Onnx__TensorProto *a, Onnx__TensorProto *b)
 {
@@ -20,7 +22,7 @@ void compareAlmostEqualTensorProto(Onnx__TensorProto *a, Onnx__TensorProto *b)
     case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:
       for(int i = 0; i < a->n_float_data; i++)
       {
-        CU_ASSERT(fabs(a->float_data[i] - b->float_data[i]) < 0.00001f);
+        CU_ASSERT(fabs(a->float_data[i] - b->float_data[i]) < FLOAT_TOLERANCE);
       }
       break;
     case ONNX__TENSOR_PROTO__DATA_TYPE__UINT8:

@@ -68,7 +68,7 @@ int main (void)
     CU_cleanup_registry();
     return CU_get_error();
   }
-  if ((NULL == CU_add_test(modelsTestSuite, "test_Models_DummyTc", test_Models_DummyTc)))
+  if ((NULL == CU_add_test(modelsTestSuite, "test_Models_mnist", test_Models_mnist)))
   {
     CU_cleanup_registry();
     return CU_get_error();

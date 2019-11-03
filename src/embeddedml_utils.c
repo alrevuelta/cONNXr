@@ -4,7 +4,7 @@
 #include "onnx.pb-c.h"
 #include "embeddedml_utils.h"
 #include "embeddedml_debug.h"
-
+#include "embeddedml_inference.h"
 
 Onnx__TensorProto* searchTensorProtoByName(Onnx__ModelProto *model,
                                            Onnx__TensorProto **inputs,
@@ -32,6 +32,17 @@ Onnx__TensorProto* searchTensorProtoByName(Onnx__ModelProto *model,
     {
       tensor = inputs[inIdx];
       DEBUG_PRINT("Found TensorProto in inputs to de model with name=%s", inputs[inIdx]->name);
+      break;
+    }
+  }
+
+  // Search in calculated outputs list
+  for (int outputsIdx = 0; outputsIdx < _outputIdx; outputsIdx++)
+  {
+    if (!strcmp(_outputs[outputsIdx]->name, name))
+    {
+      tensor = _outputs[outputsIdx];
+      DEBUG_PRINT("Found TensorProto in outputs list with name=%s", inputs[outputsIdx]->name);
       break;
     }
   }
@@ -101,7 +112,7 @@ int convertRawDataOfTensorProto(Onnx__TensorProto *tensor)
     {
       // Once float is 4 bytes.
       tensor->float_data[i/4] = *(float *)&tensor->raw_data.data[i];
-      DEBUG_PRINT("Writing %f", *(float *)&tensor->raw_data.data[i]);
+      //DEBUG_PRINT("Writing %f", *(float *)&tensor->raw_data.data[i]);
     }
     // Free raw_data resources
     free(tensor->raw_data.data);

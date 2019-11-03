@@ -9,8 +9,7 @@
 
 int main()
 {
-  //Onnx__ModelProto *model = openOnnxFile("../models/mnist/model.onnx");
-  Onnx__ModelProto *model = openOnnxFile("../models/mnist/test_data_set_0/input_0.pb");
+  Onnx__ModelProto *model = openOnnxFile("../models/mnist/model.onnx");
   if (model == NULL)
   {
     perror("Error when opening the onnx file\n");

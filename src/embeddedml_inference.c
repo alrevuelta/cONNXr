@@ -7,7 +7,6 @@
 #include "embeddedml_operators.h"
 #include "embeddedml_inference.h"
 
-int outputIdx = 0;
 // Investigate what to do with the output. Is it always a set of TensorProto?
 Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **inputs, int nInputs)
 {
@@ -357,9 +356,13 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
       Onnx__TensorProto *o = malloc (sizeof(*o));
       Operators_MatMul(a, b, o);
 
+      // Dont know if is a good idea to reuse the name. Can save memory and
+      // shouldnt change.
+      o->name = model->graph->node[nodeIdx]->output[0];
+
       // Store the output;
-      outputs[outputIdx] = o;
-      outputIdx++;
+      _outputs[_outputIdx] = o;
+      _outputIdx++;
     }
     else if (!strcmp(operation, "MatMulInteger"))
     {
@@ -728,5 +731,5 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
   // Free calculaterTensors memory
   // Free also extra allocations within the structure (i.e. doubles...)
 
-  return outputs;
+  return _outputs;
 }
