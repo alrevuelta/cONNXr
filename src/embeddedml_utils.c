@@ -6,7 +6,10 @@
 #include "embeddedml_debug.h"
 
 
-Onnx__TensorProto* searchTensorProtoByName(Onnx__ModelProto *model, Onnx__TensorProto **inputs, int nInputs, char *name)
+Onnx__TensorProto* searchTensorProtoByName(Onnx__ModelProto *model,
+                                           Onnx__TensorProto **inputs,
+                                           int nInputs,
+                                           char *name)
 {
   DEBUG_PRINT("Searching for TensorProto with name=%s", name);
   Onnx__TensorProto *tensor = NULL;
@@ -36,17 +39,7 @@ Onnx__TensorProto* searchTensorProtoByName(Onnx__ModelProto *model, Onnx__Tensor
   return tensor;
 }
 
-int getDimensionsOfTensor(Onnx__TensorProto *tensor)
-{
-  int totalDim = 1;
-  for (int dim = 0; dim < tensor->n_dims; dim++)
-  {
-    totalDim *= tensor->dims[dim];
-  }
-  return totalDim;
-}
-
-Onnx__ModelProto *openOnnxFile(char *fname){
+Onnx__ModelProto* openOnnxFile(char *fname){
   Onnx__ModelProto *model = NULL;
 
   FILE *fl = fopen(fname, "r");
@@ -99,14 +92,16 @@ int convertRawDataOfTensorProto(Onnx__TensorProto *tensor)
 
   if (tensor->has_raw_data)
   {
+    DEBUG_PRINT("Tensor has raw data. Unserializing it");
     tensor->has_raw_data = 0;
     tensor->n_float_data = tensor->raw_data.len/4;
     tensor->float_data = malloc(tensor->n_float_data * sizeof(float));
     // Hardcoded for float (4)
-    for (int i = 0; i < tensor->n_float_data; i++)
+    for (int i = 0; i < tensor->raw_data.len; i+=4)
     {
       // Once float is 4 bytes.
-      tensor->float_data[i] = *(float *)&tensor->raw_data.data[i+4];
+      tensor->float_data[i/4] = *(float *)&tensor->raw_data.data[i];
+      DEBUG_PRINT("Writing %f", *(float *)&tensor->raw_data.data[i]);
     }
     // Free raw_data resources
     free(tensor->raw_data.data);

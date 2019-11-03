@@ -62,6 +62,8 @@ void Debug_PrintModelInformation(Onnx__ModelProto *model)
         case ONNX__TENSOR_SHAPE_PROTO__DIMENSION__VALUE_DIM_PARAM:
           printf("model->graph->input[%d]->type->tensor_type->shape->dim[%d]->dim_param %s\n", i, j, model->graph->input[i]->type->tensor_type->shape->dim[j]->dim_param);
           break;
+        case _ONNX__TENSOR_SHAPE_PROTO__DIMENSION__VALUE_IS_INT_SIZE:
+          break;
       }
       //printf("model->graph->input[%d]->type->tensor_type->shape->dim[%d]->denotation %s\n", i, j, model->graph->input[i]->type->tensor_type->shape->dim[j]->denotation);
     }

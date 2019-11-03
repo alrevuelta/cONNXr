@@ -14,18 +14,18 @@
  */
 
 // Template example
- /*! \fn COPY_PASTE_FUNCTION_DECLARATION
-  *  \brief COPY_PASTE_AND_FORMAT_ONNX_DOCUMENTATION. INPUTS/OUTPUTS/CONSTRAINTS
-  *
-  *         Limitations: There might be some limitations with respect to the onnx
-  *           official operator. Write here possible limitations, i.e. if the
-  *           function doesnt work with all types, or if it works with a specific
-  *           number of dimensions only
-  *  \param[in]  xx xx
-  *  \param[in]  xx xx
-  *  \param[out] xx xx
-  *  \return     xx
-  */
+/*! \fn COPY_PASTE_FUNCTION_DECLARATION
+ *  \brief COPY_PASTE_AND_FORMAT_ONNX_DOCUMENTATION. INPUTS/OUTPUTS/CONSTRAINTS
+ *
+ *         Limitations: There might be some limitations with respect to the onnx
+ *           official operator. Write here possible limitations, i.e. if the
+ *           function doesnt work with all types, or if it works with a specific
+ *           number of dimensions only
+ *  \param[in]  xx xx
+ *  \param[in]  xx xx
+ *  \param[out] xx xx
+ *  \return     xx
+ */
 void Operators_Abs(void *todo)
 {
 
@@ -41,8 +41,63 @@ void Operators_Acosh(void *todo)
 
 }
 
-void Operators_Add(void *inOut, void *matrix, int m, enum _Onnx__TensorProto__DataType type)
+/*! \fn Operators_Add(Onnx__TensorProto *a, Onnx__TensorProto *b, Onnx__TensorProto *c);
+ *  \brief Add: Performs element-wise binary addition (with Numpy-style broadcasting support).
+ *              This operator supports multidirectional (i.e., Numpy-style) broadcasting; for more
+ *              details please check the doc.
+ *         Version: This version of the operator has been available since version 7
+ *                  of the default ONNX operator set. Other versions of this operator: Add-1, Add-6
+ *         Inputs:
+ *          A : T. First operand.
+ *          B : T. Second operand.
+ *         Outputs:
+ *          C : T. Result, has same element type as two inputs
+ *         Type Constraints:
+ *          T : tensor(uint32), tensor(uint64), tensor(int32), tensor(int64),
+ *          tensor(float16), tensor(float), tensor(double). Constrain input and output types to
+ *          high-precision numeric tensors.
+ *
+ *       Limitations: There might be some limitations with respect to the onnx
+ *         official operator. Write here possible limitations, i.e. if the
+ *         function doesnt work with all types, or if it works with a specific
+ *         number of dimensions only
+ *  \param[in]  Onnx__TensorProto a
+ *  \param[in]  Onnx__TensorProto b
+ *  \param[out] Onnx__TensorProto c
+ *  \return     void
+ */
+void Operators_Add(Onnx__TensorProto *a, Onnx__TensorProto *b, Onnx__TensorProto *c)
 {
+  DEBUG_PRINT("Calling Operators_Add");
+
+  // TODO
+
+  // Allocte memory
+  /*
+  o->dims = malloc(2 * sizeof(int64_t));
+  o->float_data = malloc(a->dims[0] * b->dims[1] * sizeof(float));
+  o->name = malloc(30 * sizeof(char));
+
+  // Populate some parameters
+  o->n_dims = 2;
+  o->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT; //hardcoded
+  o->n_float_data = a->dims[0] * b->dims[1];
+  o->name = "todo_set_name\0";
+  o->dims[0] = a->dims[0];
+  o->dims[1] = b->dims[1];
+  o->has_raw_data = 0;*/
+
+/*
+  for (int i = 0; i < a->dims[0]; i++) {
+    for (int j = 0; j < b->dims[1]; j++) {
+      float sum = 0;
+      for (int p = 0; p < a->dims[1]; p++) {
+        sum += (a->float_data[i*a->dims[1]+p] * b->float_data[p*b->dims[1]+j]);
+        // Saturate the value?
+      }
+      o->float_data[i*b->dims[1]+j] = sum;
+    }
+  }*/
   // TODO Using float by default
 /*
   while (m > 0) {
@@ -320,12 +375,12 @@ void Operators_LpPool(void *todo)
  *         Version: This version of the operator has been available since
  *                  version 9 of the default ONNX operator set. Other versions
  *                  of this operator: MatMul-1
- *         Inputs
+ *         Inputs:
  *          A : T. N-dimensional matrix A
  *          B : T. N-dimensional matrix B
- *         Outputs
+ *         Outputs:
  *          Y : T. Matrix multiply results from A * B
- *         Type Constraints
+ *         Type Constraints:
  *          T : tensor(float16), tensor(float), tensor(double), tensor(uint32),
  *              tensor(uint64), tensor(int32), tensor(int64)
  *              Constrain input and output types to float/int tensors.
@@ -342,7 +397,8 @@ void Operators_LpPool(void *todo)
 void Operators_MatMul(Onnx__TensorProto *a, Onnx__TensorProto *b, Onnx__TensorProto *o)
 {
   DEBUG_PRINT("Calling Operators_MatMul");
-  // Naive 2x2 matrix mult
+
+  // Naive 2x2 matrix mult for float
   // Allocte memory
   o->dims = malloc(2 * sizeof(int64_t));
   o->float_data = malloc(a->dims[0] * b->dims[1] * sizeof(float));
@@ -368,26 +424,6 @@ void Operators_MatMul(Onnx__TensorProto *a, Onnx__TensorProto *b, Onnx__TensorPr
     }
   }
 
-  Debug_PrintTensorProto(o);
-
-  // Remove this, for testing
-  for (int i = 0; i < o->n_float_data; i++)
-  {
-    printf("%f\n", o->float_data[i]);
-  }
-
-
-  /*
-  for (int i = 0; i < m; i++) {
-    for (int j = 0; j < k; j++) {
-      float sum = 0;
-      for (int p = 0; p < n; p++) {
-        sum += (a[i*n+p] * b[p*k+j]);
-        // Saturate the value?
-      }
-      c[i*k+j] = sum;
-    }
-  }*/
   /*
   switch(type)
   {

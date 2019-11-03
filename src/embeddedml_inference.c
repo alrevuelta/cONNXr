@@ -4,11 +4,12 @@
 #include "onnx.pb-c.h"
 #include "embeddedml_utils.h"
 #include "embeddedml_debug.h"
-#include "embeddedml_outputs.h"
 #include "embeddedml_operators.h"
+#include "embeddedml_inference.h"
 
+int outputIdx = 0;
 // Investigate what to do with the output. Is it always a set of TensorProto?
-int inference(Onnx__ModelProto *model, Onnx__TensorProto **inputs, int nInputs)
+Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **inputs, int nInputs)
 {
   int error = 0;
   DEBUG_PRINT("Calling inferenceFloat");
@@ -352,11 +353,13 @@ int inference(Onnx__ModelProto *model, Onnx__TensorProto **inputs, int nInputs)
       Onnx__TensorProto *a = searchTensorProtoByName(model, inputs, nInputs, model->graph->node[nodeIdx]->input[0]);
       Onnx__TensorProto *b = searchTensorProtoByName(model, inputs, nInputs, model->graph->node[nodeIdx]->input[1]);
 
-      DEBUG_PRINT("Running MatMul operator");
+      // Alloc memory for the output
       Onnx__TensorProto *o = malloc (sizeof(*o));
       Operators_MatMul(a, b, o);
-      DEBUG_PRINT("Printing ndims o = %zu", o->n_dims);
-      DEBUG_PRINT("Printing name %s", o->name);
+
+      // Store the output;
+      outputs[outputIdx] = o;
+      outputIdx++;
     }
     else if (!strcmp(operation, "MatMulInteger"))
     {
@@ -717,7 +720,7 @@ int inference(Onnx__ModelProto *model, Onnx__TensorProto **inputs, int nInputs)
     }
     else{
       error = 1;
-      return error;
+      //return error;
     }
   }
 
@@ -725,5 +728,5 @@ int inference(Onnx__ModelProto *model, Onnx__TensorProto **inputs, int nInputs)
   // Free calculaterTensors memory
   // Free also extra allocations within the structure (i.e. doubles...)
 
-  return error;
+  return outputs;
 }
