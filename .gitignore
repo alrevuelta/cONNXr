@@ -1,4 +1,4 @@
-
+*.o
 .DS_Store
 src/main
 test/test

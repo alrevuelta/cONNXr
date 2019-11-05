@@ -22,6 +22,7 @@ Onnx__TensorProto* searchTensorProtoByName(Onnx__ModelProto *model,
       tensor = model->graph->initializer[initializer];
       DEBUG_PRINT("Found TensorProto in initializer list with name=%s", model->graph->initializer[initializer]->name);
       break;
+      // Use return instead. Once its found, exit the function
     }
   }
 
@@ -33,6 +34,7 @@ Onnx__TensorProto* searchTensorProtoByName(Onnx__ModelProto *model,
       tensor = inputs[inIdx];
       DEBUG_PRINT("Found TensorProto in inputs to de model with name=%s", inputs[inIdx]->name);
       break;
+      // Use return instead. Once its found, exit the function
     }
   }
 
@@ -44,6 +46,7 @@ Onnx__TensorProto* searchTensorProtoByName(Onnx__ModelProto *model,
       tensor = _outputs[outputsIdx];
       DEBUG_PRINT("Found TensorProto in outputs list with name=%s", inputs[outputsIdx]->name);
       break;
+      // Use return instead. Once its found, exit the function
     }
   }
 

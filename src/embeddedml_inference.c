@@ -4,8 +4,18 @@
 #include "onnx.pb-c.h"
 #include "embeddedml_utils.h"
 #include "embeddedml_debug.h"
-#include "embeddedml_operators.h"
 #include "embeddedml_inference.h"
+
+// Just for some initial tests. Move to a common include
+#include "operators/add.h"
+#include "operators/argmax.h"
+#include "operators/arrayfeatureextractor.h"
+#include "operators/cast.h"
+#include "operators/matmul.h"
+#include "operators/reshape.h"
+#include "operators/sigmoid.h"
+#include "operators/softmax.h"
+#include "operators/zipmap.h"
 
 // Investigate what to do with the output. Is it always a set of TensorProto?
 Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **inputs, int nInputs)
@@ -66,7 +76,7 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
       DEBUG_PRINT("operation=%s, input=0 first operand name %s", operation, model->graph->node[nodeIdx]->input[0]);
       DEBUG_PRINT("operation=%s, input=1 second operand name %s", operation, model->graph->node[nodeIdx]->input[1]);
 
-      Onnx__TensorProto *result;
+      //Onnx__TensorProto *result;
 
 
 
@@ -353,8 +363,8 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
       Onnx__TensorProto *b = searchTensorProtoByName(model, inputs, nInputs, model->graph->node[nodeIdx]->input[1]);
 
       // Alloc memory for the output
-      Onnx__TensorProto *o = malloc (sizeof(*o));
-      Operators_MatMul(a, b, o);
+      Onnx__TensorProto *o = malloc (sizeof(*o)); //do this inside matmul?
+      operator_matmul(a, b, o);
 
       // Dont know if is a good idea to reuse the name. Can save memory and
       // shouldnt change.

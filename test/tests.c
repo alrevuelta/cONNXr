@@ -4,12 +4,22 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../src/embeddedml_operators.h"
 #include "../src/onnx.pb-c.h"
-
-#include "test_models.h"
-#include "test_operators.h"
 #include "test_utils.h"
+
+// Operators tests
+#include "operators/test_operator_add.h"
+#include "operators/test_operator_argmax.h"
+#include "operators/test_operator_matmul.h"
+#include "operators/test_operator_sigmoid.h"
+#include "operators/test_operator_softmax.h"
+
+// Model tests
+#include "models/test_model_mnist.h"
+
+// Common stuff
+#include "operators/common_operators.h"
+#include "models/common_models.h"
 
 int main (void)
 {
@@ -30,7 +40,7 @@ int main (void)
   }
 
   // Add tests for Operators test suite
-  if ((NULL == CU_add_test(operatorsTestSuite, "test_Operators_MatMul", test_Operators_MatMul)))
+  if ((NULL == CU_add_test(operatorsTestSuite, "test_matmul_2d", test_matmul_2d)))
   {
     CU_cleanup_registry();
     return CU_get_error();
@@ -68,7 +78,7 @@ int main (void)
     CU_cleanup_registry();
     return CU_get_error();
   }
-  if ((NULL == CU_add_test(modelsTestSuite, "test_Models_mnist", test_Models_mnist)))
+  if ((NULL == CU_add_test(modelsTestSuite, "test_model_mnist", test_model_mnist)))
   {
     CU_cleanup_registry();
     return CU_get_error();

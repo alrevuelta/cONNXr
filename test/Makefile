@@ -1,2 +1,6 @@
-test: tests.c
-	gcc -D DEBUG -o test tests.c ../src/embeddedml_debug.c ../src/embeddedml_inference.c ../src/embeddedml_operators.c ../src/embeddedml_utils.c ../src/onnx.pb-c.c -I/usr/local/include -L/usr/local/lib -lcunit -lprotobuf-c
+build:
+	gcc -std=c99 -Wall -D DEBUG -o runtest tests.c ../src/operators/*.c ../src/embeddedml_debug.c ../src/embeddedml_utils.c ../src/embeddedml_inference.c ../src/onnx.pb-c.c -I/usr/local/include -L/usr/local/lib -lcunit -lprotobuf-c
+clean:
+	rm runtest
+run:
+	./runtest
