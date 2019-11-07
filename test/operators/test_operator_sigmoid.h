@@ -2,7 +2,7 @@
 #define TEST_OPERATOR_SIGMOID_H
 #include "common_operators.h"
 
-void test_Operators_Sigmoid(void)
+void test_operator_sigmoid(void)
 {
   /*
   float x[] = {-4, -3, -2, -1, 0, 1.1f, 2, 6.7f};

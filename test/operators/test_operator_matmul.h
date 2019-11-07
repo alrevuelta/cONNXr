@@ -3,12 +3,9 @@
 #include "common_operators.h"
 #include "../../src/operators/matmul.h"
 
-void test_matmul_2d(void)
+void test_operator_matmul_2d(void)
 {
-  // TODO: Run the test without running the whole model. Just feed matmul
-  // function with the tensors
-
-  // Split this into multiple files
+  // TODO Split this into multiple files
   // node/test_matmul_2d
   // node/test_matmul_3d
   // node/test_matmul_4d
@@ -31,7 +28,7 @@ void test_matmul_2d(void)
   compareAlmostEqualTensorProto(result, out1);
 
   // Free resources
-  /*
+  /* TODO Is Cunit automatically freeing resources?
   onnx__tensor_proto__free_unpacked(inp0, NULL);
   onnx__tensor_proto__free_unpacked(inp1, NULL);
   onnx__tensor_proto__free_unpacked(out1, NULL);

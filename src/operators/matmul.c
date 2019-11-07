@@ -33,7 +33,7 @@
  */
 void operator_matmul(Onnx__TensorProto *a, Onnx__TensorProto *b, Onnx__TensorProto *o)
 {
-  DEBUG_PRINT("Calling Operators_MatMul");
+  DEBUG_PRINT("Calling operator_matmul");
 
   // TODO Hardcoded for 2 dimensions
 

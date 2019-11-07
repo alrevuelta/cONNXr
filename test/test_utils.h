@@ -22,6 +22,8 @@ void compareAlmostEqualTensorProto(Onnx__TensorProto *a, Onnx__TensorProto *b)
     case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:
       for(int i = 0; i < a->n_float_data; i++)
       {
+        //CU_ASSERT_EQUAL(a->float_data[i], b->float_data[i]);
+        DEBUG_PRINT("%f, %f\n", a->float_data[i], b->float_data[i]);
         CU_ASSERT(fabs(a->float_data[i] - b->float_data[i]) < FLOAT_TOLERANCE);
       }
       break;
@@ -41,7 +43,11 @@ void compareAlmostEqualTensorProto(Onnx__TensorProto *a, Onnx__TensorProto *b)
       CU_FAIL("int32 data_type is not implemented");
       break;
     case ONNX__TENSOR_PROTO__DATA_TYPE__INT64:
-      CU_FAIL("int64 data_type is not implemented");
+      for(int i = 0; i < a->n_int64_data; i++)
+      {
+        DEBUG_PRINT("ASSERTING EQUAL: %lld, %lld\n", a->int64_data[i], b->int64_data[i]);
+        CU_ASSERT_EQUAL(a->int64_data[i], b->int64_data[i]);
+      }
       break;
     case ONNX__TENSOR_PROTO__DATA_TYPE__STRING:
       CU_FAIL("string data_type is not implemented");

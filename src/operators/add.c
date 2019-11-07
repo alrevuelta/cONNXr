@@ -33,20 +33,26 @@
  */
 void operator_add(Onnx__TensorProto *a, Onnx__TensorProto *b, Onnx__TensorProto *c)
 {
-  DEBUG_PRINT("Calling Operators_Add");
+  DEBUG_PRINT("Calling operator_add");
 
-  // TODO Hardcoded for 1 dimension case
-
+  // TODO broadcasting is not implemented
+  fprintf(fp, "heldasdasdasd llo\n"); \
   // Check condition?
-  //a->data_type == b->data_type;
+  //a->data_type == b->data_type
+  //a->n_dims == b->n_dims
+  //a->dims[i] == b->dims[i]
 
   // Allocte memory
-  c->dims = malloc(1 * sizeof(int64_t));
+  c->dims = malloc(a->n_dims * sizeof(int64_t));
 
   // Populate some parameters
   c->name         = "name_is_set_afterwards\0";
-  c->n_dims       = 1;
-  c->dims[0]      = a->dims[0];
+  c->n_dims       = a->n_dims;
+
+  for (int i = 0; i < a->n_dims; i++)
+  {
+    c->dims[i] = a->dims[i];
+  }
   c->has_raw_data = 0;
 
   switch(a->data_type)
@@ -54,9 +60,9 @@ void operator_add(Onnx__TensorProto *a, Onnx__TensorProto *b, Onnx__TensorProto 
     case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:
     {
       c->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT;
-      c->n_float_data = a->dims[0];
-      c->float_data = malloc(a->dims[0] * sizeof(float));
-      for (int i = 0; i < a->dims[0]; i++) {
+      c->n_float_data = b->n_float_data;
+      c->float_data = malloc(c->n_float_data * sizeof(float));
+      for (int i = 0; i < b->n_float_data; i++) {
         c->float_data[i] = a->float_data[i] + b->float_data[i];
       }
     } break;

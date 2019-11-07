@@ -5,14 +5,19 @@
 #include <string.h>
 
 #include "../src/onnx.pb-c.h"
+#include "../src/embeddedml_debug.h"
 #include "test_utils.h"
 
 // Operators tests
 #include "operators/test_operator_add.h"
 #include "operators/test_operator_argmax.h"
+#include "operators/test_operator_arrayfeatureextractor.h"
+#include "operators/test_operator_cast.h"
 #include "operators/test_operator_matmul.h"
+#include "operators/test_operator_reshape.h"
 #include "operators/test_operator_sigmoid.h"
 #include "operators/test_operator_softmax.h"
+#include "operators/test_operator_zipmap.h"
 
 // Model tests
 #include "models/test_model_mnist.h"
@@ -40,31 +45,49 @@ int main (void)
   }
 
   // Add tests for Operators test suite
-  if ((NULL == CU_add_test(operatorsTestSuite, "test_matmul_2d", test_matmul_2d)))
+  if ((NULL == CU_add_test(operatorsTestSuite, "test_operator_add", test_operator_add)))
   {
     CU_cleanup_registry();
     return CU_get_error();
   }
 
-  if ((NULL == CU_add_test(operatorsTestSuite, "test_Operators_Add", test_Operators_Add)))
+  if ((NULL == CU_add_test(operatorsTestSuite, "test_operator_argmax_default_axis_example", test_operator_argmax_default_axis_example)))
   {
     CU_cleanup_registry();
     return CU_get_error();
   }
 
-  if ((NULL == CU_add_test(operatorsTestSuite, "test_Operators_Sigmoid", test_Operators_Sigmoid)))
+  if ((NULL == CU_add_test(operatorsTestSuite, "test_operator_arrayfeatureextractor", test_operator_arrayfeatureextractor)))
   {
     CU_cleanup_registry();
     return CU_get_error();
   }
 
-  if ((NULL == CU_add_test(operatorsTestSuite, "test_Operators_Softmax", test_Operators_Softmax)))
+  if ((NULL == CU_add_test(operatorsTestSuite, "test_operator_cast", test_operator_cast)))
   {
     CU_cleanup_registry();
     return CU_get_error();
   }
 
-  if ((NULL == CU_add_test(operatorsTestSuite, "test_Operators_ArgmMax", test_Operators_ArgMax)))
+  if ((NULL == CU_add_test(operatorsTestSuite, "test_operator_matmul_2d", test_operator_matmul_2d)))
+  {
+    CU_cleanup_registry();
+    return CU_get_error();
+  }
+
+  if ((NULL == CU_add_test(operatorsTestSuite, "test_operator_reshape", test_operator_reshape)))
+  {
+    CU_cleanup_registry();
+    return CU_get_error();
+  }
+
+  if ((NULL == CU_add_test(operatorsTestSuite, "test_operator_sigmoid", test_operator_sigmoid)))
+  {
+    CU_cleanup_registry();
+    return CU_get_error();
+  }
+
+  if ((NULL == CU_add_test(operatorsTestSuite, "test_operator_softmax", test_operator_softmax)))
   {
     CU_cleanup_registry();
     return CU_get_error();

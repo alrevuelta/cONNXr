@@ -1,8 +1,9 @@
 #ifndef TEST_OPERATOR_ADD_H
 #define TEST_OPERATOR_ADD_H
 #include "common_operators.h"
+#include "../../src/operators/add.h"
 
-void test_Operators_Add(void)
+void test_operator_add_custom1(void)
 {
   /*
   float a[] = {1, 2, 3, 4, 5, 6, 7};
@@ -14,6 +15,29 @@ void test_Operators_Add(void)
     CU_ASSERT(a[i] == expected[i]);
   }
   */
+}
+
+void test_operator_add(void)
+{
+  Onnx__TensorProto *inp0 = openTensorProtoFile("../test/node/test_add/test_data_set_0/input_0.pb");
+  Onnx__TensorProto *inp1 = openTensorProtoFile("../test/node/test_add/test_data_set_0/input_1.pb");
+  Onnx__TensorProto *out1 = openTensorProtoFile("../test/node/test_add/test_data_set_0/output_0.pb");
+
+  // Tensors have raw_data. Parse it and store into a normal field for the sake of simplicity
+  convertRawDataOfTensorProto(inp0);
+  convertRawDataOfTensorProto(inp1);
+  convertRawDataOfTensorProto(out1);
+
+  Onnx__TensorProto *result = malloc (sizeof(*result));
+  operator_add(inp0, inp1, result);
+
+  compareAlmostEqualTensorProto(result, out1);
+
+}
+
+void test_operator_add_bcast(void)
+{
+  // TODO
 }
 
 #endif

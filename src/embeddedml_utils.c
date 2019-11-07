@@ -68,7 +68,7 @@ Onnx__ModelProto* openOnnxFile(char *fname){
   fread(ret, 1, len, fl);
   fclose(fl);
 
-  printf("length of file is %ld\n", len);
+  DEBUG_PRINT("length of file is %ld\n", len);
 
   model = onnx__model_proto__unpack(NULL,len,ret);
 
@@ -90,7 +90,7 @@ Onnx__TensorProto *openTensorProtoFile(char *fname){
   fread(ret, 1, len, fl);
   fclose(fl);
 
-  printf("length of file %ld\n", len);
+  DEBUG_PRINT("\nlength of file %ld\n", len);
 
   model = onnx__tensor_proto__unpack(NULL,len,ret);
 
@@ -107,18 +107,68 @@ int convertRawDataOfTensorProto(Onnx__TensorProto *tensor)
   if (tensor->has_raw_data)
   {
     DEBUG_PRINT("Tensor has raw data. Unserializing it");
-    tensor->has_raw_data = 0;
-    tensor->n_float_data = tensor->raw_data.len/4;
-    tensor->float_data = malloc(tensor->n_float_data * sizeof(float));
-    // Hardcoded for float (4)
-    for (int i = 0; i < tensor->raw_data.len; i+=4)
+    DEBUG_PRINT("Tensor type = %d", tensor->data_type);
+
+    switch(tensor->data_type)
     {
-      // Once float is 4 bytes.
-      tensor->float_data[i/4] = *(float *)&tensor->raw_data.data[i];
-      //DEBUG_PRINT("Writing %f", *(float *)&tensor->raw_data.data[i]);
+      case ONNX__TENSOR_PROTO__DATA_TYPE__UNDEFINED:
+        break;
+      case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:
+      {
+        tensor->n_float_data = tensor->raw_data.len/4;
+        tensor->float_data = malloc(tensor->n_float_data * sizeof(float));
+        for (int i = 0; i < tensor->raw_data.len; i+=4)
+        {
+          // Once float is 4 bytes.
+          tensor->float_data[i/4] = *(float *)&tensor->raw_data.data[i];
+          //DEBUG_PRINT("Writing %f", tensor->float_data[i/4]);
+        }
+      } break;
+      case ONNX__TENSOR_PROTO__DATA_TYPE__UINT8:
+        break;
+      case ONNX__TENSOR_PROTO__DATA_TYPE__INT8:
+        break;
+      case ONNX__TENSOR_PROTO__DATA_TYPE__UINT16:
+        break;
+      case ONNX__TENSOR_PROTO__DATA_TYPE__INT16:
+        break;
+      case ONNX__TENSOR_PROTO__DATA_TYPE__INT32:
+        break;
+      case ONNX__TENSOR_PROTO__DATA_TYPE__INT64:
+      {
+        tensor->n_int64_data = tensor->raw_data.len/sizeof(int64_t);
+        tensor->int64_data = malloc(tensor->n_int64_data * sizeof(int64_t));
+        for (int i = 0; i < tensor->raw_data.len; i+=sizeof(int64_t))
+        {
+          tensor->int64_data[i/sizeof(int64_t)] = *(int64_t *)&tensor->raw_data.data[i];
+          DEBUG_PRINT("Writing %lld", tensor->int64_data[i/sizeof(int64_t)]);
+        }
+      } break;
+      case ONNX__TENSOR_PROTO__DATA_TYPE__STRING:
+        break;
+      case ONNX__TENSOR_PROTO__DATA_TYPE__BOOL:
+        break;
+      case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT16:
+        break;
+      case ONNX__TENSOR_PROTO__DATA_TYPE__DOUBLE:
+        break;
+      case ONNX__TENSOR_PROTO__DATA_TYPE__UINT32:
+        break;
+      case ONNX__TENSOR_PROTO__DATA_TYPE__UINT64:
+        break;
+      case ONNX__TENSOR_PROTO__DATA_TYPE__COMPLEX64:
+        break;
+      case ONNX__TENSOR_PROTO__DATA_TYPE__COMPLEX128:
+        break;
+      case ONNX__TENSOR_PROTO__DATA_TYPE__BFLOAT16:
+        break;
+      default:
+        break;
     }
-    // Free raw_data resources
+
+    // TODO is this allowed?
     free(tensor->raw_data.data);
+    tensor->has_raw_data = 0;
     tensor->raw_data.len = 0;
   }
   else
