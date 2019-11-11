@@ -36,7 +36,6 @@ void operator_add(Onnx__TensorProto *a, Onnx__TensorProto *b, Onnx__TensorProto 
   DEBUG_PRINT("Calling operator_add");
 
   // TODO broadcasting is not implemented
-  fprintf(fp, "heldasdasdasd llo\n"); \
   // Check condition?
   //a->data_type == b->data_type
   //a->n_dims == b->n_dims

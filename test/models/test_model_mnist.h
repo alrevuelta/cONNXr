@@ -9,7 +9,23 @@ void test_model_mnist(void)
   // test_data_set_0
   // test_data_set_1
   // test_data_set_2
-  CU_ASSERT(1 == 1);
+
+  DEBUG_PRINT("Start: test_model_mnist");
+
+  Onnx__ModelProto *model = openOnnxFile("../test/mnist/model.onnx");
+  Onnx__TensorProto *inp0set0 = openTensorProtoFile("../test/mnist/test_data_set_0/input_0.pb");
+  Onnx__TensorProto *out0set0 = openTensorProtoFile("../test/mnist/test_data_set_0/output_0.pb");
+
+  convertRawDataOfTensorProto(inp0set0);
+  convertRawDataOfTensorProto(out0set0);
+
+  Onnx__TensorProto *inputs[] = { inp0set0 };
+
+  Onnx__TensorProto **output = inference(model, inputs, 1);
+
+  // TODO Not finished
+
+  DEBUG_PRINT("End: test_model_mnist");
 }
 
 #endif

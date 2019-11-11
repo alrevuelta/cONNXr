@@ -68,7 +68,7 @@ Onnx__ModelProto* openOnnxFile(char *fname){
   fread(ret, 1, len, fl);
   fclose(fl);
 
-  DEBUG_PRINT("length of file is %ld\n", len);
+  DEBUG_PRINT("length of file is %ld", len);
 
   model = onnx__model_proto__unpack(NULL,len,ret);
 
@@ -90,7 +90,7 @@ Onnx__TensorProto *openTensorProtoFile(char *fname){
   fread(ret, 1, len, fl);
   fclose(fl);
 
-  DEBUG_PRINT("\nlength of file %ld\n", len);
+  DEBUG_PRINT("length of file %ld", len);
 
   model = onnx__tensor_proto__unpack(NULL,len,ret);
 
@@ -103,6 +103,10 @@ stores it into "formated" data in the corresponding field. Hardcoded for float
 */
 int convertRawDataOfTensorProto(Onnx__TensorProto *tensor)
 {
+  if (tensor == NULL)
+  {
+    DEBUG_PRINT("Tensor is null, break");
+  }
 
   if (tensor->has_raw_data)
   {

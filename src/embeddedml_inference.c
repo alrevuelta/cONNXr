@@ -358,7 +358,7 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
       DEBUG_PRINT("operation=%s, input=1 second matrix %s", operation, model->graph->node[nodeIdx]->input[1]);
 
       // TODO Maybe add some checks that input[0/1] is not null?
-
+/*
       Onnx__TensorProto *a = searchTensorProtoByName(model, inputs, nInputs, model->graph->node[nodeIdx]->input[0]);
       Onnx__TensorProto *b = searchTensorProtoByName(model, inputs, nInputs, model->graph->node[nodeIdx]->input[1]);
 
@@ -372,7 +372,7 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
 
       // Store the output;
       _outputs[_outputIdx] = o;
-      _outputIdx++;
+      _outputIdx++;*/
     }
     else if (!strcmp(operation, "MatMulInteger"))
     {

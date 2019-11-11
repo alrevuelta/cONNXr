@@ -63,7 +63,7 @@ int main (void)
     return CU_get_error();
   }
 
-  if ((NULL == CU_add_test(operatorsTestSuite, "test_operator_cast", test_operator_cast)))
+  if ((NULL == CU_add_test(operatorsTestSuite, "test_operator_cast_FLOAT_to_DOUBLE", test_operator_cast_FLOAT_to_DOUBLE)))
   {
     CU_cleanup_registry();
     return CU_get_error();

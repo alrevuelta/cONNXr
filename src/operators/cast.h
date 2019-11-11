@@ -2,6 +2,6 @@
 #define EMBEDDEDML_CAST_H
 #include "../onnx.pb-c.h"
 
-// TODO
+void operators_cast(Onnx__TensorProto *T1, Onnx__TensorProto *T2, Onnx__TensorProto__DataType to);
 
 #endif

@@ -6,7 +6,7 @@ FILE *fp;
 #define DEBUG_PRINT(FMT, ARGS...) do { \
     if (DEBUG) \
         fp = fopen("output.txt", "a"); \
-        fprintf(fp, "%s:%d " FMT "\n", __FUNCTION__, __LINE__, ## ARGS); \
+        fprintf(fp, "%s:%s:%d " FMT "\n", __FILE__, __FUNCTION__, __LINE__, ## ARGS); \
     } while (0)
 
 /* Backup

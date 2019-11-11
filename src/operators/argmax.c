@@ -6,6 +6,7 @@
 #include "../embeddedml_debug.h"
 #include "argmax.h"
 
+// TODO paste header form onnx doc
 void operators_argmax(Onnx__TensorProto *data, int axis, int keepdims, Onnx__TensorProto *reduced)
 {
   DEBUG_PRINT("Calling operator_argmax");

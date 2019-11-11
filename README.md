@@ -7,8 +7,8 @@ Note that this project is in a very early stage so its not production ready yet.
 
 * A pure C runtime for onnx shall be developed
 * No external libraries shall be used
-* Code shall compile with `C89` standard
-* Compiled code shall be as little as possible (i.e. fit into an Arduino)
+* Code shall compile with `C99` standard
+* Compiled code shall be as little as possible (i.e. fit into a small device)
 
 # Current limitations
 
@@ -33,15 +33,18 @@ protoc --c_out=. onnx.proto
 ```
 
 # Tests
-`cunit` is used to test the code.
+`cunit` is used to test the code. Two different test levels are written, on operator level (i.e. matrix multiplication) and on a model level (whole model end to end)
 
 * Have a look to https://github.com/onnx/onnx/blob/master/docs/OnnxBackendTest.md and https://github.com/onnx/onnx/tree/master/onnx/backend/test/data/node. onnx has some tools and guidelines on how to test a new backend implementation.
 
 # Models
 In `models` folder, you will find a bunch of models that can be used for testing or debugging. Note that there are also some python scripts to generate that models. The idea here is to generate several types of models, that represent a wide variety of machine learning algorithms, and verify the C output against the Python one.
 
-# Ideas/Help needed
-* x
+# Milestones
 
-# TODO
-*
+- [x] Implement matmul and add operators
+- [x] Integrate onnx backend testing
+- [ ] Implement all operators contained in MNIST model
+- [ ] Run end to end tests for MNIST model
+- [ ] Implement a significant amount of onnx operators, most common ones
+- [ ] Compile and deploy a model such MNIST into a real embedded device
