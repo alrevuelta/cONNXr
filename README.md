@@ -42,12 +42,12 @@ protoc --c_out=. onnx.proto
 - [x] Implement matmul and add operators
 - [x] Integrate onnx backend testing
 - [ ] Implement all operators contained in MNIST model
-- [ ]   Conv
-- [x]   Add
-- [x]   Relu
-- [ ]   MaxPool
-- [ ]   Reshape
-- [x]   Matmul
+- [ ] |-Conv
+- [x] |-Add
+- [x] |-Relu
+- [ ] |-MaxPool
+- [ ] |-Reshape
+- [x] |-Matmul
 - [ ] Run end to end tests for MNIST model
 - [ ] Implement a significant amount of onnx operators, most common ones
 - [ ] Compile and deploy a model such MNIST into a real embedded device
