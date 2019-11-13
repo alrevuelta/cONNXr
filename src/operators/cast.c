@@ -6,6 +6,7 @@
 #include "../embeddedml_debug.h"
 #include "cast.h"
 
+// TODO paste header form onnx doc
 void operators_cast(Onnx__TensorProto *T1, Onnx__TensorProto *T2, Onnx__TensorProto__DataType to)
 {
   // TODO Scientific notation is not supported, like 1e-5

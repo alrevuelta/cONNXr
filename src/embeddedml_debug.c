@@ -108,6 +108,13 @@ void Debug_PrintModelInformation(Onnx__ModelProto *model)
     }
     printf("model->graph->node[%d]->name %s\n", i, model->graph->node[i]->name);
     printf("model->graph->node[%d]->op_type %s\n", i, model->graph->node[i]->op_type);
+
+    printf("model->graph->node[%d]->n_attribute %zu\n", i, model->graph->node[i]->n_attribute);
+    for (int j = 0; j < model->graph->node[i]->n_attribute; j++)
+    {
+      // Check AttributeProto structure for more parameters
+      printf("model->graph->node[%d]->attribute[%d]->name %s\n", i, j, model->graph->node[i]->attribute[j]->name);
+    }
   }
 }
 

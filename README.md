@@ -37,14 +37,17 @@ protoc --c_out=. onnx.proto
 
 * Have a look to https://github.com/onnx/onnx/blob/master/docs/OnnxBackendTest.md and https://github.com/onnx/onnx/tree/master/onnx/backend/test/data/node. onnx has some tools and guidelines on how to test a new backend implementation.
 
-# Models
-In `models` folder, you will find a bunch of models that can be used for testing or debugging. Note that there are also some python scripts to generate that models. The idea here is to generate several types of models, that represent a wide variety of machine learning algorithms, and verify the C output against the Python one.
-
 # Milestones
 
 - [x] Implement matmul and add operators
 - [x] Integrate onnx backend testing
 - [ ] Implement all operators contained in MNIST model
+-     [ ] Conv
+-     [x] Add
+-     [x] Relu
+-     [ ] MaxPool
+-     [ ] Reshape
+-     [x] Matmul
 - [ ] Run end to end tests for MNIST model
 - [ ] Implement a significant amount of onnx operators, most common ones
 - [ ] Compile and deploy a model such MNIST into a real embedded device

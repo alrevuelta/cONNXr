@@ -13,7 +13,10 @@
 #include "operators/test_operator_argmax.h"
 #include "operators/test_operator_arrayfeatureextractor.h"
 #include "operators/test_operator_cast.h"
+#include "operators/test_operator_conv.h"
 #include "operators/test_operator_matmul.h"
+#include "operators/test_operator_maxpool.h"
+#include "operators/test_operator_relu.h"
 #include "operators/test_operator_reshape.h"
 #include "operators/test_operator_sigmoid.h"
 #include "operators/test_operator_softmax.h"
@@ -45,53 +48,27 @@ int main (void)
   }
 
   // Add tests for Operators test suite
-  if ((NULL == CU_add_test(operatorsTestSuite, "test_operator_add", test_operator_add)))
-  {
-    CU_cleanup_registry();
-    return CU_get_error();
-  }
+  CU_add_test(operatorsTestSuite, "test_operator_add", test_operator_add);
+  CU_add_test(operatorsTestSuite, "test_operator_add_bcast", test_operator_add_bcast);
 
-  if ((NULL == CU_add_test(operatorsTestSuite, "test_operator_argmax_default_axis_example", test_operator_argmax_default_axis_example)))
-  {
-    CU_cleanup_registry();
-    return CU_get_error();
-  }
+  CU_add_test(operatorsTestSuite, "test_operator_argmax_default_axis_example", test_operator_argmax_default_axis_example);
+  CU_add_test(operatorsTestSuite, "test_operator_arrayfeatureextractor", test_operator_arrayfeatureextractor);
+  CU_add_test(operatorsTestSuite, "test_operator_cast_FLOAT_to_DOUBLE", test_operator_cast_FLOAT_to_DOUBLE);
+  CU_add_test(operatorsTestSuite, "test_operator_matmul_2d", test_operator_matmul_2d);
+  CU_add_test(operatorsTestSuite, "test_operator_relu", test_operator_relu);
 
-  if ((NULL == CU_add_test(operatorsTestSuite, "test_operator_arrayfeatureextractor", test_operator_arrayfeatureextractor)))
-  {
-    CU_cleanup_registry();
-    return CU_get_error();
-  }
-
-  if ((NULL == CU_add_test(operatorsTestSuite, "test_operator_cast_FLOAT_to_DOUBLE", test_operator_cast_FLOAT_to_DOUBLE)))
-  {
-    CU_cleanup_registry();
-    return CU_get_error();
-  }
-
-  if ((NULL == CU_add_test(operatorsTestSuite, "test_operator_matmul_2d", test_operator_matmul_2d)))
-  {
-    CU_cleanup_registry();
-    return CU_get_error();
-  }
-
-  if ((NULL == CU_add_test(operatorsTestSuite, "test_operator_reshape", test_operator_reshape)))
-  {
-    CU_cleanup_registry();
-    return CU_get_error();
-  }
-
-  if ((NULL == CU_add_test(operatorsTestSuite, "test_operator_sigmoid", test_operator_sigmoid)))
-  {
-    CU_cleanup_registry();
-    return CU_get_error();
-  }
-
-  if ((NULL == CU_add_test(operatorsTestSuite, "test_operator_softmax", test_operator_softmax)))
-  {
-    CU_cleanup_registry();
-    return CU_get_error();
-  }
+  CU_add_test(operatorsTestSuite, "test_operator_reshape_extended_dims", test_operator_reshape_extended_dims);
+  /*CU_add_test(operatorsTestSuite, "test_operator_reshape_negative_dim", test_operator_reshape_negative_dim);
+  CU_add_test(operatorsTestSuite, "test_operator_reshape_negative_extended_dims", test_operator_reshape_negative_extended_dims);
+  CU_add_test(operatorsTestSuite, "test_operator_reshape_one_dim", test_operator_reshape_one_dim);
+  CU_add_test(operatorsTestSuite, "test_operator_reshape_reduced_dims", test_operator_reshape_reduced_dims);
+  CU_add_test(operatorsTestSuite, "test_operator_reshape_reordered_all_dims", test_operator_reshape_reordered_all_dims);
+  CU_add_test(operatorsTestSuite, "test_operator_reshape_reordered_last_dims", test_operator_reshape_reordered_last_dims);
+  CU_add_test(operatorsTestSuite, "test_operator_reshape_zero_and_negative_dim", test_operator_reshape_zero_and_negative_dim);
+  CU_add_test(operatorsTestSuite, "test_operator_reshape_zero_dim", test_operator_reshape_zero_dim);
+  */
+  CU_add_test(operatorsTestSuite, "test_operator_sigmoid", test_operator_sigmoid);
+  CU_add_test(operatorsTestSuite, "test_operator_softmax", test_operator_softmax);
 
   // Models test suite and test cases
   modelsTestSuite = CU_add_suite("Models_TestSuite",
@@ -101,11 +78,8 @@ int main (void)
     CU_cleanup_registry();
     return CU_get_error();
   }
-  if ((NULL == CU_add_test(modelsTestSuite, "test_model_mnist", test_model_mnist)))
-  {
-    CU_cleanup_registry();
-    return CU_get_error();
-  }
+
+  //CU_add_test(modelsTestSuite, "test_model_mnist", test_model_mnist);
 
   CU_basic_set_mode(CU_BRM_VERBOSE);
   CU_basic_run_tests();

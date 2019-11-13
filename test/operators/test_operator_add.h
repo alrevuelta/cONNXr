@@ -21,23 +21,35 @@ void test_operator_add(void)
 {
   Onnx__TensorProto *inp0 = openTensorProtoFile("../test/node/test_add/test_data_set_0/input_0.pb");
   Onnx__TensorProto *inp1 = openTensorProtoFile("../test/node/test_add/test_data_set_0/input_1.pb");
-  Onnx__TensorProto *out1 = openTensorProtoFile("../test/node/test_add/test_data_set_0/output_0.pb");
+  Onnx__TensorProto *out0 = openTensorProtoFile("../test/node/test_add/test_data_set_0/output_0.pb");
 
   // Tensors have raw_data. Parse it and store into a normal field for the sake of simplicity
   convertRawDataOfTensorProto(inp0);
   convertRawDataOfTensorProto(inp1);
-  convertRawDataOfTensorProto(out1);
+  convertRawDataOfTensorProto(out0);
 
   Onnx__TensorProto *result = malloc (sizeof(*result));
   operator_add(inp0, inp1, result);
 
-  compareAlmostEqualTensorProto(result, out1);
+  compareAlmostEqualTensorProto(result, out0);
 
 }
 
 void test_operator_add_bcast(void)
 {
-  // TODO
+  Onnx__TensorProto *inp0 = openTensorProtoFile("../test/node/test_add_bcast/test_data_set_0/input_0.pb");
+  Onnx__TensorProto *inp1 = openTensorProtoFile("../test/node/test_add_bcast/test_data_set_0/input_1.pb");
+  Onnx__TensorProto *out0 = openTensorProtoFile("../test/node/test_add_bcast/test_data_set_0/output_0.pb");
+
+  // Tensors have raw_data. Parse it and store into a normal field for the sake of simplicity
+  convertRawDataOfTensorProto(inp0);
+  convertRawDataOfTensorProto(inp1);
+  convertRawDataOfTensorProto(out0);
+
+  Onnx__TensorProto *result = malloc (sizeof(*result));
+  operator_add(inp0, inp1, result);
+
+  compareAlmostEqualTensorProto(result, out0);
 }
 
 #endif

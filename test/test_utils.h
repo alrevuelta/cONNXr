@@ -13,6 +13,22 @@ void compareAlmostEqualTensorProto(Onnx__TensorProto *a, Onnx__TensorProto *b)
   {
     CU_FAIL("Data types must be equal");
   }
+  if ((a->data_type == ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT) &&
+       a->n_float_data != b->n_float_data)
+  {
+    CU_FAIL("Number of float values must be equal");
+  }
+  else if ((a->data_type == ONNX__TENSOR_PROTO__DATA_TYPE__INT64) &&
+            a->n_int64_data != b->n_int64_data)
+  {
+    CU_FAIL("Number of int64 values must be equal");
+  }
+  else if ((a->data_type == ONNX__TENSOR_PROTO__DATA_TYPE__DOUBLE) &&
+            a->n_double_data != b->n_double_data)
+  {
+    CU_FAIL("Number of double values must be equal");
+  }
+  // TODO Write for rest of types
 
   switch(a->data_type)
   {

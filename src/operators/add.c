@@ -35,7 +35,6 @@ void operator_add(Onnx__TensorProto *a, Onnx__TensorProto *b, Onnx__TensorProto 
 {
   DEBUG_PRINT("Calling operator_add");
 
-  // TODO broadcasting is not implemented
   // Check condition?
   //a->data_type == b->data_type
   //a->n_dims == b->n_dims
@@ -53,16 +52,18 @@ void operator_add(Onnx__TensorProto *a, Onnx__TensorProto *b, Onnx__TensorProto 
     c->dims[i] = a->dims[i];
   }
   c->has_raw_data = 0;
+  c->data_type = a->data_type;
 
   switch(a->data_type)
   {
     case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:
     {
-      c->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT;
-      c->n_float_data = b->n_float_data;
+      c->n_float_data = a->n_float_data;
       c->float_data = malloc(c->n_float_data * sizeof(float));
-      for (int i = 0; i < b->n_float_data; i++) {
-        c->float_data[i] = a->float_data[i] + b->float_data[i];
+      for (int i = 0; i < a->n_float_data; i++) {
+        // Note that b can have a different dimension. In that case
+        // broadcasting is performed
+        c->float_data[i] = a->float_data[i] + b->float_data[i%b->n_float_data];
       }
     } break;
     case ONNX__TENSOR_PROTO__DATA_TYPE__INT32:
