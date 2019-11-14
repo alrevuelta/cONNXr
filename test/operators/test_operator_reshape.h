@@ -11,25 +11,11 @@ void test_operator_reshape_extended_dims(void)
 
   // Tensors have raw_data. Parse it and store into a normal field for the sake of simplicity
   convertRawDataOfTensorProto(inp0);
-
-  // TODO input_1 here is a bit tricky because I think it is not a TensorProto. It should be a
-  // shape structure according to doc
-
-  //convertRawDataOfTensorProto(inp1);
+  convertRawDataOfTensorProto(inp1);
   convertRawDataOfTensorProto(out0);
 
   Onnx__TensorProto *result = malloc (sizeof(*result));
-
-  Onnx__TensorShapeProto *shape = malloc(sizeof(*shape));
-
-  // TODO Faking the inp1
-  shape->n_dim = 1;
-  shape->dim = malloc(sizeof(Onnx__TensorShapeProto__Dimension));
-  shape->dim[0] = malloc(sizeof(Onnx__TensorShapeProto__Dimension));
-  shape->dim[0]->dim_value = 24;
-
-  operator_matmul(inp0, inp1, result);
-
+  operator_reshape(inp0, inp1, result);
   compareAlmostEqualTensorProto(result, out0);
 }
 
@@ -46,8 +32,7 @@ void test_operator_reshape_negative_dim(void)
   convertRawDataOfTensorProto(out0);
 
   Onnx__TensorProto *result = malloc (sizeof(*result));
-  operator_matmul(inp0, inp1, result);
-
+  operator_reshape(inp0, inp1, result);
   compareAlmostEqualTensorProto(result, out0);
 }
 
@@ -63,8 +48,7 @@ void test_operator_reshape_negative_extended_dims(void)
   convertRawDataOfTensorProto(out0);
 
   Onnx__TensorProto *result = malloc (sizeof(*result));
-  operator_matmul(inp0, inp1, result);
-
+  operator_reshape(inp0, inp1, result);
   compareAlmostEqualTensorProto(result, out0);
 }
 
@@ -80,8 +64,7 @@ void test_operator_reshape_one_dim(void)
   convertRawDataOfTensorProto(out0);
 
   Onnx__TensorProto *result = malloc (sizeof(*result));
-  operator_matmul(inp0, inp1, result);
-
+  operator_reshape(inp0, inp1, result);
   compareAlmostEqualTensorProto(result, out0);
 }
 
@@ -97,8 +80,7 @@ void test_operator_reshape_reduced_dims(void)
   convertRawDataOfTensorProto(out0);
 
   Onnx__TensorProto *result = malloc (sizeof(*result));
-  operator_matmul(inp0, inp1, result);
-
+  operator_reshape(inp0, inp1, result);
   compareAlmostEqualTensorProto(result, out0);
 }
 
@@ -114,8 +96,7 @@ void test_operator_reshape_reordered_all_dims(void)
   convertRawDataOfTensorProto(out0);
 
   Onnx__TensorProto *result = malloc (sizeof(*result));
-  operator_matmul(inp0, inp1, result);
-
+  operator_reshape(inp0, inp1, result);
   compareAlmostEqualTensorProto(result, out0);
 }
 
@@ -131,8 +112,7 @@ void test_operator_reshape_reordered_last_dims(void)
   convertRawDataOfTensorProto(out0);
 
   Onnx__TensorProto *result = malloc (sizeof(*result));
-  operator_matmul(inp0, inp1, result);
-
+  operator_reshape(inp0, inp1, result);
   compareAlmostEqualTensorProto(result, out0);
 }
 
@@ -148,8 +128,7 @@ void test_operator_reshape_zero_and_negative_dim(void)
   convertRawDataOfTensorProto(out0);
 
   Onnx__TensorProto *result = malloc (sizeof(*result));
-  operator_matmul(inp0, inp1, result);
-
+  operator_reshape(inp0, inp1, result);
   compareAlmostEqualTensorProto(result, out0);
 }
 
@@ -165,8 +144,7 @@ void test_operator_reshape_zero_dim(void)
   convertRawDataOfTensorProto(out0);
 
   Onnx__TensorProto *result = malloc (sizeof(*result));
-  operator_matmul(inp0, inp1, result);
-
+  operator_reshape(inp0, inp1, result);
   compareAlmostEqualTensorProto(result, out0);
 }
 

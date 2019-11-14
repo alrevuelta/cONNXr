@@ -51,14 +51,14 @@ int main (void)
   CU_add_test(operatorsTestSuite, "test_operator_add", test_operator_add);
   CU_add_test(operatorsTestSuite, "test_operator_add_bcast", test_operator_add_bcast);
 
-  CU_add_test(operatorsTestSuite, "test_operator_argmax_default_axis_example", test_operator_argmax_default_axis_example);
+  //CU_add_test(operatorsTestSuite, "test_operator_argmax_default_axis_example", test_operator_argmax_default_axis_example);
   CU_add_test(operatorsTestSuite, "test_operator_arrayfeatureextractor", test_operator_arrayfeatureextractor);
   CU_add_test(operatorsTestSuite, "test_operator_cast_FLOAT_to_DOUBLE", test_operator_cast_FLOAT_to_DOUBLE);
   CU_add_test(operatorsTestSuite, "test_operator_matmul_2d", test_operator_matmul_2d);
   CU_add_test(operatorsTestSuite, "test_operator_relu", test_operator_relu);
 
   CU_add_test(operatorsTestSuite, "test_operator_reshape_extended_dims", test_operator_reshape_extended_dims);
-  /*CU_add_test(operatorsTestSuite, "test_operator_reshape_negative_dim", test_operator_reshape_negative_dim);
+  CU_add_test(operatorsTestSuite, "test_operator_reshape_negative_dim", test_operator_reshape_negative_dim);
   CU_add_test(operatorsTestSuite, "test_operator_reshape_negative_extended_dims", test_operator_reshape_negative_extended_dims);
   CU_add_test(operatorsTestSuite, "test_operator_reshape_one_dim", test_operator_reshape_one_dim);
   CU_add_test(operatorsTestSuite, "test_operator_reshape_reduced_dims", test_operator_reshape_reduced_dims);
@@ -66,7 +66,7 @@ int main (void)
   CU_add_test(operatorsTestSuite, "test_operator_reshape_reordered_last_dims", test_operator_reshape_reordered_last_dims);
   CU_add_test(operatorsTestSuite, "test_operator_reshape_zero_and_negative_dim", test_operator_reshape_zero_and_negative_dim);
   CU_add_test(operatorsTestSuite, "test_operator_reshape_zero_dim", test_operator_reshape_zero_dim);
-  */
+
   CU_add_test(operatorsTestSuite, "test_operator_sigmoid", test_operator_sigmoid);
   CU_add_test(operatorsTestSuite, "test_operator_softmax", test_operator_softmax);
 

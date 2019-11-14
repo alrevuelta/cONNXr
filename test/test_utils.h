@@ -9,33 +9,23 @@
 // Compare if equal with some tolarenace
 void compareAlmostEqualTensorProto(Onnx__TensorProto *a, Onnx__TensorProto *b)
 {
-  if (a->data_type != b->data_type)
-  {
-    CU_FAIL("Data types must be equal");
-  }
-  if ((a->data_type == ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT) &&
-       a->n_float_data != b->n_float_data)
-  {
-    CU_FAIL("Number of float values must be equal");
-  }
-  else if ((a->data_type == ONNX__TENSOR_PROTO__DATA_TYPE__INT64) &&
-            a->n_int64_data != b->n_int64_data)
-  {
-    CU_FAIL("Number of int64 values must be equal");
-  }
-  else if ((a->data_type == ONNX__TENSOR_PROTO__DATA_TYPE__DOUBLE) &&
-            a->n_double_data != b->n_double_data)
-  {
-    CU_FAIL("Number of double values must be equal");
-  }
-  // TODO Write for rest of types
 
+  CU_ASSERT_EQUAL(a->data_type, b->data_type);
+  DEBUG_PRINT("a->ndims %zu, b->n_dims %zu", a->n_dims, b->n_dims);
+  CU_ASSERT_EQUAL(a->n_dims, b->n_dims);
+  for (int d = 0; d < a->n_dims; d++)
+  {
+    CU_ASSERT_EQUAL(a->dims[d], b->dims[d]);
+  }
+
+  // TODO Not all types are implemented
   switch(a->data_type)
   {
     case ONNX__TENSOR_PROTO__DATA_TYPE__UNDEFINED:
       CU_FAIL("Data types is undefined");
       break;
     case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:
+      CU_ASSERT_EQUAL(a->n_float_data, b->n_float_data);
       for(int i = 0; i < a->n_float_data; i++)
       {
         //CU_ASSERT_EQUAL(a->float_data[i], b->float_data[i]);
@@ -59,6 +49,7 @@ void compareAlmostEqualTensorProto(Onnx__TensorProto *a, Onnx__TensorProto *b)
       CU_FAIL("int32 data_type is not implemented");
       break;
     case ONNX__TENSOR_PROTO__DATA_TYPE__INT64:
+      CU_ASSERT_EQUAL(a->n_int64_data, b->n_int64_data);
       for(int i = 0; i < a->n_int64_data; i++)
       {
         DEBUG_PRINT("ASSERTING EQUAL: %lld, %lld", a->int64_data[i], b->int64_data[i]);
@@ -75,6 +66,7 @@ void compareAlmostEqualTensorProto(Onnx__TensorProto *a, Onnx__TensorProto *b)
       CU_FAIL("float16 data_type is not implemented");
       break;
     case ONNX__TENSOR_PROTO__DATA_TYPE__DOUBLE:
+      CU_ASSERT_EQUAL(a->n_double_data, b->n_double_data);
       for(int i = 0; i < a->n_double_data; i++)
       {
         DEBUG_PRINT("ASSERTING EQUAL: %lf, %lf", a->double_data[i], b->double_data[i]);

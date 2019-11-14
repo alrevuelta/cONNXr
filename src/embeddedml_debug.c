@@ -114,6 +114,50 @@ void Debug_PrintModelInformation(Onnx__ModelProto *model)
     {
       // Check AttributeProto structure for more parameters
       printf("model->graph->node[%d]->attribute[%d]->name %s\n", i, j, model->graph->node[i]->attribute[j]->name);
+
+      printf("model->graph->node[%d]->attribute[%d]->has_type %d\n", i, j, model->graph->node[i]->attribute[j]->has_type);
+      printf("model->graph->node[%d]->attribute[%d]->type %d\n", i, j, model->graph->node[i]->attribute[j]->type);
+
+      printf("model->graph->node[%d]->attribute[%d]->has_f %d\n", i, j, model->graph->node[i]->attribute[j]->has_f);
+      printf("model->graph->node[%d]->attribute[%d]->has_i %d\n", i, j, model->graph->node[i]->attribute[j]->has_i);
+      printf("model->graph->node[%d]->attribute[%d]->has_s %d\n", i, j, model->graph->node[i]->attribute[j]->has_s);
+
+      printf("model->graph->node[%d]->attribute[%d]->n_floats %zu\n", i, j, model->graph->node[i]->attribute[j]->n_floats);
+      printf("model->graph->node[%d]->attribute[%d]->n_ints %zu\n", i, j, model->graph->node[i]->attribute[j]->n_ints);
+      printf("model->graph->node[%d]->attribute[%d]->n_strings %zu\n", i, j, model->graph->node[i]->attribute[j]->n_strings);
+      printf("model->graph->node[%d]->attribute[%d]->n_tensors %zu\n", i, j, model->graph->node[i]->attribute[j]->n_tensors);
+      printf("model->graph->node[%d]->attribute[%d]->n_graphs %zu\n", i, j, model->graph->node[i]->attribute[j]->n_graphs);
+      printf("model->graph->node[%d]->attribute[%d]->n_sparse_tensors %zu\n", i, j, model->graph->node[i]->attribute[j]->n_sparse_tensors);
+
+      /*
+      ProtobufCMessage base;
+      char *name;
+      char *ref_attr_name;
+      char *doc_string;
+      protobuf_c_boolean has_type;
+      Onnx__AttributeProto__AttributeType type;
+      //Exactly ONE of the following fields must be present for this version of the IR
+      protobuf_c_boolean has_f;
+      float f;
+      protobuf_c_boolean has_i;
+      int64_t i;
+      protobuf_c_boolean has_s;
+      ProtobufCBinaryData s;
+      Onnx__TensorProto *t;
+      Onnx__GraphProto *g;
+      Onnx__SparseTensorProto *sparse_tensor;
+      size_t n_floats;
+      float *floats;
+      size_t n_ints;
+      int64_t *ints;
+      size_t n_strings;
+      ProtobufCBinaryData *strings;
+      size_t n_tensors;
+      Onnx__TensorProto **tensors;
+      size_t n_graphs;
+      Onnx__GraphProto **graphs;
+      size_t n_sparse_tensors;
+      Onnx__SparseTensorProto **sparse_tensors;*/
     }
   }
 }
@@ -154,20 +198,11 @@ void Debug_PrintTensorProto(Onnx__TensorProto *tp)
   {
     printf("raw_data->len = %zu\n", tp->raw_data.len);
 
-    // TODO 4 is hardcoded for a FLOAT case
-    // According to doc this is little endian
-    // Number are stored according to IEEE 754
-    for (int i = 0; i < tp->raw_data.len; i+=4)
+    // print raw data. convert to data_type if needed like it is done in
+    // utils.c
+    for (int i = 0; i < tp->raw_data.len; i++)
     {
-      printf("merge the following i=%d: %d, %d, %d, %d\n",
-                        i,
-                        tp->raw_data.data[i],
-                        tp->raw_data.data[i+1],
-                        tp->raw_data.data[i+2],
-                        tp->raw_data.data[i+3]);
-      // Once float is 4 bytes.
-      float unserNum = *(float *)&tp->raw_data.data[i];
-      printf("unserialized number = %f\n", unserNum);
+      printf("tp->raw_data.data[%d] = %d\n", i, tp->raw_data.data[i]);
     }
   }
 

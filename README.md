@@ -46,7 +46,7 @@ protoc --c_out=. onnx.proto
 -     [x] Add
 -     [x] Relu
 -     [ ] MaxPool
--     [ ] Reshape
+-     [x] Reshape
 -     [x] Matmul
 - [ ] Run end to end tests for MNIST model
 - [ ] Implement a significant amount of onnx operators, most common ones

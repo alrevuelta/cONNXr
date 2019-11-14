@@ -120,12 +120,13 @@ int convertRawDataOfTensorProto(Onnx__TensorProto *tensor)
       case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:
       {
         tensor->n_float_data = tensor->raw_data.len/4;
+        // todo use sizeof
         tensor->float_data = malloc(tensor->n_float_data * sizeof(float));
         for (int i = 0; i < tensor->raw_data.len; i+=4)
         {
           // Once float is 4 bytes.
           tensor->float_data[i/4] = *(float *)&tensor->raw_data.data[i];
-          //DEBUG_PRINT("Writing %f", tensor->float_data[i/4]);
+          DEBUG_PRINT("tensor->float_data[%d] = %f", i/4, tensor->float_data[i/4]);
         }
       } break;
       case ONNX__TENSOR_PROTO__DATA_TYPE__UINT8:
@@ -145,7 +146,7 @@ int convertRawDataOfTensorProto(Onnx__TensorProto *tensor)
         for (int i = 0; i < tensor->raw_data.len; i+=sizeof(int64_t))
         {
           tensor->int64_data[i/sizeof(int64_t)] = *(int64_t *)&tensor->raw_data.data[i];
-          DEBUG_PRINT("Writing %lld", tensor->int64_data[i/sizeof(int64_t)]);
+          DEBUG_PRINT("tensor->int64_data[%lu] = %lld", i/sizeof(int64_t), tensor->int64_data[i/sizeof(int64_t)]);
         }
       } break;
       case ONNX__TENSOR_PROTO__DATA_TYPE__STRING:
