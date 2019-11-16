@@ -6,6 +6,7 @@
 #include "embeddedml_debug.h"
 #include "embeddedml_inference.h"
 
+// TODO Rethink this function?
 Onnx__TensorProto* searchTensorProtoByName(Onnx__ModelProto *model,
                                            Onnx__TensorProto **inputs,
                                            int nInputs,

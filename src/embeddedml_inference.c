@@ -11,7 +11,10 @@
 #include "operators/argmax.h"
 #include "operators/arrayfeatureextractor.h"
 #include "operators/cast.h"
+#include "operators/conv.h"
 #include "operators/matmul.h"
+#include "operators/maxpool.h"
+#include "operators/relu.h"
 #include "operators/reshape.h"
 #include "operators/sigmoid.h"
 #include "operators/softmax.h"
@@ -384,7 +387,19 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
     }
     else if (!strcmp(operation, "MaxPool"))
     {
-       // TODO
+      Onnx__TensorProto *X = searchTensorProtoByName(model, inputs, nInputs, model->graph->node[nodeIdx]->input[0]);
+      Onnx__TensorProto *Y = malloc (sizeof(*Y));
+      Onnx__TensorProto *Indices = malloc (sizeof(*Indices));
+
+      operator_maxpool(X,
+                       Y,
+                       Indices,
+                       model->graph->node[nodeIdx]->n_attribute,
+                       model->graph->node[nodeIdx]->attribute);
+
+      _outputs[_outputIdx] = Y;
+      _outputIdx++;
+      printf("_outputIdx = %d\n", _outputIdx);
     }
     else if (!strcmp(operation, "MaxRoiPool"))
     {

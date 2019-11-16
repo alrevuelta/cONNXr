@@ -29,7 +29,7 @@
 #include "operators/common_operators.h"
 #include "models/common_models.h"
 
-int main (void)
+int main(int argc, char **argv)
 {
   CU_pSuite operatorsTestSuite = NULL;
   CU_pSuite modelsTestSuite = NULL;
@@ -47,6 +47,12 @@ int main (void)
     return CU_get_error();
   }
 
+  // If 1 argument, run the specified test case
+  if (argc == 3)
+  {
+    printf("Run tc=%s, from suite=%s\n", argv[2], argv[1]);
+  }
+
   // Add tests for Operators test suite
   CU_add_test(operatorsTestSuite, "test_operator_add", test_operator_add);
   CU_add_test(operatorsTestSuite, "test_operator_add_bcast", test_operator_add_bcast);
@@ -54,7 +60,25 @@ int main (void)
   //CU_add_test(operatorsTestSuite, "test_operator_argmax_default_axis_example", test_operator_argmax_default_axis_example);
   CU_add_test(operatorsTestSuite, "test_operator_arrayfeatureextractor", test_operator_arrayfeatureextractor);
   CU_add_test(operatorsTestSuite, "test_operator_cast_FLOAT_to_DOUBLE", test_operator_cast_FLOAT_to_DOUBLE);
+
   CU_add_test(operatorsTestSuite, "test_operator_matmul_2d", test_operator_matmul_2d);
+
+  CU_add_test(operatorsTestSuite, "test_operator_maxpool_1d_default", test_operator_maxpool_1d_default);
+  /*CU_add_test(operatorsTestSuite, "test_operator_maxpool_2d_ceil", test_operator_maxpool_2d_ceil);
+  CU_add_test(operatorsTestSuite, "test_operator_maxpool_2d_default", test_operator_maxpool_2d_default);
+  CU_add_test(operatorsTestSuite, "test_operator_maxpool_2d_dilations", test_operator_maxpool_2d_dilations);
+  CU_add_test(operatorsTestSuite, "test_operator_maxpool_2d_pads", test_operator_maxpool_2d_pads);
+  CU_add_test(operatorsTestSuite, "test_operator_maxpool_2d_precomputed_pads", test_operator_maxpool_2d_precomputed_pads);
+  CU_add_test(operatorsTestSuite, "test_operator_maxpool_2d_precomputed_same_upper", test_operator_maxpool_2d_precomputed_same_upper);
+  CU_add_test(operatorsTestSuite, "test_operator_maxpool_2d_precomputed_strides", test_operator_maxpool_2d_precomputed_strides);
+  CU_add_test(operatorsTestSuite, "test_operator_maxpool_2d_same_lower", test_operator_maxpool_2d_same_lower);
+  CU_add_test(operatorsTestSuite, "test_operator_maxpool_2d_same_upper", test_operator_maxpool_2d_same_upper);
+  CU_add_test(operatorsTestSuite, "test_operator_maxpool_2d_strides", test_operator_maxpool_2d_strides);
+  CU_add_test(operatorsTestSuite, "test_operator_maxpool_3d_default", test_operator_maxpool_3d_default);
+  CU_add_test(operatorsTestSuite, "test_operator_maxpool_with_argmax_2d_precomputed_pads", test_operator_maxpool_with_argmax_2d_precomputed_pads);
+  CU_add_test(operatorsTestSuite, "test_operator_maxpool_with_argmax_2d_precomputed_strides", test_operator_maxpool_with_argmax_2d_precomputed_strides);*/
+
+
   CU_add_test(operatorsTestSuite, "test_operator_relu", test_operator_relu);
 
   CU_add_test(operatorsTestSuite, "test_operator_reshape_extended_dims", test_operator_reshape_extended_dims);
@@ -82,7 +106,20 @@ int main (void)
   //CU_add_test(modelsTestSuite, "test_model_mnist", test_model_mnist);
 
   CU_basic_set_mode(CU_BRM_VERBOSE);
-  CU_basic_run_tests();
+
+  if (argc == 3)
+  {
+    printf("running specific tc from a ts\n");
+    CU_pSuite suite2run = CU_get_suite(argv[1]);
+    CU_pTest test2run = CU_get_test(suite2run, argv[2]);
+    CU_ErrorCode err = CU_basic_run_test(suite2run, test2run);
+  }
+  // If not inputs are provided, run everything
+  else if (argc == 1)
+  {
+    CU_basic_run_tests();
+  }
+
   CU_cleanup_registry();
   return CU_get_error();
 

@@ -35,6 +35,16 @@ protoc --c_out=. onnx.proto
 # Tests
 `cunit` is used to test the code. Two different test levels are written, on operator level (i.e. matrix multiplication) and on a model level (whole model end to end)
 
+You can run all the tests with
+```
+make test
+```
+
+If you are implementing a new operator or debugging, you might want to run only one specific test. The following command will run a specific testcase from its test suite:
+```
+make test ts=Operators_TestSuite tc=test_operator_maxpool_1d_default
+```
+
 * Have a look to https://github.com/onnx/onnx/blob/master/docs/OnnxBackendTest.md and https://github.com/onnx/onnx/tree/master/onnx/backend/test/data/node. onnx has some tools and guidelines on how to test a new backend implementation.
 
 # Milestones

@@ -44,6 +44,7 @@ void operator_matmul(Onnx__TensorProto *a, Onnx__TensorProto *b, Onnx__TensorPro
   o->dims = malloc(2 * sizeof(int64_t));
 
   // Populate some parameters
+  // TODO: Is this working? No mem is allocated
   o->name         = "name_is_set_afterwards\0";
   o->n_dims       = 2;
   o->dims[0]      = a->dims[0];

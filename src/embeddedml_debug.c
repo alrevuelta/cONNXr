@@ -15,6 +15,78 @@ void Debug_PrintArray(float *array, int m, int n)
   }
 }
 
+void debug_print_attributes(size_t n_attribute, Onnx__AttributeProto **attribute)
+{
+  printf("n_attribute %zu\n", n_attribute);
+  for (int j = 0; j < n_attribute; j++)
+  {
+    // Check AttributeProto structure for more parameters
+    printf("attribute[%d]->name %s\n", j, attribute[j]->name);
+
+    printf("attribute[%d]->has_type %d\n", j, attribute[j]->has_type);
+    printf("attribute[%d]->type %d\n", j, attribute[j]->type);
+
+    printf("attribute[%d]->has_f %d\n", j, attribute[j]->has_f);
+    printf("attribute[%d]->has_i %d\n", j, attribute[j]->has_i);
+    printf("attribute[%d]->has_s %d\n", j, attribute[j]->has_s);
+
+    printf("attribute[%d]->n_floats %zu\n", j, attribute[j]->n_floats);
+    for (int k = 0; k < attribute[j]->n_floats; k++)
+    {
+      printf("attribute[%d]->floats[%d] %f\n", j, k, attribute[j]->floats[k]);
+    }
+
+    printf("attribute[%d]->n_ints %zu\n", j, attribute[j]->n_ints);
+    for (int k = 0; k < attribute[j]->n_ints; k++)
+    {
+      printf("attribute[%d]->ints[%d] %lld\n", j, k, attribute[j]->ints[k]);
+    }
+
+    printf("attribute[%d]->n_strings %zu\n", j, attribute[j]->n_strings);
+    for (int k = 0; k < attribute[j]->n_strings; k++)
+    {
+      // Type is ProtobufCBinaryData
+      //printf("attribute[%d]->strings[%d] %f\n", j, k, attribute[j]->string[k]);
+    }
+
+    printf("attribute[%d]->n_tensors %zu\n", j, attribute[j]->n_tensors);
+
+
+    printf("attribute[%d]->n_graphs %zu\n", j, attribute[j]->n_graphs);
+    printf("attribute[%d]->n_sparse_tensors %zu\n", j, attribute[j]->n_sparse_tensors);
+
+    /*
+    ProtobufCMessage base;
+    char *name;
+    char *ref_attr_name;
+    char *doc_string;
+    protobuf_c_boolean has_type;
+    Onnx__AttributeProto__AttributeType type;
+    //Exactly ONE of the following fields must be present for this version of the IR
+    protobuf_c_boolean has_f;
+    float f;
+    protobuf_c_boolean has_i;
+    int64_t i;
+    protobuf_c_boolean has_s;
+    ProtobufCBinaryData s;
+    Onnx__TensorProto *t;
+    Onnx__GraphProto *g;
+    Onnx__SparseTensorProto *sparse_tensor;
+    size_t n_floats;
+    float *floats;
+    size_t n_ints;
+    int64_t *ints;
+    size_t n_strings;
+    ProtobufCBinaryData *strings;
+    size_t n_tensors;
+    Onnx__TensorProto **tensors;
+    size_t n_graphs;
+    Onnx__GraphProto **graphs;
+    size_t n_sparse_tensors;
+    Onnx__SparseTensorProto **sparse_tensors;*/
+  }
+}
+
 void Debug_PrintModelInformation(Onnx__ModelProto *model)
 {
   //--------------------------------------------------------------------------//
@@ -109,56 +181,7 @@ void Debug_PrintModelInformation(Onnx__ModelProto *model)
     printf("model->graph->node[%d]->name %s\n", i, model->graph->node[i]->name);
     printf("model->graph->node[%d]->op_type %s\n", i, model->graph->node[i]->op_type);
 
-    printf("model->graph->node[%d]->n_attribute %zu\n", i, model->graph->node[i]->n_attribute);
-    for (int j = 0; j < model->graph->node[i]->n_attribute; j++)
-    {
-      // Check AttributeProto structure for more parameters
-      printf("model->graph->node[%d]->attribute[%d]->name %s\n", i, j, model->graph->node[i]->attribute[j]->name);
-
-      printf("model->graph->node[%d]->attribute[%d]->has_type %d\n", i, j, model->graph->node[i]->attribute[j]->has_type);
-      printf("model->graph->node[%d]->attribute[%d]->type %d\n", i, j, model->graph->node[i]->attribute[j]->type);
-
-      printf("model->graph->node[%d]->attribute[%d]->has_f %d\n", i, j, model->graph->node[i]->attribute[j]->has_f);
-      printf("model->graph->node[%d]->attribute[%d]->has_i %d\n", i, j, model->graph->node[i]->attribute[j]->has_i);
-      printf("model->graph->node[%d]->attribute[%d]->has_s %d\n", i, j, model->graph->node[i]->attribute[j]->has_s);
-
-      printf("model->graph->node[%d]->attribute[%d]->n_floats %zu\n", i, j, model->graph->node[i]->attribute[j]->n_floats);
-      printf("model->graph->node[%d]->attribute[%d]->n_ints %zu\n", i, j, model->graph->node[i]->attribute[j]->n_ints);
-      printf("model->graph->node[%d]->attribute[%d]->n_strings %zu\n", i, j, model->graph->node[i]->attribute[j]->n_strings);
-      printf("model->graph->node[%d]->attribute[%d]->n_tensors %zu\n", i, j, model->graph->node[i]->attribute[j]->n_tensors);
-      printf("model->graph->node[%d]->attribute[%d]->n_graphs %zu\n", i, j, model->graph->node[i]->attribute[j]->n_graphs);
-      printf("model->graph->node[%d]->attribute[%d]->n_sparse_tensors %zu\n", i, j, model->graph->node[i]->attribute[j]->n_sparse_tensors);
-
-      /*
-      ProtobufCMessage base;
-      char *name;
-      char *ref_attr_name;
-      char *doc_string;
-      protobuf_c_boolean has_type;
-      Onnx__AttributeProto__AttributeType type;
-      //Exactly ONE of the following fields must be present for this version of the IR
-      protobuf_c_boolean has_f;
-      float f;
-      protobuf_c_boolean has_i;
-      int64_t i;
-      protobuf_c_boolean has_s;
-      ProtobufCBinaryData s;
-      Onnx__TensorProto *t;
-      Onnx__GraphProto *g;
-      Onnx__SparseTensorProto *sparse_tensor;
-      size_t n_floats;
-      float *floats;
-      size_t n_ints;
-      int64_t *ints;
-      size_t n_strings;
-      ProtobufCBinaryData *strings;
-      size_t n_tensors;
-      Onnx__TensorProto **tensors;
-      size_t n_graphs;
-      Onnx__GraphProto **graphs;
-      size_t n_sparse_tensors;
-      Onnx__SparseTensorProto **sparse_tensors;*/
-    }
+    debug_print_attributes(model->graph->node[i]->n_attribute, model->graph->node[i]->attribute);
   }
 }
 
