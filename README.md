@@ -1,9 +1,8 @@
 # onnx-c runtime
+This repo contains a pure C99 runtime to run inference on `onnx` models. You can train your model with you favourite framework (tensorflow, keras, sk-learn, you name it!) and once trained export it to a `.onnx` file, that will be used to run inference. This makes this library totally framework agnostic, no matter how you train your model, this repo will run it using the common interface that `onnx` provides. This runtime was thought for embedded devices, that have low resources and that might not be able to compile newer cpp versions, so the idea is to keep the dependancies as minimum as possible, or even zero. No GPUs or fancy processor architectures, just pure non multi-thread C99 code, compatible with almost any embedded device. Lets allow our IoT devices to run inference on the edge, but without sacrificing the tools that the big AI fishes in the industry provide.
 ![diag1](https://github.com/alrevuelta/embedded-ml/blob/master/doc/img/diag1.png)
 
 Note that this project is in a very early stage so its not production ready yet. Developers are needed so feel free to contact or contribute with a pull request. Use at your own risk. In short, our purpose is to create a pure C runtime for `onnx` with the lowest possible footprint, aimed to small embedded devices.
-
-`embeddedml` provides a `C` runtime that uses `onnx` (Open Neural Network Exchange) models. With this library you can run machine learning inference in pure `C` code, that can compile with `C89` standard. In other words, given an input and a previously trained model, this tool will allow you to predict the output. This project is aimed to fill the gap between `onnx` and small embedded devices, that don't have many resources and where is not possible to use modern compilers. Just train your model with your favourite tool (sk-learn, keras, tf, pytorch), export the `model.onnx` with onnx and use it to feed `embeddedml`. As simple as that. Since `onnx` provides a big set of operators, not all of them will be covered in the first releases. On top of that, the idea of `embeddedml` design is that only the needed operators are compiled into the binaries that you deploy to your device. A full version will be of course also suported.
 
 # High level requirements
 
@@ -15,7 +14,7 @@ Note that this project is in a very early stage so its not production ready yet.
 # Current limitations
 
 * Very few basic operators are implemented.
-* Onnx supports many types (`fixed-point`, `float`, `int`,...). Few of them are implemented.
+* Each operator works with many data types. Only few of them are implemented.
 * `has_raw_data` is not supported. A `TensorProto` is assumed to have the data inside any of the structs (int, float,...) and not in raw_data.
 
 # Run
@@ -50,6 +49,9 @@ make test ts=Operators_TestSuite tc=test_operator_maxpool_1d_default
 ```
 
 * Have a look to https://github.com/onnx/onnx/blob/master/docs/OnnxBackendTest.md and https://github.com/onnx/onnx/tree/master/onnx/backend/test/data/node. onnx has some tools and guidelines on how to test a new backend implementation.
+
+# MNIST
+// TODO
 
 # Milestones
 
