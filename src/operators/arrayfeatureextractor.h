@@ -1,6 +1,6 @@
 #ifndef EMBEDDEDML_ARRAYFEATUREEXTRACTOR_H
 #define EMBEDDEDML_ARRAYFEATUREEXTRACTOR_H
-#include "../onnx.pb-c.h"
+#include "../pb/onnx.pb-c.h"
 
 // TODO
 

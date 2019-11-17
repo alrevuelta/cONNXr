@@ -1,6 +1,6 @@
 #ifndef EMBEDDEDML_MAXPOOL_H
 #define EMBEDDEDML_MAXPOOL_H
-#include "../onnx.pb-c.h"
+#include "../pb/onnx.pb-c.h"
 
 void operator_maxpool(Onnx__TensorProto *X,
                       Onnx__TensorProto *Y,

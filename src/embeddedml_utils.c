@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "onnx.pb-c.h"
+#include "pb/onnx.pb-c.h"
 #include "embeddedml_utils.h"
 #include "embeddedml_debug.h"
 #include "embeddedml_inference.h"
@@ -52,6 +52,16 @@ Onnx__TensorProto* searchTensorProtoByName(Onnx__ModelProto *model,
   }
 
   return tensor;
+}
+
+Onnx__AttributeProto* searchAttributeNyName(size_t n_attribute, Onnx__AttributeProto **attribute, char *name)
+{
+  for (int i = 0; i < n_attribute; i++){
+    if (!strcmp(attribute[i]->name, name)){
+      return attribute[i];
+    }
+  }
+  return NULL;
 }
 
 Onnx__ModelProto* openOnnxFile(char *fname){

@@ -1,6 +1,6 @@
 #ifndef EMBEDDEDML_DEBUG_H
 #define EMBEDDEDML_DEBUG_H
-#include "onnx.pb-c.h"
+#include "pb/onnx.pb-c.h"
 
 /* This functions is not right I think. Was having problems
 FILE *fp;

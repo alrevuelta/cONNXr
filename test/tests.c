@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../src/onnx.pb-c.h"
+#include "../src/pb/onnx.pb-c.h"
 #include "../src/embeddedml_debug.h"
 #include "test_utils.h"
 
@@ -63,20 +63,20 @@ int main(int argc, char **argv)
 
   CU_add_test(operatorsTestSuite, "test_operator_matmul_2d", test_operator_matmul_2d);
 
-  CU_add_test(operatorsTestSuite, "test_operator_maxpool_1d_default", test_operator_maxpool_1d_default);
-  /*CU_add_test(operatorsTestSuite, "test_operator_maxpool_2d_ceil", test_operator_maxpool_2d_ceil);
-  CU_add_test(operatorsTestSuite, "test_operator_maxpool_2d_default", test_operator_maxpool_2d_default);
-  CU_add_test(operatorsTestSuite, "test_operator_maxpool_2d_dilations", test_operator_maxpool_2d_dilations);
-  CU_add_test(operatorsTestSuite, "test_operator_maxpool_2d_pads", test_operator_maxpool_2d_pads);
-  CU_add_test(operatorsTestSuite, "test_operator_maxpool_2d_precomputed_pads", test_operator_maxpool_2d_precomputed_pads);
-  CU_add_test(operatorsTestSuite, "test_operator_maxpool_2d_precomputed_same_upper", test_operator_maxpool_2d_precomputed_same_upper);
+  //CU_add_test(operatorsTestSuite, "test_operator_maxpool_1d_default", test_operator_maxpool_1d_default);
+  //CU_add_test(operatorsTestSuite, "test_operator_maxpool_2d_ceil", test_operator_maxpool_2d_ceil);
+  //CU_add_test(operatorsTestSuite, "test_operator_maxpool_2d_default", test_operator_maxpool_2d_default);
+  //CU_add_test(operatorsTestSuite, "test_operator_maxpool_2d_dilations", test_operator_maxpool_2d_dilations);
+  //CU_add_test(operatorsTestSuite, "test_operator_maxpool_2d_pads", test_operator_maxpool_2d_pads);
+  //CU_add_test(operatorsTestSuite, "test_operator_maxpool_2d_precomputed_pads", test_operator_maxpool_2d_precomputed_pads);
+  //CU_add_test(operatorsTestSuite, "test_operator_maxpool_2d_precomputed_same_upper", test_operator_maxpool_2d_precomputed_same_upper);
   CU_add_test(operatorsTestSuite, "test_operator_maxpool_2d_precomputed_strides", test_operator_maxpool_2d_precomputed_strides);
-  CU_add_test(operatorsTestSuite, "test_operator_maxpool_2d_same_lower", test_operator_maxpool_2d_same_lower);
-  CU_add_test(operatorsTestSuite, "test_operator_maxpool_2d_same_upper", test_operator_maxpool_2d_same_upper);
-  CU_add_test(operatorsTestSuite, "test_operator_maxpool_2d_strides", test_operator_maxpool_2d_strides);
-  CU_add_test(operatorsTestSuite, "test_operator_maxpool_3d_default", test_operator_maxpool_3d_default);
-  CU_add_test(operatorsTestSuite, "test_operator_maxpool_with_argmax_2d_precomputed_pads", test_operator_maxpool_with_argmax_2d_precomputed_pads);
-  CU_add_test(operatorsTestSuite, "test_operator_maxpool_with_argmax_2d_precomputed_strides", test_operator_maxpool_with_argmax_2d_precomputed_strides);*/
+  //CU_add_test(operatorsTestSuite, "test_operator_maxpool_2d_same_lower", test_operator_maxpool_2d_same_lower);
+  //CU_add_test(operatorsTestSuite, "test_operator_maxpool_2d_same_upper", test_operator_maxpool_2d_same_upper);
+  //CU_add_test(operatorsTestSuite, "test_operator_maxpool_2d_strides", test_operator_maxpool_2d_strides);
+  //CU_add_test(operatorsTestSuite, "test_operator_maxpool_3d_default", test_operator_maxpool_3d_default);
+  //CU_add_test(operatorsTestSuite, "test_operator_maxpool_with_argmax_2d_precomputed_pads", test_operator_maxpool_with_argmax_2d_precomputed_pads);
+  //CU_add_test(operatorsTestSuite, "test_operator_maxpool_with_argmax_2d_precomputed_strides", test_operator_maxpool_with_argmax_2d_precomputed_strides);
 
 
   CU_add_test(operatorsTestSuite, "test_operator_relu", test_operator_relu);

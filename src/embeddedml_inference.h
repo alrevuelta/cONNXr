@@ -1,6 +1,6 @@
 #ifndef EMBEDDEDML_INFERENCE_H
 #define EMBEDDEDML_INFERENCE_H
-#include "onnx.pb-c.h"
+#include "pb/onnx.pb-c.h"
 
 // TODO Hardcoded for initial tests
 #define MAX_NUM_OF_OUTPUTS 20

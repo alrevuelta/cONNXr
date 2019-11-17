@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include "../onnx.pb-c.h"
+#include "../pb/onnx.pb-c.h"
 #include "../embeddedml_debug.h"
 #include "arrayfeatureextractor.h"
 

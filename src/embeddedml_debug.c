@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "onnx.pb-c.h"
+#include "pb/onnx.pb-c.h"
 #include "embeddedml_debug.h"
 
 void Debug_PrintArray(float *array, int m, int n)

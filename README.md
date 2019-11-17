@@ -26,11 +26,13 @@ make main
 ```
 
 # Protocol Buffers
-`onnx` uses protocol buffers to serialize the models data. Note that `protobuf-c` is used to generate the `onnx.pb-c.c` and `onnx.pb-c.h`. Files are already provided, but you can generate it like this:
+`onnx` uses protocol buffers to serialize the models data. Note that `protobuf-c` is used to generate the `pb/onnx.pb-c.c` and `pb/onnx.pb-c.h`. Files are already provided, but you can generate it like this:
 
 ```
 protoc --c_out=. onnx.proto
 ```
+
+In the future `nanopb` might be used, since it can generate smaller files. Investigate also how to use `.option` file.
 
 # Tests
 `cunit` is used to test the code. Two different test levels are written, on operator level (i.e. matrix multiplication) and on a model level (whole model end to end)

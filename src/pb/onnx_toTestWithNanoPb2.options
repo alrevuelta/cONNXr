@@ -1,0 +1,4 @@
+onnx.AttributeProto.doc_string skip_message
+onnx.ValueInfoProto.doc_string skip_message
+onnx.NodeProto.doc_string skip_message
+onnx.ModelProto.doc_string skip_message

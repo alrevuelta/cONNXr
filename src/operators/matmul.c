@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include "../onnx.pb-c.h"
+#include "../pb/onnx.pb-c.h"
 #include "../embeddedml_debug.h"
 #include "matmul.h"
 
@@ -36,6 +36,10 @@ void operator_matmul(Onnx__TensorProto *a, Onnx__TensorProto *b, Onnx__TensorPro
   DEBUG_PRINT("Calling operator_matmul");
 
   // TODO Hardcoded for 2 dimensions
+
+  // TODO Might be useful to define a macro like
+  // #define I(a,b,c,d) I[(a)+(b)*oH+(c)*oH*oW+(d)*oH*oW*C]
+  // dont know how to handle the different dimensions though
 
   // Check condition?
   //a->data_type == b->data_type;

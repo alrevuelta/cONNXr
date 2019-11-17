@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "onnx.pb-c.h"
+#include "pb/onnx.pb-c.h"
 #include "embeddedml_utils.h"
 #include "embeddedml_debug.h"
 #include "embeddedml_inference.h"
