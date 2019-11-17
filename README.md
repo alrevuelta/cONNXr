@@ -1,4 +1,6 @@
-# Embedded Machine Learning C ONNX Runtime
+# onnx-c runtime
+![diag1](https://github.com/alrevuelta/embedded-ml/blob/master/doc/img/diag1.png)
+
 Note that this project is in a very early stage so its not production ready yet. Developers are needed so feel free to contact or contribute with a pull request. Use at your own risk. In short, our purpose is to create a pure C runtime for `onnx` with the lowest possible footprint, aimed to small embedded devices.
 
 `embeddedml` provides a `C` runtime that uses `onnx` (Open Neural Network Exchange) models. With this library you can run machine learning inference in pure `C` code, that can compile with `C89` standard. In other words, given an input and a previously trained model, this tool will allow you to predict the output. This project is aimed to fill the gap between `onnx` and small embedded devices, that don't have many resources and where is not possible to use modern compilers. Just train your model with your favourite tool (sk-learn, keras, tf, pytorch), export the `model.onnx` with onnx and use it to feed `embeddedml`. As simple as that. Since `onnx` provides a big set of operators, not all of them will be covered in the first releases. On top of that, the idea of `embeddedml` design is that only the needed operators are compiled into the binaries that you deploy to your device. A full version will be of course also suported.
