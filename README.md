@@ -57,7 +57,7 @@ make test ts=Operators_TestSuite tc=test_operator_maxpool_1d_default
 - [ ] Conv
 - [x] Add
 - [x] Relu
-- [ ] MaxPool
+- [x] MaxPool
 - [x] Reshape
 - [x] Matmul
 - [ ] Run end to end tests for MNIST model
