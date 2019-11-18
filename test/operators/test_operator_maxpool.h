@@ -38,7 +38,7 @@ void test_operator_maxpool_1d_default(void)
   Onnx__TensorProto *inputs[] = { inp0 };
   Onnx__TensorProto **outputs = inference(model, inputs, 1);
 
-  //compareAlmostEqualTensorProto(outputs[0], out1);
+  compareAlmostEqualTensorProto(outputs[0], out1);
 
   // this variable is 0?
   printf("num outputs = %d\n", _outputIdx);

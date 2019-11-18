@@ -61,6 +61,10 @@ int main(int argc, char **argv)
   CU_add_test(operatorsTestSuite, "test_operator_arrayfeatureextractor", test_operator_arrayfeatureextractor);
   CU_add_test(operatorsTestSuite, "test_operator_cast_FLOAT_to_DOUBLE", test_operator_cast_FLOAT_to_DOUBLE);
 
+  CU_add_test(operatorsTestSuite, "test_operator_conv_with_strides_and_asymmetric_padding", test_operator_conv_with_strides_and_asymmetric_padding);
+  CU_add_test(operatorsTestSuite, "test_operator_conv_with_strides_no_padding", test_operator_conv_with_strides_no_padding);
+  CU_add_test(operatorsTestSuite, "test_operator_conv_with_strides_padding", test_operator_conv_with_strides_padding);
+
   CU_add_test(operatorsTestSuite, "test_operator_matmul_2d", test_operator_matmul_2d);
 
   //CU_add_test(operatorsTestSuite, "test_operator_maxpool_1d_default", test_operator_maxpool_1d_default);
@@ -103,7 +107,7 @@ int main(int argc, char **argv)
     return CU_get_error();
   }
 
-  //CU_add_test(modelsTestSuite, "test_model_mnist", test_model_mnist);
+  CU_add_test(modelsTestSuite, "test_model_mnist", test_model_mnist);
 
   CU_basic_set_mode(CU_BRM_VERBOSE);
 

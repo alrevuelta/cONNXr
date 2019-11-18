@@ -16,6 +16,7 @@ Note that this project is in a very early stage so its not production ready yet.
 * Very few basic operators are implemented.
 * Each operator works with many data types. Only few of them are implemented.
 * `has_raw_data` is not supported. A `TensorProto` is assumed to have the data inside any of the structs (int, float,...) and not in raw_data.
+* So far memory management is a mess, so you will find a memory leak for sure.
 
 # Run
 

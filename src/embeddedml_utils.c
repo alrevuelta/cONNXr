@@ -13,16 +13,16 @@ Onnx__TensorProto* searchTensorProtoByName(Onnx__ModelProto *model,
                                            char *name)
 {
   DEBUG_PRINT("Searching for TensorProto with name=%s", name);
-  Onnx__TensorProto *tensor = NULL;
+  //Onnx__TensorProto *tensor = NULL;
 
   // Search in initializers
   for (int initializer = 0; initializer < model->graph->n_initializer; initializer++)
   {
     if (!strcmp(model->graph->initializer[initializer]->name, name))
     {
-      tensor = model->graph->initializer[initializer];
+      //tensor = model->graph->initializer[initializer];
       DEBUG_PRINT("Found TensorProto in initializer list with name=%s", model->graph->initializer[initializer]->name);
-      break;
+      return model->graph->initializer[initializer];
       // Use return instead. Once its found, exit the function
     }
   }
@@ -32,9 +32,9 @@ Onnx__TensorProto* searchTensorProtoByName(Onnx__ModelProto *model,
   {
     if (!strcmp(inputs[inIdx]->name, name))
     {
-      tensor = inputs[inIdx];
+      //tensor = inputs[inIdx];
       DEBUG_PRINT("Found TensorProto in inputs to de model with name=%s", inputs[inIdx]->name);
-      break;
+      return inputs[inIdx];
       // Use return instead. Once its found, exit the function
     }
   }
@@ -44,14 +44,14 @@ Onnx__TensorProto* searchTensorProtoByName(Onnx__ModelProto *model,
   {
     if (!strcmp(_outputs[outputsIdx]->name, name))
     {
-      tensor = _outputs[outputsIdx];
+      //tensor = _outputs[outputsIdx];
       DEBUG_PRINT("Found TensorProto in outputs list with name=%s", inputs[outputsIdx]->name);
-      break;
+      return _outputs[outputsIdx];
       // Use return instead. Once its found, exit the function
     }
   }
 
-  return tensor;
+  return NULL;
 }
 
 Onnx__AttributeProto* searchAttributeNyName(size_t n_attribute, Onnx__AttributeProto **attribute, char *name)

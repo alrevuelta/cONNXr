@@ -6,17 +6,6 @@
 #include "../embeddedml_debug.h"
 #include "conv.h"
 
-// TODO
-
-// TODO Use one file per operator
-
-/* Important Notes
- *  If you are contributing by implementing an operator, make sure that you follow
- *  onnx specifications in https://github.com/onnx/onnx/blob/master/docs/Operators.md
- *  Remember to copy the documentation, like inputs, outputs and type constraints.
- *  See previosly implemented operators as example.
- */
-
 // Template example
 /*! \fn COPY_PASTE_FUNCTION_DECLARATION
  *  \brief COPY_PASTE_AND_FORMAT_ONNX_DOCUMENTATION. INPUTS/OUTPUTS/CONSTRAINTS
@@ -30,46 +19,34 @@
  *  \param[out] xx xx
  *  \return     xx
  */
+ void operator_conv(Onnx__TensorProto *X,
+                    Onnx__TensorProto *W,
+                    Onnx__TensorProto *B,
+                    Onnx__TensorProto *Y,
+                    size_t n_attribute,
+                    Onnx__AttributeProto **attribute)
+{
+  DEBUG_PRINT("Calling operator_conv");
+  // Borrowed form https://github.com/pjreddie/darknet/blob/61c9d02ec461e30d55762ec7669d6a1d3c356fb2/src/convolutional_layer.c#L445
+  // TODO dilations is harcoded [1 1]
+  // TODO strides is hardcoded [1 1]
+  // TODO group is hardcoded 1
 
+  printf("X->name = %s", X->name);
+  printf("W->name = %s", W->name);
 
- // Template supported Types
- /*
- switch(type)
- {
-   case ONNX__TENSOR_PROTO__DATA_TYPE__UNDEFINED:
-     break;
-   case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:
-     break;
-   case ONNX__TENSOR_PROTO__DATA_TYPE__UINT8:
-     break;
-   case ONNX__TENSOR_PROTO__DATA_TYPE__INT8:
-     break;
-   case ONNX__TENSOR_PROTO__DATA_TYPE__UINT16:
-     break;
-   case ONNX__TENSOR_PROTO__DATA_TYPE__INT16:
-     break;
-   case ONNX__TENSOR_PROTO__DATA_TYPE__INT32:
-     break;
-   case ONNX__TENSOR_PROTO__DATA_TYPE__INT64:
-     break;
-   case ONNX__TENSOR_PROTO__DATA_TYPE__STRING:
-     break;
-   case ONNX__TENSOR_PROTO__DATA_TYPE__BOOL:
-     break;
-   case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT16:
-     break;
-   case ONNX__TENSOR_PROTO__DATA_TYPE__DOUBLE:
-     break;
-   case ONNX__TENSOR_PROTO__DATA_TYPE__UINT32:
-     break;
-   case ONNX__TENSOR_PROTO__DATA_TYPE__UINT64:
-     break;
-   case ONNX__TENSOR_PROTO__DATA_TYPE__COMPLEX64:
-     break;
-   case ONNX__TENSOR_PROTO__DATA_TYPE__COMPLEX128:
-     break;
-   case ONNX__TENSOR_PROTO__DATA_TYPE__BFLOAT16:
-     break;
-   default:
-     break;
- }*/
+  switch(X->data_type)
+  {
+    case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:
+    {
+
+    }
+      break;
+    case ONNX__TENSOR_PROTO__DATA_TYPE__DOUBLE:
+      break;
+    case ONNX__TENSOR_PROTO__DATA_TYPE__BFLOAT16:
+      break;
+    default:
+      break;
+  }
+}

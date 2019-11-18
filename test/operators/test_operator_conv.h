@@ -3,18 +3,59 @@
 #include "common_operators.h"
 #include "../../src/operators/conv.h"
 
-void test_operator_conv(void)
-{
-  /*
-  float a[] = {1, 2, 3, 4, 5, 6, 7};
-  float b[] = {1.1f, 1.2f, 7.3f, 7, 3, 6, 1.9f};
-  float expected[] = {2.1f, 3.2f, 10.3f, 11, 8, 12, 8.9f};
-  Operators_Add(a, b, 7, ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT);
+//test_conv_with_strides_and_asymmetric_padding
+//test_conv_with_strides_no_padding
+//test_conv_with_strides_padding
 
-  for (int i = 0; i < 7; i++) {
-    CU_ASSERT(a[i] == expected[i]);
-  }
-  */
+void test_operator_conv_with_strides_and_asymmetric_padding(void)
+{
+  Onnx__ModelProto *model = openOnnxFile("../test/node/test_conv_with_strides_and_asymmetric_padding/model.onnx");
+  Onnx__TensorProto *inp0 = openTensorProtoFile("../test/node/test_conv_with_strides_and_asymmetric_padding/test_data_set_0/input_0.pb");
+  Onnx__TensorProto *inp1 = openTensorProtoFile("../test/node/test_conv_with_strides_and_asymmetric_padding/test_data_set_0/input_1.pb");
+  Onnx__TensorProto *out1 = openTensorProtoFile("../test/node/test_conv_with_strides_and_asymmetric_padding/test_data_set_0/output_0.pb");
+
+  convertRawDataOfTensorProto(inp0);
+  convertRawDataOfTensorProto(inp1);
+  convertRawDataOfTensorProto(out1);
+
+  Onnx__TensorProto *inputs[2] = { inp0, inp1 };
+  Onnx__TensorProto **outputs = inference(model, inputs, 2);
+
+  //compareAlmostEqualTensorProto(outputs[0], out1);
+}
+
+void test_operator_conv_with_strides_no_padding(void)
+{
+  Onnx__ModelProto *model = openOnnxFile("../test/node/test_conv_with_strides_no_padding/model.onnx");
+  Onnx__TensorProto *inp0 = openTensorProtoFile("../test/node/test_conv_with_strides_no_padding/test_data_set_0/input_0.pb");
+  Onnx__TensorProto *inp1 = openTensorProtoFile("../test/node/test_conv_with_strides_no_padding/test_data_set_0/input_1.pb");
+  Onnx__TensorProto *out1 = openTensorProtoFile("../test/node/test_conv_with_strides_no_padding/test_data_set_0/output_0.pb");
+
+  convertRawDataOfTensorProto(inp0);
+  convertRawDataOfTensorProto(inp1);
+  convertRawDataOfTensorProto(out1);
+
+  Onnx__TensorProto *inputs[2] = { inp0, inp1 };
+  Onnx__TensorProto **outputs = inference(model, inputs, 2);
+
+  //compareAlmostEqualTensorProto(outputs[0], out1);
+}
+
+void test_operator_conv_with_strides_padding(void)
+{
+  Onnx__ModelProto *model = openOnnxFile("../test/node/test_conv_with_strides_padding/model.onnx");
+  Onnx__TensorProto *inp0 = openTensorProtoFile("../test/node/test_conv_with_strides_padding/test_data_set_0/input_0.pb");
+  Onnx__TensorProto *inp1 = openTensorProtoFile("../test/node/test_conv_with_strides_padding/test_data_set_0/input_1.pb");
+  Onnx__TensorProto *out1 = openTensorProtoFile("../test/node/test_conv_with_strides_padding/test_data_set_0/output_0.pb");
+
+  convertRawDataOfTensorProto(inp0);
+  convertRawDataOfTensorProto(inp1);
+  convertRawDataOfTensorProto(out1);
+
+  Onnx__TensorProto *inputs[2] = { inp0, inp1 };
+  Onnx__TensorProto **outputs = inference(model, inputs, 2);
+
+  //compareAlmostEqualTensorProto(outputs[0], out1);
 }
 
 #endif

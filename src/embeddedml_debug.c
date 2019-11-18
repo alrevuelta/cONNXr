@@ -108,6 +108,7 @@ void Debug_PrintModelInformation(Onnx__ModelProto *model)
   for (int n_init = 0; n_init < model->graph->n_initializer; n_init++)
   {
     printf("model->graph->initializer[%d] %s\n", n_init, model->graph->initializer[n_init]->name);
+    Debug_PrintTensorProto(model->graph->initializer[n_init]);
   }
 
   // input/output data
@@ -200,6 +201,9 @@ void Debug_PrintTensorProto(Onnx__TensorProto *tp)
   printf("n_float_data = %zu\n", tp->n_float_data);
 
   // Print float_data if needed
+  for (int i = 0; i < tp->n_float_data; i++) {
+    //printf("float_data[%d] = %f\n", i, tp->float_data[i]);
+  }
 
   printf("n_int32_data = %zu\n", tp->n_int32_data);
 

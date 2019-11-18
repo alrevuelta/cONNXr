@@ -24,7 +24,7 @@
 Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **inputs, int nInputs)
 {
   int error = 0;
-  DEBUG_PRINT("Calling inferenceFloat");
+  DEBUG_PRINT("calling inference");
   DEBUG_PRINT("The graph has nodes=%zu", model->graph->n_node);
 
   // TODO Check that number of inputs provided match the model ones
@@ -178,7 +178,25 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
     }
     else if (!strcmp(operation, "Conv"))
     {
-       // TODO
+      Onnx__TensorProto *X = searchTensorProtoByName(model, inputs, nInputs, model->graph->node[nodeIdx]->input[0]);
+      Onnx__TensorProto *W = searchTensorProtoByName(model, inputs, nInputs, model->graph->node[nodeIdx]->input[1]);
+
+      // B is unused
+      Onnx__TensorProto *B = malloc (sizeof(*B));
+      Onnx__TensorProto *Y = malloc (sizeof(*Y));
+      Onnx__TensorProto *Indices = malloc (sizeof(*Indices));
+
+      operator_conv(X,
+                    W,
+                    B,
+                    Y,
+                    model->graph->node[nodeIdx]->n_attribute,
+                    model->graph->node[nodeIdx]->attribute);
+
+      _outputs[_outputIdx] = Y;
+      _outputIdx++;
+      printf("_outputIdx = %d\n", _outputIdx);
+
     }
     else if (!strcmp(operation, "ConvInteger"))
     {
