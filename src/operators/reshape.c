@@ -24,6 +24,9 @@ void operator_reshape(Onnx__TensorProto *data, Onnx__TensorProto *shape, Onnx__T
 {
   DEBUG_PRINT("Calling operator_reshape");
 
+  printf("input_dims:\n");
+  debug_print_dims(data->n_dims, data->dims);
+
   // Not sure about this implementation. It just swaps the dimensions
   // and does not change the data.
   reshaped->dims = malloc(shape->n_int64_data * sizeof(int64_t));
@@ -79,6 +82,9 @@ void operator_reshape(Onnx__TensorProto *data, Onnx__TensorProto *shape, Onnx__T
   reshaped->n_dims       = shape->n_int64_data;
   reshaped->has_raw_data = 0;
   reshaped->data_type    = data->data_type;
+
+  printf("output_dims:\n");
+  debug_print_dims(reshaped->n_dims, reshaped->dims);
 
   switch(data->data_type)
   {

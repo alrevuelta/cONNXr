@@ -26,7 +26,8 @@
                        size_t n_attribute,
                        Onnx__AttributeProto **attribute)
 {
-  debug_print_attributes(n_attribute, attribute);
+  DEBUG_PRINT("Calling operator_maxpool");
+  //debug_print_attributes(n_attribute, attribute);
 
   // TODO ingore dilated parameter for initial tests
   // TODO indices are not implemented for the initial prototype

@@ -79,30 +79,15 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
       DEBUG_PRINT("operation=%s, input=0 first operand name %s", operation, model->graph->node[nodeIdx]->input[0]);
       DEBUG_PRINT("operation=%s, input=1 second operand name %s", operation, model->graph->node[nodeIdx]->input[1]);
 
-      //Onnx__TensorProto *result;
+      Onnx__TensorProto *a = searchTensorProtoByName(model, inputs, nInputs, model->graph->node[nodeIdx]->input[0]);
+      Onnx__TensorProto *b = searchTensorProtoByName(model, inputs, nInputs, model->graph->node[nodeIdx]->input[1]);
+      Onnx__TensorProto *c = malloc (sizeof(*c));
 
+      operator_add(a, b, c);
+      c->name = model->graph->node[nodeIdx]->output[0];
 
-
-      // Maybe the output tensor should be allocated inside the operator function.
-      /*outputs_allocateOneTensor(result,...);
-                                int32_t data_type,
-                                int *dimensions,
-                                int nDims);*/
-
-
-/*
-      Onnx__TensorProto *operandA = searchTensorInInitializers(
-                                          model,
-                                          model->graph->node[nodeIdx]->input[0]);
-      Onnx__TensorProto *operandB = searchTensorInInitializers(
-                                          model,
-                                          model->graph->node[nodeIdx]->input[1]);*/
-
-/* TODO
-      Operators_Add(input,
-                    tensor->float_data,
-                    tensor->dims[0],
-                    tensor->data_type);*/
+      _outputs[++_outputIdx] = c;
+      printf("_outputIdx = %d\n", _outputIdx);
     }
     else if (!strcmp(operation, "And"))
     {
@@ -178,6 +163,7 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
     }
     else if (!strcmp(operation, "Conv"))
     {
+      printf("enter conv switch\n");
       Onnx__TensorProto *X = searchTensorProtoByName(model, inputs, nInputs, model->graph->node[nodeIdx]->input[0]);
       Onnx__TensorProto *W = searchTensorProtoByName(model, inputs, nInputs, model->graph->node[nodeIdx]->input[1]);
 
@@ -193,8 +179,7 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
                     model->graph->node[nodeIdx]->n_attribute,
                     model->graph->node[nodeIdx]->attribute);
 
-      _outputs[_outputIdx] = Y;
-      _outputIdx++;
+      _outputs[++_outputIdx] = Y;
       printf("_outputIdx = %d\n", _outputIdx);
 
     }
@@ -414,9 +399,8 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
                        Indices,
                        model->graph->node[nodeIdx]->n_attribute,
                        model->graph->node[nodeIdx]->attribute);
-
-      _outputs[_outputIdx] = Y;
-      _outputIdx++;
+      Y->name = model->graph->node[nodeIdx]->output[0];
+      _outputs[++_outputIdx] = Y;
       printf("_outputIdx = %d\n", _outputIdx);
     }
     else if (!strcmp(operation, "MaxRoiPool"))
@@ -561,7 +545,16 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
     }
     else if (!strcmp(operation, "Relu"))
     {
-      //Operators_Relu(input, inputDim);
+      DEBUG_PRINT("operation=%s, input=0 first operand name %s", operation, model->graph->node[nodeIdx]->input[0]);
+
+      Onnx__TensorProto *X = searchTensorProtoByName(model, inputs, nInputs, model->graph->node[nodeIdx]->input[0]);
+      Onnx__TensorProto *Y = malloc (sizeof(*Y));
+
+      operator_relu(X, Y);
+      Y->name = model->graph->node[nodeIdx]->output[0];
+
+      _outputs[++_outputIdx] = Y;
+      printf("_outputIdx = %d\n", _outputIdx);
     }
     else if (!strcmp(operation, "Reshape"))
     {
@@ -571,14 +564,17 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
       DEBUG_PRINT("operation=%s, input=0 tensor name %s", operation, model->graph->node[nodeIdx]->input[0]);
       DEBUG_PRINT("operation=%s, input=1 shape for output %s", operation, model->graph->node[nodeIdx]->input[1]);
 
-/*
-      Onnx__TensorProto *inputTensor = searchTensorInInitializers(
-                                          model,
-                                          model->graph->node[nodeIdx]->input[0]);
-      Onnx__TensorProto *dimensions = searchTensorInInitializers(
-                                          model,
-                                          model->graph->node[nodeIdx]->input[1]);*/
-      //Operators_Reshape(float *t, int tx, int ty, int ox, int oy);
+      Onnx__TensorProto *inputTensor = searchTensorProtoByName(model, inputs, nInputs, model->graph->node[nodeIdx]->input[0]);
+      Onnx__TensorProto *dimensions = searchTensorProtoByName(model, inputs, nInputs, model->graph->node[nodeIdx]->input[1]);
+
+      Onnx__TensorProto *Y = malloc (sizeof(*Y));
+      operator_reshape(inputTensor, dimensions, Y);
+
+      // TODO strcp?
+      Y->name = model->graph->node[nodeIdx]->output[0];
+
+      _outputs[++_outputIdx] = Y;
+      printf("_outputIdx = %d\n", _outputIdx);
     }
     else if (!strcmp(operation, "Resize"))
     {

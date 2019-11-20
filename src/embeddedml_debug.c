@@ -27,8 +27,17 @@ void debug_print_attributes(size_t n_attribute, Onnx__AttributeProto **attribute
     printf("attribute[%d]->type %d\n", j, attribute[j]->type);
 
     printf("attribute[%d]->has_f %d\n", j, attribute[j]->has_f);
+    //print f
+
     printf("attribute[%d]->has_i %d\n", j, attribute[j]->has_i);
+    // print i
+
     printf("attribute[%d]->has_s %d\n", j, attribute[j]->has_s);
+    if (attribute[j]->has_s) {
+      // This has s.data and s.len
+      printf("attribute[%d]->s %s\n", j, attribute[j]->s.data);
+    }
+
 
     printf("attribute[%d]->n_floats %zu\n", j, attribute[j]->n_floats);
     for (int k = 0; k < attribute[j]->n_floats; k++)
@@ -85,6 +94,15 @@ void debug_print_attributes(size_t n_attribute, Onnx__AttributeProto **attribute
     size_t n_sparse_tensors;
     Onnx__SparseTensorProto **sparse_tensors;*/
   }
+}
+
+void debug_print_dims(size_t n_dims, int64_t *dims)
+{
+  printf("n_dims=%zu\n", n_dims);
+  for (int i = 0; i < n_dims; i++){
+    printf("%lld x ", dims[i]);
+  }
+  printf("\n");
 }
 
 void Debug_PrintModelInformation(Onnx__ModelProto *model)
