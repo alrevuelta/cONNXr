@@ -28,14 +28,12 @@
                     Onnx__AttributeProto **attribute)
 {
   DEBUG_PRINT("Calling operator_conv");
+  debug_print_dims(X->n_dims, X->dims);
   // Borrowed form https://github.com/pjreddie/darknet/blob/61c9d02ec461e30d55762ec7669d6a1d3c356fb2/src/convolutional_layer.c#L445
   // TODO dilations is harcoded [1 1]
   // TODO strides is hardcoded [1 1]
   // TODO group is hardcoded 1
   // Hardcoded for 4d (2d)
-
-  printf("input dim\n");
-  debug_print_dims(X->n_dims, X->dims);
 
   Onnx__AttributeProto *auto_pad = searchAttributeNyName(n_attribute, attribute, "auto_pad");
   //Onnx__AttributeProto *dilations = searchAttributeNyName(n_attribute, attribute, "dilations");
@@ -82,9 +80,6 @@
   Y->dims[2] = (X->dims[2] - h_kernel + h_stride + -h_pad) / h_stride;
   Y->dims[3] = (X->dims[3] - w_kernel + w_stride + -w_pad) / w_stride;
 
-  printf("output dim\n");
-  debug_print_dims(Y->n_dims, Y->dims);
-
   // TODO check this? no mem is allocated?
   Y->name         = "name_is_set_afterwards\0";
   Y->has_raw_data = 0;
@@ -117,7 +112,7 @@
                   // Padded with 0, is this right?
                   float val = (valid != 0) ? X->float_data[index] : 0;
                   value += val * W->float_data[n*h_kernel + m];
-                  //printf("multiplicando %f * %f\n", val, W->float_data[n*h_kernel + m]);
+                  //printf("mult %f * %f\n", val, W->float_data[n*h_kernel + m]);
                   }
                 }
                 Y->float_data[out_index] = value;
@@ -134,4 +129,6 @@
     default:
       break;
   }
+
+  debug_print_dims(Y->n_dims, Y->dims);
 }

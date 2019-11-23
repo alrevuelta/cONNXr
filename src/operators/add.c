@@ -34,6 +34,7 @@
 void operator_add(Onnx__TensorProto *a, Onnx__TensorProto *b, Onnx__TensorProto *c)
 {
   DEBUG_PRINT("Calling operator_add");
+  debug_print_dims(a->n_dims, a->dims);
 
   // Check condition?
   //a->data_type == b->data_type
@@ -82,4 +83,6 @@ void operator_add(Onnx__TensorProto *a, Onnx__TensorProto *b, Onnx__TensorProto 
     default:
       break;
   }
+
+  debug_print_dims(c->n_dims, c->dims);
 }

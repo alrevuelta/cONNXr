@@ -22,6 +22,7 @@
  void operator_relu(Onnx__TensorProto *X, Onnx__TensorProto *Y)
  {
    DEBUG_PRINT("Calling operator_relu");
+   debug_print_dims(X->n_dims, X->dims);
 
    Y->dims = malloc(X->n_dims * sizeof(int64_t));
    for (int i = 0; i < X->n_dims; i++)
@@ -65,4 +66,5 @@
      default:
        break;
    }
+   debug_print_dims(Y->n_dims, Y->dims);
  }

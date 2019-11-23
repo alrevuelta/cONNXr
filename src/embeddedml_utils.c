@@ -45,12 +45,13 @@ Onnx__TensorProto* searchTensorProtoByName(Onnx__ModelProto *model,
     if (!strcmp(_outputs[outputsIdx]->name, name))
     {
       //tensor = _outputs[outputsIdx];
-      DEBUG_PRINT("Found TensorProto in outputs list with name=%s", inputs[outputsIdx]->name);
+      DEBUG_PRINT("Found TensorProto in outputs list with name=%s", _outputs[outputsIdx]->name);
       return _outputs[outputsIdx];
       // Use return instead. Once its found, exit the function
     }
   }
 
+  DEBUG_PRINT("%s was not found anywhere, maybe you should worry", name);
   return NULL;
 }
 

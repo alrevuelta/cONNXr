@@ -27,6 +27,7 @@
                        Onnx__AttributeProto **attribute)
 {
   DEBUG_PRINT("Calling operator_maxpool");
+  debug_print_dims(X->n_dims, X->dims);
   //debug_print_attributes(n_attribute, attribute);
 
   // TODO ingore dilated parameter for initial tests
@@ -111,5 +112,7 @@
     default:
       break;
   }
+
+  debug_print_dims(Y->n_dims, Y->dims);
 
 }

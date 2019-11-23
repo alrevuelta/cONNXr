@@ -4,14 +4,16 @@
 #include <CUnit/CUnit.h>
 #include <CUnit/Basic.h>
 
+#include "../src/embeddedml_debug.h"
+
 #define FLOAT_TOLERANCE 0.00001f
 
 // Compare if equal with some tolarenace
 void compareAlmostEqualTensorProto(Onnx__TensorProto *a, Onnx__TensorProto *b)
 {
-
+  debug_print_dims(a->n_dims, a->dims);
+  debug_print_dims(b->n_dims, b->dims);
   CU_ASSERT_EQUAL(a->data_type, b->data_type);
-  DEBUG_PRINT("a->ndims %zu, b->n_dims %zu", a->n_dims, b->n_dims);
   CU_ASSERT_EQUAL(a->n_dims, b->n_dims);
   for (int d = 0; d < a->n_dims; d++)
   {
@@ -29,6 +31,7 @@ void compareAlmostEqualTensorProto(Onnx__TensorProto *a, Onnx__TensorProto *b)
       for(int i = 0; i < a->n_float_data; i++)
       {
         //CU_ASSERT_EQUAL(a->float_data[i], b->float_data[i]);
+
         DEBUG_PRINT("%f, %f", a->float_data[i], b->float_data[i]);
         CU_ASSERT(fabs(a->float_data[i] - b->float_data[i]) < FLOAT_TOLERANCE);
       }

@@ -34,6 +34,8 @@
 void operator_matmul(Onnx__TensorProto *a, Onnx__TensorProto *b, Onnx__TensorProto *o)
 {
   DEBUG_PRINT("Calling operator_matmul");
+  debug_print_dims(a->n_dims, a->dims);
+  debug_print_dims(b->n_dims, b->dims);
 
   // TODO Hardcoded for 2 dimensions
 
@@ -116,4 +118,6 @@ void operator_matmul(Onnx__TensorProto *a, Onnx__TensorProto *b, Onnx__TensorPro
     default:
       break;
   }
+
+  debug_print_dims(o->n_dims, o->dims);
 }

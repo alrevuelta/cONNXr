@@ -13,6 +13,7 @@ void operators_cast(Onnx__TensorProto *T1, Onnx__TensorProto *T2, Onnx__TensorPr
   // TODO Only float to int64 conversion is supported
 
   DEBUG_PRINT("Calling operator_cast");
+  debug_print_dims(T1->n_dims, T1->dims);
 
   T2->dims = malloc(T1->n_dims * sizeof(int64_t));
   for (int i = 0; i < T1->n_dims; i++)
@@ -91,4 +92,6 @@ void operators_cast(Onnx__TensorProto *T1, Onnx__TensorProto *T2, Onnx__TensorPr
     default:
       break;
   }
+
+  debug_print_dims(T2->n_dims, T2->dims);
 }

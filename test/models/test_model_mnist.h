@@ -16,7 +16,7 @@ void test_model_mnist(void)
   Onnx__TensorProto *inp0set0 = openTensorProtoFile("../test/mnist/test_data_set_0/input_0.pb");
   Onnx__TensorProto *out0set0 = openTensorProtoFile("../test/mnist/test_data_set_0/output_0.pb");
 
-  //Debug_PrintModelInformation(model);
+  Debug_PrintModelInformation(model);
   convertRawDataOfTensorProto(inp0set0);
   convertRawDataOfTensorProto(out0set0);
 
@@ -29,7 +29,8 @@ void test_model_mnist(void)
   Onnx__TensorProto *inputs[] = { inp0set0 };
   Onnx__TensorProto **output = inference(model, inputs, 1);
 
-  // TODO Not finished
+  /* 11 is hardcoded, which is Plus214_Output_0 */
+  compareAlmostEqualTensorProto(output[11], out0set0);
 
   DEBUG_PRINT("End: test_model_mnist");
 }

@@ -34,7 +34,13 @@ make main
 protoc --c_out=. onnx.proto
 ```
 
-In the future `nanopb` might be used, since it can generate smaller files. Investigate also how to use `.option` file.
+In the future `nanopb` might be used, since it can generate smaller files. Investigate also how to use `.option` file. You can find some initial tests in `pb/nanopb` but is not yet being used. You can regenerate it using the following command, but note that you need to have a `protoc` binary.
+
+```
+generator-bin/protoc --nanopb_out=. onnx.proto
+```
+
+Note that nanopb archieves a signifiant reduction of the '.c' and `.h` files. 69K/45K for non nanopb and 14/20KB for nanopb. So (69+45)/(14+20) thats 3 times less!
 
 # Tests
 `cunit` is used to test the code. Two different test levels are written, on operator level (i.e. matrix multiplication) and on a model level (whole model end to end)
@@ -59,7 +65,7 @@ make test ts=Operators_TestSuite tc=test_operator_maxpool_1d_default
 - [x] Implement matmul and add operators
 - [x] Integrate onnx backend testing
 - [ ] Implement all operators contained in MNIST model
-- [ ] Conv
+- [x] Conv
 - [x] Add
 - [x] Relu
 - [x] MaxPool

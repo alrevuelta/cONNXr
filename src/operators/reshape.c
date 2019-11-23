@@ -23,8 +23,6 @@
 void operator_reshape(Onnx__TensorProto *data, Onnx__TensorProto *shape, Onnx__TensorProto *reshaped)
 {
   DEBUG_PRINT("Calling operator_reshape");
-
-  printf("input_dims:\n");
   debug_print_dims(data->n_dims, data->dims);
 
   // Not sure about this implementation. It just swaps the dimensions
@@ -83,9 +81,6 @@ void operator_reshape(Onnx__TensorProto *data, Onnx__TensorProto *shape, Onnx__T
   reshaped->has_raw_data = 0;
   reshaped->data_type    = data->data_type;
 
-  printf("output_dims:\n");
-  debug_print_dims(reshaped->n_dims, reshaped->dims);
-
   switch(data->data_type)
   {
     case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:
@@ -128,5 +123,6 @@ void operator_reshape(Onnx__TensorProto *data, Onnx__TensorProto *shape, Onnx__T
       break;
     default:
       break;
-    }
+  }
+  debug_print_dims(reshaped->n_dims, reshaped->dims);
 }

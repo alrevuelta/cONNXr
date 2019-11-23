@@ -10,6 +10,7 @@
 void operators_argmax(Onnx__TensorProto *data, int axis, int keepdims, Onnx__TensorProto *reduced)
 {
   DEBUG_PRINT("Calling operator_argmax");
+  debug_print_dims(data->n_dims, data->dims);
 
   // TODO axis and keepdims is not implemented
   // TODO Only a simple case with 2x2 matrix is implemented
@@ -69,4 +70,5 @@ void operators_argmax(Onnx__TensorProto *data, int axis, int keepdims, Onnx__Ten
     default:
       break;
   }
+  debug_print_dims(reduced->n_dims, reduced->dims);
 }

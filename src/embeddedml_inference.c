@@ -20,6 +20,9 @@
 #include "operators/softmax.h"
 #include "operators/zipmap.h"
 
+int _outputIdx = 0;
+Onnx__TensorProto *_outputs[MAX_NUM_OF_OUTPUTS] = {};
+
 // Investigate what to do with the output. Is it always a set of TensorProto?
 Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **inputs, int nInputs)
 {
@@ -82,11 +85,11 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
       Onnx__TensorProto *a = searchTensorProtoByName(model, inputs, nInputs, model->graph->node[nodeIdx]->input[0]);
       Onnx__TensorProto *b = searchTensorProtoByName(model, inputs, nInputs, model->graph->node[nodeIdx]->input[1]);
       Onnx__TensorProto *c = malloc (sizeof(*c));
-
+      printf("debuging %s\n\n", a->name);
       operator_add(a, b, c);
       c->name = model->graph->node[nodeIdx]->output[0];
 
-      _outputs[++_outputIdx] = c;
+      _outputs[_outputIdx++] = c;
       printf("_outputIdx = %d\n", _outputIdx);
     }
     else if (!strcmp(operation, "And"))
@@ -179,7 +182,10 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
                     model->graph->node[nodeIdx]->n_attribute,
                     model->graph->node[nodeIdx]->attribute);
 
-      _outputs[++_outputIdx] = Y;
+      Y->name = malloc(100);
+      strcpy(Y->name, model->graph->node[nodeIdx]->output[0]);
+
+      _outputs[_outputIdx++] = Y;
       printf("_outputIdx = %d\n", _outputIdx);
 
     }
@@ -357,28 +363,22 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
     }
     else if (!strcmp(operation, "MatMul"))
     {
-      // Inputs are deterministic given the operation type. MatMul:
-      // * A: T. N-dimensional matrix A
-      // * B: T. N-dimensional matrix B
       DEBUG_PRINT("operation=%s, input=0 first matrix %s", operation, model->graph->node[nodeIdx]->input[0]);
       DEBUG_PRINT("operation=%s, input=1 second matrix %s", operation, model->graph->node[nodeIdx]->input[1]);
 
-      // TODO Maybe add some checks that input[0/1] is not null?
-/*
       Onnx__TensorProto *a = searchTensorProtoByName(model, inputs, nInputs, model->graph->node[nodeIdx]->input[0]);
       Onnx__TensorProto *b = searchTensorProtoByName(model, inputs, nInputs, model->graph->node[nodeIdx]->input[1]);
 
       // Alloc memory for the output
-      Onnx__TensorProto *o = malloc (sizeof(*o)); //do this inside matmul?
+      Onnx__TensorProto *o = malloc (sizeof(*o));
       operator_matmul(a, b, o);
 
       // Dont know if is a good idea to reuse the name. Can save memory and
-      // shouldnt change.
+      // shouldnt change. name is not allocated? wtf is this working?
       o->name = model->graph->node[nodeIdx]->output[0];
 
       // Store the output;
-      _outputs[_outputIdx] = o;
-      _outputIdx++;*/
+      _outputs[_outputIdx++] = o;
     }
     else if (!strcmp(operation, "MatMulInteger"))
     {
@@ -400,7 +400,7 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
                        model->graph->node[nodeIdx]->n_attribute,
                        model->graph->node[nodeIdx]->attribute);
       Y->name = model->graph->node[nodeIdx]->output[0];
-      _outputs[++_outputIdx] = Y;
+      _outputs[_outputIdx++] = Y;
       printf("_outputIdx = %d\n", _outputIdx);
     }
     else if (!strcmp(operation, "MaxRoiPool"))
@@ -553,7 +553,7 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
       operator_relu(X, Y);
       Y->name = model->graph->node[nodeIdx]->output[0];
 
-      _outputs[++_outputIdx] = Y;
+      _outputs[_outputIdx++] = Y;
       printf("_outputIdx = %d\n", _outputIdx);
     }
     else if (!strcmp(operation, "Reshape"))
@@ -571,10 +571,13 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
       operator_reshape(inputTensor, dimensions, Y);
 
       // TODO strcp?
-      Y->name = model->graph->node[nodeIdx]->output[0];
+      //Y->name = model->graph->node[nodeIdx]->output[0];
+      Y->name = malloc(100);
+      strcpy(Y->name, model->graph->node[nodeIdx]->output[0]);
 
-      _outputs[++_outputIdx] = Y;
+      _outputs[_outputIdx++] = Y;
       printf("_outputIdx = %d\n", _outputIdx);
+      printf("added to list %s\n", Y->name);
     }
     else if (!strcmp(operation, "Resize"))
     {
