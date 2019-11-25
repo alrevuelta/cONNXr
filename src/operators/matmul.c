@@ -31,8 +31,18 @@
  *  \param[out] Onnx__TensorProto c
  *  \return     void
  */
-void operator_matmul(Onnx__TensorProto *a, Onnx__TensorProto *b, Onnx__TensorProto *o)
+void operator_matmul(size_t n_input,
+                     Onnx__TensorProto **input,
+                     size_t n_attribute,
+                     Onnx__AttributeProto **attribute,
+                     size_t n_output,
+                     Onnx__TensorProto **output)
 {
+  // TODO temporal
+  Onnx__TensorProto *a = input[0];
+  Onnx__TensorProto *b = input[1];
+  Onnx__TensorProto *o = output[0];
+  
   DEBUG_PRINT("Calling operator_matmul");
   debug_print_dims(a->n_dims, a->dims);
   debug_print_dims(b->n_dims, b->dims);
@@ -45,6 +55,8 @@ void operator_matmul(Onnx__TensorProto *a, Onnx__TensorProto *b, Onnx__TensorPro
 
   // Check condition?
   //a->data_type == b->data_type;
+
+
 
   // Allocte memory
   o->dims = malloc(2 * sizeof(int64_t));

@@ -5,20 +5,11 @@
 
 void test_operator_add_custom1(void)
 {
-  /*
-  float a[] = {1, 2, 3, 4, 5, 6, 7};
-  float b[] = {1.1f, 1.2f, 7.3f, 7, 3, 6, 1.9f};
-  float expected[] = {2.1f, 3.2f, 10.3f, 11, 8, 12, 8.9f};
-  Operators_Add(a, b, 7, ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT);
-
-  for (int i = 0; i < 7; i++) {
-    CU_ASSERT(a[i] == expected[i]);
-  }
-  */
 }
 
 void test_operator_add(void)
 {
+  Onnx__ModelProto *model = openOnnxFile("../test/node/test_add/model.onnx");
   Onnx__TensorProto *inp0 = openTensorProtoFile("../test/node/test_add/test_data_set_0/input_0.pb");
   Onnx__TensorProto *inp1 = openTensorProtoFile("../test/node/test_add/test_data_set_0/input_1.pb");
   Onnx__TensorProto *out0 = openTensorProtoFile("../test/node/test_add/test_data_set_0/output_0.pb");
@@ -28,15 +19,15 @@ void test_operator_add(void)
   convertRawDataOfTensorProto(inp1);
   convertRawDataOfTensorProto(out0);
 
-  Onnx__TensorProto *result = malloc (sizeof(*result));
-  operator_add(inp0, inp1, result);
+  Onnx__TensorProto *inputs[2] = { inp0, inp1 };
+  Onnx__TensorProto **outputs = inference(model, inputs, 2);
 
-  compareAlmostEqualTensorProto(result, out0);
-
+  compareAlmostEqualTensorProto(outputs[0], out0);
 }
 
 void test_operator_add_bcast(void)
 {
+  Onnx__ModelProto *model = openOnnxFile("../test/node/test_add_bcast/model.onnx");
   Onnx__TensorProto *inp0 = openTensorProtoFile("../test/node/test_add_bcast/test_data_set_0/input_0.pb");
   Onnx__TensorProto *inp1 = openTensorProtoFile("../test/node/test_add_bcast/test_data_set_0/input_1.pb");
   Onnx__TensorProto *out0 = openTensorProtoFile("../test/node/test_add_bcast/test_data_set_0/output_0.pb");
@@ -46,10 +37,10 @@ void test_operator_add_bcast(void)
   convertRawDataOfTensorProto(inp1);
   convertRawDataOfTensorProto(out0);
 
-  Onnx__TensorProto *result = malloc (sizeof(*result));
-  operator_add(inp0, inp1, result);
+  Onnx__TensorProto *inputs[2] = { inp0, inp1 };
+  Onnx__TensorProto **outputs = inference(model, inputs, 2);
 
-  compareAlmostEqualTensorProto(result, out0);
+  compareAlmostEqualTensorProto(outputs[0], out0);
 }
 
 #endif

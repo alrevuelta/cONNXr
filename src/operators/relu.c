@@ -19,9 +19,19 @@
  *  \param[out] xx xx
  *  \return     xx
  */
- void operator_relu(Onnx__TensorProto *X, Onnx__TensorProto *Y)
+ void operator_relu(size_t n_input,
+                    Onnx__TensorProto **input,
+                    size_t n_attribute,
+                    Onnx__AttributeProto **attribute,
+                    size_t n_output,
+                    Onnx__TensorProto **output)
  {
    DEBUG_PRINT("Calling operator_relu");
+
+   // TODO temporal
+   Onnx__TensorProto *X = input[0];
+   Onnx__TensorProto *Y = output[0];
+
    debug_print_dims(X->n_dims, X->dims);
 
    Y->dims = malloc(X->n_dims * sizeof(int64_t));
@@ -29,6 +39,8 @@
    {
      Y->dims[i] = X->dims[i];
    }
+
+
 
    // Populate some parameters
    Y->name         = "name_is_set_afterwards\0";

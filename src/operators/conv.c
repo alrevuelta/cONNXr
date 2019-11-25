@@ -20,20 +20,29 @@
  *  \param[out] xx xx
  *  \return     xx
  */
- void operator_conv(Onnx__TensorProto *X,
-                    Onnx__TensorProto *W,
-                    Onnx__TensorProto *B,
-                    Onnx__TensorProto *Y,
+ void operator_conv(size_t n_input,
+                    Onnx__TensorProto **input,
                     size_t n_attribute,
-                    Onnx__AttributeProto **attribute)
+                    Onnx__AttributeProto **attribute,
+                    size_t n_output,
+                    Onnx__TensorProto **output)
 {
   DEBUG_PRINT("Calling operator_conv");
+
+  // TODO Temporal
+  Onnx__TensorProto *X = input[0];
+  Onnx__TensorProto *W = input[1];
+  //Onnx__TensorProto *B = xx;
+  Onnx__TensorProto *Y = output[0];
+
   debug_print_dims(X->n_dims, X->dims);
   // Borrowed form https://github.com/pjreddie/darknet/blob/61c9d02ec461e30d55762ec7669d6a1d3c356fb2/src/convolutional_layer.c#L445
   // TODO dilations is harcoded [1 1]
   // TODO strides is hardcoded [1 1]
   // TODO group is hardcoded 1
   // Hardcoded for 4d (2d)
+
+
 
   Onnx__AttributeProto *auto_pad = searchAttributeNyName(n_attribute, attribute, "auto_pad");
   //Onnx__AttributeProto *dilations = searchAttributeNyName(n_attribute, attribute, "dilations");

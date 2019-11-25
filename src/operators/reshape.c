@@ -20,9 +20,21 @@
  *  \param[out] xx xx
  *  \return     xx
  */
-void operator_reshape(Onnx__TensorProto *data, Onnx__TensorProto *shape, Onnx__TensorProto *reshaped)
+void operator_reshape(size_t n_input,
+                      Onnx__TensorProto **input,
+                      size_t n_attribute,
+                      Onnx__AttributeProto **attribute,
+                      size_t n_output,
+                      Onnx__TensorProto **output)
 {
   DEBUG_PRINT("Calling operator_reshape");
+
+
+  // TODO temporal
+  Onnx__TensorProto *data = input[0];
+  Onnx__TensorProto *shape = input[1];
+  Onnx__TensorProto *reshaped = output[0];
+
   debug_print_dims(data->n_dims, data->dims);
 
   // Not sure about this implementation. It just swaps the dimensions

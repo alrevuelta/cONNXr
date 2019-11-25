@@ -2,11 +2,11 @@
 #define EMBEDDEDML_CONV_H
 #include "../pb/onnx.pb-c.h"
 
-void operator_conv(Onnx__TensorProto *X,
-                   Onnx__TensorProto *W,
-                   Onnx__TensorProto *B,
-                   Onnx__TensorProto *Y,
+void operator_conv(size_t n_input,
+                   Onnx__TensorProto **input,
                    size_t n_attribute,
-                   Onnx__AttributeProto **attribute);
+                   Onnx__AttributeProto **attribute,
+                   size_t n_output,
+                   Onnx__TensorProto **output);
 
 #endif

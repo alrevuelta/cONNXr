@@ -20,13 +20,19 @@
   *  \param[out] xx xx
   *  \return     xx
   */
- void operator_maxpool(Onnx__TensorProto *X,
-                       Onnx__TensorProto *Y,
-                       Onnx__TensorProto *Indices,
+ void operator_maxpool(size_t n_input,
+                       Onnx__TensorProto **input,
                        size_t n_attribute,
-                       Onnx__AttributeProto **attribute)
+                       Onnx__AttributeProto **attribute,
+                       size_t n_output,
+                       Onnx__TensorProto **output)
 {
   DEBUG_PRINT("Calling operator_maxpool");
+
+  // Temporal
+  Onnx__TensorProto *X = input[0];
+  Onnx__TensorProto *Y = output[0];
+  
   debug_print_dims(X->n_dims, X->dims);
   //debug_print_attributes(n_attribute, attribute);
 
@@ -35,6 +41,8 @@
   // TODO this is hardcoded af. only for 4d arrays, where maxpool
   // is applied along 2dimensions.
   // TODO pads are not implemented
+
+
 
   // number of dimensions do not change
   Y->dims = malloc(X->n_dims * sizeof(int64_t));

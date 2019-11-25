@@ -31,10 +31,22 @@
  *  \param[out] Onnx__TensorProto c
  *  \return     void
  */
-void operator_add(Onnx__TensorProto *a, Onnx__TensorProto *b, Onnx__TensorProto *c)
+void operator_add(size_t n_input,
+                  Onnx__TensorProto **input,
+                  size_t n_attribute,
+                  Onnx__AttributeProto **attribute,
+                  size_t n_output,
+                  Onnx__TensorProto **output)
 {
   DEBUG_PRINT("Calling operator_add");
+
+  // TODO temporal workaround
+  Onnx__TensorProto *a = input[0];
+  Onnx__TensorProto *b = input[1];
+  Onnx__TensorProto *c = output[0];
   debug_print_dims(a->n_dims, a->dims);
+
+
 
   // Check condition?
   //a->data_type == b->data_type

@@ -2,7 +2,7 @@
 #define TEST_OPERATOR_RESHAPE_H
 #include "common_operators.h"
 #include "../../src/operators/reshape.h"
-
+/*
 void test_operator_reshape_extended_dims(void)
 {
   Onnx__TensorProto *inp0 = openTensorProtoFile("../test/node/test_reshape_extended_dims/test_data_set_0/input_0.pb");
@@ -146,6 +146,6 @@ void test_operator_reshape_zero_dim(void)
   Onnx__TensorProto *result = malloc (sizeof(*result));
   operator_reshape(inp0, inp1, result);
   compareAlmostEqualTensorProto(result, out0);
-}
+}*/
 
 #endif

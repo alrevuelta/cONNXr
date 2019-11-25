@@ -74,7 +74,7 @@ int main(int argc, char **argv)
   //CU_add_test(operatorsTestSuite, "test_operator_maxpool_2d_pads", test_operator_maxpool_2d_pads);
   //CU_add_test(operatorsTestSuite, "test_operator_maxpool_2d_precomputed_pads", test_operator_maxpool_2d_precomputed_pads);
   //CU_add_test(operatorsTestSuite, "test_operator_maxpool_2d_precomputed_same_upper", test_operator_maxpool_2d_precomputed_same_upper);
-  CU_add_test(operatorsTestSuite, "test_operator_maxpool_2d_precomputed_strides", test_operator_maxpool_2d_precomputed_strides);
+  //CU_add_test(operatorsTestSuite, "test_operator_maxpool_2d_precomputed_strides", test_operator_maxpool_2d_precomputed_strides);
   //CU_add_test(operatorsTestSuite, "test_operator_maxpool_2d_same_lower", test_operator_maxpool_2d_same_lower);
   //CU_add_test(operatorsTestSuite, "test_operator_maxpool_2d_same_upper", test_operator_maxpool_2d_same_upper);
   //CU_add_test(operatorsTestSuite, "test_operator_maxpool_2d_strides", test_operator_maxpool_2d_strides);
@@ -84,7 +84,7 @@ int main(int argc, char **argv)
 
 
   CU_add_test(operatorsTestSuite, "test_operator_relu", test_operator_relu);
-
+/*
   CU_add_test(operatorsTestSuite, "test_operator_reshape_extended_dims", test_operator_reshape_extended_dims);
   CU_add_test(operatorsTestSuite, "test_operator_reshape_negative_dim", test_operator_reshape_negative_dim);
   CU_add_test(operatorsTestSuite, "test_operator_reshape_negative_extended_dims", test_operator_reshape_negative_extended_dims);
@@ -93,7 +93,7 @@ int main(int argc, char **argv)
   CU_add_test(operatorsTestSuite, "test_operator_reshape_reordered_all_dims", test_operator_reshape_reordered_all_dims);
   CU_add_test(operatorsTestSuite, "test_operator_reshape_reordered_last_dims", test_operator_reshape_reordered_last_dims);
   CU_add_test(operatorsTestSuite, "test_operator_reshape_zero_and_negative_dim", test_operator_reshape_zero_and_negative_dim);
-  CU_add_test(operatorsTestSuite, "test_operator_reshape_zero_dim", test_operator_reshape_zero_dim);
+  CU_add_test(operatorsTestSuite, "test_operator_reshape_zero_dim", test_operator_reshape_zero_dim);*/
 
   CU_add_test(operatorsTestSuite, "test_operator_sigmoid", test_operator_sigmoid);
   CU_add_test(operatorsTestSuite, "test_operator_softmax", test_operator_softmax);
@@ -107,7 +107,7 @@ int main(int argc, char **argv)
     return CU_get_error();
   }
 
-  CU_add_test(modelsTestSuite, "test_model_mnist", test_model_mnist);
+  //CU_add_test(modelsTestSuite, "test_model_mnist", test_model_mnist);
 
   CU_basic_set_mode(CU_BRM_VERBOSE);
 

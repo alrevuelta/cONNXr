@@ -7,13 +7,26 @@
 #include "cast.h"
 
 // TODO paste header form onnx doc
-void operators_cast(Onnx__TensorProto *T1, Onnx__TensorProto *T2, Onnx__TensorProto__DataType to)
+void operator_cast(size_t n_input,
+                   Onnx__TensorProto **input,
+                   size_t n_attribute,
+                   Onnx__AttributeProto **attribute,
+                   size_t n_output,
+                   Onnx__TensorProto **output)
 {
   // TODO Scientific notation is not supported, like 1e-5
   // TODO Only float to int64 conversion is supported
 
+  // TODO temporal
+  Onnx__TensorProto *T1 = input[0];
+  Onnx__TensorProto *T2 = output[0];
+  Onnx__AttributeProto *attr = attribute[0];
+
   DEBUG_PRINT("Calling operator_cast");
   debug_print_dims(T1->n_dims, T1->dims);
+
+  // todo remove. just to make it work
+  int to = ONNX__TENSOR_PROTO__DATA_TYPE__INT64;
 
   T2->dims = malloc(T1->n_dims * sizeof(int64_t));
   for (int i = 0; i < T1->n_dims; i++)

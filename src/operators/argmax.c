@@ -7,10 +7,22 @@
 #include "argmax.h"
 
 // TODO paste header form onnx doc
-void operators_argmax(Onnx__TensorProto *data, int axis, int keepdims, Onnx__TensorProto *reduced)
+void operator_argmax(size_t n_input,
+                     Onnx__TensorProto **input,
+                     size_t n_attribute,
+                     Onnx__AttributeProto **attribute,
+                     size_t n_output,
+                     Onnx__TensorProto **output)
 {
   DEBUG_PRINT("Calling operator_argmax");
+
+  // TODO temporal workaround
+  // (Onnx__TensorProto *data, int axis, int keepdims, Onnx__TensorProto *reduced);
+  Onnx__TensorProto *data = input[0];
+  Onnx__TensorProto *reduced = output[0];
+
   debug_print_dims(data->n_dims, data->dims);
+
 
   // TODO axis and keepdims is not implemented
   // TODO Only a simple case with 2x2 matrix is implemented

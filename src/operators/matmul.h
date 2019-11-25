@@ -2,6 +2,11 @@
 #define EMBEDDEDML_MATMUL_H
 #include "../pb/onnx.pb-c.h"
 
-void operator_matmul(Onnx__TensorProto *a, Onnx__TensorProto *b, Onnx__TensorProto *o);
+void operator_matmul(size_t n_input,
+                     Onnx__TensorProto **input,
+                     size_t n_attribute,
+                     Onnx__AttributeProto **attribute,
+                     size_t n_output,
+                     Onnx__TensorProto **output);
 
 #endif
