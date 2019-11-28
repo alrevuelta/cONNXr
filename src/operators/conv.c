@@ -90,7 +90,7 @@
   Y->dims[3] = (X->dims[3] - w_kernel + w_stride + -w_pad) / w_stride;
 
   // TODO check this? no mem is allocated?
-  Y->name         = "name_is_set_afterwards\0";
+  Y->name         = "name_is_set_afterwards\0"; // todo this is wrong.
   Y->has_raw_data = 0;
 
   switch(X->data_type)
@@ -125,6 +125,7 @@
                   }
                 }
                 Y->float_data[out_index] = value;
+                //printf("%f\n", value);
               }
             }
           }

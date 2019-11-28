@@ -77,6 +77,7 @@ void operator_add(size_t n_input,
         // Note that b can have a different dimension. In that case
         // broadcasting is performed
         c->float_data[i] = a->float_data[i] + b->float_data[i%b->n_float_data];
+        printf("%f\n", c->float_data[i]);
       }
     } break;
     case ONNX__TENSOR_PROTO__DATA_TYPE__INT32:

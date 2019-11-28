@@ -105,6 +105,10 @@ void debug_print_dims(size_t n_dims, int64_t *dims)
   printf("\n");
 }
 
+void debug_prettyprint_tensorproto(Onnx__TensorProto *tp)
+{
+}
+
 void Debug_PrintModelInformation(Onnx__ModelProto *model)
 {
   //--------------------------------------------------------------------------//
