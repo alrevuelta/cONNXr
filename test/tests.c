@@ -108,6 +108,7 @@ int main(int argc, char **argv)
   }
 
   CU_add_test(modelsTestSuite, "test_model_mnist", test_model_mnist);
+  CU_add_test(modelsTestSuite, "test_model_mnist_per_node", test_model_mnist_per_node);
 
   CU_basic_set_mode(CU_BRM_VERBOSE);
 

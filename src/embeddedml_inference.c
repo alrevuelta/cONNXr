@@ -37,6 +37,9 @@ static void call_operator(const char *name,
 Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **inputs, int nInputs)
 {
   //int error = 0;
+
+  /* Dirty trick to allow multiple runs. There is a memory leak for sure */
+  _outputIdx = 0;
   DEBUG_PRINT("calling inference");
   DEBUG_PRINT("The graph has nodes=%zu", model->graph->n_node);
 

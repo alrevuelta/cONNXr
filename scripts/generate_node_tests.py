@@ -74,10 +74,12 @@ for out in enumerate_model_node_outputs(model_onnx):
 
 print(outputs_list)
 
-for out in outputs_list:
-    os.mkdir(out)
-    os.mkdir(out+"/test_data_set_0")
-    modelPath = out + "/" + out + "_model.onnx"
+for idx, out in enumerate(outputs_list):
+    name = str(idx) + "_" + out
+    dataset = "test_data_set_0"
+    os.mkdir(name)
+    os.mkdir(name + "/" + dataset)
+    modelPath = name + "/" + name + ".onnx"
     model_output = select_model_inputs_outputs(model_onnx, out)
     save_onnx_model(model_output, modelPath)
     sess = rt.InferenceSession(modelPath)
@@ -85,5 +87,7 @@ for out in outputs_list:
     print()
     print(out)
     print(numX)
-    numpy_to_pb(out, numX[0], out + "/test_data_set_0/" + "output_0.pb")
-    numpy_to_pb(out, inputs[0], out + "/test_data_set_0/" + "input_0.pb")
+
+    # hardcoded for 1 output
+    numpy_to_pb(out, numX[0], name + "/" + dataset + "/" + "output_0.pb")
+    numpy_to_pb(out, inputs[0], name + "/" + dataset + "/" + "input_0.pb")

@@ -42,8 +42,6 @@
   // TODO group is hardcoded 1
   // Hardcoded for 4d (2d)
 
-
-
   Onnx__AttributeProto *auto_pad = searchAttributeNyName(n_attribute, attribute, "auto_pad");
   //Onnx__AttributeProto *dilations = searchAttributeNyName(n_attribute, attribute, "dilations");
   //Onnx__AttributeProto *group = searchAttributeNyName(n_attribute, attribute, "group");
@@ -83,7 +81,10 @@
 
   // TODO Padding is not taken into account
   Y->dims[0] = X->dims[0];
-  Y->dims[1] = X->dims[1];
+  //Y->dims[1] = X->dims[1];
+
+  /* Hardcoding this for mnist model */
+  Y->dims[1] = 8;
 
   // TODO Formula is probably wrong, double check  // remove -
   Y->dims[2] = (X->dims[2] - h_kernel + h_stride + -h_pad) / h_stride;

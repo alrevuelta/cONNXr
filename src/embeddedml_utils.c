@@ -70,6 +70,7 @@ Onnx__ModelProto* openOnnxFile(char *fname){
 
   FILE *fl = fopen(fname, "r");
   if (fl == NULL){
+    DEBUG_PRINT("File was not opened");
     return model;
   }
 
