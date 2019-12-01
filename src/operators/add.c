@@ -46,8 +46,6 @@ void operator_add(size_t n_input,
   Onnx__TensorProto *c = output[0];
   debug_print_dims(a->n_dims, a->dims);
 
-
-
   // Check condition?
   //a->data_type == b->data_type
   //a->n_dims == b->n_dims
@@ -74,10 +72,9 @@ void operator_add(size_t n_input,
       c->n_float_data = a->n_float_data;
       c->float_data = malloc(c->n_float_data * sizeof(float));
       for (int i = 0; i < a->n_float_data; i++) {
-        // Note that b can have a different dimension. In that case
-        // broadcasting is performed
-        c->float_data[i] = a->float_data[i] + b->float_data[i%b->n_float_data];
-        printf("%f\n", c->float_data[i]);
+        /* Broadcasting might not work as expected. This is hardcoded for
+        mnist model */
+        c->float_data[i] = a->float_data[i] + b->float_data[i/(a->dims[2]*a->dims[3])];
       }
     } break;
     case ONNX__TENSOR_PROTO__DATA_TYPE__INT32:

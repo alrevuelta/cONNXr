@@ -25,7 +25,7 @@ def numpy_to_pb(name, np_data, out_filename):
 
 if __name__ == '__main__':
     print_pb_file(
-        "../test/mnist_experimental_test/Times212_Output_0/test_data_set_0/input_0.pb")
+        "../test/mnist_experimental_test/1_Convolution28_Output_0/test_data_set_0/input_0.pb")
 
     print_pb_file(
-        "../test/mnist_experimental_test/Times212_Output_0/test_data_set_0/output_0.pb")
+        "../test/mnist_experimental_test/1_Convolution28_Output_0/test_data_set_0/output_0.pb")

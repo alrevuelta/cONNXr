@@ -56,28 +56,33 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
     // TODO hardcoded to one output
     size_t nOutputs = 1;
     Onnx__TensorProto *out0 = malloc(sizeof(*out0));
-    Onnx__TensorProto **graphOutputs = malloc(sizeof(*out0));
-    graphOutputs[0] = out0;
-    Onnx__TensorProto **graphInputs = malloc(sizeof(*out0) * model->graph->node[nodeIdx]->n_input);
+    Onnx__TensorProto **nodeOutputs = malloc(sizeof(*out0));
+    nodeOutputs[0] = out0;
+    Onnx__TensorProto **nodeInputs = malloc(sizeof(*out0) * model->graph->node[nodeIdx]->n_input);
 
     // Populate the input array by gathering all the required inputs
     for (int inp = 0; inp < model->graph->node[nodeIdx]->n_input; ++inp) {
       Onnx__TensorProto *inpN =malloc(sizeof(*inpN));
       inpN = searchTensorProtoByName(model, inputs, nInputs, model->graph->node[nodeIdx]->input[inp]);
-      graphInputs[inp] = inpN;
+      nodeInputs[inp] = inpN;
     }
 
     call_operator(operation,
                   model->graph->node[nodeIdx]->n_input,
-                  graphInputs,
+                  nodeInputs,
                   model->graph->node[nodeIdx]->n_attribute,
                   model->graph->node[nodeIdx]->attribute,
                   nOutputs,// TODO use model->graph->node[nodeIdx]->n_output
-                  graphOutputs);
+                  nodeOutputs);
 
     // TODO temporal shit
+    printf("deug\n\n");
+    for (int i = 0; i < nodeOutputs[0]->n_float_data; i++) {
+      //printf("float_data[%d] = %f\n", i, nodeOutputs[0]->float_data[i]);
+    }
     out0->name = model->graph->node[nodeIdx]->output[0];
-    _outputs[_outputIdx++] = graphOutputs[0]; // todo this is hardcoded
+    DEBUG_PRINT("Storing output in list index=%d, name=%s", _outputIdx, out0->name);
+    _outputs[_outputIdx++] = nodeOutputs[0]; // todo this is hardcoded
     printf("_outputIdx = %d\n", _outputIdx);
   }
 

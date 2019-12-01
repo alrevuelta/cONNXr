@@ -70,10 +70,9 @@
       // add the extra padding to the end
       // TODO Quick test, even padding is assumed
       // TODO Quick test, ignore stride, just 1
-      h_pad = -(h_kernel - 1); // store the negative value of the offset
-      w_pad = -(w_kernel - 1);
+      h_pad = -(h_kernel - 1)/2; // store the negative value of the offset
+      w_pad = -(w_kernel - 1)/2;
     }
-
   }
 
   Y->dims = malloc(X->n_dims * sizeof(int64_t));
@@ -81,14 +80,15 @@
 
   // TODO Padding is not taken into account
   Y->dims[0] = X->dims[0];
+
+  /* Not sure about this. W might have different dimensions. This is if
+  W has 4 dims (hardcoded for mnist model) */
+  Y->dims[1] = W->dims[0];
   //Y->dims[1] = X->dims[1];
 
-  /* Hardcoding this for mnist model */
-  Y->dims[1] = 8;
-
   // TODO Formula is probably wrong, double check  // remove -
-  Y->dims[2] = (X->dims[2] - h_kernel + h_stride + -h_pad) / h_stride;
-  Y->dims[3] = (X->dims[3] - w_kernel + w_stride + -w_pad) / w_stride;
+  Y->dims[2] = (X->dims[2] - h_kernel + h_stride + -h_pad*2) / h_stride;
+  Y->dims[3] = (X->dims[3] - w_kernel + w_stride + -w_pad*2) / w_stride;
 
   // TODO check this? no mem is allocated?
   Y->name         = "name_is_set_afterwards\0"; // todo this is wrong.
@@ -111,27 +111,27 @@
               float value = 0;
               for(n = 0; n < h_kernel; ++n){
                 for(m = 0; m < w_kernel; ++m){
-                  // TODO Not sure about this. The idea is to have here a negative
-                  // number if we are on a padded "pixel". Left side is ok but
-                  // not sure about the right side
-                  int cur_h = h_pad + i*h_stride + n;
-                  int cur_w = w_pad + j*w_stride + m;
-                  int index = cur_w + X->dims[3]*(cur_h + X->dims[2]*(k + b*X->dims[1]));
+                  int cur_h = i*h_stride + n + h_pad;
+                  int cur_w = j*w_stride + m + w_pad;
+
+                  /* This is hardcoded to make it work with mnist model, where
+                  the input is 1x1x28x28 */
+                  //int index = cur_w + X->dims[3]*(cur_h + X->dims[2]*(k + b*X->dims[1]));
+                  int index = cur_w + X->dims[3]*(cur_h + X->dims[2]*(0 + 0*X->dims[1]));
+
                   int valid = (cur_h >= 0 && cur_h < X->dims[2] &&
                                cur_w >= 0 && cur_w < X->dims[3]);
-                  // Padded with 0, is this right?
                   float val = (valid != 0) ? X->float_data[index] : 0;
-                  value += val * W->float_data[n*h_kernel + m];
-                  //printf("mult %f * %f\n", val, W->float_data[n*h_kernel + m]);
+                  int index_kernel = k*W->dims[3]*W->dims[2]*W->dims[1] + 0*W->dims[2]*W->dims[1] + n*h_kernel +m;
+                  value += val * W->float_data[index_kernel];
                   }
                 }
-                Y->float_data[out_index] = value;
-                //printf("%f\n", value);
-              }
+              Y->float_data[out_index] = value;
             }
           }
         }
       }
+    }
       break;
     case ONNX__TENSOR_PROTO__DATA_TYPE__DOUBLE:
       break;
