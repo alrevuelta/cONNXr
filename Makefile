@@ -1,2 +1,2 @@
 run:
-  echo "Dummy Makefile"
+  echo "Dummy Makefile."
