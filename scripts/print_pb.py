@@ -1,4 +1,6 @@
 import onnx
+import sys
+import numpy
 from onnx import numpy_helper
 
 """
@@ -24,8 +26,9 @@ def numpy_to_pb(name, np_data, out_filename):
 
 
 if __name__ == '__main__':
+    numpy.set_printoptions(threshold=sys.maxsize)
     print_pb_file(
-        "../test/mnist_experimental_test/1_Convolution28_Output_0/test_data_set_0/input_0.pb")
+        "../test/mnist_experimental_test/4_Pooling66_Output_0/test_data_set_0/input_0.pb")
 
     print_pb_file(
-        "../test/mnist_experimental_test/1_Convolution28_Output_0/test_data_set_0/output_0.pb")
+        "../test/mnist_experimental_test/4_Pooling66_Output_0/test_data_set_0/output_0.pb")

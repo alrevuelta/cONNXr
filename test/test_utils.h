@@ -6,7 +6,7 @@
 
 #include "../src/embeddedml_debug.h"
 
-#define FLOAT_TOLERANCE 0.00001f
+#define FLOAT_TOLERANCE 0.001f
 
 // Compare if equal with some tolarenace
 void compareAlmostEqualTensorProto(Onnx__TensorProto *a, Onnx__TensorProto *b)

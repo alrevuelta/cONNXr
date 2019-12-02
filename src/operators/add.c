@@ -74,7 +74,15 @@ void operator_add(size_t n_input,
       for (int i = 0; i < a->n_float_data; i++) {
         /* Broadcasting might not work as expected. This is hardcoded for
         mnist model */
-        c->float_data[i] = a->float_data[i] + b->float_data[i/(a->dims[2]*a->dims[3])];
+
+        // TODO this wont work with 2 dimensions n_dims = 2
+        // TODO Dirty aF. If inside loop is bad, fix
+        if (a->n_dims == 2) {
+          c->float_data[i] = a->float_data[i] + b->float_data[i];
+        // broadcasting hardcoded
+        }else {
+          c->float_data[i] = a->float_data[i] + b->float_data[i/(a->dims[2]*a->dims[3])];
+        }
       }
     } break;
     case ONNX__TENSOR_PROTO__DATA_TYPE__INT32:

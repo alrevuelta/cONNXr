@@ -35,6 +35,8 @@
   //Onnx__TensorProto *B = xx;
   Onnx__TensorProto *Y = output[0];
 
+  printf("remove %s\n", W->name);
+
   debug_print_dims(X->n_dims, X->dims);
   // Borrowed form https://github.com/pjreddie/darknet/blob/61c9d02ec461e30d55762ec7669d6a1d3c356fb2/src/convolutional_layer.c#L445
   // TODO dilations is harcoded [1 1]
@@ -49,8 +51,8 @@
   //Onnx__AttributeProto *pads = searchAttributeNyName(n_attribute, attribute, "pads");
   Onnx__AttributeProto *strides = searchAttributeNyName(n_attribute, attribute, "strides");
 
-  int64_t h_kernel, w_kernel, h_stride, w_stride;
-  h_kernel = w_kernel = h_stride = w_stride = 1;
+  int64_t h_kernel, w_kernel, d_kernel, h_stride, w_stride;
+  h_kernel = w_kernel = d_kernel = h_stride = w_stride = 1;
   if (kernel_shape != NULL) {
     h_kernel = kernel_shape->ints[0];
     w_kernel = kernel_shape->ints[1];
@@ -100,32 +102,37 @@
     {
       Y->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT;
       Y->float_data = malloc(Y->dims[0]*Y->dims[1]*Y->dims[2]*Y->dims[3] * sizeof(float));
+      // todo make this nice :P
       Y->n_float_data = Y->dims[0]*Y->dims[1]*Y->dims[2]*Y->dims[3];
 
-      int b,i,j,k,m,n;
+      int b,i,j,k,m,n,d;
       for(b = 0; b < Y->dims[0]; ++b){
         for(k = 0; k < Y->dims[1]; ++k){
           for(i = 0; i < Y->dims[2]; ++i){
             for(j = 0; j < Y->dims[3]; ++j){
+              // TODO replace all this calculations by macros?
               int out_index = j + Y->dims[3]*(i + Y->dims[2]*(k + X->dims[1]*b));
               float value = 0;
-              for(n = 0; n < h_kernel; ++n){
-                for(m = 0; m < w_kernel; ++m){
-                  int cur_h = i*h_stride + n + h_pad;
-                  int cur_w = j*w_stride + m + w_pad;
+              for(d = 0; d < W->dims[1]; ++d){
+                for(n = 0; n < h_kernel; ++n){   // TODO use W->dims[2] instead?
+                  for(m = 0; m < w_kernel; ++m){ // TODO use W->dims[3] instead?
+                    int cur_h = i*h_stride + n + h_pad;
+                    int cur_w = j*w_stride + m + w_pad;
 
-                  /* This is hardcoded to make it work with mnist model, where
-                  the input is 1x1x28x28 */
-                  //int index = cur_w + X->dims[3]*(cur_h + X->dims[2]*(k + b*X->dims[1]));
-                  int index = cur_w + X->dims[3]*(cur_h + X->dims[2]*(0 + 0*X->dims[1]));
+                    /* This is hardcoded to make it work with mnist model, where
+                    the input is 1x1x28x28 */
+                    int index = cur_w + X->dims[3]*(cur_h + X->dims[2]*(d + 0*X->dims[1]));
+                    //printf("%d,%d,%d index=%d\n", d, cur_h, cur_w, index);
 
-                  int valid = (cur_h >= 0 && cur_h < X->dims[2] &&
-                               cur_w >= 0 && cur_w < X->dims[3]);
-                  float val = (valid != 0) ? X->float_data[index] : 0;
-                  int index_kernel = k*W->dims[3]*W->dims[2]*W->dims[1] + 0*W->dims[2]*W->dims[1] + n*h_kernel +m;
-                  value += val * W->float_data[index_kernel];
+                    int valid = (cur_h >= 0 && cur_h < X->dims[2] &&
+                                 cur_w >= 0 && cur_w < X->dims[3]);
+                    float val = (valid != 0) ? X->float_data[index] : 0;
+                    int index_kernel = k*W->dims[3]*W->dims[2]*W->dims[1] + d*W->dims[3]*W->dims[2] + n*h_kernel + m; // change h_kernel by W->dims[x]
+                    value += val * W->float_data[index_kernel];
+                    //printf("%fx%f+\n", val, W->float_data[index_kernel]);
                   }
                 }
+              }
               Y->float_data[out_index] = value;
             }
           }
