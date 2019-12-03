@@ -1,7 +1,0 @@
-#ifndef EMBEDDEDML_ARRAYFEATUREEXTRACTOR_H
-#define EMBEDDEDML_ARRAYFEATUREEXTRACTOR_H
-#include "../pb/onnx.pb-c.h"
-
-// TODO
-
-#endif

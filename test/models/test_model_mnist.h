@@ -63,7 +63,7 @@ static void test_model_mnist_node(char *outputName)
 
   Onnx__NodeProto *temp0 = model->graph->node[0];
   Onnx__NodeProto *temp3 = model->graph->node[3];
-  Onnx__NodeProto *temp2 = model->graph->node[2];
+  //Onnx__NodeProto *temp2 = model->graph->node[2];
   Onnx__NodeProto *temp1 = model->graph->node[1];
   model->graph->node[0] = model->graph->node[4];
   model->graph->node[1] = temp3;

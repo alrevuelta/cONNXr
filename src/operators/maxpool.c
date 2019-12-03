@@ -7,34 +7,41 @@
 #include "../embeddedml_utils.h"
 #include "maxpool.h"
 
- // Template example
- /*! \fn COPY_PASTE_FUNCTION_DECLARATION
-  *  \brief COPY_PASTE_AND_FORMAT_ONNX_DOCUMENTATION. INPUTS/OUTPUTS/CONSTRAINTS
-  *
-  *         Limitations: There might be some limitations with respect to the onnx
-  *           official operator. Write here possible limitations, i.e. if the
-  *           function doesnt work with all types, or if it works with a specific
-  *           number of dimensions only
-  *  \param[in]  xx xx
-  *  \param[in]  xx xx
-  *  \param[out] xx xx
-  *  \return     xx
-  */
- void operator_maxpool(size_t n_input,
-                       Onnx__TensorProto **input,
-                       size_t n_attribute,
-                       Onnx__AttributeProto **attribute,
-                       size_t n_output,
-                       Onnx__TensorProto **output)
+/*! \fn COPY_PASTE_FUNCTION_DECLARATION
+ *  \brief COPY_PASTE_AND_FORMAT_ONNX_DOCUMENTATION. INPUTS/OUTPUTS/CONSTRAINTS
+ *
+ *  Limitations: There might be some limitations with respect to the official onnx
+ *  operator. Write here possible limitations, i.e. if the function doesnt work
+ *  with all types, or if it works with a specific number of dimensions only
+ *
+ *  \param[in]      n_input     Number of inputs of the operator
+ *  \param[in]      input       Array of pointers to the inputs of the operator
+ *  \param[in]      n_attribute Number of attributes of the operator
+ *  \param[in]      attribute   Array of pointers to the attributes of the operator
+ *  \param[in]      n_output    Numper of outputs of the operator
+ *  \param[in/out]  output      Array of pointer to the outputs of the operators
+ *  \return         error       Different than 0 if an error was produced
+ */
+int operator_maxpool(const size_t n_input,
+                     const Onnx__TensorProto **input,
+                     const size_t n_attribute,
+                     const Onnx__AttributeProto **attribute,
+                     const size_t n_output,
+                     Onnx__TensorProto **output)
 {
   DEBUG_PRINT("Calling operator_maxpool");
-
-  // Temporal
-  Onnx__TensorProto *X = input[0];
-  Onnx__TensorProto *Y = output[0];
-  
-  debug_print_dims(X->n_dims, X->dims);
+  debug_print_dims(input[0]->n_dims, input[0]->dims);
   //debug_print_attributes(n_attribute, attribute);
+
+  /* Use conv operator as reference to improve this one */
+  if (0){
+    /* TODO: Check some conditions. For example if a specific
+     * functionality is not supported */
+    //a->data_type == b->data_type
+    //a->n_dims == b->n_dims
+    //a->dims[i] == b->dims[i]
+    return -1;
+  }
 
   // TODO ingore dilated parameter for initial tests
   // TODO indices are not implemented for the initial prototype
@@ -42,11 +49,9 @@
   // is applied along 2dimensions.
   // TODO pads are not implemented
 
-
-
   // number of dimensions do not change
-  Y->dims = malloc(X->n_dims * sizeof(int64_t));
-  Y->n_dims       = X->n_dims;
+  output[0]->dims   = malloc(input[0]->n_dims * sizeof(int64_t));
+  output[0]->n_dims = input[0]->n_dims;
 
   // Only kernel_shape is mandatory
   //Onnx__AttributeProto *auto_pad = searchAttributeNyName(n_attribute, attribute, "auto_pad");
@@ -69,44 +74,44 @@
     w_stride = strides->ints[1];
   }
 
-  Y->dims[0] = X->dims[0];
-  Y->dims[1] = X->dims[1];
-  Y->dims[2] = (X->dims[2] - h_kernel + h_stride) / h_stride;
-  Y->dims[3] = (X->dims[3] - w_kernel + w_stride) / w_stride;
+  output[0]->dims[0] = input[0]->dims[0];
+  output[0]->dims[1] = input[0]->dims[1];
+  output[0]->dims[2] = (input[0]->dims[2] - h_kernel + h_stride) / h_stride;
+  output[0]->dims[3] = (input[0]->dims[3] - w_kernel + w_stride) / w_stride;
 
   // TODO check this? no mem is allocated?
-  Y->name         = "name_is_set_afterwards\0";
-  Y->has_raw_data = 0;
+  output[0]->name         = "name_is_set_afterwards\0"; // dont do this
+  output[0]->has_raw_data = 0;
 
-  switch(X->data_type)
+  switch(input[0]->data_type)
   {
     case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:
     {
-      Y->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT;
-      Y->float_data = malloc(Y->dims[0]*Y->dims[1]*Y->dims[2]*Y->dims[3] * sizeof(float));
-      Y->n_float_data = Y->dims[0]*Y->dims[1]*Y->dims[2]*Y->dims[3];
+      output[0]->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT;
+      output[0]->float_data = malloc(output[0]->dims[0]*output[0]->dims[1]*output[0]->dims[2]*output[0]->dims[3] * sizeof(float));
+      output[0]->n_float_data = output[0]->dims[0]*output[0]->dims[1]*output[0]->dims[2]*output[0]->dims[3];
 
       int b,i,j,k,m,n;
-      for(b = 0; b < Y->dims[0]; ++b){
-        for(k = 0; k < Y->dims[1]; ++k){
-          for(i = 0; i < Y->dims[2]; ++i){
-            for(j = 0; j < Y->dims[3]; ++j){
-              int out_index = j + Y->dims[3]*(i + Y->dims[2]*(k + X->dims[1]*b));
+      for(b = 0; b < output[0]->dims[0]; ++b){
+        for(k = 0; k < output[0]->dims[1]; ++k){
+          for(i = 0; i < output[0]->dims[2]; ++i){
+            for(j = 0; j < output[0]->dims[3]; ++j){
+              int out_index = j + output[0]->dims[3]*(i + output[0]->dims[2]*(k + input[0]->dims[1]*b));
               float max = -99999; // TODO
               for(n = 0; n < h_kernel; ++n){
                 for(m = 0; m < w_kernel; ++m){
                   int cur_h = i*h_stride + n;
                   int cur_w = j*w_stride + m;
-                  int index = cur_w + X->dims[3]*(cur_h + X->dims[2]*(k + b*X->dims[1]));
+                  int index = cur_w + input[0]->dims[3]*(cur_h + input[0]->dims[2]*(k + b*input[0]->dims[1]));
                   /*int valid = (cur_h >= 0 && cur_h < l.h &&
                                cur_w >= 0 && cur_w < l.w);
                   float val = (valid != 0) ? net.input[index] : -FLT_MAX;*/
-                  max = (X->float_data[index] > max ? X->float_data[index] : max);
+                  max = (input[0]->float_data[index] > max ? input[0]->float_data[index] : max);
                   //max_i = (val > max) ? index : max_i;
                   //max   = (val > max) ? val   : max;
                   }
                 }
-                Y->float_data[out_index] = max;
+                output[0]->float_data[out_index] = max;
               }
             }
           }
@@ -121,6 +126,7 @@
       break;
   }
 
-  debug_print_dims(Y->n_dims, Y->dims);
+  debug_print_dims(output[0]->n_dims, output[0]->dims);
+  return 0;
 
 }

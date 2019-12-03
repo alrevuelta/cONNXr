@@ -6,102 +6,105 @@
 #include "../embeddedml_debug.h"
 #include "reshape.h"
 
-
-// Template example
 /*! \fn COPY_PASTE_FUNCTION_DECLARATION
  *  \brief COPY_PASTE_AND_FORMAT_ONNX_DOCUMENTATION. INPUTS/OUTPUTS/CONSTRAINTS
  *
- *         Limitations: There might be some limitations with respect to the onnx
- *           official operator. Write here possible limitations, i.e. if the
- *           function doesnt work with all types, or if it works with a specific
- *           number of dimensions only
- *  \param[in]  xx xx
- *  \param[in]  xx xx
- *  \param[out] xx xx
- *  \return     xx
+ *  Limitations: There might be some limitations with respect to the official onnx
+ *  operator. Write here possible limitations, i.e. if the function doesnt work
+ *  with all types, or if it works with a specific number of dimensions only
+ *
+ *  \param[in]      n_input     Number of inputs of the operator
+ *  \param[in]      input       Array of pointers to the inputs of the operator
+ *  \param[in]      n_attribute Number of attributes of the operator
+ *  \param[in]      attribute   Array of pointers to the attributes of the operator
+ *  \param[in]      n_output    Numper of outputs of the operator
+ *  \param[in/out]  output      Array of pointer to the outputs of the operators
+ *  \return         error       Different than 0 if an error was produced
  */
-void operator_reshape(size_t n_input,
-                      Onnx__TensorProto **input,
-                      size_t n_attribute,
-                      Onnx__AttributeProto **attribute,
-                      size_t n_output,
-                      Onnx__TensorProto **output)
+int operator_reshape(const size_t n_input,
+                     const Onnx__TensorProto **input,
+                     const size_t n_attribute,
+                     const Onnx__AttributeProto **attribute,
+                     const size_t n_output,
+                     Onnx__TensorProto **output)
 {
   DEBUG_PRINT("Calling operator_reshape");
+  debug_print_dims(input[0]->n_dims, input[0]->dims);
 
-
-  // TODO temporal
-  Onnx__TensorProto *data = input[0];
-  Onnx__TensorProto *shape = input[1];
-  Onnx__TensorProto *reshaped = output[0];
-
-  debug_print_dims(data->n_dims, data->dims);
+  if (0){
+    /* TODO: Check some conditions. For example if a specific
+     * functionality is not supported */
+    //a->data_type == b->data_type
+    //a->n_dims == b->n_dims
+    //a->dims[i] == b->dims[i]
+    return -1;
+  }
 
   // Not sure about this implementation. It just swaps the dimensions
   // and does not change the data.
-  reshaped->dims = malloc(shape->n_int64_data * sizeof(int64_t));
+  output[0]->dims = malloc(input[1]->n_int64_data * sizeof(int64_t));
 
   // Note that the dimension that is applied is encoded as a
   // int64 field. So shape its assumed to have data_type int64
 
-  for (int i = 0; i < shape->n_int64_data; i++)
+  for (int i = 0; i < input[1]->n_int64_data; i++)
   {
     // The dimension can be n, 0 or -1.
-    if (shape->int64_data[i] == 0)
+    if (input[1]->int64_data[i] == 0)
     {
       // If 0 the dimension is not changed
-      reshaped->dims[i] = data->dims[i];
+      output[0]->dims[i] = input[0]->dims[i];
     }
-    else if (shape->int64_data[i] == -1)
+    else if (input[1]->int64_data[i] == -1)
     {
       // If -1 the dimension is inferred from the remaining dim
       // Only 1 parameter can be -1
 
       // This is ugly af, just to make it work for now
       uint64_t totalDimData = 1;
-      for (int j = 0; j < data->n_dims; j++)
+      for (int j = 0; j < input[0]->n_dims; j++)
       {
-        totalDimData *= data->dims[j];
+        totalDimData *= input[0]->dims[j];
       }
 
       uint64_t totalShape = 1;
 
-      for (int j = 0; j < shape->n_int64_data; j++)
+      for (int j = 0; j < input[1]->n_int64_data; j++)
       {
-        if (shape->int64_data[j] > 0)
+        if (input[1]->int64_data[j] > 0)
         {
-          totalShape *= shape->int64_data[j];
+          totalShape *= input[1]->int64_data[j];
         }
-        else if (shape->int64_data[j] == 0)
+        else if (input[1]->int64_data[j] == 0)
         {
-          totalShape *= data->dims[j];
+          totalShape *= input[0]->dims[j];
         }
         // Just ignore if -1
       }
-      reshaped->dims[i] = totalDimData/totalShape;
+      output[0]->dims[i] = totalDimData/totalShape;
     }
     else
     {
-      reshaped->dims[i] = shape->int64_data[i];
+      output[0]->dims[i] = input[1]->int64_data[i];
     }
-    DEBUG_PRINT("-----reshaped->dims[%d] = %lld", i, reshaped->dims[i]);
+    DEBUG_PRINT("-----reshaped->dims[%d] = %lld", i, output[0]->dims[i]);
   }
 
   // Populate some parameters
-  reshaped->name         = "name_is_set_afterwards\0";
-  reshaped->n_dims       = shape->n_int64_data;
-  reshaped->has_raw_data = 0;
-  reshaped->data_type    = data->data_type;
+  output[0]->name         = "name_is_set_afterwards\0";
+  output[0]->n_dims       = input[1]->n_int64_data;
+  output[0]->has_raw_data = 0;
+  output[0]->data_type    = input[0]->data_type;
 
-  switch(data->data_type)
+  switch(input[0]->data_type)
   {
     case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:
     {
-      reshaped->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT;
-      reshaped->n_float_data = data->n_float_data;
-      reshaped->float_data = malloc(data->n_float_data * sizeof(float));
-      for (int i = 0; i < data->n_float_data; i++) {
-        reshaped->float_data[i] = data->float_data[i];
+      output[0]->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT;
+      output[0]->n_float_data = input[0]->n_float_data;
+      output[0]->float_data = malloc(input[0]->n_float_data * sizeof(float));
+      for (int i = 0; i < input[0]->n_float_data; i++) {
+        output[0]->float_data[i] = input[0]->float_data[i];
       }
     }
       break;
@@ -136,5 +139,6 @@ void operator_reshape(size_t n_input,
     default:
       break;
   }
-  debug_print_dims(reshaped->n_dims, reshaped->dims);
+  debug_print_dims(output[0]->n_dims, output[0]->dims);
+  return 0;
 }

@@ -5,7 +5,6 @@
 // Just for some initial tests. Move to a common include
 #include "operators/add.h"
 #include "operators/argmax.h"
-#include "operators/arrayfeatureextractor.h"
 #include "operators/cast.h"
 #include "operators/conv.h"
 #include "operators/matmul.h"
@@ -15,8 +14,6 @@
 #include "operators/sigmoid.h"
 #include "operators/softmax.h"
 #include "operators/zipmap.h"
-
-#include "operators/notimplemented.h"
 
 // TODO Hardcoded for initial tests
 #define MAX_NUM_OF_OUTPUTS 20
@@ -29,11 +26,11 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
 typedef struct
 {
   const char *name;
-  void (*func)(size_t n_input,
-               Onnx__TensorProto **input,
-               size_t n_attribute,
-               Onnx__AttributeProto **attribute,
-               size_t n_output,
+  int (*func)(const size_t n_input,
+               const Onnx__TensorProto **input,
+               const size_t n_attribute,
+               const Onnx__AttributeProto **attribute,
+               const size_t n_output,
                Onnx__TensorProto **output);
 } operatorptrs;
 
@@ -47,8 +44,6 @@ static const operatorptrs
                              {"MaxPool", operator_maxpool},
                              {"Relu", operator_relu},
                              {"Reshape", operator_reshape},
-
-                            // If operator is not found notimplemented function is called
                            };
 
 #endif

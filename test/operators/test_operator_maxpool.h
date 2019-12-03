@@ -20,9 +20,6 @@ test_maxpool_3d_default
 test_maxpool_with_argmax_2d_precomputed_pads
 test_maxpool_with_argmax_2d_precomputed_strides
 */
-/* Note that maxpool is not tested as some other operators. Since maxpool needs more
-than just the inputs (attributes), the onnx model is used to test.*/
-/*
 void test_operator_maxpool_1d_default(void)
 {
 
@@ -238,6 +235,6 @@ void test_operator_maxpool_with_argmax_2d_precomputed_strides(void)
   Onnx__TensorProto **outputs = inference(model, inputs, 1);
 
   compareAlmostEqualTensorProto(outputs[0], out1);
-}*/
+}
 
 #endif

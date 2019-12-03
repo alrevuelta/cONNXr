@@ -6,12 +6,4 @@
 #include "../embeddedml_debug.h"
 #include "sigmoid.h"
 
-/*
-void Operators_Sigmoid(void *x, int size)
-{
-  float *xf = (float*)x;
-  while (size > 0) {
-    size--;
-    xf[size] = (1/(1 + exp(-(xf[size]))));
-  }
-}*/
+// TODO

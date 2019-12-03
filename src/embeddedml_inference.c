@@ -9,29 +9,29 @@
 int _outputIdx = 0;
 Onnx__TensorProto *_outputs[MAX_NUM_OF_OUTPUTS] = {};
 
-// TODO Move somewhere?
-static void call_operator(const char *name,
-                          size_t n_input,
-                          Onnx__TensorProto **input,
-                          size_t n_attribute,
-                          Onnx__AttributeProto **attribute,
-                          size_t n_output,
-                          Onnx__TensorProto **output)
+static int call_operator(const char *name,
+                         const size_t n_input,
+                         const Onnx__TensorProto **input,
+                         const size_t n_attribute,
+                         const Onnx__AttributeProto **attribute,
+                         const size_t n_output,
+                         Onnx__TensorProto **output)
 {
   int i;
   for(i = 0; operatorsSet[i].name; i++) {
     if(strcmp(operatorsSet[i].name, name) == 0) {
-      operatorsSet[i].func(n_input,
-                           input,
-                           n_attribute,
-                           attribute,
-                           n_output,
-                           output);
-      return;
+      int ret = operatorsSet[i].func(n_input,
+                                     input,
+                                     n_attribute,
+                                     attribute,
+                                     n_output,
+                                     output);
+      return ret;
     }
   }
-  // If it reaches this point, the operator wasnt found
-  operator_notimplemented(name);
+  /* If it reaches this point, the operator wasnt found */
+  printf("\n\nTODO: Operator %s doest not exist or its not implemented\n\n", name);
+  return -1;
 }
 
 Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **inputs, int nInputs)
@@ -67,19 +67,18 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
       nodeInputs[inp] = inpN;
     }
 
-    call_operator(operation,
-                  model->graph->node[nodeIdx]->n_input,
-                  nodeInputs,
-                  model->graph->node[nodeIdx]->n_attribute,
-                  model->graph->node[nodeIdx]->attribute,
-                  nOutputs,// TODO use model->graph->node[nodeIdx]->n_output
-                  nodeOutputs);
+    int error = call_operator(operation,
+                              model->graph->node[nodeIdx]->n_input,
+                              nodeInputs,
+                              model->graph->node[nodeIdx]->n_attribute,
+                              model->graph->node[nodeIdx]->attribute,
+                              nOutputs,// TODO use model->graph->node[nodeIdx]->n_output
+                              nodeOutputs);
 
-    // TODO temporal shit
-    printf("deug\n\n");
-    for (int i = 0; i < nodeOutputs[0]->n_float_data; i++) {
-      //printf("float_data[%d] = %f\n", i, nodeOutputs[0]->float_data[i]);
+    if (error){
+      printf("TODO: There was an error, do something\n");
     }
+
     out0->name = model->graph->node[nodeIdx]->output[0];
     DEBUG_PRINT("Storing output in list index=%d, name=%s", _outputIdx, out0->name);
     _outputs[_outputIdx++] = nodeOutputs[0]; // todo this is hardcoded

@@ -6,9 +6,9 @@
 #include "../embeddedml_debug.h"
 #include "softmax.h"
 
-/*
+/* TODO
 // Works with 1 dimension.
-void Operators_Softmax(void *x, int dimx, int dimy)
+void xx(void *x, int dimx, int dimy)
 {
   // TODO Use dimy to work with 2 dimensions.
   float sumExp = 0;

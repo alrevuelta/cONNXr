@@ -6,43 +6,60 @@
 #include "../embeddedml_debug.h"
 #include "cast.h"
 
-// TODO paste header form onnx doc
-void operator_cast(size_t n_input,
-                   Onnx__TensorProto **input,
-                   size_t n_attribute,
-                   Onnx__AttributeProto **attribute,
-                   size_t n_output,
-                   Onnx__TensorProto **output)
+/*! \fn COPY_PASTE_FUNCTION_DECLARATION
+ *  \brief COPY_PASTE_AND_FORMAT_ONNX_DOCUMENTATION. INPUTS/OUTPUTS/CONSTRAINTS
+ *
+ *  Limitations: There might be some limitations with respect to the official onnx
+ *  operator. Write here possible limitations, i.e. if the function doesnt work
+ *  with all types, or if it works with a specific number of dimensions only
+ *
+ *  \param[in]      n_input     Number of inputs of the operator
+ *  \param[in]      input       Array of pointers to the inputs of the operator
+ *  \param[in]      n_attribute Number of attributes of the operator
+ *  \param[in]      attribute   Array of pointers to the attributes of the operator
+ *  \param[in]      n_output    Numper of outputs of the operator
+ *  \param[in/out]  output      Array of pointer to the outputs of the operators
+ *  \return         error       Different than 0 if an error was produced
+ */
+int operator_cast(const size_t n_input,
+                  const Onnx__TensorProto **input,
+                  const size_t n_attribute,
+                  const Onnx__AttributeProto **attribute,
+                  const size_t n_output,
+                  Onnx__TensorProto **output)
 {
-  // TODO Scientific notation is not supported, like 1e-5
-  // TODO Only float to int64 conversion is supported
-
-  // TODO temporal
-  Onnx__TensorProto *T1 = input[0];
-  Onnx__TensorProto *T2 = output[0];
-  Onnx__AttributeProto *attr = attribute[0];
-
   DEBUG_PRINT("Calling operator_cast");
-  debug_print_dims(T1->n_dims, T1->dims);
+  debug_print_dims(input[0]->n_dims, input[0]->dims);
 
-  // todo remove. just to make it work
+  if (0){
+    // TODO Just a prototype. Not tested
+    // TODO Scientific notation is not supported, like 1e-5
+    // TODO Only float to int64 conversion is supported
+    /* TODO: Check some conditions. For example if a specific
+     * functionality is not supported */
+    //a->data_type == b->data_type
+    //a->n_dims == b->n_dims
+    //a->dims[i] == b->dims[i]
+    return -1;
+  }
+
+  /* TODO: This is hardcoded */
   int to = ONNX__TENSOR_PROTO__DATA_TYPE__INT64;
 
-  T2->dims = malloc(T1->n_dims * sizeof(int64_t));
-  for (int i = 0; i < T1->n_dims; i++)
+  output[0]->dims = malloc(input[0]->n_dims * sizeof(int64_t));
+  for (int i = 0; i < input[0]->n_dims; i++)
   {
-    T2->dims[i] = T1->dims[i];
+    output[0]->dims[i] = input[0]->dims[i];
   }
 
   // Populate some parameters
-  T2->name         = "name_is_set_afterwards\0";
-  T2->n_dims       = T1->n_dims;
-  T2->has_raw_data = 0;
-  T2->data_type    = to;
+  output[0]->name         = "name_is_set_afterwards\0";
+  output[0]->n_dims       = input[0]->n_dims;
+  output[0]->has_raw_data = 0;
+  output[0]->data_type    = to;
 
   // TODO Set unused parameters to 0?
-
-  switch(T1->data_type)
+  switch(input[0]->data_type)
   {
     case ONNX__TENSOR_PROTO__DATA_TYPE__UNDEFINED:
       break;
@@ -51,20 +68,20 @@ void operator_cast(size_t n_input,
       // Hardcode conversion to int64 or double only
       if (to == ONNX__TENSOR_PROTO__DATA_TYPE__INT64)
       {
-        T2->n_int64_data = T1->n_float_data;
-        T2->int64_data = malloc(T2->n_int64_data * sizeof(int64_t));
-        for (int i = 0; i < T2->n_int64_data; i++)
+        output[0]->n_int64_data = input[0]->n_float_data;
+        output[0]->int64_data = malloc(output[0]->n_int64_data * sizeof(int64_t));
+        for (int i = 0; i < output[0]->n_int64_data; i++)
         {
-          T2->int64_data[i] = (int64_t)T1->float_data[i];
+          output[0]->int64_data[i] = (int64_t)input[0]->float_data[i];
         }
       }
       else if (to == ONNX__TENSOR_PROTO__DATA_TYPE__DOUBLE)
       {
-        T2->n_double_data = T1->n_double_data;
-        T2->double_data = malloc(T2->n_double_data * sizeof(double));
-        for (int i = 0; i < T2->n_double_data; i++)
+        output[0]->n_double_data = input[0]->n_double_data;
+        output[0]->double_data = malloc(output[0]->n_double_data * sizeof(double));
+        for (int i = 0; i < output[0]->n_double_data; i++)
         {
-          T2->double_data[i] = (double)T1->float_data[i];
+          output[0]->double_data[i] = (double)input[0]->float_data[i];
         }
       }
       // TODO Conversion from float to other types
@@ -106,5 +123,6 @@ void operator_cast(size_t n_input,
       break;
   }
 
-  debug_print_dims(T2->n_dims, T2->dims);
+  debug_print_dims(output[0]->n_dims, output[0]->dims);
+  return 0;
 }

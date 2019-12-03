@@ -21,7 +21,7 @@ void test_operator_conv_with_strides_and_asymmetric_padding(void)
   Onnx__TensorProto *inputs[2] = { inp0, inp1 };
   Onnx__TensorProto **outputs = inference(model, inputs, 2);
 
-  //compareAlmostEqualTensorProto(outputs[0], out1);
+  compareAlmostEqualTensorProto(outputs[0], out1);
 }
 
 void test_operator_conv_with_strides_no_padding(void)
@@ -55,7 +55,7 @@ void test_operator_conv_with_strides_padding(void)
   Onnx__TensorProto *inputs[2] = { inp0, inp1 };
   Onnx__TensorProto **outputs = inference(model, inputs, 2);
 
-  //compareAlmostEqualTensorProto(outputs[0], out1);
+  compareAlmostEqualTensorProto(outputs[0], out1);
 }
 
 #endif

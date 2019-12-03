@@ -2,12 +2,12 @@
 #define EMBEDDEDML_MAXPOOL_H
 #include "../pb/onnx.pb-c.h"
 
-void operator_maxpool(size_t n_input,
-                      Onnx__TensorProto **input,
-                      size_t n_attribute,
-                      Onnx__AttributeProto **attribute,
-                      size_t n_output,
-                      Onnx__TensorProto **output);
+int operator_maxpool(const size_t n_input,
+                     const Onnx__TensorProto **input,
+                     const size_t n_attribute,
+                     const Onnx__AttributeProto **attribute,
+                     const size_t n_output,
+                     Onnx__TensorProto **output);
 
 
 

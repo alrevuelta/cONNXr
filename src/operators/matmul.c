@@ -6,100 +6,88 @@
 #include "../embeddedml_debug.h"
 #include "matmul.h"
 
-/*! \fn void matmul(Onnx__TensorProto *a, Onnx__TensorProto *b, Onnx__TensorProto *c)
- *  \brief MatMul: Matrix product that behaves like numpy.matmul:
- *                 https://docs.scipy.org/doc/numpy-1.13.0/reference/generated/numpy.matmul.html
- *         Version: This version of the operator has been available since
- *                  version 9 of the default ONNX operator set. Other versions
- *                  of this operator: MatMul-1
- *         Inputs:
- *          A : T. N-dimensional matrix A
- *          B : T. N-dimensional matrix B
- *         Outputs:
- *          Y : T. Matrix multiply results from A * B
- *         Type Constraints:
- *          T : tensor(float16), tensor(float), tensor(double), tensor(uint32),
- *              tensor(uint64), tensor(int32), tensor(int64)
- *              Constrain input and output types to float/int tensors.
+/*! \fn COPY_PASTE_FUNCTION_DECLARATION
+ *  \brief COPY_PASTE_AND_FORMAT_ONNX_DOCUMENTATION. INPUTS/OUTPUTS/CONSTRAINTS
  *
- *         Limitations: There might be some limitations with respect to the onnx
- *           official operator. Write here possible limitations, i.e. if the
- *           function doesnt work with all types, or if it works with a specific
- *           number of dimensions only
- *  \param[in]  Onnx__TensorProto a
- *  \param[in]  Onnx__TensorProto b
- *  \param[out] Onnx__TensorProto c
- *  \return     void
+ *  Limitations: There might be some limitations with respect to the official onnx
+ *  operator. Write here possible limitations, i.e. if the function doesnt work
+ *  with all types, or if it works with a specific number of dimensions only
+ *
+ *  \param[in]      n_input     Number of inputs of the operator
+ *  \param[in]      input       Array of pointers to the inputs of the operator
+ *  \param[in]      n_attribute Number of attributes of the operator
+ *  \param[in]      attribute   Array of pointers to the attributes of the operator
+ *  \param[in]      n_output    Numper of outputs of the operator
+ *  \param[in/out]  output      Array of pointer to the outputs of the operators
+ *  \return         error       Different than 0 if an error was produced
  */
-void operator_matmul(size_t n_input,
-                     Onnx__TensorProto **input,
-                     size_t n_attribute,
-                     Onnx__AttributeProto **attribute,
-                     size_t n_output,
-                     Onnx__TensorProto **output)
+int operator_matmul(const size_t n_input,
+                    const Onnx__TensorProto **input,
+                    const size_t n_attribute,
+                    const Onnx__AttributeProto **attribute,
+                    const size_t n_output,
+                    Onnx__TensorProto **output)
 {
-  // TODO temporal
-  Onnx__TensorProto *a = input[0];
-  Onnx__TensorProto *b = input[1];
-  Onnx__TensorProto *o = output[0];
-  
   DEBUG_PRINT("Calling operator_matmul");
-  debug_print_dims(a->n_dims, a->dims);
-  debug_print_dims(b->n_dims, b->dims);
+  debug_print_dims(input[0]->n_dims, input[0]->dims);
+  debug_print_dims(input[1]->n_dims, input[1]->dims);
+
+  if (0){
+    /* TODO: Check some conditions. For example if a specific
+     * functionality is not supported */
+    //a->data_type == b->data_type
+    //a->n_dims == b->n_dims
+    //a->dims[i] == b->dims[i]
+    return -1;
+  }
 
   // TODO Hardcoded for 2 dimensions
-
   // TODO Might be useful to define a macro like
   // #define I(a,b,c,d) I[(a)+(b)*oH+(c)*oH*oW+(d)*oH*oW*C]
   // dont know how to handle the different dimensions though
 
-  // Check condition?
-  //a->data_type == b->data_type;
-
-
-
   // Allocte memory
-  o->dims = malloc(2 * sizeof(int64_t));
+  output[0]->dims = malloc(2 * sizeof(int64_t));
 
   // Populate some parameters
   // TODO: Is this working? No mem is allocated
-  o->name         = "name_is_set_afterwards\0";
-  o->n_dims       = 2;
-  o->dims[0]      = a->dims[0];
-  o->dims[1]      = b->dims[1];
-  o->has_raw_data = 0;
+  output[0]->name         = "name_is_set_afterwards\0";
+  output[0]->n_dims       = 2;
+  output[0]->dims[0]      = input[0]->dims[0];
+  output[0]->dims[1]      = input[1]->dims[1];
+  output[0]->has_raw_data = 0;
 
-  switch(a->data_type)
+  switch(input[0]->data_type)
   {
     case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:
     {
-      o->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT;
-      o->n_float_data = a->dims[0] * b->dims[1];
-      o->float_data = malloc(a->dims[0] * b->dims[1] * sizeof(float));
-      for (int i = 0; i < a->dims[0]; i++) {
-        for (int j = 0; j < b->dims[1]; j++) {
+      output[0]->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT;
+      output[0]->n_float_data = input[0]->dims[0] * input[1]->dims[1];
+      output[0]->float_data = malloc(input[0]->dims[0] * input[1]->dims[1] * sizeof(float));
+      for (int i = 0; i < input[0]->dims[0]; i++) {
+        for (int j = 0; j < input[1]->dims[1]; j++) {
           float sum = 0;
-          for (int p = 0; p < a->dims[1]; p++) {
-            sum += (a->float_data[i*a->dims[1]+p] * b->float_data[p*b->dims[1]+j]);
+          for (int p = 0; p < input[0]->dims[1]; p++) {
+            sum += (input[0]->float_data[i*input[0]->dims[1]+p] * input[1]->float_data[p*input[1]->dims[1]+j]);
             // Saturate the value?
           }
-          o->float_data[i*b->dims[1]+j] = sum;
+          output[0]->float_data[i*input[1]->dims[1]+j] = sum;
         }
       }
     } break;
     case ONNX__TENSOR_PROTO__DATA_TYPE__INT32:
     {
-      o->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__INT32;
-      o->n_int32_data = a->dims[0] * b->dims[1];
-      o->int32_data = malloc(a->dims[0] * b->dims[1] * sizeof(int32_t));
-      for (int i = 0; i < a->dims[0]; i++) {
-        for (int j = 0; j < b->dims[1]; j++) {
+      output[0]->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__INT32;
+      output[0]->n_int32_data = input[0]->dims[0] * input[1]->dims[1];
+      output[0]->int32_data = malloc(input[0]->dims[0] * input[1]->dims[1] * sizeof(int32_t));
+      for (int i = 0; i < input[0]->dims[0]; i++) {
+        for (int j = 0; j < input[1]->dims[1]; j++) {
           int32_t sum = 0;
-          for (int p = 0; p < a->dims[1]; p++) {
-            sum += (a->int32_data[i*a->dims[1]+p] * b->int32_data[p*b->dims[1]+j]);
+          for (int p = 0; p < input[0]->dims[1]; p++) {
+            sum += (input[0]->int32_data[i*input[0]->dims[1]+p] * input[1]->int32_data[p*input[1]->dims[1]+j]);
             // Saturate the value?
           }
-          o->int32_data[i*b->dims[1]+j] = sum;
+          output[0]->int32_data[i*input[1]->dims[1]+j] = sum;
         }
       }
     } break;
@@ -131,5 +119,6 @@ void operator_matmul(size_t n_input,
       break;
   }
 
-  debug_print_dims(o->n_dims, o->dims);
+  debug_print_dims(output[0]->n_dims, output[0]->dims);
+  return 0;
 }

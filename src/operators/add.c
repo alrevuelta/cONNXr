@@ -6,7 +6,7 @@
 #include "../embeddedml_debug.h"
 #include "add.h"
 
-/*! \fn operator_add(Onnx__TensorProto *a, Onnx__TensorProto *b, Onnx__TensorProto *c)
+/*! \fn operator_add()
  *  \brief Add: Performs element-wise binary addition (with Numpy-style broadcasting support).
  *              This operator supports multidirectional (i.e., Numpy-style) broadcasting; for more
  *              details please check the doc.
@@ -22,71 +22,69 @@
  *          tensor(float16), tensor(float), tensor(double). Constrain input and output types to
  *          high-precision numeric tensors.
  *
- *       Limitations: There might be some limitations with respect to the onnx
- *         official operator. Write here possible limitations, i.e. if the
- *         function doesnt work with all types, or if it works with a specific
- *         number of dimensions only
- *  \param[in]  Onnx__TensorProto a
- *  \param[in]  Onnx__TensorProto b
- *  \param[out] Onnx__TensorProto c
- *  \return     void
+ *  Limitations: There might be some limitations with respect to the official onnx
+ *  operator. Write here possible limitations, i.e. if the function doesnt work
+ *  with all types, or if it works with a specific number of dimensions only
+ *
+ *  \param[in]      n_input     Number of inputs of the operator
+ *  \param[in]      input       Array of pointers to the inputs of the operator
+ *  \param[in]      n_attribute Number of attributes of the operator
+ *  \param[in]      attribute   Array of pointers to the attributes of the operator
+ *  \param[in]      n_output    Numper of outputs of the operator
+ *  \param[in/out]  output      Array of pointer to the outputs of the operators
+ *  \return         error       Different than 0 if an error was produced
  */
-void operator_add(size_t n_input,
-                  Onnx__TensorProto **input,
-                  size_t n_attribute,
-                  Onnx__AttributeProto **attribute,
-                  size_t n_output,
-                  Onnx__TensorProto **output)
+int operator_add(const size_t n_input,
+                 const Onnx__TensorProto **input,
+                 const size_t n_attribute,
+                 const Onnx__AttributeProto **attribute,
+                 const size_t n_output,
+                 Onnx__TensorProto **output)
 {
   DEBUG_PRINT("Calling operator_add");
+  debug_print_dims(input[0]->n_dims, input[0]->dims);
 
-  // TODO temporal workaround
-  Onnx__TensorProto *a = input[0];
-  Onnx__TensorProto *b = input[1];
-  Onnx__TensorProto *c = output[0];
-  debug_print_dims(a->n_dims, a->dims);
-
-  // Check condition?
-  //a->data_type == b->data_type
-  //a->n_dims == b->n_dims
-  //a->dims[i] == b->dims[i]
-
-  // Allocte memory
-  c->dims = malloc(a->n_dims * sizeof(int64_t));
-
-  // Populate some parameters
-  c->name         = "name_is_set_afterwards\0";
-  c->n_dims       = a->n_dims;
-
-  for (int i = 0; i < a->n_dims; i++)
-  {
-    c->dims[i] = a->dims[i];
+  if (0){
+    /* TODO: Check some conditions. For example if a specific
+     * functionality is not supported */
+    //a->data_type == b->data_type
+    //a->n_dims == b->n_dims
+    //a->dims[i] == b->dims[i]
+    return -1;
   }
-  c->has_raw_data = 0;
-  c->data_type = a->data_type;
 
-  switch(a->data_type)
+  /* Move this block to a common function */
+  output[0]->dims = malloc(input[0]->n_dims * sizeof(int64_t));
+  output[0]->name         = "name_is_set_afterwards\0"; // dont do this
+  output[0]->n_dims       = input[0]->n_dims;
+  for (int i = 0; i < input[0]->n_dims; i++)
+  {
+    output[0]->dims[i] = input[0]->dims[i];
+  }
+  output[0]->has_raw_data = 0;
+  output[0]->data_type = input[0]->data_type;
+
+  switch(input[0]->data_type)
   {
     case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:
     {
-      c->n_float_data = a->n_float_data;
-      c->float_data = malloc(c->n_float_data * sizeof(float));
-      for (int i = 0; i < a->n_float_data; i++) {
-        /* Broadcasting might not work as expected. This is hardcoded for
-        mnist model */
-
-        // TODO this wont work with 2 dimensions n_dims = 2
-        // TODO Dirty aF. If inside loop is bad, fix
-        if (a->n_dims == 2) {
-          c->float_data[i] = a->float_data[i] + b->float_data[i];
-        // broadcasting hardcoded
-        }else {
-          c->float_data[i] = a->float_data[i] + b->float_data[i/(a->dims[2]*a->dims[3])];
+      output[0]->n_float_data = input[0]->n_float_data;
+      output[0]->float_data = malloc(output[0]->n_float_data * sizeof(float));
+      for (int i = 0; i < input[0]->n_float_data; i++) {
+        /* Normal case where dimensions match */
+        if (input[0]->n_dims == input[1]->n_dims) {
+          output[0]->float_data[i] = input[0]->float_data[i] + input[1]->float_data[i];
+        /* Broadcasting */
+        }else{
+          if (input[1]->n_dims == 1){
+            output[0]->float_data[i] = input[0]->float_data[i] + input[1]->float_data[i%input[1]->dims[0]];
+          }else{
+            output[0]->float_data[i] = input[0]->float_data[i] + input[1]->float_data[i/(input[0]->dims[2]*input[0]->dims[3])];
+          }
         }
       }
     } break;
     case ONNX__TENSOR_PROTO__DATA_TYPE__INT32:
-      // TODO
       break;
     case ONNX__TENSOR_PROTO__DATA_TYPE__INT64:
       break;
@@ -102,5 +100,6 @@ void operator_add(size_t n_input,
       break;
   }
 
-  debug_print_dims(c->n_dims, c->dims);
+  debug_print_dims(output[0]->n_dims, output[0]->dims);
+  return 0;
 }
