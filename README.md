@@ -29,32 +29,10 @@ cd src
 make main
 ```
 
-# Protocol Buffers
-`onnx` uses protocol buffers to serialize the models data. Note that `protobuf-c` is used to generate the `pb/onnx.pb-c.c` and `pb/onnx.pb-c.h`. Files are already provided, but you can generate it like this:
-
-```
-protoc --c_out=. onnx.proto
-```
-
-In the future `nanopb` might be used, since it can generate smaller files. Investigate also how to use `.option` file. You can find some initial tests in `pb/nanopb` but is not yet being used. You can regenerate it using the following command, but note that you need to have a `protoc` binary.
-
-```
-generator-bin/protoc --nanopb_out=. onnx.proto
-```
-
-Note that nanopb archieves a signifiant reduction of the '.c' and `.h` files. 69K/45K for non nanopb and 14/20KB for nanopb. So (69+45)/(14+20) thats 3 times less!
-
 # Tests
-`cunit` is used to test the code. Two different test levels are written, on operator level (i.e. matrix multiplication) and on a model level (whole model end to end)
-
-You can run all the tests with
+Run all tests with:
 ```
 make test
-```
-
-If you are implementing a new operator or debugging, you might want to run only one specific test. The following command will run a specific testcase from its test suite:
-```
-make test ts=Operators_TestSuite tc=test_operator_maxpool_1d_default
 ```
 
 * Have a look to https://github.com/onnx/onnx/blob/master/docs/OnnxBackendTest.md and https://github.com/onnx/onnx/tree/master/onnx/backend/test/data/node. onnx has some tools and guidelines on how to test a new backend implementation.
@@ -66,13 +44,13 @@ make test ts=Operators_TestSuite tc=test_operator_maxpool_1d_default
 
 - [x] Implement matmul and add operators
 - [x] Integrate onnx backend testing
-- [ ] Implement all operators contained in MNIST model
+- [x] Implement all operators contained in MNIST model
 - [x] Conv
 - [x] Add
 - [x] Relu
 - [x] MaxPool
 - [x] Reshape
 - [x] Matmul
-- [ ] Run end to end tests for MNIST model
+- [x] Run end to end tests for MNIST model
 - [ ] Implement a significant amount of onnx operators, most common ones
 - [ ] Compile and deploy a model such MNIST into a real embedded device
