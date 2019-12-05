@@ -3,8 +3,11 @@
 
 #include <CUnit/CUnit.h>
 #include <CUnit/Basic.h>
+#include <glob.h>
 
 #include "../src/embeddedml_debug.h"
+#include "operators/common_operators.h"
+#include <glob.h>
 
 #define FLOAT_TOLERANCE 0.001f
 
@@ -95,6 +98,60 @@ void compareAlmostEqualTensorProto(Onnx__TensorProto *a, Onnx__TensorProto *b)
       CU_FAIL("Unknown data_type");
       break;
   }
+}
+
+void testOperator(char *outputName)
+{
+  /* TODO:
+   * - Run across all data_set_xx (only 0 is used)
+   * - Only output_0 is assumed. Read N outputs
+   */
+  char modelPath[200];
+  strcpy(modelPath, "../test/node/");
+  strcat(modelPath, outputName);
+  strcat(modelPath, "/");
+  strcat(modelPath, "model.onnx");
+
+  printf("Reading model %s\n", modelPath);
+  Onnx__ModelProto *model = openOnnxFile(modelPath);
+
+  char inputPath[200];
+  strcpy(inputPath, "../test/node/");
+  strcat(inputPath, outputName);
+  strcat(inputPath, "/test_data_set_0/input_*.pb");
+
+  /* Lazy, just set a huge number of inputs */
+  Onnx__TensorProto *inputs[10];
+  glob_t globbuf;
+  int nInputs = 0;
+  if (0==glob(inputPath, 0, NULL, &globbuf)){
+    char **inputPbs=globbuf.gl_pathv;
+    for(;*inputPbs;inputPbs++){
+      printf("Reading input %s\n", *inputPbs);
+      Onnx__TensorProto *inputN = openTensorProtoFile(*inputPbs);
+      convertRawDataOfTensorProto(inputN);
+      inputs[nInputs] = inputN;
+      nInputs++;
+    }
+  }
+  globfree(&globbuf);
+
+  char outputPath[200];
+  strcpy(outputPath, "../test/node/");
+  strcat(outputPath, outputName);
+  strcat(outputPath, "/test_data_set_0/output_0.pb");
+
+  printf("Reading output %s\n", outputPath);
+  Onnx__TensorProto *out0set0 = openTensorProtoFile(outputPath);
+  convertRawDataOfTensorProto(out0set0);
+
+  printf("Running inference\n");
+  Onnx__TensorProto **output = inference(model, inputs, nInputs);
+
+  /* Some operators have more than two outputs to assert */
+  int outputToAssert = 0;
+  DEBUG_PRINT("Asserting output %s", output[outputToAssert]->name);
+  compareAlmostEqualTensorProto(output[outputToAssert], out0set0);
 }
 
 #endif

@@ -1,15 +1,15 @@
 # 01 Inntroduction
 ## What is ONNX?
-If you don't know about `onnx` you might want to read about it before. They have a nice [website](https://onnx.ai/) and great repositories with a lot of documentation to read about. Everything is open source, and really big companies in the industry are behind it (AMD, ARM, AWS, Nvidia, Ibm) just to name a few.
+If you don't know about `onnx` you might want to read about it before. They have a nice [website](https://onnx.ai/) and great repositories with a lot of documentation to read about. Everything is open source, and really big companies in the industry are behind it (AMD, ARM, AWS, Nvidia, IBM) just to name a few.
 * https://github.com/onnx/onnx
 * https://github.com/onnx/onnx-r
 * https://github.com/onnx/models
 * https://github.com/owulveryck/onnx-go
 * https://github.com/microsoft/onnxruntime
 
-In short, `onnx` provides a **O**pen **N**eural **N**etwork **E**xchange format. This format, describes a huge set of operators, that can be mixed to create every type of machine learning model that you ever heard of, from a simple neural network to complex deep convolutional networks. Some examples of operators are: matrix multiplications, convolutions, addings, maxpool, sin, cosine, you name it! They provide a standarized set of operators [here](https://github.com/onnx/onnx/blob/master/docs/Operators.md). So we can say that `onnx` provides a layer of abstraction to ML models, which makes all framework compatible between them. Exporters are provided for a huge variety of frameworks (PyTorch, TensorFlow, Keras, Scikit-Learn) so if you want to convert a model from Keras to TensorFlow, you just have to use Keras exporter to export `Keras->ONNX` and then use the importer to import `ONNX-TensorFlow`.
+In short, `onnx` provides a **O**pen **N**eural **N**etwork **E**xchange format. This format, describes a huge set of operators, that can be mixed to create every type of machine learning model that you ever heard of, from a simple neural network to complex deep convolutional networks. Some examples of operators are: matrix multiplications, convolutions, adding, maxpool, sin, cosine, you name it! They provide a standardised set of operators [here](https://github.com/onnx/onnx/blob/master/docs/Operators.md). So we can say that `onnx` provides a layer of abstraction to ML models, which makes all framework compatible between them. Exporters are provided for a huge variety of frameworks (PyTorch, TensorFlow, Keras, Scikit-Learn) so if you want to convert a model from Keras to TensorFlow, you just have to use Keras exporter to export `Keras->ONNX` and then use the importer to import `ONNX-TensorFlow`.
 
-In the following image, you can find an example on how a `onnx` model looks like. Its just a bunch of `nodes` that are connected between them to form a `graph`. Each node has an `operator` that takes some `inputs` with some specific `dimensions` and some `attributes` and calculates some `outputs`. This is how the inference is calculated, just forward propagating the input along every node ultil the last one is reached.
+In the following image, you can find an example on how a `onnx` model looks like. Its just a bunch of `nodes` that are connected between them to form a `graph`. Each node has an `operator` that takes some `inputs` with some specific `dimensions` and some `attributes` and calculates some `outputs`. This is how the inference is calculated, just forward propagating the input along every node until the last one is reached.
 
 ![mnist](/doc/img/mnist_example.png)
 

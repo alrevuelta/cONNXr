@@ -5,18 +5,7 @@
 
 void test_operator_cast_FLOAT_to_DOUBLE(void)
 {
-  Onnx__ModelProto *model = openOnnxFile("../test/node/test_cast_FLOAT_to_DOUBLE/model.onnx");
-  Onnx__TensorProto *inp0 = openTensorProtoFile("../test/node/test_cast_FLOAT_to_DOUBLE/test_data_set_0/input_0.pb");
-  Onnx__TensorProto *out0 = openTensorProtoFile("../test/node/test_cast_FLOAT_to_DOUBLE/test_data_set_0/output_0.pb");
-
-  // Tensors have raw_data. Parse it and store into a normal field for the sake of simplicity
-  convertRawDataOfTensorProto(inp0);
-  convertRawDataOfTensorProto(out0);
-
-  Onnx__TensorProto *inputs[1] = { inp0 };
-  Onnx__TensorProto **outputs = inference(model, inputs, 1);
-
-  compareAlmostEqualTensorProto(outputs[0], out0);
+  testOperator("test_cast_FLOAT_to_DOUBLE");
 }
 
 #endif
