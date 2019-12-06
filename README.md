@@ -8,9 +8,9 @@
 <p align="center">
   <a href="doc/01_Introduction.md">01 Introduction</a> •
   <a href="doc/02_CodeOverview.md">02 Code Overview</a> •
-  <a href="doc/03_Testing">03 Testing</a> •
-  <a href="doc/04_Contributing">04 Contributing</a> •
-  <a href="doc/05_Requirements">05 Requirements</a>
+  <a href="doc/03_Testing.md">03 Testing</a> •
+  <a href="doc/04_Contributing.md">04 Contributing</a> •
+  <a href="doc/05_Requirements.md">05 Requirements</a>
 </p>
 
 This repo contains a pure C99 runtime to run inference on `onnx` models. You can train your model with you favourite framework (tensorflow, keras, sk-learn, you name it!) and once trained export it to a `.onnx` file, that will be used to run inference. This makes this library totally framework agnostic, no matter how you train your model, this repo will run it using the common interface that `onnx` provides. This runtime was thought for embedded devices, that have low resources and that might not be able to compile newer cpp versions, so the idea is to keep the dependancies as minimum as possible, or even zero. No GPUs or fancy processor architectures, just pure non multi-thread C99 code, compatible with almost any embedded device. Lets allow our IoT devices to run inference on the edge, but without sacrificing the tools that the big AI fishes in the industry provide.
