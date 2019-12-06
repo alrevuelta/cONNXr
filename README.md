@@ -3,7 +3,7 @@
 
 > A `onnx` runtime written in pure `C99` with zero dependancies focused on small embedded devices. Run inference on your machine learning models no matter which framework you train it with and no matter the device that you use.
 
-<h2 align="center">📗 Index 📗</h2>
+<h2 align="center">📗 Documentation 📗</h2>
 
 <p align="center">
   <a href="doc/01_Introduction.md">01 Introduction</a> •
@@ -16,6 +16,17 @@
 This repo contains a pure C99 runtime to run inference on `onnx` models. You can train your model with you favourite framework (tensorflow, keras, sk-learn, you name it!) and once trained export it to a `.onnx` file, that will be used to run inference. This makes this library totally framework agnostic, no matter how you train your model, this repo will run it using the common interface that `onnx` provides. This runtime was thought for embedded devices, that have low resources and that might not be able to compile newer cpp versions, so the idea is to keep the dependancies as minimum as possible, or even zero. No GPUs or fancy processor architectures, just pure non multi-thread C99 code, compatible with almost any embedded device. Lets allow our IoT devices to run inference on the edge, but without sacrificing the tools that the big AI fishes in the industry provide.
 
 Note that this project is in a very early stage so its not even close to be production ready. Developers are needed so feel free to contact or contribute with a pull request. See **Help Needed** and [doc](doc) for more information about how to contribute. So far we can run inference on the `MNIST` model to recognise handwritten digits.
+
+# Related Projects
+Other C/C++ related projects
+
+| Project       | Framework     | Language  | Size |
+| ------------- |:-------------:| -----:| ----:|
+| [onnxruntime](https://github.com/microsoft/onnxruntime)   | ONNX       | x | x |
+| [darknet](https://github.com/pjreddie/darknet)            | ?          | x | x |
+| [uTensor](https://github.com/uTensor/uTensor)             | TensorFlow | x | x |
+| [nnom](https://github.com/majianjia/nnom)                 | Keras      | x | x |
+
 
 # Install
 Check the `Makefile` inside `test` that compiles the code and run a bunch of test cases for the implemented operators + MNIST digit recognition model. Library compilation into a static library is not done yet.
@@ -64,6 +75,7 @@ int main()
 - [ ] Compile and deploy a model (i.e. MNIST) into a real embedded device
 - [ ] Set up a nice CI with Azure or GitHub Actions
 - [ ] Run profiling on the operators
+- [ ] Migrate to nanopb to reduce the size of the pb files
 - [ ] Run memory check and leak detection (Valgrind?)
 - [ ] Add more tests than the onnx backend, which is not sufficient
 - [ ] Create a nice Makefile, compile library as a static library to be linked
