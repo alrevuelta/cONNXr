@@ -196,3 +196,54 @@ int convertRawDataOfTensorProto(Onnx__TensorProto *tensor)
 
   return 0;
 }
+
+/* tp has already memory allocated for the struct. Maybe its
+memory should be allocated here instead. This is a bit experimental TODO:*/
+void mallocTensorProto(Onnx__TensorProto *tp,
+                       Onnx__TensorProto__DataType data_type,
+                       size_t n_dims,
+                       size_t n_data)
+{
+
+  tp->has_raw_data = 0;
+  tp->n_external_data = 0;
+  tp->has_data_location = 0;
+  tp->n_dims = n_dims;
+  tp->dims = malloc(n_dims * sizeof(int64_t));
+  tp->name = malloc(MAX_CHAR_SIZE * sizeof(char));
+
+  if (tp->data_type == ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT ||
+      tp->data_type == ONNX__TENSOR_PROTO__DATA_TYPE__COMPLEX64){
+    tp->n_float_data = n_data;
+    tp->float_data = malloc(n_data * sizeof(float));
+
+  }else if (tp->data_type == ONNX__TENSOR_PROTO__DATA_TYPE__INT32  ||
+            tp->data_type == ONNX__TENSOR_PROTO__DATA_TYPE__INT16  ||
+            tp->data_type == ONNX__TENSOR_PROTO__DATA_TYPE__INT8   ||
+            tp->data_type == ONNX__TENSOR_PROTO__DATA_TYPE__UINT16 ||
+            tp->data_type == ONNX__TENSOR_PROTO__DATA_TYPE__UINT8  ||
+            tp->data_type == ONNX__TENSOR_PROTO__DATA_TYPE__BOOL   ||
+            tp->data_type == ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT16){
+    tp->n_int32_data = n_data;
+    tp->int32_data = malloc(n_data * sizeof(int32_t));
+
+  }else if (tp->data_type == ONNX__TENSOR_PROTO__DATA_TYPE__INT64){
+    tp->n_int64_data = n_data;
+    tp->int64_data = malloc(n_data * sizeof(int64_t));
+
+  }else if(tp->data_type == ONNX__TENSOR_PROTO__DATA_TYPE__STRING){
+    /* TODO
+    size_t n_string_data;
+    ProtobufCBinaryData *string_data; */
+
+  }else if(tp->data_type == ONNX__TENSOR_PROTO__DATA_TYPE__DOUBLE ||
+          tp->data_type == ONNX__TENSOR_PROTO__DATA_TYPE__COMPLEX128){
+    tp->n_double_data = n_data;
+    tp->double_data = malloc(n_data * sizeof(double));
+
+  }else if(tp->data_type == ONNX__TENSOR_PROTO__DATA_TYPE__UINT64 ||
+          tp->data_type == ONNX__TENSOR_PROTO__DATA_TYPE__UINT32){
+    tp->n_uint64_data = n_data;
+    tp->uint64_data = malloc(n_data * sizeof(uint64_t));
+  }
+}

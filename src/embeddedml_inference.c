@@ -56,7 +56,10 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
     // TODO hardcoded to one output
     size_t nOutputs = 1;
     Onnx__TensorProto *out0 = malloc(sizeof(*out0));
+
+    /* Do this alloc inside the operator ?*/
     Onnx__TensorProto **nodeOutputs = malloc(sizeof(*out0));
+
     nodeOutputs[0] = out0;
     Onnx__TensorProto **nodeInputs = malloc(sizeof(*out0) * model->graph->node[nodeIdx]->n_input);
 

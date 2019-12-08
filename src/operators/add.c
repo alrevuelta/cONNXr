@@ -57,6 +57,7 @@ int operator_add(const size_t n_input,
   output[0]->dims = malloc(input[0]->n_dims * sizeof(int64_t));
   output[0]->name         = "name_is_set_afterwards\0"; // dont do this
   output[0]->n_dims       = input[0]->n_dims;
+
   for (int i = 0; i < input[0]->n_dims; i++)
   {
     output[0]->dims[i] = input[0]->dims[i];

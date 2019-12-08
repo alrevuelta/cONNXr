@@ -6,7 +6,8 @@
 #include <glob.h>
 
 #include "../src/embeddedml_debug.h"
-#include "operators/common_operators.h"
+#include "../src/embeddedml_inference.h"
+#include "../src/embeddedml_utils.h"
 #include <glob.h>
 
 #define FLOAT_TOLERANCE 0.001f
