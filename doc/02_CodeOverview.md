@@ -26,6 +26,54 @@ int operator_xxx(const size_t n_input,
                  Onnx__TensorProto **output);
 ```
 
+## Types and Structures
+If you go through the code, you will see that some custom defined types are used such as `Onnx__TensorProto`. Well, actually they are not custom, but defined by `onnx` in the `.proto` file. You can see them all in [src/pb](src/pb) folder. For example, `Onnx__ModelProto` struct stores the whole model, that contains some information plus a `Onnx__GraphProto`. And inside the graph, there are many `Onnx__NodeProto` connected to each other that take some inputs and apply a specific operator to calculate an output.
+
+One of the most important types that you will see, is the `Onnx__TensorProto`. It just defines a vector, an array, a matrix, or whatever you want to call it. It is quite convinient to use, because it is quite generic. You can store different types of values, with different sizes. As an example, lets say that we want to store a 3 dimension vector. In that case `n_dims=3` and `dims[0]`, `dims[1]`, `dims[2]` will store some values. Lets store some `float` values, so `data_type=ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT `. In this case `n_float_data=dims[0]*dims[1]*dims[2]` and `float_data` will contain all the values in a single dimension array. The tensor has also a `name`.
+
+```c
+struct  _Onnx__TensorProto
+{
+  ProtobufCMessage base;
+  size_t n_dims;
+  int64_t *dims;
+
+  protobuf_c_boolean has_data_type;
+  int32_t data_type;
+  Onnx__TensorProto__Segment *segment;
+
+  size_t n_float_data;
+  float *float_data;
+
+  size_t n_int32_data;
+  int32_t *int32_data;
+
+  size_t n_string_data;
+  ProtobufCBinaryData *string_data;
+
+  size_t n_int64_data;
+  int64_t *int64_data;
+
+  char *name;
+  char *doc_string;
+
+  protobuf_c_boolean has_raw_data;
+  ProtobufCBinaryData raw_data;
+
+  size_t n_external_data;
+  Onnx__StringStringEntryProto **external_data;
+
+  protobuf_c_boolean has_data_location;
+  Onnx__TensorProto__DataLocation data_location;
+
+  size_t n_double_data;
+  double *double_data;
+
+  size_t n_uint64_data;
+  uint64_t *uint64_data;
+};
+```
+
 ## Protocol Buffers
 `onnx` uses protocol buffers to serialize the models data. Note that `protobuf-c` is used to generate the `pb/onnx.pb-c.c` and `pb/onnx.pb-c.h`. Files are already provided, but you can generate it like this:
 
