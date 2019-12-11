@@ -4,6 +4,26 @@
 #include "pb/onnx.pb-c.h"
 #include "embeddedml_debug.h"
 
+char data_types_string[][20] = {
+                         "UNDEFINED",  /* ONNX__TENSOR_PROTO__DATA_TYPE__UNDEFINED = 0 */
+                         "FLOAT",      /* ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT = 1     */
+                         "UINT8",      /* ONNX__TENSOR_PROTO__DATA_TYPE__UINT8 = 2     */
+                         "INT8",       /* ONNX__TENSOR_PROTO__DATA_TYPE__INT8 = 3      */
+                         "UINT16",     /* ONNX__TENSOR_PROTO__DATA_TYPE__UINT16 = 4    */
+                         "INT16",      /* ONNX__TENSOR_PROTO__DATA_TYPE__INT16 = 5     */
+                         "INT32",      /* ONNX__TENSOR_PROTO__DATA_TYPE__INT32 = 6     */
+                         "INT64",      /* ONNX__TENSOR_PROTO__DATA_TYPE__INT64 = 7     */
+                         "STRING",     /* ONNX__TENSOR_PROTO__DATA_TYPE__STRING = 8    */
+                         "BOOL",       /* ONNX__TENSOR_PROTO__DATA_TYPE__BOOL = 9      */
+                         "FLOT16",     /* ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT16 = 10  */
+                         "DOUBLE",     /* ONNX__TENSOR_PROTO__DATA_TYPE__DOUBLE = 11   */
+                         "UINT32",     /* ONNX__TENSOR_PROTO__DATA_TYPE__UINT32 = 12   */
+                         "UINT64",     /* ONNX__TENSOR_PROTO__DATA_TYPE__UINT64 = 13   */
+                         "COMPLEX64",  /* ONNX__TENSOR_PROTO__DATA_TYPE__COMPLEX64 = 14  */
+                         "COMPLEX128", /* ONNX__TENSOR_PROTO__DATA_TYPE__COMPLEX128 = 15 */
+                         "BFLOAT16"    /* ONNX__TENSOR_PROTO__DATA_TYPE__BFLOAT16 = 16   */
+                     };
+
 void Debug_PrintArray(float *array, int m, int n)
 {
   for (int i = 0; i < m; i++)
@@ -267,4 +287,135 @@ void Debug_PrintTensorProto(Onnx__TensorProto *tp)
 
   // Print uint64_data if needed
 
+}
+
+
+
+void debug_prettyprint_model(Onnx__ModelProto *model)
+{
+  printf("");
+  printf("-----------------------------------------------\n");
+  printf("---------------Model information---------------\n");
+  printf("-----------------------------------------------\n");
+
+  printf("Model:\n");
+  printf("  model->producer_name %s\n", model->producer_name);
+  printf("  model->producer_version %s\n", model->producer_version);
+  printf("  model->n_opset_import %zu\n", model->n_opset_import);
+  for (int i = 0; i < model->n_opset_import; i++) {
+    printf("  model->opset_import[%d]->domain %s\n", i, model->opset_import[i]->domain);
+  }
+
+  //--------------------------------------------------------------------------//
+  // GRAPH
+  //--------------------------------------------------------------------------//
+  printf("Graph:\n");
+  printf("  model->graph->name %s\n", model->graph->name);
+  printf("  model->graph->n_node %zu\n", model->graph->n_node);
+  printf("  model->graph->n_initializer %zu\n", model->graph->n_initializer);
+
+  printf("Initializers:\n");
+  for (int n_init = 0; n_init < model->graph->n_initializer; n_init++)
+  {
+    printf("  model->graph->initializer[%d] %s\t\t|", n_init,
+                                                      model->graph->initializer[n_init]->name);
+
+    for (int i = 0; i < model->graph->initializer[n_init]->n_dims; i++)
+    {
+      i == (model->graph->initializer[n_init]->n_dims - 1) ?
+            printf("%lld ", model->graph->initializer[n_init]->dims[i]) :
+            printf("%lld x ", model->graph->initializer[n_init]->dims[i]);
+    }
+    //print(" | has_data_type = %d\n", tp->has_data_type);
+    printf("\t| %s\n", data_types_string[model->graph->initializer[n_init]->data_type]);
+  }
+
+/*
+  printf("Nodes:\n");
+  printf("  model->graph->n_input %zu\n", model->graph->n_input);
+  printf("  model->graph->n_output %zu\n", model->graph->n_output);*/
+
+/*
+  for (int i = 0; i < model->graph->n_input; i++) {
+    printf("%zu %s | ", i, model->graph->input[i]->name);
+
+    //printf("model->graph->input[%d]->type->tensor_type->has_elem_type %d\n", i, model->graph->input[i]->type->tensor_type->has_elem_type);
+    //printf("model->graph->input[%d]->type->tensor_type->elem_type %d\n", i, model->graph->input[i]->type->tensor_type->elem_type);
+    //printf("model->graph->input[%d]->type->tensor_type->shape->n_dim %zu\n", i, model->graph->input[i]->type->tensor_type->shape->n_dim);
+
+    // TODO With some models this crashes
+    for (int j = 0; j < model->graph->input[i]->type->tensor_type->shape->n_dim; j++) {
+
+      //printf("model->graph->input[%d]->type->tensor_type->shape->dim[%d]->value_case %d\n", i, j, model->graph->input[i]->type->tensor_type->shape->dim[j]->value_case);
+      switch(model->graph->input[i]->type->tensor_type->shape->dim[j]->value_case) {
+        case ONNX__TENSOR_SHAPE_PROTO__DIMENSION__VALUE__NOT_SET:
+          printf("Value not not set\n");
+          break;
+        case ONNX__TENSOR_SHAPE_PROTO__DIMENSION__VALUE_DIM_VALUE:
+          printf("%lld x ", model->graph->input[i]->type->tensor_type->shape->dim[j]->dim_value);
+          break;
+        case ONNX__TENSOR_SHAPE_PROTO__DIMENSION__VALUE_DIM_PARAM:
+          printf("TODO %s\n", model->graph->input[i]->type->tensor_type->shape->dim[j]->dim_param);
+          break;
+        case _ONNX__TENSOR_SHAPE_PROTO__DIMENSION__VALUE_IS_INT_SIZE:
+          break;
+      }
+      //printf("model->graph->input[%d]->type->tensor_type->shape->dim[%d]->denotation %s\n", i, j, model->graph->input[i]->type->tensor_type->shape->dim[j]->denotation);
+    }
+    printf("\n");
+
+  }*/
+
+  for (int i = 0; i < model->graph->n_output; i++) {
+    //printf("model->graph->output[%d]->name %s\n", i, model->graph->output[i]->name);
+    //printf("model->graph->output[%d]->type->tensor_type->has_elem_type %d\n", i, model->graph->output[i]->type->tensor_type->has_elem_type);
+    //printf("model->graph->output[%d]->type->tensor_type->elem_type %d\n", i, model->graph->output[i]->type->tensor_type->elem_type);
+    //printf("model->graph->output[%d]->type->tensor_type->shape->n_dim %zu\n", i, model->graph->output[i]->type->tensor_type->shape->n_dim);
+    /* Is this failing?
+    for (int j = 0; j < model->graph->input[i]->type->tensor_type->shape->n_dim; j++) {
+
+      printf("model->graph->output[%d]->type->tensor_type->shape->dim[%d]->value_case %d\n", i, j, model->graph->output[i]->type->tensor_type->shape->dim[j]->value_case);
+      switch(model->graph->output[i]->type->tensor_type->shape->dim[j]->value_case) {
+        case ONNX__TENSOR_SHAPE_PROTO__DIMENSION__VALUE__NOT_SET:
+          printf("Value not not set\n");
+          break;
+        case ONNX__TENSOR_SHAPE_PROTO__DIMENSION__VALUE_DIM_VALUE:
+          printf("model->graph->output[%d]->type->tensor_type->shape->dim[%d]->dim_value %lld\n", i, j, model->graph->output[i]->type->tensor_type->shape->dim[j]->dim_value);
+          break;
+        case ONNX__TENSOR_SHAPE_PROTO__DIMENSION__VALUE_DIM_PARAM:
+          printf("model->graph->output[%d]->type->tensor_type->shape->dim[%d]->dim_param %s\n", i, j, model->graph->output[i]->type->tensor_type->shape->dim[j]->dim_param);
+          break;
+
+      //printf("model->graph->output[%d]->type->tensor_type->shape->dim[%d]->denotation %s\n", i, j, model->graph->output[i]->type->tensor_type->shape->dim[j]->denotation);
+    }*/
+  }
+
+
+  /* TODO Experiment with the align
+  https://stackoverflow.com/questions/35329208/aligning-columns-in-c-output
+  */
+  printf("Nodes:\n");
+  for (int i = 0; i < model->graph->n_node; i++)
+  {
+    printf("  %s %20.20s n_input=%zu  n_output=%zu\n",
+                                          model->graph->node[i]->op_type,
+                                          model->graph->node[i]->name,
+                                          model->graph->node[i]->n_input,
+                                          model->graph->node[i]->n_output);
+    //printf("model->graph->node[%d]->op_type %s\n", i, model->graph->node[i]->op_type);
+    //printf("model->graph->node[%d]->n_input %zu\n", i, model->graph->node[i]->n_input);
+    for (int j = 0; j < model->graph->node[i]->n_input; j++) {
+      printf("    input[%d] %s\n", j, model->graph->node[i]->input[j]);
+    }
+    for (int j = 0; j < model->graph->node[i]->n_output; j++) {
+      printf("    output[%d] %s\n", j, model->graph->node[i]->output[j]);
+    }
+
+    for (int j = 0; j < model->graph->node[i]->n_attribute; j++)
+    {
+      printf("    attribute[%d]->name %s\n", j, model->graph->node[i]->attribute[j]->name);
+      //printf("    attribute[%d]->has_type %d\n", j, model->graph->node[i]->attribute[j]->has_type);
+      //printf("    attribute[%d]->type %d\n", j, model->graph->node[i]->attribute[j]->type);
+    }
+  }
 }

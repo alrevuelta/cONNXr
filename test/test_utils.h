@@ -34,9 +34,7 @@ void compareAlmostEqualTensorProto(Onnx__TensorProto *a, Onnx__TensorProto *b)
       CU_ASSERT_EQUAL(a->n_float_data, b->n_float_data);
       for(int i = 0; i < a->n_float_data; i++)
       {
-        //CU_ASSERT_EQUAL(a->float_data[i], b->float_data[i]);
-
-        //DEBUG_PRINT("%f, %f", a->float_data[i], b->float_data[i]);
+        DEBUG_PRINT("%f, %f", a->float_data[i], b->float_data[i]);
         CU_ASSERT(fabs(a->float_data[i] - b->float_data[i]) < FLOAT_TOLERANCE);
       }
       break;

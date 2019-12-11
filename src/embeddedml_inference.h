@@ -14,9 +14,12 @@
 #include "operators/sigmoid.h"
 #include "operators/softmax.h"
 #include "operators/zipmap.h"
+#include "operators/batchnormalization.h"
+#include "operators/mul.h"
+#include "operators/leakyrelu.h"
 
 // TODO Hardcoded for initial tests
-#define MAX_NUM_OF_OUTPUTS 20
+#define MAX_NUM_OF_OUTPUTS 40
 extern Onnx__TensorProto *_outputs[MAX_NUM_OF_OUTPUTS];
 extern int _outputIdx;
 
@@ -44,6 +47,9 @@ static const operatorptrs
                              {"MaxPool", operator_maxpool},
                              {"Relu", operator_relu},
                              {"Reshape", operator_reshape},
+                             {"BatchNormalization", operator_batchnormalization},
+                             {"Mul", operator_mul},
+                             {"LeakyRelu", operator_leakyrelu}
                            };
 
 #endif

@@ -59,9 +59,11 @@ Onnx__AttributeProto* searchAttributeNyName(const size_t n_attribute,
 {
   for (int i = 0; i < n_attribute; i++){
     if (!strcmp(attribute[i]->name, name)){
+      DEBUG_PRINT("Attribute %s was found", name);
       return attribute[i];
     }
   }
+  DEBUG_PRINT("Attribute %s was NOT found", name);
   return NULL;
 }
 

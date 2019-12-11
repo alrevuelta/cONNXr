@@ -10,6 +10,7 @@
 
 #include "operators/test_onnx_backend_operators.h"
 #include "models/test_model_mnist.h"
+#include "models/test_model_tinyyolov2.h"
 #include "models/common_models.h"
 
 int main(int argc, char **argv)
@@ -125,8 +126,8 @@ int main(int argc, char **argv)
   //CU_add_test(onnxBackendSuite,"test_basic_conv_with_padding",test_basic_conv_with_padding),
   //CU_add_test(onnxBackendSuite,"test_basic_conv_without_padding",test_basic_conv_without_padding),
   //CU_add_test(onnxBackendSuite,"test_basic_convinteger",test_basic_convinteger),
-  //CU_add_test(onnxBackendSuite,"test_batchnorm_epsilon",test_batchnorm_epsilon),
-  //CU_add_test(onnxBackendSuite,"test_batchnorm_example",test_batchnorm_example),
+  CU_add_test(onnxBackendSuite,"test_batchnorm_epsilon",test_batchnorm_epsilon),
+  CU_add_test(onnxBackendSuite,"test_batchnorm_example",test_batchnorm_example),
   //CU_add_test(onnxBackendSuite,"test_bitshift_left_uint16",test_bitshift_left_uint16),
   //CU_add_test(onnxBackendSuite,"test_bitshift_left_uint32",test_bitshift_left_uint32),
   //CU_add_test(onnxBackendSuite,"test_bitshift_left_uint64",test_bitshift_left_uint64),
@@ -285,9 +286,9 @@ int main(int argc, char **argv)
   //CU_add_test(onnxBackendSuite,"test_isinf_negative",test_isinf_negative),
   //CU_add_test(onnxBackendSuite,"test_isinf_positive",test_isinf_positive),
   //CU_add_test(onnxBackendSuite,"test_isnan",test_isnan),
-  //CU_add_test(onnxBackendSuite,"test_leakyrelu",test_leakyrelu),
-  //CU_add_test(onnxBackendSuite,"test_leakyrelu_default",test_leakyrelu_default),
-  //CU_add_test(onnxBackendSuite,"test_leakyrelu_example",test_leakyrelu_example),
+  CU_add_test(onnxBackendSuite,"test_leakyrelu",test_leakyrelu),
+  CU_add_test(onnxBackendSuite,"test_leakyrelu_default",test_leakyrelu_default),
+  CU_add_test(onnxBackendSuite,"test_leakyrelu_example",test_leakyrelu_example),
   //CU_add_test(onnxBackendSuite,"test_less",test_less),
   //CU_add_test(onnxBackendSuite,"test_less_bcast",test_less_bcast),
   //CU_add_test(onnxBackendSuite,"test_log",test_log),
@@ -635,6 +636,7 @@ int main(int argc, char **argv)
    * is provided */
   CU_add_test(modelsTestSuite, "test_model_mnist", test_model_mnist);
   CU_add_test(modelsTestSuite, "test_model_mnist_per_node", test_model_mnist_per_node);
+  //CU_add_test(modelsTestSuite, "test_model_tinyyolov2", test_model_tinyyolov2);
 
   CU_basic_set_mode(CU_BRM_VERBOSE);
 

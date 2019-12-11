@@ -43,8 +43,8 @@ def numpy_to_pb(name, np_data, out_filename):
     tensor = numpy_helper.from_array(np_data, name)
     onnx.save_tensor(tensor, out_filename)
 
-model_onnx = onnx.load('../test/mnist/model.onnx')
-test_data_dir = '../test/mnist/test_data_set_0'
+model_onnx = onnx.load('../test/tiny_yolov2/Model.onnx')
+test_data_dir = '../test/tiny_yolov2/test_data_set_0'
 
 inputs = []
 inputs_num = len(glob.glob(os.path.join(test_data_dir, 'input_*.pb')))
@@ -63,8 +63,9 @@ for i in range(inputs_num):
     inputs.append(onnx.load_tensor(input_file))
 """
 
+# For some models this string has to match the input to the model
 inputDict = {
-    "Input3": inputs[0]
+    "image": inputs[0]
 }
 
 
@@ -85,6 +86,7 @@ for idx, out in enumerate(outputs_list):
     sess = rt.InferenceSession(modelPath)
     numX = sess.run(None, inputDict)
     print()
+    print("Generating idx=", idx)
     print(out)
     print(numX)
 

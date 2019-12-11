@@ -16,7 +16,7 @@ void test_model_tinyyolov2(void)
   Onnx__TensorProto *inp0set0 = openTensorProtoFile("../test/tiny_yolov2/test_data_set_0/input_0.pb");
   Onnx__TensorProto *out0set0 = openTensorProtoFile("../test/tiny_yolov2/test_data_set_0/output_0.pb");
 
-  Debug_PrintModelInformation(model);
+  debug_prettyprint_model(model);
   convertRawDataOfTensorProto(inp0set0);
   convertRawDataOfTensorProto(out0set0);
 

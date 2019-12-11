@@ -56,12 +56,26 @@ int operator_add(const size_t n_input,
   /* Move this block to a common function */
   output[0]->dims = malloc(input[0]->n_dims * sizeof(int64_t));
   output[0]->name         = "name_is_set_afterwards\0"; // dont do this
-  output[0]->n_dims       = input[0]->n_dims;
 
-  for (int i = 0; i < input[0]->n_dims; i++)
-  {
-    output[0]->dims[i] = input[0]->dims[i];
+  /* There order of operands if unknown. The longest one will determine the output */
+
+  /* Quick and dirty solution */
+  if (input[0]->n_dims > input[1]->n_dims){
+    output[0]->n_dims = input[0]->n_dims;
+    output[0]->n_float_data = input[0]->n_float_data; // check other types
+    for (int i = 0; i < output[0]->n_dims; i++)
+    {
+      output[0]->dims[i] = input[0]->dims[i];
+    }
+  }else{
+    output[0]->n_dims = input[1]->n_dims;
+    output[0]->n_float_data = input[1]->n_float_data; // check other types
+    for (int i = 0; i < output[0]->n_dims; i++)
+    {
+      output[0]->dims[i] = input[1]->dims[i];
+    }
   }
+
   output[0]->has_raw_data = 0;
   output[0]->data_type = input[0]->data_type;
 
@@ -69,17 +83,22 @@ int operator_add(const size_t n_input,
   {
     case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:
     {
-      output[0]->n_float_data = input[0]->n_float_data;
+      //output[0]->n_float_data = input[0]->n_float_data;
       output[0]->float_data = malloc(output[0]->n_float_data * sizeof(float));
-      for (int i = 0; i < input[0]->n_float_data; i++) {
+      /* TODO: ugly */
+      for (int i = 0; i < output[0]->n_float_data; i++) {
         /* Normal case where dimensions match */
         if (input[0]->n_dims == input[1]->n_dims) {
           output[0]->float_data[i] = input[0]->float_data[i] + input[1]->float_data[i];
-        /* Broadcasting */
+        /* Broadcasting. Hardcoded not working */
         }else{
           if (input[1]->n_dims == 1){
             output[0]->float_data[i] = input[0]->float_data[i] + input[1]->float_data[i%input[1]->dims[0]];
           }else{
+            /* TODO Hardcoded for TINY YOLO */
+            //output[0]->float_data[i] = input[0]->float_data[i%3] + input[1]->float_data[i];
+
+            /* TODO Hardcoded for MNIST */
             output[0]->float_data[i] = input[0]->float_data[i] + input[1]->float_data[i/(input[0]->dims[2]*input[0]->dims[3])];
           }
         }

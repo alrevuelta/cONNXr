@@ -16,7 +16,8 @@ void test_model_mnist(void)
   Onnx__TensorProto *inp0set0 = openTensorProtoFile("../test/mnist/test_data_set_0/input_0.pb");
   Onnx__TensorProto *out0set0 = openTensorProtoFile("../test/mnist/test_data_set_0/output_0.pb");
 
-  Debug_PrintModelInformation(model);
+  //Debug_PrintModelInformation(model);
+  debug_prettyprint_model(model);
   convertRawDataOfTensorProto(inp0set0);
   convertRawDataOfTensorProto(out0set0);
 
@@ -72,7 +73,7 @@ static void test_model_mnist_node(char *outputName)
   model->graph->node[4] = temp0;
 
 
-  Debug_PrintModelInformation(model);
+  debug_prettyprint_model(model);
 
   Onnx__TensorProto *inp0set0 = openTensorProtoFile(inputPath);
   Onnx__TensorProto *out0set0 = openTensorProtoFile(outputPath);
