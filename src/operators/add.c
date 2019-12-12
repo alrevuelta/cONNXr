@@ -92,14 +92,17 @@ int operator_add(const size_t n_input,
           output[0]->float_data[i] = input[0]->float_data[i] + input[1]->float_data[i];
         /* Broadcasting. Hardcoded not working */
         }else{
+          /* If inside loop :( */
           if (input[1]->n_dims == 1){
             output[0]->float_data[i] = input[0]->float_data[i] + input[1]->float_data[i%input[1]->dims[0]];
           }else{
             /* TODO Hardcoded for TINY YOLO */
-            //output[0]->float_data[i] = input[0]->float_data[i%3] + input[1]->float_data[i];
-
+            if (input[0]->dims[0] == 3){ /* Remove this uAF*/
+              output[0]->float_data[i] = input[0]->float_data[i%3] + input[1]->float_data[i];
             /* TODO Hardcoded for MNIST */
-            output[0]->float_data[i] = input[0]->float_data[i] + input[1]->float_data[i/(input[0]->dims[2]*input[0]->dims[3])];
+            }else{
+              output[0]->float_data[i] = input[0]->float_data[i] + input[1]->float_data[i/(input[0]->dims[2]*input[0]->dims[3])];
+            }
           }
         }
       }

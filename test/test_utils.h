@@ -15,9 +15,13 @@
 // Compare if equal with some tolarenace
 void compareAlmostEqualTensorProto(Onnx__TensorProto *a, Onnx__TensorProto *b)
 {
+  printf("\nAsserting, a dims:\n");
   debug_print_dims(a->n_dims, a->dims);
+  printf("\nAsserting, b adims:\n");
   debug_print_dims(b->n_dims, b->dims);
+  printf("\nAsserting, a data_type: %d\n", a->data_type);
   CU_ASSERT_EQUAL(a->data_type, b->data_type);
+  printf("\nAsserting, b data_type: %d\n", b->data_type);
   CU_ASSERT_EQUAL(a->n_dims, b->n_dims);
   for (int d = 0; d < a->n_dims; d++)
   {
@@ -34,7 +38,7 @@ void compareAlmostEqualTensorProto(Onnx__TensorProto *a, Onnx__TensorProto *b)
       CU_ASSERT_EQUAL(a->n_float_data, b->n_float_data);
       for(int i = 0; i < a->n_float_data; i++)
       {
-        DEBUG_PRINT("%f, %f", a->float_data[i], b->float_data[i]);
+        //DEBUG_PRINT("%f, %f", a->float_data[i], b->float_data[i]);
         CU_ASSERT(fabs(a->float_data[i] - b->float_data[i]) < FLOAT_TOLERANCE);
       }
       break;

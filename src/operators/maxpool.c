@@ -54,7 +54,7 @@ int operator_maxpool(const size_t n_input,
   output[0]->n_dims = input[0]->n_dims;
 
   // Only kernel_shape is mandatory
-  //Onnx__AttributeProto *auto_pad = searchAttributeNyName(n_attribute, attribute, "auto_pad");
+  Onnx__AttributeProto *auto_pad = searchAttributeNyName(n_attribute, attribute, "auto_pad");
   //Onnx__AttributeProto *ceil_mode = searchAttributeNyName(n_attribute, attribute, "ceil_mode");
   //Onnx__AttributeProto *dilations = searchAttributeNyName(n_attribute, attribute, "dilations");
   Onnx__AttributeProto *kernel_shape = searchAttributeNyName(n_attribute, attribute, "kernel_shape");
@@ -74,10 +74,37 @@ int operator_maxpool(const size_t n_input,
     w_stride = strides->ints[1];
   }
 
+  // TODO Maybe use a smaller type
+  int64_t h_pad, w_pad;
+  h_pad = w_pad = 0;
+  if (auto_pad != NULL){
+    if (!strcmp((const char*)auto_pad->s.data, "SAME_UPPER")){
+      if ("SAME_UPPER"){
+        // This means, pad to match the output dimensions, and if not even
+        // add the extra padding to the end
+        // TODO Quick test, even padding is assumed
+        // TODO Quick test, ignore stride, just 1
+
+        /* For TINYOLO I think 1/2 = 0. So SAME_UPPER means pad to the right*/
+        /*h_pad = -(h_kernel - 1)/2; // store the negative value of the offset
+        w_pad = -(w_kernel - 1)/2;*/
+        //printf("\n\n\n\n h_pad=%lld w_pad=%lld", h_pad, w_pad);
+        //h_pad = 1;
+        //w_pad = 1;
+      }
+    }
+  }
+
   output[0]->dims[0] = input[0]->dims[0];
   output[0]->dims[1] = input[0]->dims[1];
-  output[0]->dims[2] = (input[0]->dims[2] - h_kernel + h_stride) / h_stride;
-  output[0]->dims[3] = (input[0]->dims[3] - w_kernel + w_stride) / w_stride;
+
+  /*output[0]->dims[2] = (input[0]->dims[2] - h_kernel + h_stride) / h_stride;
+  output[0]->dims[3] = (input[0]->dims[3] - w_kernel + w_stride) / w_stride;*/
+
+  // TODO Formula is probably wrong, double check  // remove -
+  output[0]->dims[2] = (input[0]->dims[2] - h_kernel + h_stride + -h_pad*2) / h_stride;
+  output[0]->dims[3] = (input[0]->dims[3] - w_kernel + w_stride + -w_pad*2) / w_stride;
+
 
   // TODO check this? no mem is allocated?
   output[0]->name         = "name_is_set_afterwards\0"; // dont do this
@@ -97,18 +124,16 @@ int operator_maxpool(const size_t n_input,
           for(i = 0; i < output[0]->dims[2]; ++i){
             for(j = 0; j < output[0]->dims[3]; ++j){
               int out_index = j + output[0]->dims[3]*(i + output[0]->dims[2]*(k + input[0]->dims[1]*b));
-              float max = -99999; // TODO
+              float max = -999999; // TODO
               for(n = 0; n < h_kernel; ++n){
                 for(m = 0; m < w_kernel; ++m){
-                  int cur_h = i*h_stride + n;
-                  int cur_w = j*w_stride + m;
+                  int cur_h = i*h_stride + n + h_pad;
+                  int cur_w = j*w_stride + m + w_pad;
                   int index = cur_w + input[0]->dims[3]*(cur_h + input[0]->dims[2]*(k + b*input[0]->dims[1]));
-                  /*int valid = (cur_h >= 0 && cur_h < l.h &&
-                               cur_w >= 0 && cur_w < l.w);
-                  float val = (valid != 0) ? net.input[index] : -FLT_MAX;*/
-                  max = (input[0]->float_data[index] > max ? input[0]->float_data[index] : max);
-                  //max_i = (val > max) ? index : max_i;
-                  //max   = (val > max) ? val   : max;
+                  int valid = (cur_h >= 0 && cur_h < input[0]->dims[2] &&
+                               cur_w >= 0 && cur_w < input[0]->dims[3]);
+                  float val = (valid != 0) ? input[0]->float_data[index] : 0;
+                  max = (val > max ? val : max);
                   }
                 }
                 output[0]->float_data[out_index] = max;

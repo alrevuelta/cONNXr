@@ -29,6 +29,7 @@ void test_model_tinyyolov2(void)
   Onnx__TensorProto *inputs[] = { inp0set0 };
   Onnx__TensorProto **output = inference(model, inputs, 1);
 
+  printf("Will compare output 32 = %s", output[32]->name);
   compareAlmostEqualTensorProto(output[32], out0set0);
 
   DEBUG_PRINT("End: test_model_tinyyolov2");
