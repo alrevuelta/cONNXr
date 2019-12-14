@@ -134,6 +134,14 @@
                 }
               }
               output[0]->float_data[out_index] = value;
+
+              /* TODO This is a huge crap to make it work with tinyYOLO
+              It adds the bias, but this if will waste a lot of time. Make
+              this nice!
+              */
+              if (n_input == 3){
+                output[0]->float_data[out_index] += input[2]->float_data[k];
+              }
             }
           }
         }

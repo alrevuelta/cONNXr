@@ -75,35 +75,45 @@ int operator_maxpool(const size_t n_input,
   }
 
   // TODO Maybe use a smaller type
+  /* left and right pads */
   int64_t h_pad, w_pad;
   h_pad = w_pad = 0;
+
+  // rmeove
+  int h_pad_aux = 0;
+  int w_pad_aux = 0;
   if (auto_pad != NULL){
     if (!strcmp((const char*)auto_pad->s.data, "SAME_UPPER")){
-      if ("SAME_UPPER"){
-        // This means, pad to match the output dimensions, and if not even
-        // add the extra padding to the end
-        // TODO Quick test, even padding is assumed
-        // TODO Quick test, ignore stride, just 1
+      h_pad = (h_kernel - 1)/2;
+      w_pad = (w_kernel - 1)/2;
+      printf("h_kernel = %lld\n", h_kernel);
+      printf("w_kernel = %lld\n", w_kernel);
+      h_pad_aux = (h_kernel - 1);
+      w_pad_aux = (w_kernel - 1);
+    } else if (!strcmp((const char*)auto_pad->s.data, "SAME_LOWER")){
 
-        /* For TINYOLO I think 1/2 = 0. So SAME_UPPER means pad to the right*/
-        /*h_pad = -(h_kernel - 1)/2; // store the negative value of the offset
-        w_pad = -(w_kernel - 1)/2;*/
-        //printf("\n\n\n\n h_pad=%lld w_pad=%lld", h_pad, w_pad);
-        //h_pad = 1;
-        //w_pad = 1;
-      }
+      /*h_pad = (h_kernel - 1)/2;
+      w_pad = (w_kernel - 1)/2;
+      printf("h_kernel = %lld\n", h_kernel);
+      printf("w_kernel = %lld\n", w_kernel);
+      h_pad_aux = (h_kernel - 1);
+      w_pad_aux = (w_kernel - 1);*/
     }
   }
+
+  printf("h_pad=%lld, w_pad=%lld\n", h_pad, w_pad);
+  printf("h_padaux=%lld, w_padaux=%lld\n", h_pad_aux, w_pad_aux);
 
   output[0]->dims[0] = input[0]->dims[0];
   output[0]->dims[1] = input[0]->dims[1];
 
-  /*output[0]->dims[2] = (input[0]->dims[2] - h_kernel + h_stride) / h_stride;
-  output[0]->dims[3] = (input[0]->dims[3] - w_kernel + w_stride) / w_stride;*/
+/* TODO Use this instead. floor or ceil
+  floorf((float)(input[0]->dims[2] + h_pad_aux - ((h_kernel - 1) + 1)) / (float)h_stride + 1);
+  floorf((float)(input[0]->dims[3] + w_pad_aux - ((w_kernel - 1) + 1)) / (float)w_stride + 1);
+  */
 
-  // TODO Formula is probably wrong, double check  // remove -
-  output[0]->dims[2] = (input[0]->dims[2] - h_kernel + h_stride + -h_pad*2) / h_stride;
-  output[0]->dims[3] = (input[0]->dims[3] - w_kernel + w_stride + -w_pad*2) / w_stride;
+  output[0]->dims[2] = (input[0]->dims[2] - h_kernel + h_stride + h_pad_aux) / h_stride;
+  output[0]->dims[3] = (input[0]->dims[3] - w_kernel + w_stride + w_pad_aux) / w_stride;
 
 
   // TODO check this? no mem is allocated?
@@ -127,12 +137,12 @@ int operator_maxpool(const size_t n_input,
               float max = -999999; // TODO
               for(n = 0; n < h_kernel; ++n){
                 for(m = 0; m < w_kernel; ++m){
-                  int cur_h = i*h_stride + n + h_pad;
-                  int cur_w = j*w_stride + m + w_pad;
+                  int cur_h = i*h_stride + n -h_pad;
+                  int cur_w = j*w_stride + m -w_pad;
                   int index = cur_w + input[0]->dims[3]*(cur_h + input[0]->dims[2]*(k + b*input[0]->dims[1]));
-                  int valid = (cur_h >= 0 && cur_h < input[0]->dims[2] &&
-                               cur_w >= 0 && cur_w < input[0]->dims[3]);
-                  float val = (valid != 0) ? input[0]->float_data[index] : 0;
+                  int valid = (cur_h >= 0 && cur_h < (input[0]->dims[2]) &&
+                               cur_w >= 0 && cur_w < (input[0]->dims[3]));
+                  float val = (valid != 0) ? input[0]->float_data[index] : -999999; //TODO
                   max = (val > max ? val : max);
                   }
                 }
