@@ -33,21 +33,14 @@ int operator_maxpool(const size_t n_input,
   debug_print_dims(input[0]->n_dims, input[0]->dims);
   //debug_print_attributes(n_attribute, attribute);
 
-  /* Use conv operator as reference to improve this one */
   if (0){
     /* TODO: Check some conditions. For example if a specific
      * functionality is not supported */
-    //a->data_type == b->data_type
-    //a->n_dims == b->n_dims
-    //a->dims[i] == b->dims[i]
+    // TODO ingore dilated parameter for initial tests
+    // TODO indices are not implemented for the initial prototype
+    // TODO this is hardcoded hardcoded for 2d (dims = 4)
     return -1;
   }
-
-  // TODO ingore dilated parameter for initial tests
-  // TODO indices are not implemented for the initial prototype
-  // TODO this is hardcoded af. only for 4d arrays, where maxpool
-  // is applied along 2dimensions.
-  // TODO pads are not implemented
 
   // number of dimensions do not change
   output[0]->dims   = malloc(input[0]->n_dims * sizeof(int64_t));
@@ -58,7 +51,7 @@ int operator_maxpool(const size_t n_input,
   //Onnx__AttributeProto *ceil_mode = searchAttributeNyName(n_attribute, attribute, "ceil_mode");
   //Onnx__AttributeProto *dilations = searchAttributeNyName(n_attribute, attribute, "dilations");
   Onnx__AttributeProto *kernel_shape = searchAttributeNyName(n_attribute, attribute, "kernel_shape");
-  //Onnx__AttributeProto *pads = searchAttributeNyName(n_attribute, attribute, "pads");
+  Onnx__AttributeProto *pads = searchAttributeNyName(n_attribute, attribute, "pads");
   //Onnx__AttributeProto *storage_order = searchAttributeNyName(n_attribute, attribute, "storage_order");
   Onnx__AttributeProto *strides = searchAttributeNyName(n_attribute, attribute, "strides");
 
@@ -76,45 +69,48 @@ int operator_maxpool(const size_t n_input,
 
   // TODO Maybe use a smaller type
   /* left and right pads */
-  int64_t h_pad, w_pad;
+  int h_pad, w_pad;
   h_pad = w_pad = 0;
 
-  // rmeove
   int h_pad_aux = 0;
   int w_pad_aux = 0;
   if (auto_pad != NULL){
+    h_pad_aux = (h_kernel - 1);
+    w_pad_aux = (w_kernel - 1);
+    h_pad = (h_kernel - 1)/2;
+    w_pad = (w_kernel - 1)/2;
     if (!strcmp((const char*)auto_pad->s.data, "SAME_UPPER")){
-      h_pad = (h_kernel - 1)/2;
-      w_pad = (w_kernel - 1)/2;
-      printf("h_kernel = %lld\n", h_kernel);
-      printf("w_kernel = %lld\n", w_kernel);
-      h_pad_aux = (h_kernel - 1);
-      w_pad_aux = (w_kernel - 1);
+      // remove
     } else if (!strcmp((const char*)auto_pad->s.data, "SAME_LOWER")){
 
-      /*h_pad = (h_kernel - 1)/2;
-      w_pad = (w_kernel - 1)/2;
-      printf("h_kernel = %lld\n", h_kernel);
-      printf("w_kernel = %lld\n", w_kernel);
-      h_pad_aux = (h_kernel - 1);
-      w_pad_aux = (w_kernel - 1);*/
+      /* TODO quick n dirty*/
+      if ((h_kernel - 1)%2 != 0){
+        h_pad++;
+      }
+      if ((w_kernel - 1)%2 != 0){
+        w_pad++;
+      }
     }
   }
 
-  printf("h_pad=%lld, w_pad=%lld\n", h_pad, w_pad);
-  printf("h_padaux=%lld, w_padaux=%lld\n", h_pad_aux, w_pad_aux);
+  if (pads != NULL){
+    /* TODO */
+    /* Hardcoded for pads = [x, x, x, x] dim = 4*/
+    h_pad_aux = pads->ints[0] + pads->ints[2];
+    w_pad_aux = pads->ints[1] + pads->ints[3];
+    h_pad = h_pad_aux/2;
+    w_pad = w_pad_aux/2;
+
+    /*
+    for (int i = 0; i < pads->n_ints; i++){
+      printf("\n\n pad=%d\n", pads->ints[i]);
+    }*/
+  }
 
   output[0]->dims[0] = input[0]->dims[0];
   output[0]->dims[1] = input[0]->dims[1];
-
-/* TODO Use this instead. floor or ceil
-  floorf((float)(input[0]->dims[2] + h_pad_aux - ((h_kernel - 1) + 1)) / (float)h_stride + 1);
-  floorf((float)(input[0]->dims[3] + w_pad_aux - ((w_kernel - 1) + 1)) / (float)w_stride + 1);
-  */
-
-  output[0]->dims[2] = (input[0]->dims[2] - h_kernel + h_stride + h_pad_aux) / h_stride;
-  output[0]->dims[3] = (input[0]->dims[3] - w_kernel + w_stride + w_pad_aux) / w_stride;
-
+  output[0]->dims[2] = (int64_t)floorf((float)(input[0]->dims[2] + h_pad_aux - ((h_kernel - 1) + 1)) / (float)h_stride + 1);
+  output[0]->dims[3] = (int64_t)floorf((float)(input[0]->dims[3] + w_pad_aux - ((w_kernel - 1) + 1)) / (float)w_stride + 1);
 
   // TODO check this? no mem is allocated?
   output[0]->name         = "name_is_set_afterwards\0"; // dont do this

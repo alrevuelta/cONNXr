@@ -316,11 +316,11 @@ int main(int argc, char **argv)
   //CU_add_test(onnxBackendSuite,"test_maxpool_2d_ceil",test_maxpool_2d_ceil),
   CU_add_test(onnxBackendSuite,"test_maxpool_2d_default",test_maxpool_2d_default),
   //CU_add_test(onnxBackendSuite,"test_maxpool_2d_dilations",test_maxpool_2d_dilations),
-  //CU_add_test(onnxBackendSuite,"test_maxpool_2d_pads",test_maxpool_2d_pads),
-  //CU_add_test(onnxBackendSuite,"test_maxpool_2d_precomputed_pads",test_maxpool_2d_precomputed_pads),
+  CU_add_test(onnxBackendSuite,"test_maxpool_2d_pads",test_maxpool_2d_pads),
+  CU_add_test(onnxBackendSuite,"test_maxpool_2d_precomputed_pads",test_maxpool_2d_precomputed_pads),
   CU_add_test(onnxBackendSuite,"test_maxpool_2d_precomputed_same_upper",test_maxpool_2d_precomputed_same_upper),
   CU_add_test(onnxBackendSuite,"test_maxpool_2d_precomputed_strides",test_maxpool_2d_precomputed_strides),
-  //CU_add_test(onnxBackendSuite,"test_maxpool_2d_same_lower",test_maxpool_2d_same_lower),
+  CU_add_test(onnxBackendSuite,"test_maxpool_2d_same_lower",test_maxpool_2d_same_lower),
   CU_add_test(onnxBackendSuite,"test_maxpool_2d_same_upper",test_maxpool_2d_same_upper),
   CU_add_test(onnxBackendSuite,"test_maxpool_2d_strides",test_maxpool_2d_strides),
   //CU_add_test(onnxBackendSuite,"test_maxpool_3d_default",test_maxpool_3d_default),
@@ -634,9 +634,9 @@ int main(int argc, char **argv)
   /* This suite tests a whole model end to end. All data is taken
    * form ONNX repository, where the model plus a set of inputs/outputs
    * is provided */
-  CU_add_test(modelsTestSuite, "test_model_mnist", test_model_mnist);
+  //CU_add_test(modelsTestSuite, "test_model_mnist", test_model_mnist);
   //CU_add_test(modelsTestSuite, "test_model_mnist_per_node", test_model_mnist_per_node);
-  CU_add_test(modelsTestSuite, "test_model_tinyyolov2", test_model_tinyyolov2);
+  //CU_add_test(modelsTestSuite, "test_model_tinyyolov2", test_model_tinyyolov2);
 
   CU_basic_set_mode(CU_BRM_VERBOSE);
 
