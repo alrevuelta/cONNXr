@@ -7,10 +7,10 @@
 #include "embeddedml_inference.h"
 
 // TODO Rethink this function?
-Onnx__TensorProto* searchTensorProtoByName(const Onnx__ModelProto *model,
+Onnx__TensorProto* searchTensorProtoByName( Onnx__ModelProto *model,
                                           Onnx__TensorProto **inputs,
-                                           const int nInputs,
-                                           const char *name)
+                                            int nInputs,
+                                            char *name)
 {
   DEBUG_PRINT("Searching for TensorProto with name=%s", name);
   //Onnx__TensorProto *tensor = NULL;
@@ -53,9 +53,9 @@ Onnx__TensorProto* searchTensorProtoByName(const Onnx__ModelProto *model,
   return NULL;
 }
 
-Onnx__AttributeProto* searchAttributeNyName(const size_t n_attribute,
-                                            const Onnx__AttributeProto **attribute,
-                                            const char *name)
+Onnx__AttributeProto* searchAttributeNyName( size_t n_attribute,
+                                             Onnx__AttributeProto **attribute,
+                                             char *name)
 {
   for (int i = 0; i < n_attribute; i++){
     if (!strcmp(attribute[i]->name, name)){

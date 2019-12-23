@@ -22,11 +22,11 @@
  *  \param[in/out]  output      Array of pointer to the outputs of the operators
  *  \return         error       Different than 0 if an error was produced
  */
- int operator_conv(const size_t n_input,
-                   const Onnx__TensorProto **input,
-                   const size_t n_attribute,
-                   const Onnx__AttributeProto **attribute,
-                   const size_t n_output,
+ int operator_conv(size_t n_input,
+                   Onnx__TensorProto **input,
+                   size_t n_attribute,
+                   Onnx__AttributeProto **attribute,
+                   size_t n_output,
                    Onnx__TensorProto **output)
 {
   DEBUG_PRINT("Calling operator_conv");
@@ -66,7 +66,7 @@
   int64_t h_pad, w_pad;
   h_pad = w_pad = 0;
   if (auto_pad != NULL){
-    if (!strcmp((const char*)auto_pad->s.data, "SAME_UPPER")){
+    if (!strcmp((char*)auto_pad->s.data, "SAME_UPPER")){
       if ("SAME_UPPER"){
         // This means, pad to match the output dimensions, and if not even
         // add the extra padding to the end

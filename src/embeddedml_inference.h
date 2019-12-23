@@ -28,16 +28,16 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
 
 typedef struct
 {
-  const char *name;
-  int (*func)(const size_t n_input,
-               const Onnx__TensorProto **input,
-               const size_t n_attribute,
-               const Onnx__AttributeProto **attribute,
-               const size_t n_output,
+   char *name;
+  int (*func)( size_t n_input,
+                Onnx__TensorProto **input,
+                size_t n_attribute,
+                Onnx__AttributeProto **attribute,
+                size_t n_output,
                Onnx__TensorProto **output);
 } operatorptrs;
 
-static const operatorptrs
+static  operatorptrs
           operatorsSet[] = {
                              {"Add", operator_add},
                              {"ArgMax", operator_argmax},

@@ -9,12 +9,12 @@
 int _outputIdx = 0;
 Onnx__TensorProto *_outputs[MAX_NUM_OF_OUTPUTS] = {};
 
-static int call_operator(const char *name,
-                         const size_t n_input,
-                         const Onnx__TensorProto **input,
-                         const size_t n_attribute,
-                         const Onnx__AttributeProto **attribute,
-                         const size_t n_output,
+static int call_operator( char *name,
+                          size_t n_input,
+                          Onnx__TensorProto **input,
+                          size_t n_attribute,
+                          Onnx__AttributeProto **attribute,
+                          size_t n_output,
                          Onnx__TensorProto **output)
 {
   int i;

@@ -22,11 +22,11 @@
  *  \param[in/out]  output      Array of pointer to the outputs of the operators
  *  \return         error       Different than 0 if an error was produced
  */
-int operator_maxpool(const size_t n_input,
-                     const Onnx__TensorProto **input,
-                     const size_t n_attribute,
-                     const Onnx__AttributeProto **attribute,
-                     const size_t n_output,
+int operator_maxpool(size_t n_input,
+                     Onnx__TensorProto **input,
+                     size_t n_attribute,
+                     Onnx__AttributeProto **attribute,
+                     size_t n_output,
                      Onnx__TensorProto **output)
 {
   DEBUG_PRINT("Calling operator_maxpool");
@@ -79,9 +79,9 @@ int operator_maxpool(const size_t n_input,
     w_pad_aux = (w_kernel - 1);
     h_pad = (h_kernel - 1)/2;
     w_pad = (w_kernel - 1)/2;
-    if (!strcmp((const char*)auto_pad->s.data, "SAME_UPPER")){
+    if (!strcmp((char*)auto_pad->s.data, "SAME_UPPER")){
       // remove
-    } else if (!strcmp((const char*)auto_pad->s.data, "SAME_LOWER")){
+    } else if (!strcmp((char*)auto_pad->s.data, "SAME_LOWER")){
 
       /* TODO quick n dirty*/
       if ((h_kernel - 1)%2 != 0){

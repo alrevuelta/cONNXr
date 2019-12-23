@@ -20,3 +20,10 @@ scripts/.idea/vcs.xml
 scripts/.idea/workspace.xml
 test/runtest
 test/remove.txt
+test/runtest.dSYM/Contents/Resources/DWARF/runtest
+test/runtest
+test/runprofile
+test/prototest
+test/callgrind.out.2261
+test/callgrind.out.79200
+test/callgrind.out.79200

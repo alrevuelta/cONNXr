@@ -35,7 +35,7 @@ void Debug_PrintArray(float *array, int m, int n)
   }
 }
 
-void debug_print_attributes(size_t n_attribute, Onnx__AttributeProto **attribute)
+void debug_print_attributes( size_t n_attribute,  Onnx__AttributeProto **attribute)
 {
   printf("n_attribute %zu\n", n_attribute);
   for (int j = 0; j < n_attribute; j++)
@@ -129,7 +129,7 @@ void debug_prettyprint_tensorproto(Onnx__TensorProto *tp)
 {
 }
 
-void Debug_PrintModelInformation(Onnx__ModelProto *model)
+void Debug_PrintModelInformation( Onnx__ModelProto *model)
 {
   //--------------------------------------------------------------------------//
   // MODEL

@@ -34,11 +34,11 @@
  *  \param[in/out]  output      Array of pointer to the outputs of the operators
  *  \return         error       Different than 0 if an error was produced
  */
-int operator_add(const size_t n_input,
-                 const Onnx__TensorProto **input,
-                 const size_t n_attribute,
-                 const Onnx__AttributeProto **attribute,
-                 const size_t n_output,
+int operator_add(size_t n_input,
+                 Onnx__TensorProto **input,
+                 size_t n_attribute,
+                 Onnx__AttributeProto **attribute,
+                 size_t n_output,
                  Onnx__TensorProto **output)
 {
   DEBUG_PRINT("Calling operator_add");

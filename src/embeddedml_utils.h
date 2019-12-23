@@ -5,13 +5,13 @@
 /* Max size for strings */
 #define MAX_CHAR_SIZE 50
 
-Onnx__TensorProto* searchTensorProtoByName(const Onnx__ModelProto *model,
+Onnx__TensorProto* searchTensorProtoByName( Onnx__ModelProto *model,
                                            Onnx__TensorProto **inputs,
-                                           const int nInputs,
-                                           const char *name);
-Onnx__AttributeProto* searchAttributeNyName(const size_t n_attribute,
-                                            const Onnx__AttributeProto **attribute,
-                                            const char *name);
+                                            int nInputs,
+                                            char *name);
+Onnx__AttributeProto* searchAttributeNyName( size_t n_attribute,
+                                             Onnx__AttributeProto **attribute,
+                                             char *name);
 Onnx__ModelProto* openOnnxFile(char *fname);
 Onnx__TensorProto* openTensorProtoFile(char *fname);
 

@@ -3,7 +3,7 @@
 
 #ifndef PB_ONNX_ONNX_PB_H_INCLUDED
 #define PB_ONNX_ONNX_PB_H_INCLUDED
-#include <pb.h>
+#include "pb.h" /* This was modified after the export to make it compile */
 
 /* @@protoc_insertion_point(includes) */
 #if PB_PROTO_HEADER_VERSION != 30
