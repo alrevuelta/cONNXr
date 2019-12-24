@@ -9,6 +9,8 @@ jobs:
     
     steps:
     - uses: actions/checkout@v1
+    - name: whatdf
+      run: sudo apt-get install libcunit1
     - name: make
       run: make
 
