@@ -26,7 +26,10 @@ jobs:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v1
-    - name: pre
+    - name: install_cunit
       run: brew install cunit
+    # Remove this when uplifted to nanopb
+    - name: install_protobuf
+      run: brew install protobuf-c
     - name: make
       run: make
