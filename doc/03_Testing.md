@@ -18,4 +18,8 @@ make test ts=onnxBackendSuite tc=test_operator_maxpool_1d_default
 // TODO List the testcases that are passing. Automate?
 
 ## Model Tests
-// TODO
+
+Models that are being tested.
+* https://github.com/onnx/models/tree/master/vision/classification/mnist
+* https://github.com/onnx/models/tree/master/vision/object_detection_segmentation/tiny_yolov2
+* TODO: https://github.com/onnx/models/tree/master/vision/classification/resnet

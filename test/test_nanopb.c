@@ -33,8 +33,13 @@ int main(int argc, char **argv)
 
   pb_istream_t stream;
   stream = pb_istream_from_buffer(buffer, len);
-  pb_decode(&stream, onnx_ModelProto_fields, &msg);
+  bool res = pb_decode(&stream, onnx_ModelProto_fields, &msg);
+  if(!res){
+    printf("something went wrong\n");
+  }
 
   printf("producer_name = %s\n", msg.producer_name);
+  printf("producer_name = %s\n", msg.graph.node.arg);
+
 
 }

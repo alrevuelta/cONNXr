@@ -27,3 +27,10 @@ test/prototest
 test/callgrind.out.2261
 test/callgrind.out.79200
 test/callgrind.out.79200
+runtest
+test/callgraph.dot
+test/callgraph.dot.ps
+test/gprof
+test/runprofile.dSYM/Contents/Info.plist
+test/runprofile.dSYM/Contents/Resources/DWARF/runprofile
+test/runtest.dSYM/Contents/Resources/DWARF/runtest

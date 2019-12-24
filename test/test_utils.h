@@ -112,7 +112,7 @@ void testOperator(char *outputName)
    * - Only output_0 is assumed. Read N outputs
    */
   char modelPath[200];
-  strcpy(modelPath, "../test/node/");
+  strcpy(modelPath, "test/node/");
   strcat(modelPath, outputName);
   strcat(modelPath, "/");
   strcat(modelPath, "model.onnx");
@@ -121,7 +121,7 @@ void testOperator(char *outputName)
   Onnx__ModelProto *model = openOnnxFile(modelPath);
 
   char inputPath[200];
-  strcpy(inputPath, "../test/node/");
+  strcpy(inputPath, "test/node/");
   strcat(inputPath, outputName);
   strcat(inputPath, "/test_data_set_0/input_*.pb");
 
@@ -142,7 +142,7 @@ void testOperator(char *outputName)
   globfree(&globbuf);
 
   char outputPath[200];
-  strcpy(outputPath, "../test/node/");
+  strcpy(outputPath, "test/node/");
   strcat(outputPath, outputName);
   strcat(outputPath, "/test_data_set_0/output_0.pb");
 

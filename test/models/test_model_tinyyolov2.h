@@ -12,9 +12,9 @@ void test_model_tinyyolov2(void)
 
   DEBUG_PRINT("Start: test_model_tinyyolov2");
 
-  Onnx__ModelProto *model = openOnnxFile("../test/tiny_yolov2/Model.onnx");
-  Onnx__TensorProto *inp0set0 = openTensorProtoFile("../test/tiny_yolov2/test_data_set_0/input_0.pb");
-  Onnx__TensorProto *out0set0 = openTensorProtoFile("../test/tiny_yolov2/test_data_set_0/output_0.pb");
+  Onnx__ModelProto *model = openOnnxFile("test/tiny_yolov2/Model.onnx");
+  Onnx__TensorProto *inp0set0 = openTensorProtoFile("test/tiny_yolov2/test_data_set_0/input_0.pb");
+  Onnx__TensorProto *out0set0 = openTensorProtoFile("test/tiny_yolov2/test_data_set_0/output_0.pb");
 
   debug_prettyprint_model(model);
   convertRawDataOfTensorProto(inp0set0);

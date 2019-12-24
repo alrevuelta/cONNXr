@@ -12,9 +12,9 @@ void test_model_mnist(void)
 
   DEBUG_PRINT("Start: test_model_mnist");
 
-  Onnx__ModelProto *model = openOnnxFile("../test/mnist/model.onnx");
-  Onnx__TensorProto *inp0set0 = openTensorProtoFile("../test/mnist/test_data_set_0/input_0.pb");
-  Onnx__TensorProto *out0set0 = openTensorProtoFile("../test/mnist/test_data_set_0/output_0.pb");
+  Onnx__ModelProto *model = openOnnxFile("test/mnist/model.onnx");
+  Onnx__TensorProto *inp0set0 = openTensorProtoFile("test/mnist/test_data_set_0/input_0.pb");
+  Onnx__TensorProto *out0set0 = openTensorProtoFile("test/mnist/test_data_set_0/output_0.pb");
 
   //Debug_PrintModelInformation(model);
   debug_prettyprint_model(model);
@@ -39,19 +39,19 @@ void test_model_mnist(void)
 static void test_model_mnist_node(char *outputName)
 {
   char modelPath[200];
-  strcpy(modelPath, "../test/mnist_experimental_test/");
+  strcpy(modelPath, "test/mnist_experimental_test/");
   strcat(modelPath, outputName);
   strcat(modelPath, "/");
   strcat(modelPath, outputName);
   strcat(modelPath, ".onnx");
 
   char inputPath[200];
-  strcpy(inputPath, "../test/mnist_experimental_test/");
+  strcpy(inputPath, "test/mnist_experimental_test/");
   strcat(inputPath, outputName);
   strcat(inputPath, "/test_data_set_0/input_0.pb");
 
   char outputPath[200];
-  strcpy(outputPath, "../test/mnist_experimental_test/");
+  strcpy(outputPath, "test/mnist_experimental_test/");
   strcat(outputPath, outputName);
   strcat(outputPath, "/test_data_set_0/output_0.pb");
 
