@@ -26,7 +26,7 @@ Other C/C++ related projects
 | [darknet](https://github.com/pjreddie/darknet)            | ?          | x | x |
 | [uTensor](https://github.com/uTensor/uTensor)             | TensorFlow | x | x |
 | [nnom](https://github.com/majianjia/nnom)                 | Keras      | x | x |
-https://github.com/Microsoft/ELL
+| [ELL](https://github.com/Microsoft/ELL)                   | ELL        | x | x |
 
 
 # Install
