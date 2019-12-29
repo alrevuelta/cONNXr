@@ -28,8 +28,10 @@ jobs:
     - uses: actions/checkout@v1
     - name: install_cunit
       run: brew install cunit
-    # Remove this when uplifted to nanopb
+    # No longer needed. Dependencies are included
     - name: install_protobuf
       run: brew install protobuf-c
+    - name: make_test
+      run: make dummy
     - name: make
       run: make
