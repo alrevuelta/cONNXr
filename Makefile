@@ -11,6 +11,9 @@ profile:
 	valgrind --tool=callgrind ./runprofile $(ts) $(tc)
 	qcachegrind
 
+dummy:
+	echo "Hi!"
+
 #nanopb:
 #	rm -f prototest
 #	gcc -std=c99 -Wall -D DEBUG -o prototest test_nanopb.c ../src/pb/nanopb/onnx.pb.c ../src/pb/nanopb/pb_common.c ../src/pb/nanopb/pb_decode.c ../src/pb/nanopb/pb_encode.c -I/usr/local/include -L/usr/local/lib -lcunit
