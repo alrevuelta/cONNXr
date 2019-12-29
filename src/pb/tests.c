@@ -11,7 +11,6 @@
 #include "operators/test_onnx_backend_operators.h"
 #include "models/test_model_mnist.h"
 #include "models/test_model_tinyyolov2.h"
-#include "models/test_model_super_resolution.h"
 #include "models/common_models.h"
 
 int main(int argc, char **argv)
@@ -638,7 +637,6 @@ int main(int argc, char **argv)
   CU_add_test(modelsTestSuite, "test_model_mnist", test_model_mnist);
   //CU_add_test(modelsTestSuite, "test_model_mnist_per_node", test_model_mnist_per_node);
   //CU_add_test(modelsTestSuite, "test_model_tinyyolov2", test_model_tinyyolov2);
-  CU_add_test(modelsTestSuite, "test_model_super_resolution", test_model_super_resolution);
 
   CU_basic_set_mode(CU_BRM_VERBOSE);
 

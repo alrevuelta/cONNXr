@@ -2,6 +2,7 @@
 #define TEST_MODEL_MNIST_H
 
 #include "common_models.h"
+#include <time.h>
 
 void test_model_mnist(void)
 {
@@ -28,7 +29,18 @@ void test_model_mnist(void)
   printf("%s\n\n", inp0set0->name);
 
   Onnx__TensorProto *inputs[] = { inp0set0 };
+  clock_t start, end;
+  double cpu_time_used;
+
+  start = clock();
   Onnx__TensorProto **output = inference(model, inputs, 1);
+  end = clock();
+
+  // TODO Is CLOCKS_PER_SEC ok to use?
+  cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+  printf("end-start: %f\n", (double) (end - start));
+  printf("cpu_time_used mnist: %f\n", cpu_time_used);
+  printf("CLOCKS_PER_SEC: %d\n", CLOCKS_PER_SEC);
 
   /* 11 is hardcoded, which is Plus214_Output_0 */
   compareAlmostEqualTensorProto(output[11], out0set0);

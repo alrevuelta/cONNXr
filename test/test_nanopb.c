@@ -15,6 +15,24 @@
 #include "../src/embeddedml_debug.h"
 #include "../src/embeddedml_inference.h"
 
+bool decode_node(pb_istream_t *istream, const pb_field_t *field, void **arg)
+{
+    IntList * dest = (IntList*)(*arg);
+
+    // decode single number
+    int64_t number;
+    if (!pb_decode_svarint(istream, &number))
+    {
+        const char * error = PB_GET_ERROR(istream);
+        printf("SimpleMessage_decode_single_number error: %s", error);
+        return false;
+    }
+
+    // add to destination list
+    IntList_add_number(dest, (int32_t)number);
+    return true;
+}
+
 int main(int argc, char **argv)
 {
   onnx_ModelProto msg = {};

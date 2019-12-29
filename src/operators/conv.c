@@ -101,9 +101,12 @@
     case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:
     {
       output[0]->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT;
-      output[0]->float_data = malloc(output[0]->dims[0]*output[0]->dims[1]*output[0]->dims[2]*output[0]->dims[3] * sizeof(float));
-      // todo make this nice :P
       output[0]->n_float_data = output[0]->dims[0]*output[0]->dims[1]*output[0]->dims[2]*output[0]->dims[3];
+
+      //TODO This is wrong. n_dims can be like 2 and this will fail
+      printf("n_flot_data = %d\n", input[0]->n_dims);
+
+      output[0]->float_data = malloc(output[0]->n_float_data * sizeof(float));
 
       int b,i,j,k,m,n,d;
       for(b = 0; b < output[0]->dims[0]; ++b){

@@ -75,6 +75,11 @@ struct  _Onnx__TensorProto
 ```
 
 ## Protocol Buffers
+There are different options to handle protocol buffers in C. Protoc is the first chosen alternative, but we are assessing other possibilities.
+* protoc
+* https://github.com/eerimoq/pbtools (Looks like the files wastes a lot of storage 200 kb?)
+* nanopb (Looks like its the most lightweight one. However, variable size fields are handled in a not very straight forward way. Read about pb_callback_t)
+
 `onnx` uses protocol buffers to serialize the models data. Note that `protobuf-c` is used to generate the `pb/onnx.pb-c.c` and `pb/onnx.pb-c.h`. Files are already provided, but you can generate it like this:
 
 ```
