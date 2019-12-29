@@ -1,18 +1,34 @@
-all:
-	rm -f runtest
-	gcc -std=c99 -Wall -D DEBUG -o runtest test/tests.c src/operators/*.c src/*.c src/pb/onnx.pb-c.c src/pb/protobuf-c.c -lcunit
+all: clean build
 	./runtest $(ts) $(tc)
 
-# TODO Following targets might not work. Just a copy paste + playing a bit
-profile:
-	rm -f runprofile
-	rm -f call*
-	gcc -std=c99 -Wall -D DEBUG -o runprofile test/tests.c src/operators/*.c src/*.c src/pb/onnx.pb-c.c src/pb/protobuf-c.c -lcunit
-	valgrind --tool=callgrind ./runprofile $(ts) $(tc)
-	qcachegrind
+clean:
+	echo "Cleaning"
+	rm -f runtest
 
-dummy:
-	echo "Hi!"
+build:
+	echo "Building"
+	gcc -std=c99 -Wall -D DEBUG -o runtest test/tests.c src/operators/*.c src/*.c src/pb/onnx.pb-c.c src/pb/protobuf-c.c -lcunit
+
+onnx_backend_tests:
+	echo "Running onnx backend tests"
+	./runtest onnxBackendSuite
+
+onnx_models_tests:
+	echo "Running models tests"
+	./runtest modelsTestSuite
+
+benchmark:
+	echo "TODO: Runing benchmarking"
+
+valgrind:
+	echo "TODO: Running valgrind"
+	#rm -f runprofile
+	#rm -f call*
+	#gcc -std=c99 -Wall -D DEBUG -o runprofile test/tests.c src/operators/*.c src/*.c src/pb/onnx.pb-c.c src/pb/protobuf-c.c -lcunit
+	#valgrind --tool=callgrind ./runprofile $(ts) $(tc)
+	#qcachegrind
+
+#memory leak stuff TODO:
 
 #nanopb:
 #	rm -f prototest

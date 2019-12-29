@@ -29,7 +29,7 @@ int main(int argc, char **argv)
                                    clean_onnxBackendSuite);
 
   /* Add models test suite*/
-  modelsTestSuite = CU_add_suite("Models_TestSuite",
+  modelsTestSuite = CU_add_suite("modelsTestSuite",
                                  init_Models_TestSuite,
                                  clean_Models_TestSuite);
   if (NULL == onnxBackendSuite) {
@@ -642,17 +642,20 @@ int main(int argc, char **argv)
 
   CU_basic_set_mode(CU_BRM_VERBOSE);
 
-  if (argc == 3)
-  {
+  // If not inputs are provided, run everything
+  if (argc == 1){
+    CU_basic_run_tests();
+  }
+
+  else if (argc == 2){
+    printf("running specific ts\n");
+    CU_pSuite suite2run = CU_get_suite(argv[1]);
+    CU_basic_run_suite(suite2run);
+  }else if (argc == 3){
     printf("running specific tc from a ts\n");
     CU_pSuite suite2run = CU_get_suite(argv[1]);
     CU_pTest test2run = CU_get_test(suite2run, argv[2]);
     CU_basic_run_test(suite2run, test2run);
-  }
-  // If not inputs are provided, run everything
-  else if (argc == 1)
-  {
-    CU_basic_run_tests();
   }
 
   CU_cleanup_registry();
