@@ -17,8 +17,15 @@ onnx_models_tests:
 	echo "Running models tests"
 	./runtest modelsTestSuite
 
+# TODO Benchmarking should run without many logging crap to avoid performance loss
+# All runs will be average later on in the post processing phase
 benchmark:
-	echo "TODO: Runing benchmarking"
+	echo "Runing benchmarking"
+	number=1 ; while [[ $$number -le 10 ]] ; do \
+		echo "Benchmarking iteration "$$number ; \
+		./runtest modelsTestSuite test_model_mnist >> benchmarking.txt ; \
+		((number = number + 1)) ; \
+  done
 
 valgrind:
 	echo "TODO: Running valgrind"

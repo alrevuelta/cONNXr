@@ -4,7 +4,7 @@
 
 #ifdef DEBUG
 #define DEBUG_PRINT(FMT, ARGS...) do { \
-  fprintf(stderr, "%s:%d " FMT "\n", __FILE__, __LINE__, ## ARGS); \
+  printf("%s:%d " FMT "\n", __FILE__, __LINE__, ## ARGS); \
   } while (0)
 #else
   #define DEBUG_PRINT(fmt, ...){}

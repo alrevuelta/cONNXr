@@ -1,8 +1,3 @@
-import onnx
-import sys
-import numpy
-from onnx import numpy_helper
-
 """
     file:        parse_output.py
 
@@ -13,4 +8,4 @@ from onnx import numpy_helper
 """
 
 if __name__ == '__main__':
-    xx
+    print("Test")

@@ -34,3 +34,4 @@ test/gprof
 test/runprofile.dSYM/Contents/Info.plist
 test/runprofile.dSYM/Contents/Resources/DWARF/runprofile
 test/runtest.dSYM/Contents/Resources/DWARF/runtest
+benchmarking.txt
