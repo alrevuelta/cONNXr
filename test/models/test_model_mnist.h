@@ -38,9 +38,9 @@ void test_model_mnist(void)
 
   // TODO Is CLOCKS_PER_SEC ok to use?
   cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-  printf("[mnist trace] end-start: %f\n", (double) (end - start));
-  printf("[mnist trace] cpu_time_used: %f\n", cpu_time_used);
-  printf("[mnist_trace] CLOCKS_PER_SEC: %d\n", CLOCKS_PER_SEC);
+  printf("[benchmark][mnist] cycles: %f\n", (double) (end - start));
+  printf("[benchmark][mnist] cpu_time_used: %f\n", cpu_time_used);
+  printf("[benchmark][mnist] CLOCKS_PER_SEC: %d\n", CLOCKS_PER_SEC);
 
   /* 11 is hardcoded, which is Plus214_Output_0 */
   compareAlmostEqualTensorProto(output[11], out0set0);

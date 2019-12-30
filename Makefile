@@ -27,6 +27,9 @@ benchmark:
 		((number = number + 1)) ; \
   done
 
+	# Run some postprocessing on the benchmarking results
+	python3 scripts/parse_output_benchmarking.py
+
 valgrind:
 	echo "TODO: Running valgrind"
 	#rm -f runprofile
