@@ -41,7 +41,7 @@ int operator_add(size_t n_input,
                  size_t n_output,
                  Onnx__TensorProto **output)
 {
-  DEBUG_PRINT("Calling operator_add");
+  TRACE_LEVEL0("Calling operator_add");
   debug_print_dims(input[0]->n_dims, input[0]->dims);
 
   if (0){

@@ -29,7 +29,7 @@
                    size_t n_output,
                    Onnx__TensorProto **output)
 {
-  DEBUG_PRINT("Calling operator_conv");
+  TRACE_LEVEL0("Calling operator_conv");
   debug_print_dims(input[0]->n_dims, input[0]->dims);
 
   if (0){
@@ -104,7 +104,7 @@
       output[0]->n_float_data = output[0]->dims[0]*output[0]->dims[1]*output[0]->dims[2]*output[0]->dims[3];
 
       //TODO This is wrong. n_dims can be like 2 and this will fail
-      printf("n_flot_data = %d\n", input[0]->n_dims);
+      TRACE_LEVEL0("n_flot_data = %d\n", input[0]->n_dims);
 
       output[0]->float_data = malloc(output[0]->n_float_data * sizeof(float));
 
@@ -125,14 +125,14 @@
                     /* This is hardcoded to make it work with mnist model, where
                     the input is 1x1x28x28 */
                     int index = cur_w + input[0]->dims[3]*(cur_h + input[0]->dims[2]*(d + 0*input[0]->dims[1]));
-                    //printf("%d,%d,%d index=%d\n", d, cur_h, cur_w, index);
+                    //TRACE_LEVEL0("%d,%d,%d index=%d\n", d, cur_h, cur_w, index);
 
                     int valid = (cur_h >= 0 && cur_h < input[0]->dims[2] &&
                                  cur_w >= 0 && cur_w < input[0]->dims[3]);
                     float val = (valid != 0) ? input[0]->float_data[index] : 0;
                     int index_kernel = k*input[1]->dims[3]*input[1]->dims[2]*input[1]->dims[1] + d*input[1]->dims[3]*input[1]->dims[2] + n*h_kernel + m; // change h_kernel by W->dims[x]
                     value += val * input[1]->float_data[index_kernel];
-                    //printf("%fx%f+\n", val, input[1]->float_data[index_kernel]);
+                    //TRACE_LEVEL0("%fx%f+\n", val, input[1]->float_data[index_kernel]);
                   }
                 }
               }

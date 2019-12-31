@@ -30,59 +30,59 @@ void Debug_PrintArray(float *array, int m, int n)
   {
     for (int j = 0; j < n; j++)
     {
-      printf("array[%d][%d]=%f\n", i, j, array[i*m+j]);
+      TRACE_LEVEL0("array[%d][%d]=%f\n", i, j, array[i*m+j]);
     }
   }
 }
 
 void debug_print_attributes( size_t n_attribute,  Onnx__AttributeProto **attribute)
 {
-  printf("n_attribute %zu\n", n_attribute);
+  TRACE_LEVEL0("n_attribute %zu\n", n_attribute);
   for (int j = 0; j < n_attribute; j++)
   {
     // Check AttributeProto structure for more parameters
-    printf("attribute[%d]->name %s\n", j, attribute[j]->name);
+    TRACE_LEVEL0("attribute[%d]->name %s\n", j, attribute[j]->name);
 
-    printf("attribute[%d]->has_type %d\n", j, attribute[j]->has_type);
-    printf("attribute[%d]->type %d\n", j, attribute[j]->type);
+    TRACE_LEVEL0("attribute[%d]->has_type %d\n", j, attribute[j]->has_type);
+    TRACE_LEVEL0("attribute[%d]->type %d\n", j, attribute[j]->type);
 
-    printf("attribute[%d]->has_f %d\n", j, attribute[j]->has_f);
+    TRACE_LEVEL0("attribute[%d]->has_f %d\n", j, attribute[j]->has_f);
     //print f
 
-    printf("attribute[%d]->has_i %d\n", j, attribute[j]->has_i);
+    TRACE_LEVEL0("attribute[%d]->has_i %d\n", j, attribute[j]->has_i);
     // print i
 
-    printf("attribute[%d]->has_s %d\n", j, attribute[j]->has_s);
+    TRACE_LEVEL0("attribute[%d]->has_s %d\n", j, attribute[j]->has_s);
     if (attribute[j]->has_s) {
       // This has s.data and s.len
-      printf("attribute[%d]->s %s\n", j, attribute[j]->s.data);
+      TRACE_LEVEL0("attribute[%d]->s %s\n", j, attribute[j]->s.data);
     }
 
 
-    printf("attribute[%d]->n_floats %zu\n", j, attribute[j]->n_floats);
+    TRACE_LEVEL0("attribute[%d]->n_floats %zu\n", j, attribute[j]->n_floats);
     for (int k = 0; k < attribute[j]->n_floats; k++)
     {
-      printf("attribute[%d]->floats[%d] %f\n", j, k, attribute[j]->floats[k]);
+      TRACE_LEVEL0("attribute[%d]->floats[%d] %f\n", j, k, attribute[j]->floats[k]);
     }
 
-    printf("attribute[%d]->n_ints %zu\n", j, attribute[j]->n_ints);
+    TRACE_LEVEL0("attribute[%d]->n_ints %zu\n", j, attribute[j]->n_ints);
     for (int k = 0; k < attribute[j]->n_ints; k++)
     {
-      printf("attribute[%d]->ints[%d] %lld\n", j, k, attribute[j]->ints[k]);
+      TRACE_LEVEL0("attribute[%d]->ints[%d] %lld\n", j, k, attribute[j]->ints[k]);
     }
 
-    printf("attribute[%d]->n_strings %zu\n", j, attribute[j]->n_strings);
+    TRACE_LEVEL0("attribute[%d]->n_strings %zu\n", j, attribute[j]->n_strings);
     for (int k = 0; k < attribute[j]->n_strings; k++)
     {
       // Type is ProtobufCBinaryData
-      //printf("attribute[%d]->strings[%d] %f\n", j, k, attribute[j]->string[k]);
+      //TRACE_LEVEL0("attribute[%d]->strings[%d] %f\n", j, k, attribute[j]->string[k]);
     }
 
-    printf("attribute[%d]->n_tensors %zu\n", j, attribute[j]->n_tensors);
+    TRACE_LEVEL0("attribute[%d]->n_tensors %zu\n", j, attribute[j]->n_tensors);
 
 
-    printf("attribute[%d]->n_graphs %zu\n", j, attribute[j]->n_graphs);
-    printf("attribute[%d]->n_sparse_tensors %zu\n", j, attribute[j]->n_sparse_tensors);
+    TRACE_LEVEL0("attribute[%d]->n_graphs %zu\n", j, attribute[j]->n_graphs);
+    TRACE_LEVEL0("attribute[%d]->n_sparse_tensors %zu\n", j, attribute[j]->n_sparse_tensors);
 
     /*
     ProtobufCMessage base;
@@ -118,11 +118,11 @@ void debug_print_attributes( size_t n_attribute,  Onnx__AttributeProto **attribu
 
 void debug_print_dims(size_t n_dims, int64_t *dims)
 {
-  printf("n_dims=%zu\n", n_dims);
+  TRACE_LEVEL0("n_dims=%zu\n", n_dims);
   for (int i = 0; i < n_dims; i++){
-    printf("%lld x ", dims[i]);
+    TRACE_LEVEL0("%lld x ", dims[i]);
   }
-  printf("\n");
+  TRACE_LEVEL0("\n");
 }
 
 void debug_prettyprint_tensorproto(Onnx__TensorProto *tp)
@@ -134,77 +134,77 @@ void Debug_PrintModelInformation( Onnx__ModelProto *model)
   //--------------------------------------------------------------------------//
   // MODEL
   //--------------------------------------------------------------------------//
-  printf("model->producer_name %s\n", model->producer_name);
-  printf("model->producer_version %s\n", model->producer_version);
-  printf("model->n_opset_import %zu\n", model->n_opset_import);
+  TRACE_LEVEL0("model->producer_name %s\n", model->producer_name);
+  TRACE_LEVEL0("model->producer_version %s\n", model->producer_version);
+  TRACE_LEVEL0("model->n_opset_import %zu\n", model->n_opset_import);
   for (int i = 0; i < model->n_opset_import; i++) {
-    printf("model->opset_import[%d]->domain %s\n", i, model->opset_import[i]->domain);
+    TRACE_LEVEL0("model->opset_import[%d]->domain %s\n", i, model->opset_import[i]->domain);
   }
 
   //--------------------------------------------------------------------------//
   // GRAPH
   //--------------------------------------------------------------------------//
-  printf("model->graph->name %s\n", model->graph->name);
-  printf("model->graph->n_node %zu\n", model->graph->n_node);
-  printf("model->graph->n_initializer %zu\n", model->graph->n_initializer);
+  TRACE_LEVEL0("model->graph->name %s\n", model->graph->name);
+  TRACE_LEVEL0("model->graph->n_node %zu\n", model->graph->n_node);
+  TRACE_LEVEL0("model->graph->n_initializer %zu\n", model->graph->n_initializer);
   for (int n_init = 0; n_init < model->graph->n_initializer; n_init++)
   {
-    printf("model->graph->initializer[%d] %s\n", n_init, model->graph->initializer[n_init]->name);
+    TRACE_LEVEL0("model->graph->initializer[%d] %s\n", n_init, model->graph->initializer[n_init]->name);
     Debug_PrintTensorProto(model->graph->initializer[n_init]);
   }
 
   // input/output data
-  printf("model->graph->n_input %zu\n", model->graph->n_input);
-  printf("model->graph->n_output %zu\n", model->graph->n_output);
+  TRACE_LEVEL0("model->graph->n_input %zu\n", model->graph->n_input);
+  TRACE_LEVEL0("model->graph->n_output %zu\n", model->graph->n_output);
 
   for (int i = 0; i < model->graph->n_input; i++) {
-    printf("model->graph->input[%d]->name %s\n", i, model->graph->input[i]->name);
-    printf("model->graph->input[%d]->type->tensor_type->has_elem_type %d\n", i, model->graph->input[i]->type->tensor_type->has_elem_type);
-    printf("model->graph->input[%d]->type->tensor_type->elem_type %d\n", i, model->graph->input[i]->type->tensor_type->elem_type);
-    printf("model->graph->input[%d]->type->tensor_type->shape->n_dim %zu\n", i, model->graph->input[i]->type->tensor_type->shape->n_dim);
+    TRACE_LEVEL0("model->graph->input[%d]->name %s\n", i, model->graph->input[i]->name);
+    TRACE_LEVEL0("model->graph->input[%d]->type->tensor_type->has_elem_type %d\n", i, model->graph->input[i]->type->tensor_type->has_elem_type);
+    TRACE_LEVEL0("model->graph->input[%d]->type->tensor_type->elem_type %d\n", i, model->graph->input[i]->type->tensor_type->elem_type);
+    TRACE_LEVEL0("model->graph->input[%d]->type->tensor_type->shape->n_dim %zu\n", i, model->graph->input[i]->type->tensor_type->shape->n_dim);
 
     // TODO With some models this crashes
     for (int j = 0; j < model->graph->input[i]->type->tensor_type->shape->n_dim; j++) {
 
-      printf("model->graph->input[%d]->type->tensor_type->shape->dim[%d]->value_case %d\n", i, j, model->graph->input[i]->type->tensor_type->shape->dim[j]->value_case);
+      TRACE_LEVEL0("model->graph->input[%d]->type->tensor_type->shape->dim[%d]->value_case %d\n", i, j, model->graph->input[i]->type->tensor_type->shape->dim[j]->value_case);
       switch(model->graph->input[i]->type->tensor_type->shape->dim[j]->value_case) {
         case ONNX__TENSOR_SHAPE_PROTO__DIMENSION__VALUE__NOT_SET:
-          printf("Value not not set\n");
+          TRACE_LEVEL0("Value not not set\n");
           break;
         case ONNX__TENSOR_SHAPE_PROTO__DIMENSION__VALUE_DIM_VALUE:
-          printf("model->graph->input[%d]->type->tensor_type->shape->dim[%d]->dim_value %lld\n", i, j, model->graph->input[i]->type->tensor_type->shape->dim[j]->dim_value);
+          TRACE_LEVEL0("model->graph->input[%d]->type->tensor_type->shape->dim[%d]->dim_value %lld\n", i, j, model->graph->input[i]->type->tensor_type->shape->dim[j]->dim_value);
           break;
         case ONNX__TENSOR_SHAPE_PROTO__DIMENSION__VALUE_DIM_PARAM:
-          printf("model->graph->input[%d]->type->tensor_type->shape->dim[%d]->dim_param %s\n", i, j, model->graph->input[i]->type->tensor_type->shape->dim[j]->dim_param);
+          TRACE_LEVEL0("model->graph->input[%d]->type->tensor_type->shape->dim[%d]->dim_param %s\n", i, j, model->graph->input[i]->type->tensor_type->shape->dim[j]->dim_param);
           break;
         case _ONNX__TENSOR_SHAPE_PROTO__DIMENSION__VALUE_IS_INT_SIZE:
           break;
       }
-      //printf("model->graph->input[%d]->type->tensor_type->shape->dim[%d]->denotation %s\n", i, j, model->graph->input[i]->type->tensor_type->shape->dim[j]->denotation);
+      //TRACE_LEVEL0("model->graph->input[%d]->type->tensor_type->shape->dim[%d]->denotation %s\n", i, j, model->graph->input[i]->type->tensor_type->shape->dim[j]->denotation);
     }
 
   }
   /*
   for (int i = 0; i < model->graph->n_output; i++) {
-    printf("model->graph->output[%d]->name %s\n", i, model->graph->output[i]->name);
-    printf("model->graph->output[%d]->type->tensor_type->has_elem_type %d\n", i, model->graph->output[i]->type->tensor_type->has_elem_type);
-    printf("model->graph->output[%d]->type->tensor_type->elem_type %d\n", i, model->graph->output[i]->type->tensor_type->elem_type);
-    printf("model->graph->output[%d]->type->tensor_type->shape->n_dim %zu\n", i, model->graph->output[i]->type->tensor_type->shape->n_dim);
+    TRACE_LEVEL0("model->graph->output[%d]->name %s\n", i, model->graph->output[i]->name);
+    TRACE_LEVEL0("model->graph->output[%d]->type->tensor_type->has_elem_type %d\n", i, model->graph->output[i]->type->tensor_type->has_elem_type);
+    TRACE_LEVEL0("model->graph->output[%d]->type->tensor_type->elem_type %d\n", i, model->graph->output[i]->type->tensor_type->elem_type);
+    TRACE_LEVEL0("model->graph->output[%d]->type->tensor_type->shape->n_dim %zu\n", i, model->graph->output[i]->type->tensor_type->shape->n_dim);
     for (int j = 0; j < model->graph->input[i]->type->tensor_type->shape->n_dim; j++) {
 
-      printf("model->graph->output[%d]->type->tensor_type->shape->dim[%d]->value_case %d\n", i, j, model->graph->output[i]->type->tensor_type->shape->dim[j]->value_case);
+      TRACE_LEVEL0("model->graph->output[%d]->type->tensor_type->shape->dim[%d]->value_case %d\n", i, j, model->graph->output[i]->type->tensor_type->shape->dim[j]->value_case);
       switch(model->graph->output[i]->type->tensor_type->shape->dim[j]->value_case) {
         case ONNX__TENSOR_SHAPE_PROTO__DIMENSION__VALUE__NOT_SET:
-          printf("Value not not set\n");
+          TRACE_LEVEL0("Value not not set\n");
           break;
         case ONNX__TENSOR_SHAPE_PROTO__DIMENSION__VALUE_DIM_VALUE:
-          printf("model->graph->output[%d]->type->tensor_type->shape->dim[%d]->dim_value %lld\n", i, j, model->graph->output[i]->type->tensor_type->shape->dim[j]->dim_value);
+          TRACE_LEVEL0("model->graph->output[%d]->type->tensor_type->shape->dim[%d]->dim_value %lld\n", i, j, model->graph->output[i]->type->tensor_type->shape->dim[j]->dim_value);
           break;
         case ONNX__TENSOR_SHAPE_PROTO__DIMENSION__VALUE_DIM_PARAM:
-          printf("model->graph->output[%d]->type->tensor_type->shape->dim[%d]->dim_param %s\n", i, j, model->graph->output[i]->type->tensor_type->shape->dim[j]->dim_param);
+          TRACE_LEVEL0("model->graph->output[%d]->type->tensor_type->shape->dim[%d]->dim_param %s\n", i, j, model->graph->output[i]->type->tensor_type->shape->dim[j]->dim_param);
           break;
       }
-      //printf("model->graph->output[%d]->type->tensor_type->shape->dim[%d]->denotation %s\n", i, j, model->graph->output[i]->type->tensor_type->shape->dim[j]->denotation);
+      //TRACE_LEVEL0("model->graph->output[%d]->type->tensor_type->shape->dim[%d]->denotation %s\n", i, j, model->graph->output[i]->type->tensor_type->shape->dim[j]->denotation);
     }
   }*/
 
@@ -213,16 +213,16 @@ void Debug_PrintModelInformation( Onnx__ModelProto *model)
   //--------------------------------------------------------------------------//
   for (int i = 0; i < model->graph->n_node; i++)
   {
-    printf("model->graph->node[%d]->n_input %zu\n", i, model->graph->node[i]->n_input);
+    TRACE_LEVEL0("model->graph->node[%d]->n_input %zu\n", i, model->graph->node[i]->n_input);
     for (int j = 0; j < model->graph->node[i]->n_input; j++) {
-      printf("model->graph->node[%d]->input[%d] %s\n", i, j, model->graph->node[i]->input[j]);
+      TRACE_LEVEL0("model->graph->node[%d]->input[%d] %s\n", i, j, model->graph->node[i]->input[j]);
     }
-    printf("model->graph->node[%d]->n_output %zu\n", i, model->graph->node[i]->n_output);
+    TRACE_LEVEL0("model->graph->node[%d]->n_output %zu\n", i, model->graph->node[i]->n_output);
     for (int j = 0; j < model->graph->node[i]->n_output; j++) {
-      printf("model->graph->node[%d]->output[%d] %s\n", i, j, model->graph->node[i]->output[j]);
+      TRACE_LEVEL0("model->graph->node[%d]->output[%d] %s\n", i, j, model->graph->node[i]->output[j]);
     }
-    printf("model->graph->node[%d]->name %s\n", i, model->graph->node[i]->name);
-    printf("model->graph->node[%d]->op_type %s\n", i, model->graph->node[i]->op_type);
+    TRACE_LEVEL0("model->graph->node[%d]->name %s\n", i, model->graph->node[i]->name);
+    TRACE_LEVEL0("model->graph->node[%d]->op_type %s\n", i, model->graph->node[i]->op_type);
 
     debug_print_attributes(model->graph->node[i]->n_attribute, model->graph->node[i]->attribute);
   }
@@ -230,48 +230,48 @@ void Debug_PrintModelInformation( Onnx__ModelProto *model)
 
 void Debug_PrintTensorProto(Onnx__TensorProto *tp)
 {
-  printf("ndims = %zu\n", tp->n_dims);
+  TRACE_LEVEL0("ndims = %zu\n", tp->n_dims);
   for (int i = 0; i < tp->n_dims; i++)
   {
-    printf("dims[%d]=%lld\n", i, tp->dims[i]);
+    TRACE_LEVEL0("dims[%d]=%lld\n", i, tp->dims[i]);
   }
-  printf("has_data_type = %d\n", tp->has_data_type);
-  printf("data_type = %d\n", tp->data_type);
+  TRACE_LEVEL0("has_data_type = %d\n", tp->has_data_type);
+  TRACE_LEVEL0("data_type = %d\n", tp->data_type);
 
   // TODO segment
 
-  printf("n_float_data = %zu\n", tp->n_float_data);
+  TRACE_LEVEL0("n_float_data = %zu\n", tp->n_float_data);
 
   // Print float_data if needed
   for (int i = 0; i < tp->n_float_data; i++) {
-    //printf("float_data[%d] = %f\n", i, tp->float_data[i]);
+    //TRACE_LEVEL0("float_data[%d] = %f\n", i, tp->float_data[i]);
   }
 
-  printf("n_int32_data = %zu\n", tp->n_int32_data);
+  TRACE_LEVEL0("n_int32_data = %zu\n", tp->n_int32_data);
 
   // Print int32_data if needed
 
-  printf("n_string_data = %zu\n", tp->n_string_data);
+  TRACE_LEVEL0("n_string_data = %zu\n", tp->n_string_data);
 
   // Print string_data if needed
 
-  printf("n_int64_data = %zu\n", tp->n_int64_data);
+  TRACE_LEVEL0("n_int64_data = %zu\n", tp->n_int64_data);
 
   // Print int64_data if needed
 
-  printf("name = %s\n", tp->name);
-  printf("docstring = %s\n", tp->doc_string);
+  TRACE_LEVEL0("name = %s\n", tp->name);
+  TRACE_LEVEL0("docstring = %s\n", tp->doc_string);
 
-  printf("has_raw_data = %d\n", tp->has_raw_data);
+  TRACE_LEVEL0("has_raw_data = %d\n", tp->has_raw_data);
   if (tp->has_raw_data)
   {
-    printf("raw_data->len = %zu\n", tp->raw_data.len);
+    TRACE_LEVEL0("raw_data->len = %zu\n", tp->raw_data.len);
 
     // print raw data. convert to data_type if needed like it is done in
     // utils.c
     for (int i = 0; i < tp->raw_data.len; i++)
     {
-      printf("tp->raw_data.data[%d] = %d\n", i, tp->raw_data.data[i]);
+      TRACE_LEVEL0("tp->raw_data.data[%d] = %d\n", i, tp->raw_data.data[i]);
     }
   }
 
@@ -279,11 +279,11 @@ void Debug_PrintTensorProto(Onnx__TensorProto *tp)
 
   // Print data_location if needed
 
-  printf("n_double_data = %zu\n", tp->n_double_data);
+  TRACE_LEVEL0("n_double_data = %zu\n", tp->n_double_data);
 
   // Print double_data if needed
 
-  printf("n_uint64_data = %zu\n", tp->n_uint64_data);
+  TRACE_LEVEL0("n_uint64_data = %zu\n", tp->n_uint64_data);
 
   // Print uint64_data if needed
 
@@ -293,100 +293,98 @@ void Debug_PrintTensorProto(Onnx__TensorProto *tp)
 
 void debug_prettyprint_model(Onnx__ModelProto *model)
 {
-  printf("");
-  printf("-----------------------------------------------\n");
-  printf("---------------Model information---------------\n");
-  printf("-----------------------------------------------\n");
+  TRACE_LEVEL0("");
+  TRACE_LEVEL0("-----------------------------------------------\n");
+  TRACE_LEVEL0("---------------Model information---------------\n");
+  TRACE_LEVEL0("-----------------------------------------------\n");
 
-  printf("Model:\n");
-  printf("  model->producer_name %s\n", model->producer_name);
-  printf("  model->producer_version %s\n", model->producer_version);
-  printf("  model->n_opset_import %zu\n", model->n_opset_import);
+  TRACE_LEVEL0("Model:\n");
+  TRACE_LEVEL0("  model->producer_name %s\n", model->producer_name);
+  TRACE_LEVEL0("  model->producer_version %s\n", model->producer_version);
+  TRACE_LEVEL0("  model->n_opset_import %zu\n", model->n_opset_import);
   for (int i = 0; i < model->n_opset_import; i++) {
-    printf("  model->opset_import[%d]->domain %s\n", i, model->opset_import[i]->domain);
+    TRACE_LEVEL0("  model->opset_import[%d]->domain %s\n", i, model->opset_import[i]->domain);
   }
 
   //--------------------------------------------------------------------------//
   // GRAPH
   //--------------------------------------------------------------------------//
-  printf("Graph:\n");
-  printf("  model->graph->name %s\n", model->graph->name);
-  printf("  model->graph->n_node %zu\n", model->graph->n_node);
-  printf("  model->graph->n_initializer %zu\n", model->graph->n_initializer);
+  TRACE_LEVEL0("Graph:\n");
+  TRACE_LEVEL0("  model->graph->name %s\n", model->graph->name);
+  TRACE_LEVEL0("  model->graph->n_node %zu\n", model->graph->n_node);
+  TRACE_LEVEL0("  model->graph->n_initializer %zu\n", model->graph->n_initializer);
 
-  printf("Initializers:\n");
+  TRACE_LEVEL0("Initializers:\n");
   for (int n_init = 0; n_init < model->graph->n_initializer; n_init++)
   {
-    printf("  model->graph->initializer[%d] %s\t\t|", n_init,
+    TRACE_LEVEL0("  model->graph->initializer[%d] %s\t\t|", n_init,
                                                       model->graph->initializer[n_init]->name);
 
     for (int i = 0; i < model->graph->initializer[n_init]->n_dims; i++)
     {
-      i == (model->graph->initializer[n_init]->n_dims - 1) ?
-            printf("%lld ", model->graph->initializer[n_init]->dims[i]) :
-            printf("%lld x ", model->graph->initializer[n_init]->dims[i]);
+      TRACE_LEVEL0("%lld x ", model->graph->initializer[n_init]->dims[i]);
     }
     //print(" | has_data_type = %d\n", tp->has_data_type);
-    printf("\t| %s\n", data_types_string[model->graph->initializer[n_init]->data_type]);
+    TRACE_LEVEL0("\t| %s\n", data_types_string[model->graph->initializer[n_init]->data_type]);
   }
 
 /*
-  printf("Nodes:\n");
-  printf("  model->graph->n_input %zu\n", model->graph->n_input);
-  printf("  model->graph->n_output %zu\n", model->graph->n_output);*/
+  TRACE_LEVEL0("Nodes:\n");
+  TRACE_LEVEL0("  model->graph->n_input %zu\n", model->graph->n_input);
+  TRACE_LEVEL0("  model->graph->n_output %zu\n", model->graph->n_output);*/
 
 /*
   for (int i = 0; i < model->graph->n_input; i++) {
-    printf("%zu %s | ", i, model->graph->input[i]->name);
+    TRACE_LEVEL0("%zu %s | ", i, model->graph->input[i]->name);
 
-    //printf("model->graph->input[%d]->type->tensor_type->has_elem_type %d\n", i, model->graph->input[i]->type->tensor_type->has_elem_type);
-    //printf("model->graph->input[%d]->type->tensor_type->elem_type %d\n", i, model->graph->input[i]->type->tensor_type->elem_type);
-    //printf("model->graph->input[%d]->type->tensor_type->shape->n_dim %zu\n", i, model->graph->input[i]->type->tensor_type->shape->n_dim);
+    //TRACE_LEVEL0("model->graph->input[%d]->type->tensor_type->has_elem_type %d\n", i, model->graph->input[i]->type->tensor_type->has_elem_type);
+    //TRACE_LEVEL0("model->graph->input[%d]->type->tensor_type->elem_type %d\n", i, model->graph->input[i]->type->tensor_type->elem_type);
+    //TRACE_LEVEL0("model->graph->input[%d]->type->tensor_type->shape->n_dim %zu\n", i, model->graph->input[i]->type->tensor_type->shape->n_dim);
 
     // TODO With some models this crashes
     for (int j = 0; j < model->graph->input[i]->type->tensor_type->shape->n_dim; j++) {
 
-      //printf("model->graph->input[%d]->type->tensor_type->shape->dim[%d]->value_case %d\n", i, j, model->graph->input[i]->type->tensor_type->shape->dim[j]->value_case);
+      //TRACE_LEVEL0("model->graph->input[%d]->type->tensor_type->shape->dim[%d]->value_case %d\n", i, j, model->graph->input[i]->type->tensor_type->shape->dim[j]->value_case);
       switch(model->graph->input[i]->type->tensor_type->shape->dim[j]->value_case) {
         case ONNX__TENSOR_SHAPE_PROTO__DIMENSION__VALUE__NOT_SET:
-          printf("Value not not set\n");
+          TRACE_LEVEL0("Value not not set\n");
           break;
         case ONNX__TENSOR_SHAPE_PROTO__DIMENSION__VALUE_DIM_VALUE:
-          printf("%lld x ", model->graph->input[i]->type->tensor_type->shape->dim[j]->dim_value);
+          TRACE_LEVEL0("%lld x ", model->graph->input[i]->type->tensor_type->shape->dim[j]->dim_value);
           break;
         case ONNX__TENSOR_SHAPE_PROTO__DIMENSION__VALUE_DIM_PARAM:
-          printf("TODO %s\n", model->graph->input[i]->type->tensor_type->shape->dim[j]->dim_param);
+          TRACE_LEVEL0("TODO %s\n", model->graph->input[i]->type->tensor_type->shape->dim[j]->dim_param);
           break;
         case _ONNX__TENSOR_SHAPE_PROTO__DIMENSION__VALUE_IS_INT_SIZE:
           break;
       }
-      //printf("model->graph->input[%d]->type->tensor_type->shape->dim[%d]->denotation %s\n", i, j, model->graph->input[i]->type->tensor_type->shape->dim[j]->denotation);
+      //TRACE_LEVEL0("model->graph->input[%d]->type->tensor_type->shape->dim[%d]->denotation %s\n", i, j, model->graph->input[i]->type->tensor_type->shape->dim[j]->denotation);
     }
-    printf("\n");
+    TRACE_LEVEL0("\n");
 
   }*/
 
   for (int i = 0; i < model->graph->n_output; i++) {
-    //printf("model->graph->output[%d]->name %s\n", i, model->graph->output[i]->name);
-    //printf("model->graph->output[%d]->type->tensor_type->has_elem_type %d\n", i, model->graph->output[i]->type->tensor_type->has_elem_type);
-    //printf("model->graph->output[%d]->type->tensor_type->elem_type %d\n", i, model->graph->output[i]->type->tensor_type->elem_type);
-    //printf("model->graph->output[%d]->type->tensor_type->shape->n_dim %zu\n", i, model->graph->output[i]->type->tensor_type->shape->n_dim);
+    //TRACE_LEVEL0("model->graph->output[%d]->name %s\n", i, model->graph->output[i]->name);
+    //TRACE_LEVEL0("model->graph->output[%d]->type->tensor_type->has_elem_type %d\n", i, model->graph->output[i]->type->tensor_type->has_elem_type);
+    //TRACE_LEVEL0("model->graph->output[%d]->type->tensor_type->elem_type %d\n", i, model->graph->output[i]->type->tensor_type->elem_type);
+    //TRACE_LEVEL0("model->graph->output[%d]->type->tensor_type->shape->n_dim %zu\n", i, model->graph->output[i]->type->tensor_type->shape->n_dim);
     /* Is this failing?
     for (int j = 0; j < model->graph->input[i]->type->tensor_type->shape->n_dim; j++) {
 
-      printf("model->graph->output[%d]->type->tensor_type->shape->dim[%d]->value_case %d\n", i, j, model->graph->output[i]->type->tensor_type->shape->dim[j]->value_case);
+      TRACE_LEVEL0("model->graph->output[%d]->type->tensor_type->shape->dim[%d]->value_case %d\n", i, j, model->graph->output[i]->type->tensor_type->shape->dim[j]->value_case);
       switch(model->graph->output[i]->type->tensor_type->shape->dim[j]->value_case) {
         case ONNX__TENSOR_SHAPE_PROTO__DIMENSION__VALUE__NOT_SET:
-          printf("Value not not set\n");
+          TRACE_LEVEL0("Value not not set\n");
           break;
         case ONNX__TENSOR_SHAPE_PROTO__DIMENSION__VALUE_DIM_VALUE:
-          printf("model->graph->output[%d]->type->tensor_type->shape->dim[%d]->dim_value %lld\n", i, j, model->graph->output[i]->type->tensor_type->shape->dim[j]->dim_value);
+          TRACE_LEVEL0("model->graph->output[%d]->type->tensor_type->shape->dim[%d]->dim_value %lld\n", i, j, model->graph->output[i]->type->tensor_type->shape->dim[j]->dim_value);
           break;
         case ONNX__TENSOR_SHAPE_PROTO__DIMENSION__VALUE_DIM_PARAM:
-          printf("model->graph->output[%d]->type->tensor_type->shape->dim[%d]->dim_param %s\n", i, j, model->graph->output[i]->type->tensor_type->shape->dim[j]->dim_param);
+          TRACE_LEVEL0("model->graph->output[%d]->type->tensor_type->shape->dim[%d]->dim_param %s\n", i, j, model->graph->output[i]->type->tensor_type->shape->dim[j]->dim_param);
           break;
 
-      //printf("model->graph->output[%d]->type->tensor_type->shape->dim[%d]->denotation %s\n", i, j, model->graph->output[i]->type->tensor_type->shape->dim[j]->denotation);
+      //TRACE_LEVEL0("model->graph->output[%d]->type->tensor_type->shape->dim[%d]->denotation %s\n", i, j, model->graph->output[i]->type->tensor_type->shape->dim[j]->denotation);
     }*/
   }
 
@@ -394,28 +392,28 @@ void debug_prettyprint_model(Onnx__ModelProto *model)
   /* TODO Experiment with the align
   https://stackoverflow.com/questions/35329208/aligning-columns-in-c-output
   */
-  printf("Nodes:\n");
+  TRACE_LEVEL0("Nodes:\n");
   for (int i = 0; i < model->graph->n_node; i++)
   {
-    printf("  %s %20.20s n_input=%zu  n_output=%zu\n",
+    TRACE_LEVEL0("  %s %20.20s n_input=%zu  n_output=%zu\n",
                                           model->graph->node[i]->op_type,
                                           model->graph->node[i]->name,
                                           model->graph->node[i]->n_input,
                                           model->graph->node[i]->n_output);
-    //printf("model->graph->node[%d]->op_type %s\n", i, model->graph->node[i]->op_type);
-    //printf("model->graph->node[%d]->n_input %zu\n", i, model->graph->node[i]->n_input);
+    //TRACE_LEVEL0("model->graph->node[%d]->op_type %s\n", i, model->graph->node[i]->op_type);
+    //TRACE_LEVEL0("model->graph->node[%d]->n_input %zu\n", i, model->graph->node[i]->n_input);
     for (int j = 0; j < model->graph->node[i]->n_input; j++) {
-      printf("    input[%d] %s\n", j, model->graph->node[i]->input[j]);
+      TRACE_LEVEL0("    input[%d] %s\n", j, model->graph->node[i]->input[j]);
     }
     for (int j = 0; j < model->graph->node[i]->n_output; j++) {
-      printf("    output[%d] %s\n", j, model->graph->node[i]->output[j]);
+      TRACE_LEVEL0("    output[%d] %s\n", j, model->graph->node[i]->output[j]);
     }
 
     for (int j = 0; j < model->graph->node[i]->n_attribute; j++)
     {
-      printf("    attribute[%d]->name %s\n", j, model->graph->node[i]->attribute[j]->name);
-      //printf("    attribute[%d]->has_type %d\n", j, model->graph->node[i]->attribute[j]->has_type);
-      //printf("    attribute[%d]->type %d\n", j, model->graph->node[i]->attribute[j]->type);
+      TRACE_LEVEL0("    attribute[%d]->name %s\n", j, model->graph->node[i]->attribute[j]->name);
+      //TRACE_LEVEL0("    attribute[%d]->has_type %d\n", j, model->graph->node[i]->attribute[j]->has_type);
+      //TRACE_LEVEL0("    attribute[%d]->type %d\n", j, model->graph->node[i]->attribute[j]->type);
     }
   }
 }

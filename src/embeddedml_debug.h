@@ -2,12 +2,39 @@
 #define EMBEDDEDML_DEBUG_H
 #include "pb/onnx.pb-c.h"
 
-#ifdef DEBUG
-#define DEBUG_PRINT(FMT, ARGS...) do { \
-  printf("%s:%d " FMT "\n", __FILE__, __LINE__, ## ARGS); \
+/* How to trace?
+ * Use different macros for different tracing levels 0-2. When compiling, set
+ * the corresponding flag to 1.
+ * - LEVEL0: Easy to understand traces, without many detail. Operators that
+ *           are called, dimensions,...
+ * - LEVEL1: More detailed traces.
+ * - LEVEL2: Very detailed traces.
+
+ * If you want to always trace something, just use printf.
+*/
+
+#ifdef ENABLE_LEVEL0
+#define TRACE_LEVEL0(FMT, ARGS...) do { \
+  printf("[LEVEL0] %s:%d " FMT "\n", __FILE__, __LINE__, ## ARGS); \
   } while (0)
 #else
-  #define DEBUG_PRINT(fmt, ...){}
+  #define TRACE_LEVEL0(fmt, ...){}
+#endif
+
+#ifdef ENABLE_LEVEL1
+#define TRACE_LEVEL1(FMT, ARGS...) do { \
+  printf("[LEVEL1] %s:%d " FMT "\n", __FILE__, __LINE__, ## ARGS); \
+  } while (0)
+#else
+  #define TRACE_LEVEL1(fmt, ...){}
+#endif
+
+#ifdef ENABLE_LEVEL2
+#define TRACE_LEVEL2(FMT, ARGS...) do { \
+  printf("[LEVEL2] %s:%d " FMT "\n", __FILE__, __LINE__, ## ARGS); \
+  } while (0)
+#else
+  #define TRACE_LEVEL2(fmt, ...){}
 #endif
 
 void debug_print_attributes(size_t n_attribute, Onnx__AttributeProto **attribute);

@@ -5,7 +5,7 @@
 
 void test_model_super_resolution(void)
 {
-  DEBUG_PRINT("Start: test_model_super_resolution");
+  TRACE_LEVEL0("Start: test_model_super_resolution");
 
   Onnx__ModelProto *model = openOnnxFile("test/super_resolution/super_resolution.onnx");
   Onnx__TensorProto *inp0set0 = openTensorProtoFile("test/super_resolution/test_data_set_0/input_0.pb");
@@ -27,7 +27,7 @@ void test_model_super_resolution(void)
   //printf("Will compare output xx = %s", output[xx]->name);
   //compareAlmostEqualTensorProto(output[xx], out0set0);
 
-  DEBUG_PRINT("End: test_model_super_resolution");
+  TRACE_LEVEL0("End: test_model_super_resolution");
 }
 
 #endif

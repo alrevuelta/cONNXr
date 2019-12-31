@@ -28,7 +28,7 @@ int operator_reshape(size_t n_input,
                      size_t n_output,
                      Onnx__TensorProto **output)
 {
-  DEBUG_PRINT("Calling operator_reshape");
+  TRACE_LEVEL0("Calling operator_reshape");
   debug_print_dims(input[0]->n_dims, input[0]->dims);
 
   if (0){
@@ -87,7 +87,7 @@ int operator_reshape(size_t n_input,
     {
       output[0]->dims[i] = input[1]->int64_data[i];
     }
-    DEBUG_PRINT("-----reshaped->dims[%d] = %lld", i, output[0]->dims[i]);
+    TRACE_LEVEL0("-----reshaped->dims[%d] = %lld", i, output[0]->dims[i]);
   }
 
   // Populate some parameters

@@ -4,10 +4,12 @@ all: clean build
 clean:
 	echo "Cleaning"
 	rm -f runtest
+	rm -f connxr
 
 build:
 	echo "Building"
-	gcc -std=c99 -Wall -D DEBUG -o runtest test/tests.c src/operators/*.c src/*.c src/pb/onnx.pb-c.c src/pb/protobuf-c.c -lcunit
+	# TODO: Do not include connxr.c because it contains another main. /e*.c is a quick fix
+	gcc -std=c99 -Wall -D ENABLE_LEVEL0 -o runtest test/tests.c src/operators/*.c src/e*.c src/pb/onnx.pb-c.c src/pb/protobuf-c.c -lcunit
 
 onnx_backend_tests:
 	echo "Running onnx backend tests"
@@ -37,6 +39,11 @@ valgrind:
 	#gcc -std=c99 -Wall -D DEBUG -o runprofile test/tests.c src/operators/*.c src/*.c src/pb/onnx.pb-c.c src/pb/protobuf-c.c -lcunit
 	#valgrind --tool=callgrind ./runprofile $(ts) $(tc)
 	#qcachegrind
+
+make build_cli:
+	rm -f connxr
+	# TODO Set different levels of verbosity
+	gcc -std=c99 -Wall -o connxr src/operators/*.c src/*.c src/pb/onnx.pb-c.c src/pb/protobuf-c.c
 
 #memory leak stuff TODO:
 

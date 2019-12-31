@@ -28,7 +28,7 @@ int operator_relu(size_t n_input,
                   size_t n_output,
                   Onnx__TensorProto **output)
  {
-   DEBUG_PRINT("Calling operator_relu");
+   TRACE_LEVEL0("Calling operator_relu");
    debug_print_dims(input[0]->n_dims, input[0]->dims);
 
    if (0){

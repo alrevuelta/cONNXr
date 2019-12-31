@@ -11,7 +11,7 @@ void test_model_mnist(void)
   // test_data_set_1
   // test_data_set_2
 
-  DEBUG_PRINT("Start: test_model_mnist");
+  TRACE_LEVEL0("Start: test_model_mnist");
 
   Onnx__ModelProto *model = openOnnxFile("test/mnist/model.onnx");
   Onnx__TensorProto *inp0set0 = openTensorProtoFile("test/mnist/test_data_set_0/input_0.pb");
@@ -45,7 +45,7 @@ void test_model_mnist(void)
   /* 11 is hardcoded, which is Plus214_Output_0 */
   compareAlmostEqualTensorProto(output[11], out0set0);
 
-  DEBUG_PRINT("End: test_model_mnist");
+  TRACE_LEVEL0("End: test_model_mnist");
 }
 
 static void test_model_mnist_node(char *outputName)
@@ -96,7 +96,7 @@ static void test_model_mnist_node(char *outputName)
   Onnx__TensorProto **output = inference(model, inputs, 1);
 
   int outputToAssert = 4;
-  DEBUG_PRINT("Asserting output %s", output[outputToAssert]->name);
+  TRACE_LEVEL0("Asserting output %s", output[outputToAssert]->name);
   compareAlmostEqualTensorProto(output[outputToAssert], out0set0);
 }
 
@@ -119,7 +119,7 @@ void test_model_mnist_per_node(void)
   -10_Times212_Output_0
   -11_Plus214_Output_0
   */
-  //DEBUG_PRINT("Start: test_model_mnist_per_node");
+  //TRACE_LEVEL0("Start: test_model_mnist_per_node");
 
   //test_model_mnist_node("0_Parameter193_reshape1");
 

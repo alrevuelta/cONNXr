@@ -30,7 +30,7 @@ static int call_operator( char *name,
     }
   }
   /* If it reaches this point, the operator wasnt found */
-  printf("\n\nTODO: Operator %s doest not exist or its not implemented\n\n", name);
+  TRACE_LEVEL0("\n\nTODO: Operator %s doest not exist or its not implemented\n\n", name);
   return -1;
 }
 
@@ -40,14 +40,14 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
 
   /* Dirty trick to allow multiple runs. There is a memory leak for sure */
   _outputIdx = 0;
-  DEBUG_PRINT("calling inference");
-  DEBUG_PRINT("The graph has nodes=%zu", model->graph->n_node);
+  TRACE_LEVEL0("calling inference");
+  TRACE_LEVEL0("The graph has nodes=%zu", model->graph->n_node);
 
   // Iterate all nodes in the graph
   for (int nodeIdx = 0; nodeIdx < model->graph->n_node; nodeIdx++)
   {
     char *operation = model->graph->node[nodeIdx]->op_type;
-    DEBUG_PRINT("node=%d, operation=%s, n_input=%zu, n_output=%zu",
+    TRACE_LEVEL0("node=%d, operation=%s, n_input=%zu, n_output=%zu",
                 nodeIdx,
                 model->graph->node[nodeIdx]->op_type,
                 model->graph->node[nodeIdx]->n_input,
@@ -79,13 +79,13 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
                               nodeOutputs);
 
     if (error){
-      printf("TODO: There was an error, do something\n");
+      TRACE_LEVEL0("TODO: There was an error, do something\n");
     }
 
     out0->name = model->graph->node[nodeIdx]->output[0];
-    DEBUG_PRINT("Storing output in list index=%d, name=%s", _outputIdx, out0->name);
+    TRACE_LEVEL0("Storing output in list index=%d, name=%s", _outputIdx, out0->name);
     _outputs[_outputIdx++] = nodeOutputs[0]; // todo this is hardcoded
-    printf("_outputIdx = %d\n", _outputIdx);
+    TRACE_LEVEL0("_outputIdx = %d\n", _outputIdx);
   }
 
   // TODO:

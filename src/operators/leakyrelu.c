@@ -28,7 +28,7 @@
                         size_t n_output,
                         Onnx__TensorProto **output)
  {
-   DEBUG_PRINT("Calling operator_leakyrelu");
+   TRACE_LEVEL0("Calling operator_leakyrelu");
    debug_print_dims(input[0]->n_dims, input[0]->dims);
 
    /* TODO Alpha is not always float */

@@ -28,7 +28,7 @@ int operator_matmul(size_t n_input,
                     size_t n_output,
                     Onnx__TensorProto **output)
 {
-  DEBUG_PRINT("Calling operator_matmul");
+  TRACE_LEVEL0("Calling operator_matmul");
   debug_print_dims(input[0]->n_dims, input[0]->dims);
   debug_print_dims(input[1]->n_dims, input[1]->dims);
 

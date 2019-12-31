@@ -28,7 +28,7 @@ int operator_argmax(size_t n_input,
                     size_t n_output,
                     Onnx__TensorProto **output)
 {
-  DEBUG_PRINT("Calling operator_argmax");
+  TRACE_LEVEL0("Calling operator_argmax");
 
   if (0){
     /* TODO: Check some conditions. For example if a specific

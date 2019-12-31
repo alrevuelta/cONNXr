@@ -39,7 +39,7 @@ void compareAlmostEqualTensorProto(Onnx__TensorProto *a, Onnx__TensorProto *b)
       for(int i = 0; i < a->n_float_data; i++)
       {
         if (fabs(a->float_data[i] - b->float_data[i]) > FLOAT_TOLERANCE){
-          DEBUG_PRINT("%i, %f, %f", i, a->float_data[i], b->float_data[i]);
+          TRACE_LEVEL0("%i, %f, %f", i, a->float_data[i], b->float_data[i]);
         }
         CU_ASSERT(fabs(a->float_data[i] - b->float_data[i]) < FLOAT_TOLERANCE);
       }
@@ -63,7 +63,7 @@ void compareAlmostEqualTensorProto(Onnx__TensorProto *a, Onnx__TensorProto *b)
       CU_ASSERT_EQUAL(a->n_int64_data, b->n_int64_data);
       for(int i = 0; i < a->n_int64_data; i++)
       {
-        DEBUG_PRINT("ASSERTING EQUAL: %lld, %lld", a->int64_data[i], b->int64_data[i]);
+        TRACE_LEVEL0("ASSERTING EQUAL: %lld, %lld", a->int64_data[i], b->int64_data[i]);
         CU_ASSERT_EQUAL(a->int64_data[i], b->int64_data[i]);
       }
       break;
@@ -80,7 +80,7 @@ void compareAlmostEqualTensorProto(Onnx__TensorProto *a, Onnx__TensorProto *b)
       CU_ASSERT_EQUAL(a->n_double_data, b->n_double_data);
       for(int i = 0; i < a->n_double_data; i++)
       {
-        DEBUG_PRINT("ASSERTING EQUAL: %lf, %lf", a->double_data[i], b->double_data[i]);
+        TRACE_LEVEL0("ASSERTING EQUAL: %lf, %lf", a->double_data[i], b->double_data[i]);
         CU_ASSERT_EQUAL(a->double_data[i], b->double_data[i]);
       }
       break;
@@ -155,7 +155,7 @@ void testOperator(char *outputName)
 
   /* Some operators have more than two outputs to assert */
   int outputToAssert = 0;
-  DEBUG_PRINT("Asserting output %s", output[outputToAssert]->name);
+  TRACE_LEVEL0("Asserting output %s", output[outputToAssert]->name);
   compareAlmostEqualTensorProto(output[outputToAssert], out0set0);
 }
 

@@ -10,7 +10,7 @@ void test_model_tinyyolov2(void)
   // test_data_set_1
   // test_data_set_2
 
-  DEBUG_PRINT("Start: test_model_tinyyolov2");
+  TRACE_LEVEL0("Start: test_model_tinyyolov2");
 
   Onnx__ModelProto *model = openOnnxFile("test/tiny_yolov2/Model.onnx");
   Onnx__TensorProto *inp0set0 = openTensorProtoFile("test/tiny_yolov2/test_data_set_0/input_0.pb");
@@ -32,7 +32,7 @@ void test_model_tinyyolov2(void)
   printf("Will compare output 32 = %s", output[32]->name);
   compareAlmostEqualTensorProto(output[32], out0set0);
 
-  DEBUG_PRINT("End: test_model_tinyyolov2");
+  TRACE_LEVEL0("End: test_model_tinyyolov2");
 }
 
 #endif

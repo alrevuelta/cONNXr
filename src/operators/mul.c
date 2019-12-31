@@ -28,7 +28,7 @@
                   size_t n_output,
                   Onnx__TensorProto **output)
 {
-  DEBUG_PRINT("Calling operator_mul");
+  TRACE_LEVEL0("Calling operator_mul");
 
   /* TODO: Hardcoded for tiny YOLO */
 

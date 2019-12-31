@@ -39,7 +39,7 @@ int main(int argc, char **argv)
 
   FILE *fl = fopen("mnist/model.onnx", "r");
   if (fl == NULL){
-    DEBUG_PRINT("File was not opened");
+    TRACE_LEVEL0("File was not opened");
   }
   fseek(fl, 0, SEEK_END);
   long len = ftell(fl);
@@ -47,7 +47,7 @@ int main(int argc, char **argv)
   fseek(fl, 0, SEEK_SET);
   fread(buffer, 1, len, fl);
   fclose(fl);
-  DEBUG_PRINT("length of file is %ld", len);
+  TRACE_LEVEL0("length of file is %ld", len);
 
   pb_istream_t stream;
   stream = pb_istream_from_buffer(buffer, len);

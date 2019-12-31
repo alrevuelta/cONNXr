@@ -101,7 +101,7 @@ pb_ostream_t pb_ostream_from_buffer(pb_byte_t *buf, size_t bufsize);
  *    MyMessage msg = {};
  *    pb_ostream_t stream = PB_OSTREAM_SIZING;
  *    pb_encode(&stream, MyMessage_fields, &msg);
- *    printf("Message size is %d\n", stream.bytes_written);
+ *    TRACE_LEVEL0("Message size is %d\n", stream.bytes_written);
  */
 #ifndef PB_NO_ERRMSG
 #define PB_OSTREAM_SIZING {0,0,0,0,0}

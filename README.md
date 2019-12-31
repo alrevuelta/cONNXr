@@ -33,6 +33,8 @@ Other C/C++ related projects
 Check the `Makefile` inside `test` that compiles the code and run a bunch of test cases for the implemented operators + MNIST digit recognition model. Library compilation into a static library is not done yet.
 
 # Example
+
+## In your code
 Note that this example won't work as it is. Some more work is needed.
 
 ```c
@@ -58,6 +60,19 @@ int main()
 }
 ```
 
+## Command Line Interface
+A simple command line interface is provided so you can easily use it from your terminal. Note that its still in a very early stage.
+
+Just compile it
+```
+make build_cli
+```
+
+And use it. First parameter is the model, and second the input in `.pb` format. In the future it might support other input formats such as images.
+```
+./connxr test/mnist/model.onnx test/mnist/test_data_set_0/input_0.pb
+```
+
 # Limitations
 
 * Very few basic operators are implemented, so a model that contains a not implemented operator will fail. See them inside `operators` folder
@@ -74,9 +89,9 @@ int main()
 - [x] Run end to end tests for MNIST model
 - [ ] Implement a significant amount of onnx operators, most common ones
 - [ ] Compile and deploy a model (i.e. MNIST) into a real embedded device
-- [ ] Set up a nice CI with Azure or GitHub Actions
-- [ ] Run profiling on the operators
-- [ ] Migrate to nanopb to reduce the size of the pb files
+- [x] Set up a nice CI with Azure or GitHub Actions
+- [-] Run profiling on the operators
+- [-] Migrate to nanopb to reduce the size of the pb files
 - [ ] Run memory check and leak detection (Valgrind?)
 - [ ] Add more tests than the onnx backend, which is not sufficient
 - [ ] Create a nice Makefile, compile library as a static library to be linked

@@ -28,7 +28,7 @@ int operator_batchnormalization(size_t n_input,
                                 size_t n_output,
                                 Onnx__TensorProto **output)
 {
-  DEBUG_PRINT("Calling operator_batchnormalization");
+  TRACE_LEVEL0("Calling operator_batchnormalization");
 
   //Onnx__AttributeProto *momentumAttr = searchAttributeNyName(n_attribute, attribute, "momentum");
   debug_print_attributes(n_attribute, attribute);
@@ -73,8 +73,8 @@ int operator_batchnormalization(size_t n_input,
         float var = input[4]->float_data[index];
         float scale = input[1]->float_data[index];
         float B = input[2]->float_data[index];
-        //printf("input=%f\n", input[0]->float_data[i]);
-        //printf("index=%dmean=%f, var=%f, scale=%f, B=%f\n", index, mean, var, scale, B);
+        //TRACE_LEVEL0("input=%f\n", input[0]->float_data[i]);
+        //TRACE_LEVEL0("index=%dmean=%f, var=%f, scale=%f, B=%f\n", index, mean, var, scale, B);
         output[0]->float_data[i] = (input[0]->float_data[i] - mean) / sqrtf(var + eps);
         output[0]->float_data[i] = scale * output[0]->float_data[i] + B;
       }

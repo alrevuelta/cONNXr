@@ -29,7 +29,7 @@ int operator_maxpool(size_t n_input,
                      size_t n_output,
                      Onnx__TensorProto **output)
 {
-  DEBUG_PRINT("Calling operator_maxpool");
+  TRACE_LEVEL0("Calling operator_maxpool");
   debug_print_dims(input[0]->n_dims, input[0]->dims);
   //debug_print_attributes(n_attribute, attribute);
 
@@ -103,7 +103,7 @@ int operator_maxpool(size_t n_input,
 
     /*
     for (int i = 0; i < pads->n_ints; i++){
-      printf("\n\n pad=%d\n", pads->ints[i]);
+      TRACE_LEVEL0("\n\n pad=%d\n", pads->ints[i]);
     }*/
   }
 
