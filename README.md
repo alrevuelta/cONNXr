@@ -90,10 +90,10 @@ And use it. First parameter is the model, and second the input in `.pb` format. 
 - [ ] Implement a significant amount of onnx operators, most common ones
 - [ ] Compile and deploy a model (i.e. MNIST) into a real embedded device
 - [x] Set up a nice CI with Azure or GitHub Actions
-- [-] Run profiling on the operators
-- [-] Migrate to nanopb to reduce the size of the pb files
+- [ ] Run profiling on the operators
+- [ ] Migrate to nanopb to reduce the size of the pb files
 - [ ] Run memory check and leak detection (Valgrind?)
 - [ ] Add more tests than the onnx backend, which is not sufficient
 - [ ] Create a nice Makefile, compile library as a static library to be linked
 - [ ] Try different compilers
-- [ ] xxx
+- [ ] Enable gcc extra options (pedantic, all W, etc,...)
