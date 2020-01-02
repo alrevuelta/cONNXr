@@ -1,22 +1,7 @@
 #ifndef EMBEDDEDML_INFERENCE_H
 #define EMBEDDEDML_INFERENCE_H
 #include "pb/onnx.pb-c.h"
-
-// Just for some initial tests. Move to a common include
-#include "operators/add.h"
-#include "operators/argmax.h"
-#include "operators/cast.h"
-#include "operators/conv.h"
-#include "operators/matmul.h"
-#include "operators/maxpool.h"
-#include "operators/relu.h"
-#include "operators/reshape.h"
-#include "operators/sigmoid.h"
-#include "operators/softmax.h"
-#include "operators/zipmap.h"
-#include "operators/batchnormalization.h"
-#include "operators/mul.h"
-#include "operators/leakyrelu.h"
+#include "operators/operators.h"
 
 // TODO Hardcoded for initial tests
 #define MAX_NUM_OF_OUTPUTS 40
@@ -28,7 +13,7 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
 
 typedef struct
 {
-   char *name;
+  char *name;
   int (*func)( size_t n_input,
                 Onnx__TensorProto **input,
                 size_t n_attribute,

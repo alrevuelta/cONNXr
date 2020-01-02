@@ -2,9 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include "../pb/onnx.pb-c.h"
 #include "../embeddedml_debug.h"
-#include "add.h"
+#include "operators.h"
 
 /*! \fn operator_add()
  *  \brief Add: Performs element-wise binary addition (with Numpy-style broadcasting support).

@@ -4,16 +4,8 @@
 #include "../../src/embeddedml_debug.h"
 #include "../../src/embeddedml_inference.h"
 #include "../../src/embeddedml_utils.h"
+#include "../../src/operators/operators.h"
 #include "../test_utils.h"
-
-#include "../../src/operators/add.h"
-#include "../../src/operators/argmax.h"
-#include "../../src/operators/cast.h"
-#include "../../src/operators/conv.h"
-#include "../../src/operators/matmul.h"
-#include "../../src/operators/maxpool.h"
-#include "../../src/operators/relu.h"
-#include "../../src/operators/reshape.h"
 
 int init_onnxBackendSuite(void)
 {

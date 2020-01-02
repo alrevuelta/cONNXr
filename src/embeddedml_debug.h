@@ -13,7 +13,7 @@
  * If you want to always trace something, just use printf.
 */
 
-#ifdef ENABLE_LEVEL0
+#if TRACE_LEVEL>=0
 #define TRACE_LEVEL0(FMT, ARGS...) do { \
   printf("[LEVEL0] %s:%d " FMT "\n", __FILE__, __LINE__, ## ARGS); \
   } while (0)
@@ -21,7 +21,7 @@
   #define TRACE_LEVEL0(fmt, ...){}
 #endif
 
-#ifdef ENABLE_LEVEL1
+#if TRACE_LEVEL>=1
 #define TRACE_LEVEL1(FMT, ARGS...) do { \
   printf("[LEVEL1] %s:%d " FMT "\n", __FILE__, __LINE__, ## ARGS); \
   } while (0)
@@ -29,7 +29,7 @@
   #define TRACE_LEVEL1(fmt, ...){}
 #endif
 
-#ifdef ENABLE_LEVEL2
+#if TRACE_LEVEL>=2
 #define TRACE_LEVEL2(FMT, ARGS...) do { \
   printf("[LEVEL2] %s:%d " FMT "\n", __FILE__, __LINE__, ## ARGS); \
   } while (0)
