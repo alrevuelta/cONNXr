@@ -1,4 +1,4 @@
-# onnx-c runtime
+# cONNXr C ONNX Runtime
 ![](https://github.com/alrevuelta/embedded-ml/workflows/CI/badge.svg)
 
 > A `onnx` runtime written in pure `C99` with zero dependancies focused on small embedded devices. Run inference on your machine learning models no matter which framework you train it with and no matter the device that you use.
