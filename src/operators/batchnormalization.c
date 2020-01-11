@@ -27,7 +27,13 @@ int operator_batchnormalization(size_t n_input,
                                 size_t n_output,
                                 Onnx__TensorProto **output)
 {
-  TRACE_LEVEL0("Calling operator_batchnormalization");
+  TRACE_LEVEL0("Calling operator_batchnormalization\n");
+
+  if (0){
+    /* TODO: Check some conditions. For example if a specific
+     * functionality is not supported */
+    return 1;
+  }
 
   //Onnx__AttributeProto *momentumAttr = searchAttributeNyName(n_attribute, attribute, "momentum");
   debug_print_attributes(n_attribute, attribute);
@@ -47,7 +53,6 @@ int operator_batchnormalization(size_t n_input,
 
   // Populate some parameters
   // TODO: Is this working? No mem is allocated
-  output[0]->name         = "name_is_set_afterwards\0";
   output[0]->has_raw_data = 0;
 
   /* The order of inputs is assumed to be:

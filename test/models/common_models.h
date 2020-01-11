@@ -4,6 +4,8 @@
 #include "../../src/embeddedml_inference.h"
 #include "../../src/embeddedml_utils.h"
 
+#include <time.h>
+
 int init_Models_TestSuite(void)
 {
   return 0;

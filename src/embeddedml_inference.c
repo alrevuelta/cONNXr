@@ -29,7 +29,7 @@ static int call_operator( char *name,
       return ret;
     }
   }
-  /* If it reaches this point, the operator wasnt found */
+  /* If it reaches this point, the operator wasnt found. Throw error? */
   TRACE_LEVEL0("\n\nTODO: Operator %s doest not exist or its not implemented\n\n", name);
   return -1;
 }
@@ -40,18 +40,18 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
 
   /* Dirty trick to allow multiple runs. There is a memory leak for sure */
   _outputIdx = 0;
-  TRACE_LEVEL0("calling inference");
-  TRACE_LEVEL0("The graph has nodes=%zu", model->graph->n_node);
+  TRACE_LEVEL0("Calling inference\n");
+  TRACE_LEVEL0("The graph has nodes=%zu\n", model->graph->n_node);
 
   // Iterate all nodes in the graph
   for (int nodeIdx = 0; nodeIdx < model->graph->n_node; nodeIdx++)
   {
     char *operation = model->graph->node[nodeIdx]->op_type;
-    TRACE_LEVEL0("node=%d, operation=%s, n_input=%zu, n_output=%zu",
-                nodeIdx,
-                model->graph->node[nodeIdx]->op_type,
-                model->graph->node[nodeIdx]->n_input,
-                model->graph->node[nodeIdx]->n_output);
+    TRACE_LEVEL0("node=%d, operation=%s, n_input=%zu, n_output=%zu\n",
+                 nodeIdx,
+                 model->graph->node[nodeIdx]->op_type,
+                 model->graph->node[nodeIdx]->n_input,
+                 model->graph->node[nodeIdx]->n_output);
 
     // TODO hardcoded to one output
     size_t nOutputs = 1;
@@ -79,13 +79,16 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
                               nodeOutputs);
 
     if (error){
-      TRACE_LEVEL0("TODO: There was an error, do something\n");
+      perror("There was an error calling the operator");
+      exit(1);
     }
 
+    /* Reuse the string */
     out0->name = model->graph->node[nodeIdx]->output[0];
-    TRACE_LEVEL0("Storing output in list index=%d, name=%s", _outputIdx, out0->name);
-    _outputs[_outputIdx++] = nodeOutputs[0]; // todo this is hardcoded
-    TRACE_LEVEL0("_outputIdx = %d\n", _outputIdx);
+    TRACE_LEVEL0("Storing output in list index=%d, name=%s\n", _outputIdx, out0->name);
+
+    /* TODO this is hardcoded */
+    _outputs[_outputIdx++] = nodeOutputs[0];
   }
 
   // TODO:

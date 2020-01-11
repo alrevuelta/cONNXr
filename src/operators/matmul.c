@@ -27,7 +27,7 @@ int operator_matmul(size_t n_input,
                     size_t n_output,
                     Onnx__TensorProto **output)
 {
-  TRACE_LEVEL0("Calling operator_matmul");
+  TRACE_LEVEL0("Calling operator_matmul\n");
   debug_print_dims(input[0]->n_dims, input[0]->dims);
   debug_print_dims(input[1]->n_dims, input[1]->dims);
 
@@ -49,8 +49,6 @@ int operator_matmul(size_t n_input,
   output[0]->dims = malloc(2 * sizeof(int64_t));
 
   // Populate some parameters
-  // TODO: Is this working? No mem is allocated
-  output[0]->name         = "name_is_set_afterwards\0";
   output[0]->n_dims       = 2;
   output[0]->dims[0]      = input[0]->dims[0];
   output[0]->dims[1]      = input[1]->dims[1];

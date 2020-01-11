@@ -27,7 +27,7 @@ int operator_cast(size_t n_input,
                   size_t n_output,
                   Onnx__TensorProto **output)
 {
-  TRACE_LEVEL0("Calling operator_cast");
+  TRACE_LEVEL0("Calling operator_cast\n");
   debug_print_dims(input[0]->n_dims, input[0]->dims);
 
   if (0){
@@ -52,7 +52,6 @@ int operator_cast(size_t n_input,
   }
 
   // Populate some parameters
-  output[0]->name         = "name_is_set_afterwards\0";
   output[0]->n_dims       = input[0]->n_dims;
   output[0]->has_raw_data = 0;
   output[0]->data_type    = to;

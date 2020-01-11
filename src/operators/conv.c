@@ -28,10 +28,17 @@
                    size_t n_output,
                    Onnx__TensorProto **output)
 {
-  TRACE_LEVEL0("Calling operator_conv");
-  debug_print_dims(input[0]->n_dims, input[0]->dims);
+  TRACE_LEVEL0("Calling operator_conv\n");
 
   if (0){
+    /* TODO: Check some conditions. For example if a specific
+     * functionality is not supported */
+    return 1;
+  }
+
+  debug_print_dims(input[0]->n_dims, input[0]->dims);
+
+  if (input[0]->n_dims != 4){
     /* TODO: Check some conditions. For example if a specific
      * functionality is not supported */
     //a->data_type == b->data_type
@@ -91,8 +98,6 @@
   output[0]->dims[2] = (input[0]->dims[2] - h_kernel + h_stride + -h_pad*2) / h_stride;
   output[0]->dims[3] = (input[0]->dims[3] - w_kernel + w_stride + -w_pad*2) / w_stride;
 
-  // TODO check this? no mem is allocated?
-  output[0]->name         = "name_is_set_afterwards\0"; // todo this is wrong.
   output[0]->has_raw_data = 0;
 
   switch(input[0]->data_type)

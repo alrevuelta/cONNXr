@@ -28,7 +28,7 @@ int operator_maxpool(size_t n_input,
                      size_t n_output,
                      Onnx__TensorProto **output)
 {
-  TRACE_LEVEL0("Calling operator_maxpool");
+  TRACE_LEVEL0("Calling operator_maxpool\n");
   debug_print_dims(input[0]->n_dims, input[0]->dims);
   //debug_print_attributes(n_attribute, attribute);
 
@@ -38,7 +38,7 @@ int operator_maxpool(size_t n_input,
     // TODO ingore dilated parameter for initial tests
     // TODO indices are not implemented for the initial prototype
     // TODO this is hardcoded hardcoded for 2d (dims = 4)
-    return -1;
+    return 1;
   }
 
   // number of dimensions do not change
@@ -111,8 +111,6 @@ int operator_maxpool(size_t n_input,
   output[0]->dims[2] = (int64_t)floorf((float)(input[0]->dims[2] + h_pad_aux - ((h_kernel - 1) + 1)) / (float)h_stride + 1);
   output[0]->dims[3] = (int64_t)floorf((float)(input[0]->dims[3] + w_pad_aux - ((w_kernel - 1) + 1)) / (float)w_stride + 1);
 
-  // TODO check this? no mem is allocated?
-  output[0]->name         = "name_is_set_afterwards\0"; // dont do this
   output[0]->has_raw_data = 0;
 
   switch(input[0]->data_type)

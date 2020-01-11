@@ -40,7 +40,7 @@ int operator_add(size_t n_input,
                  size_t n_output,
                  Onnx__TensorProto **output)
 {
-  TRACE_LEVEL0("Calling operator_add");
+  TRACE_LEVEL0("Calling operator_add\n");
   debug_print_dims(input[0]->n_dims, input[0]->dims);
 
   if (0){
@@ -49,12 +49,11 @@ int operator_add(size_t n_input,
     //a->data_type == b->data_type
     //a->n_dims == b->n_dims
     //a->dims[i] == b->dims[i]
-    return -1;
+    return 1;
   }
 
   /* Move this block to a common function */
   output[0]->dims = malloc(input[0]->n_dims * sizeof(int64_t));
-  output[0]->name         = "name_is_set_afterwards\0"; // dont do this
 
   /* There order of operands if unknown. The longest one will determine the output */
 

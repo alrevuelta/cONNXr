@@ -21,13 +21,18 @@ onnx_models_tests:
 
 # TODO Benchmarking should run without many logging crap to avoid performance loss
 # All runs will be average later on in the post processing phase
-benchmark:
+benchmark: clean build
 	echo "Runing benchmarking"
+
+	# Run 10 iterations for mnist to average
 	number=1 ; while [[ $$number -le 10 ]] ; do \
 		echo "Benchmarking iteration "$$number ; \
 		./runtest modelsTestSuite test_model_mnist >> benchmarking.txt ; \
 		((number = number + 1)) ; \
   done
+
+	# Run only 1 iteration of tinyyolo (it takes a lot to run)
+	./runtest modelsTestSuite test_model_tinyyolov2 >> benchmarking.txt
 
 	# Run some postprocessing on the benchmarking results
 	python3 scripts/parse_output_benchmarking.py
@@ -42,8 +47,7 @@ valgrind:
 
 make build_cli:
 	rm -f connxr
-	# TODO Set different levels of verbosity
-	gcc -std=c99 -Wall -o connxr src/operators/*.c src/*.c src/pb/onnx.pb-c.c src/pb/protobuf-c.c
+	gcc -std=c99 -Wall -D TRACE_LEVEL=0 -o connxr src/operators/*.c src/*.c src/pb/onnx.pb-c.c src/pb/protobuf-c.c
 
 #memory leak stuff TODO:
 

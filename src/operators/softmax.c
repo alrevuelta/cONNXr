@@ -20,3 +20,15 @@ void xx(void *x, int dimx, int dimy)
     xf[i] = exp(xf[i])/sumExp;
   }
 }*/
+
+
+int operator_softmax(size_t n_input,
+                     Onnx__TensorProto **input,
+                     size_t n_attribute,
+                     Onnx__AttributeProto **attribute,
+                     size_t n_output,
+                     Onnx__TensorProto **output)
+{
+  printf("Operator softmax not implemented\n");
+  return 1;
+}

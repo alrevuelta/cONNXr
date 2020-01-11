@@ -27,7 +27,7 @@ int operator_argmax(size_t n_input,
                     size_t n_output,
                     Onnx__TensorProto **output)
 {
-  TRACE_LEVEL0("Calling operator_argmax");
+  TRACE_LEVEL0("Calling operator_argmax\n");
 
   if (0){
     /* TODO: Check some conditions. For example if a specific
@@ -39,7 +39,7 @@ int operator_argmax(size_t n_input,
     // TODO Only a simple case with 2x2 matrix is implemented
     // TODO in all operators, init unused fields.
     // i.e. if the tensor is int64, init n_float_data to 0
-    return -1;
+    return 1;
   }
 
   debug_print_dims(input[0]->n_dims, input[0]->dims);
@@ -48,7 +48,6 @@ int operator_argmax(size_t n_input,
   output[0]->dims = malloc(input[0]->dims[1] * sizeof(int64_t));
 
   // Populate some parameters
-  output[0]->name         = "name_is_set_afterwards\0";
   output[0]->n_dims       = 1;
   output[0]->dims[0]      = input[0]->dims[1];
   output[0]->has_raw_data = 0;

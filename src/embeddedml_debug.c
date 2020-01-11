@@ -120,9 +120,8 @@ void debug_print_dims(size_t n_dims, int64_t *dims)
 {
   TRACE_LEVEL0("n_dims=%zu\n", n_dims);
   for (int i = 0; i < n_dims; i++){
-    TRACE_LEVEL0("%lld x ", dims[i]);
+    TRACE_LEVEL0("dims[%d]=%lld\n", i, dims[i]);
   }
-  TRACE_LEVEL0("\n");
 }
 
 void debug_prettyprint_tensorproto(Onnx__TensorProto *tp)

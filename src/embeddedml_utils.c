@@ -12,7 +12,7 @@ Onnx__TensorProto* searchTensorProtoByName( Onnx__ModelProto *model,
                                             int nInputs,
                                             char *name)
 {
-  TRACE_LEVEL0("Searching for TensorProto with name=%s", name);
+  TRACE_LEVEL0("Searching for TensorProto with name=%s\n", name);
   //Onnx__TensorProto *tensor = NULL;
 
   // Search in initializers
@@ -21,7 +21,7 @@ Onnx__TensorProto* searchTensorProtoByName( Onnx__ModelProto *model,
     if (!strcmp(model->graph->initializer[initializer]->name, name))
     {
       //tensor = model->graph->initializer[initializer];
-      TRACE_LEVEL0("Found TensorProto in initializer list with name=%s", model->graph->initializer[initializer]->name);
+      TRACE_LEVEL0("Found TensorProto in initializer list with name=%s\n", model->graph->initializer[initializer]->name);
       return model->graph->initializer[initializer];
       // Use return instead. Once its found, exit the function
     }
@@ -33,7 +33,7 @@ Onnx__TensorProto* searchTensorProtoByName( Onnx__ModelProto *model,
     if (!strcmp(inputs[inIdx]->name, name))
     {
       //tensor = inputs[inIdx];
-      TRACE_LEVEL0("Found TensorProto in inputs to de model with name=%s", inputs[inIdx]->name);
+      TRACE_LEVEL0("Found TensorProto in inputs to de model with name=%s\n", inputs[inIdx]->name);
       return inputs[inIdx];
       // Use return instead. Once its found, exit the function
     }
@@ -44,12 +44,12 @@ Onnx__TensorProto* searchTensorProtoByName( Onnx__ModelProto *model,
   {
     if (!strcmp(_outputs[outputsIdx]->name, name))
     {
-      TRACE_LEVEL0("Found TensorProto in outputs list with name=%s", _outputs[outputsIdx]->name);
+      TRACE_LEVEL0("Found TensorProto in outputs list with name=%s\n", _outputs[outputsIdx]->name);
       return _outputs[outputsIdx];
     }
   }
 
-  TRACE_LEVEL0("%s was not found anywhere, maybe you should worry", name);
+  TRACE_LEVEL0("%s was not found anywhere, maybe you should worry\n", name);
   return NULL;
 }
 
@@ -59,11 +59,11 @@ Onnx__AttributeProto* searchAttributeNyName( size_t n_attribute,
 {
   for (int i = 0; i < n_attribute; i++){
     if (!strcmp(attribute[i]->name, name)){
-      TRACE_LEVEL0("Attribute %s was found", name);
+      TRACE_LEVEL0("Attribute %s was found\n", name);
       return attribute[i];
     }
   }
-  TRACE_LEVEL0("Attribute %s was NOT found", name);
+  TRACE_LEVEL0("Attribute %s was NOT found\n", name);
   return NULL;
 }
 
@@ -72,7 +72,7 @@ Onnx__ModelProto* openOnnxFile(char *fname){
 
   FILE *fl = fopen(fname, "r");
   if (fl == NULL){
-    TRACE_LEVEL0("File was not opened");
+    TRACE_LEVEL0("File was not opened\n");
     return model;
   }
 
@@ -83,7 +83,7 @@ Onnx__ModelProto* openOnnxFile(char *fname){
   fread(ret, 1, len, fl);
   fclose(fl);
 
-  TRACE_LEVEL0("length of file is %ld", len);
+  TRACE_LEVEL0("length of file is %ld\n", len);
 
   model = onnx__model_proto__unpack(NULL,len,ret);
 
@@ -105,7 +105,7 @@ Onnx__TensorProto *openTensorProtoFile(char *fname){
   fread(ret, 1, len, fl);
   fclose(fl);
 
-  TRACE_LEVEL0("length of file %ld", len);
+  TRACE_LEVEL0("length of file %ld\n", len);
 
   model = onnx__tensor_proto__unpack(NULL,len,ret);
 
@@ -120,13 +120,13 @@ int convertRawDataOfTensorProto(Onnx__TensorProto *tensor)
 {
   if (tensor == NULL)
   {
-    TRACE_LEVEL0("Tensor is null, break");
+    TRACE_LEVEL0("Tensor is null, break\n");
   }
 
   if (tensor->has_raw_data)
   {
-    TRACE_LEVEL0("Tensor has raw data. Unserializing it");
-    TRACE_LEVEL0("Tensor type = %d", tensor->data_type);
+    TRACE_LEVEL0("Tensor has raw data. Unserializing it\n");
+    TRACE_LEVEL0("Tensor type = %d\n", tensor->data_type);
 
     switch(tensor->data_type)
     {
@@ -193,7 +193,7 @@ int convertRawDataOfTensorProto(Onnx__TensorProto *tensor)
   }
   else
   {
-    TRACE_LEVEL0("Input tensor doesnt have raw_data, doing nothing");
+    TRACE_LEVEL0("Input tensor doesnt have raw_data, doing nothing\n");
   }
 
   return 0;

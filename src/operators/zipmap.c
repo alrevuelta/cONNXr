@@ -5,4 +5,13 @@
 #include "../embeddedml_debug.h"
 #include "operators.h"
 
-// TODO
+int operator_zipmap(size_t n_input,
+                    Onnx__TensorProto **input,
+                    size_t n_attribute,
+                    Onnx__AttributeProto **attribute,
+                    size_t n_output,
+                    Onnx__TensorProto **output)
+{
+  printf("Operator zipmap not implemented\n");
+  return 1;
+}

@@ -2,7 +2,6 @@
 #define TEST_MODEL_MNIST_H
 
 #include "common_models.h"
-#include <time.h>
 
 void test_model_mnist(void)
 {
@@ -36,6 +35,10 @@ void test_model_mnist(void)
   Onnx__TensorProto **output = inference(model, inputs, 1);
   end = clock();
 
+  /* TODO: Could be nice to use model->graph->name if we can be sure that
+   * all modelas have a unique and meaningful name. In this case [mnist] no
+   * longer needs to be hardcoded.
+   */
   // TODO Is CLOCKS_PER_SEC ok to use?
   cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
   printf("[benchmark][mnist] cycles: %f\n", (double) (end - start));

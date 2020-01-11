@@ -27,13 +27,18 @@
                   size_t n_output,
                   Onnx__TensorProto **output)
 {
-  TRACE_LEVEL0("Calling operator_mul");
+  TRACE_LEVEL0("Calling operator_mul\n");
+
+  if (0){
+    /* TODO: Check some conditions. For example if a specific
+     * functionality is not supported */
+    return 1;
+  }
 
   /* TODO: Hardcoded for tiny YOLO */
 
   /* Move this block to a common function */
   output[0]->dims   = malloc(input[0]->n_dims * sizeof(int64_t));
-  output[0]->name   = "name_is_set_afterwards\0"; // dont do this
   output[0]->n_dims = input[0]->n_dims;
 
   for (int i = 0; i < input[0]->n_dims; i++)
