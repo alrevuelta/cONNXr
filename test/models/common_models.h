@@ -1,8 +1,8 @@
 #ifndef TEST_COMMON_MODELS_H
 #define TEST_COMMON_MODELS_H
-#include "../../src/embeddedml_debug.h"
-#include "../../src/embeddedml_inference.h"
-#include "../../src/embeddedml_utils.h"
+#include "../../src/trace.h"
+#include "../../src/inference.h"
+#include "../../src/utils.h"
 
 #include <time.h>
 

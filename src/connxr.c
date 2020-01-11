@@ -4,9 +4,9 @@
 #include <time.h>
 
 #include "pb/onnx.pb-c.h"
-#include "embeddedml_debug.h"
-#include "embeddedml_inference.h"
-#include "embeddedml_utils.h"
+#include "trace.h"
+#include "inference.h"
+#include "utils.h"
 
 int main(int argc, char **argv){
 

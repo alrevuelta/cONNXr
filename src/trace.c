@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "pb/onnx.pb-c.h"
-#include "embeddedml_debug.h"
+#include "trace.h"
 
 char data_types_string[][20] = {
                          "UNDEFINED",  /* ONNX__TENSOR_PROTO__DATA_TYPE__UNDEFINED = 0 */

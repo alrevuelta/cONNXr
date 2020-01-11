@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include "../embeddedml_debug.h"
+#include "../trace.h"
 #include "operators.h"
 
 int operator_zipmap(size_t n_input,

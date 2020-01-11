@@ -5,9 +5,9 @@
 #include <CUnit/Basic.h>
 #include <glob.h>
 
-#include "../src/embeddedml_debug.h"
-#include "../src/embeddedml_inference.h"
-#include "../src/embeddedml_utils.h"
+#include "../src/trace.h"
+#include "../src/inference.h"
+#include "../src/utils.h"
 #include <glob.h>
 
 #define FLOAT_TOLERANCE 0.001f

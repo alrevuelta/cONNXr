@@ -12,8 +12,8 @@
 #include "../src/pb/nanopb/pb_decode.h"
 #include "../src/pb/nanopb/pb_encode.h" /* Not needed ?*/
 
-#include "../src/embeddedml_debug.h"
-#include "../src/embeddedml_inference.h"
+#include "../src/trace.h"
+#include "../src/inference.h"
 
 bool decode_node(pb_istream_t *istream, const pb_field_t *field, void **arg)
 {

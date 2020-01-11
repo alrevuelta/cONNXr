@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include "../embeddedml_debug.h"
+#include "../trace.h"
 #include "operators.h"
 
 /*! \fn COPY_PASTE_FUNCTION_DECLARATION
@@ -34,7 +34,7 @@ int operator_reshape(size_t n_input,
      * functionality is not supported */
     return 1;
   }
-  
+
   debug_print_dims(input[0]->n_dims, input[0]->dims);
 
   if (0){

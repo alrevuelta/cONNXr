@@ -1,5 +1,5 @@
-#ifndef EMBEDDEDML_DEBUG_H
-#define EMBEDDEDML_DEBUG_H
+#ifndef trace_H
+#define trace_H
 #include "pb/onnx.pb-c.h"
 
 /* This functions is not right I think. Was having problems

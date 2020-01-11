@@ -1,9 +1,9 @@
 #ifndef TEST_COMMON_OPERATORS_H
 #define TEST_COMMON_OPERATORS_H
 
-#include "../../src/embeddedml_debug.h"
-#include "../../src/embeddedml_inference.h"
-#include "../../src/embeddedml_utils.h"
+#include "../../src/trace.h"
+#include "../../src/inference.h"
+#include "../../src/utils.h"
 #include "../../src/operators/operators.h"
 #include "../test_utils.h"
 

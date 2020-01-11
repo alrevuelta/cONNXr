@@ -2,19 +2,19 @@
 #include <stdlib.h>
 #include <string.h>
 #include "pb/onnx.pb-c.h"
-#include "embeddedml_utils.h"
-#include "embeddedml_debug.h"
-#include "embeddedml_inference.h"
+#include "utils.h"
+#include "trace.h"
+#include "inference.h"
 
 int _outputIdx = 0;
 Onnx__TensorProto *_outputs[MAX_NUM_OF_OUTPUTS] = {};
 
-static int call_operator( char *name,
-                          size_t n_input,
-                          Onnx__TensorProto **input,
-                          size_t n_attribute,
-                          Onnx__AttributeProto **attribute,
-                          size_t n_output,
+static int call_operator(char *name,
+                         size_t n_input,
+                         Onnx__TensorProto **input,
+                         size_t n_attribute,
+                         Onnx__AttributeProto **attribute,
+                         size_t n_output,
                          Onnx__TensorProto **output)
 {
   int i;

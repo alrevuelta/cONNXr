@@ -8,8 +8,7 @@ clean:
 
 build:
 	echo "Building"
-	# TODO: Do not include connxr.c because it contains another main. /e*.c is a quick fix
-	gcc -std=c99 -Wall -D TRACE_LEVEL=0 -o runtest test/tests.c src/operators/*.c src/e*.c src/pb/onnx.pb-c.c src/pb/protobuf-c.c -lcunit
+	gcc -std=c99 -Wall -D TRACE_LEVEL=0 -o runtest test/tests.c src/operators/*.c src/inference.c src/utils.c src/trace.c src/pb/onnx.pb-c.c src/pb/protobuf-c.c -lcunit
 
 onnx_backend_tests:
 	echo "Running onnx backend tests"
@@ -58,5 +57,5 @@ make build_cli:
 
 #gprof:
 #	rm -f gprof
-#	gcc -std=c99 -D xxx -pg ../src/operators/*.c ../src/embeddedml_debug.c ../src/embeddedml_utils.c ../src/embeddedml_inference.c ../src/pb/onnx.pb-c.c -o gprof tests.c -I/usr/local/include -L/usr/local/lib -lcunit -lprotobuf-c
+#	gcc -std=c99 -D xxx -pg ../src/operators/*.c ../src/trace.c ../src/utils.c ../src/inference.c ../src/pb/onnx.pb-c.c -o gprof tests.c -I/usr/local/include -L/usr/local/lib -lcunit -lprotobuf-c
 #	./gprof $(ts) $(tc)

@@ -1,5 +1,5 @@
-#ifndef EMBEDDEDML_DEBUG_H
-#define EMBEDDEDML_DEBUG_H
+#ifndef TRACE_H
+#define TRACE_H
 #include "pb/onnx.pb-c.h"
 
 /* How to trace?

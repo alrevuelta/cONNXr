@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include "../embeddedml_debug.h"
-#include "../embeddedml_utils.h"
+#include "../trace.h"
+#include "../utils.h"
 #include "operators.h"
 
 /*! \fn COPY_PASTE_FUNCTION_DECLARATION

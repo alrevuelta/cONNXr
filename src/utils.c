@@ -2,15 +2,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include "pb/onnx.pb-c.h"
-#include "embeddedml_utils.h"
-#include "embeddedml_debug.h"
-#include "embeddedml_inference.h"
+#include "utils.h"
+#include "trace.h"
+#include "inference.h"
 
 // TODO Rethink this function?
-Onnx__TensorProto* searchTensorProtoByName( Onnx__ModelProto *model,
-                                          Onnx__TensorProto **inputs,
-                                            int nInputs,
-                                            char *name)
+Onnx__TensorProto* searchTensorProtoByName(Onnx__ModelProto *model,
+                                           Onnx__TensorProto **inputs,
+                                           int nInputs,
+                                           char *name)
 {
   TRACE_LEVEL0("Searching for TensorProto with name=%s\n", name);
   //Onnx__TensorProto *tensor = NULL;
