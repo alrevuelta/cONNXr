@@ -18,7 +18,7 @@ import subprocess
 """
 
 
-def speed(inst, number=10, repeat=20):
+def speed(inst, number=2, repeat=5):
     timer = Timer(inst, globals=globals())
     raw = numpy.array(timer.repeat(repeat, number=number))
     ave = raw.sum() / len(raw) / number
@@ -26,7 +26,7 @@ def speed(inst, number=10, repeat=20):
     print("Average %1.3g min=%1.3g max=%1.3g" % (ave, mi, ma))
     return ave
 
-test_data_dir = '../test/mnist/test_data_set_0'
+test_data_dir = 'test/mnist/test_data_set_0'
 
 inputs = []
 inputs_num = len(glob.glob(os.path.join(test_data_dir, 'input_*.pb')))
@@ -42,7 +42,7 @@ inputDict = {
     "Input3": inputs[0]
 }
 
-sess = rt.InferenceSession('../test/mnist/model.onnx')
+sess = rt.InferenceSession('test/mnist/model.onnx')
 
 
 #outputs = sess.run(None, inputDict)
@@ -50,5 +50,5 @@ speed("sess.run(None, inputDict)")
 
 speed("sess.run(None, inputDict); sess.run(None, inputDict)")
 
-#speed("subprocess.run(.././/runtest)")
-subprocess.run(".././runtest")
+speed("subprocess.run([\"./runtest\", \"modelsTestSuite\", \"test_model_mnist\"])")
+

@@ -5,6 +5,7 @@
 
 // TODO Hardcoded for initial tests
 #define MAX_NUM_OF_OUTPUTS 40
+#define NUMBER_OF_OPERATORS 14
 extern Onnx__TensorProto *_outputs[MAX_NUM_OF_OUTPUTS];
 extern int _outputIdx;
 
@@ -36,7 +37,11 @@ static operatorptrs
                              {"Reshape", operator_reshape},
                              {"BatchNormalization", operator_batchnormalization},
                              {"Mul", operator_mul},
-                             {"LeakyRelu", operator_leakyrelu}
+                             {"LeakyRelu", operator_leakyrelu},
+                             {"QuantizeLinear", operator_quantizelinear},
+                             {"ConvInteger", operator_convinteger},
+                             {"MatMulInteger", operator_matmulinteger}
+                             // Dont forget to update NUMBER_OF_OPERATORS
                            };
 
 #endif

@@ -144,7 +144,13 @@ int convertRawDataOfTensorProto(Onnx__TensorProto *tensor)
           //TRACE_LEVEL0("tensor->float_data[%d] = %f", i/4, tensor->float_data[i/4]);
         }
       } break;
+      /* TODO I think uint8 and 16/32 can be all merged since the type is the same*/
       case ONNX__TENSOR_PROTO__DATA_TYPE__UINT8:
+        tensor->n_int32_data = tensor->raw_data.len/sizeof(int32_t);
+        tensor->int32_data = malloc(tensor->n_int32_data * sizeof(int32_t));
+        for (int i = 0; i < tensor->raw_data.len; i+=sizeof(int32_t)){
+          tensor->int32_data[i/sizeof(int32_t)] = *(int32_t *)&tensor->raw_data.data[i];
+        }
         break;
       case ONNX__TENSOR_PROTO__DATA_TYPE__INT8:
         break;
@@ -201,6 +207,7 @@ int convertRawDataOfTensorProto(Onnx__TensorProto *tensor)
 
 /* tp has already memory allocated for the struct. Maybe its
 memory should be allocated here instead. This is a bit experimental TODO:*/
+/* this is crap, remove. not used*/
 void mallocTensorProto(Onnx__TensorProto *tp,
                        Onnx__TensorProto__DataType data_type,
                        size_t n_dims,

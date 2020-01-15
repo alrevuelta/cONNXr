@@ -17,7 +17,7 @@ void compareAlmostEqualTensorProto(Onnx__TensorProto *a, Onnx__TensorProto *b)
 {
   printf("\nAsserting, a dims:\n");
   debug_print_dims(a->n_dims, a->dims);
-  printf("\nAsserting, b adims:\n");
+  printf("\nAsserting, b dims:\n");
   debug_print_dims(b->n_dims, b->dims);
   printf("\nAsserting, a data_type: %d\n", a->data_type);
   CU_ASSERT_EQUAL(a->data_type, b->data_type);
@@ -39,13 +39,20 @@ void compareAlmostEqualTensorProto(Onnx__TensorProto *a, Onnx__TensorProto *b)
       for(int i = 0; i < a->n_float_data; i++)
       {
         if (fabs(a->float_data[i] - b->float_data[i]) > FLOAT_TOLERANCE){
-          TRACE_LEVEL0("%i, %f, %f", i, a->float_data[i], b->float_data[i]);
+          TRACE_LEVEL0("%i, %f, %f\n", i, a->float_data[i], b->float_data[i]);
         }
         CU_ASSERT(fabs(a->float_data[i] - b->float_data[i]) < FLOAT_TOLERANCE);
       }
       break;
+    /* TODO Merge uint8 with 16 and 32 since the type is the same */
     case ONNX__TENSOR_PROTO__DATA_TYPE__UINT8:
-      CU_FAIL("uint8 data_type is not implemented");
+      TRACE_LEVEL0("ASSERTING EQUAL: %zu, %zu\n", a->n_int32_data, b->n_int32_data);
+      CU_ASSERT_EQUAL(a->n_int32_data, b->n_int32_data);
+      for(int i = 0; i < a->n_int32_data; i++)
+      {
+        TRACE_LEVEL0("ASSERTING EQUAL: %d, %d\n", a->int32_data[i], b->int32_data[i]);
+        CU_ASSERT_EQUAL(a->int32_data[i], b->int32_data[i]);
+      }
       break;
     case ONNX__TENSOR_PROTO__DATA_TYPE__INT8:
       CU_FAIL("int8 data_type is not implemented");
@@ -63,7 +70,7 @@ void compareAlmostEqualTensorProto(Onnx__TensorProto *a, Onnx__TensorProto *b)
       CU_ASSERT_EQUAL(a->n_int64_data, b->n_int64_data);
       for(int i = 0; i < a->n_int64_data; i++)
       {
-        TRACE_LEVEL0("ASSERTING EQUAL: %lld, %lld", a->int64_data[i], b->int64_data[i]);
+        TRACE_LEVEL0("ASSERTING EQUAL: %lld, %lld\n", a->int64_data[i], b->int64_data[i]);
         CU_ASSERT_EQUAL(a->int64_data[i], b->int64_data[i]);
       }
       break;

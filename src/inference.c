@@ -18,7 +18,7 @@ static int call_operator(char *name,
                          Onnx__TensorProto **output)
 {
   int i;
-  for(i = 0; operatorsSet[i].name; i++) {
+  for(i = 0; i < NUMBER_OF_OPERATORS; i++) {
     if(strcmp(operatorsSet[i].name, name) == 0) {
       int ret = operatorsSet[i].func(n_input,
                                      input,
@@ -31,6 +31,11 @@ static int call_operator(char *name,
   }
   /* If it reaches this point, the operator wasnt found. Throw error? */
   TRACE_LEVEL0("\n\nTODO: Operator %s doest not exist or its not implemented\n\n", name);
+
+  /* break */
+  perror("There was an error calling the operator");
+  exit(1);
+
   return -1;
 }
 
@@ -68,6 +73,7 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
       Onnx__TensorProto *inpN =malloc(sizeof(*inpN));
       inpN = searchTensorProtoByName(model, inputs, nInputs, model->graph->node[nodeIdx]->input[inp]);
       nodeInputs[inp] = inpN;
+      //printf("\n %d\n", model->graph->node[nodeIdx]->n_input);
     }
 
     int error = call_operator(operation,

@@ -121,5 +121,26 @@ int operator_zipmap(size_t n_input,
                     size_t n_output,
                     Onnx__TensorProto **output);
 
+int operator_quantizelinear(size_t n_input,
+                            Onnx__TensorProto **input,
+                            size_t n_attribute,
+                            Onnx__AttributeProto **attribute,
+                            size_t n_output,
+                            Onnx__TensorProto **output);
+
+int operator_convinteger(size_t n_input,
+                         Onnx__TensorProto **input,
+                         size_t n_attribute,
+                         Onnx__AttributeProto **attribute,
+                         size_t n_output,
+                         Onnx__TensorProto **output);
+
+int operator_matmulinteger(size_t n_input,
+                           Onnx__TensorProto **input,
+                           size_t n_attribute,
+                           Onnx__AttributeProto **attribute,
+                           size_t n_output,
+                           Onnx__TensorProto **output);
+
 
 #endif
