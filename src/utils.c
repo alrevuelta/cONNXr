@@ -146,10 +146,10 @@ int convertRawDataOfTensorProto(Onnx__TensorProto *tensor)
       } break;
       /* TODO I think uint8 and 16/32 can be all merged since the type is the same*/
       case ONNX__TENSOR_PROTO__DATA_TYPE__UINT8:
-        tensor->n_int32_data = tensor->raw_data.len/sizeof(int32_t);
+        tensor->n_int32_data = tensor->raw_data.len/sizeof(uint8_t);
         tensor->int32_data = malloc(tensor->n_int32_data * sizeof(int32_t));
-        for (int i = 0; i < tensor->raw_data.len; i+=sizeof(int32_t)){
-          tensor->int32_data[i/sizeof(int32_t)] = *(int32_t *)&tensor->raw_data.data[i];
+        for (int i = 0; i < tensor->raw_data.len; i+=sizeof(uint8_t)){
+          tensor->int32_data[i/sizeof(uint8_t)] = *(uint8_t *)&tensor->raw_data.data[i];
         }
         break;
       case ONNX__TENSOR_PROTO__DATA_TYPE__INT8:

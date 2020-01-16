@@ -30,14 +30,6 @@
 {
   TRACE_LEVEL0("Calling operator_conv\n");
 
-  if (0){
-    /* TODO: Check some conditions. For example if a specific
-     * functionality is not supported */
-    return 1;
-  }
-
-  debug_print_dims(input[0]->n_dims, input[0]->dims);
-
   if (input[0]->n_dims != 4){
     /* TODO: Check some conditions. For example if a specific
      * functionality is not supported */
@@ -47,6 +39,8 @@
     // dilations is hardcoded ?
     return -1;
   }
+
+  debug_print_dims(input[0]->n_dims, input[0]->dims);
 
   // Borrowed form https://github.com/pjreddie/darknet/blob/61c9d02ec461e30d55762ec7669d6a1d3c356fb2/src/convolutional_layer.c#L445
   Onnx__AttributeProto *auto_pad = searchAttributeNyName(n_attribute, attribute, "auto_pad");

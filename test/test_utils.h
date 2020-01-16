@@ -163,6 +163,7 @@ void testOperator(char *outputName)
   /* Some operators have more than two outputs to assert */
   int outputToAssert = 0;
   TRACE_LEVEL0("Asserting output %s", output[outputToAssert]->name);
+
   compareAlmostEqualTensorProto(output[outputToAssert], out0set0);
 }
 

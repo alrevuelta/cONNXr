@@ -5,6 +5,23 @@
 #include "../trace.h"
 #include "operators.h"
 
+/* TODO not very nice, rethink this. Round to even:
+https://en.wikipedia.org/wiki/Rounding
+*/
+int32_t divAndRoundEven(float a, int32_t b)
+{
+  int32_t AdivB = a/b;
+  if (((int32_t)a % b) == 0){
+    return AdivB;
+  }else{
+    if (AdivB % 2 == 0){
+      return AdivB;
+    }else{
+      return AdivB + 1;
+    }
+  }
+}
+
 int operator_quantizelinear(size_t n_input,
                             Onnx__TensorProto **input,
                             size_t n_attribute,
@@ -28,7 +45,12 @@ int operator_quantizelinear(size_t n_input,
   }
   output[0]->has_raw_data = 0;
 
-  /* TODO hardcoded to uint8 */
+  printf("%f\n", input[1]->float_data[0]);
+
+  printf("%d\n", input[2]->int32_data[0]);
+
+  /* TODO hardcoded to uint8
+   [0, 255] if it's uint8, or [-128, 127] if it's int8.*/
   output[0]->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__UINT8;
 
   output[0]->n_int32_data = input[0]->n_float_data;
@@ -38,7 +60,12 @@ int operator_quantizelinear(size_t n_input,
     /* TODO third parameter is options, its assumed its always there */
     if (n_input != 3){return 1;}
     for(int i = 0; i < output[0]->n_int32_data; i++){
-      output[0]->int32_data[i] = (input[0]->float_data[i] / input[1]->float_data[0]) + input[2]->int32_data[0];
+      int32_t value = divAndRoundEven(input[0]->float_data[i], input[1]->float_data[0]) +
+                      input[2]->int32_data[0];
+      /* TODO Quick implementation. Find a better way to saturate and avoid negative */
+      value > 255 ? value = 255 : value;
+      value < 0   ? value = 0   : value;
+      output[0]->int32_data[i] = value;
     }
   }else{
     printf("wrong type %d\n", input[0]->data_type);

@@ -28,7 +28,7 @@ def numpy_to_pb(name, np_data, out_filename):
 if __name__ == '__main__':
     numpy.set_printoptions(threshold=sys.maxsize)
     print_pb_file(
-        "../test/node/test_quantizelinear/test_data_set_0/input_2.pb")
+        "../test/node/test_quantizelinear/test_data_set_0/output_0.pb")
 
     #print_pb_file(
     #    "../test/node/test_maxpool_2d_same_upper/test_data_set_0/output_0.pb")
