@@ -97,3 +97,5 @@ And use it. First parameter is the model, and second the input in `.pb` format. 
 - [ ] Create a nice Makefile, compile library as a static library to be linked
 - [ ] Try different compilers
 - [ ] Enable gcc extra options (pedantic, all W, etc,...)
+- [ ] Implement some "Int" operators and fixed point stuff.
+- [ ] Create and run a quantized variation of the MNIST model
