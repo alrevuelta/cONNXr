@@ -27,6 +27,9 @@ Other C/C++ related projects
 | [uTensor](https://github.com/uTensor/uTensor)             | TensorFlow | x | x |
 | [nnom](https://github.com/majianjia/nnom)                 | Keras      | x | x |
 | [ELL](https://github.com/Microsoft/ELL)                   | ELL        | x | x |
+| [TF Lite](xx)                                             | TF Lite    | x | x |
+
+TensorFlow Lite
 
 
 # Install
