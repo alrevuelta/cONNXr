@@ -29,8 +29,6 @@ Other C/C++ related projects
 | [ELL](https://github.com/Microsoft/ELL)                   | ELL        | x | x |
 | [TF Lite](xx)                                             | TF Lite    | x | x |
 
-TensorFlow Lite
-
 
 # Install
 Check the `Makefile` inside `test` that compiles the code and run a bunch of test cases for the implemented operators + MNIST digit recognition model. Library compilation into a static library is not done yet.
