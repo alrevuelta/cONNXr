@@ -27,6 +27,7 @@ Other C/C++ related projects
 | [uTensor](https://github.com/uTensor/uTensor)             | TensorFlow | x | x |
 | [nnom](https://github.com/majianjia/nnom)                 | Keras      | x | x |
 | [ELL](https://github.com/Microsoft/ELL)                   | ELL        | x | x |
+| [TF Lite](xx)                                             | TF Lite    | x | x |
 
 
 # Install
@@ -97,3 +98,5 @@ And use it. First parameter is the model, and second the input in `.pb` format. 
 - [ ] Create a nice Makefile, compile library as a static library to be linked
 - [ ] Try different compilers
 - [ ] Enable gcc extra options (pedantic, all W, etc,...)
+- [ ] Implement some "Int" operators and fixed point stuff.
+- [ ] Create and run a quantized variation of the MNIST model
