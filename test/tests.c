@@ -126,7 +126,7 @@ int main(int argc, char **argv)
   //CU_add_test(onnxBackendSuite,"test_averagepool_3d_default",test_averagepool_3d_default),
   //CU_add_test(onnxBackendSuite,"test_basic_conv_with_padding",test_basic_conv_with_padding),
   //CU_add_test(onnxBackendSuite,"test_basic_conv_without_padding",test_basic_conv_without_padding),
-  //CU_add_test(onnxBackendSuite,"test_basic_convinteger",test_basic_convinteger),
+  CU_add_test(onnxBackendSuite,"test_basic_convinteger",test_basic_convinteger),
   CU_add_test(onnxBackendSuite,"test_batchnorm_epsilon",test_batchnorm_epsilon),
   CU_add_test(onnxBackendSuite,"test_batchnorm_example",test_batchnorm_example),
   //CU_add_test(onnxBackendSuite,"test_bitshift_left_uint16",test_bitshift_left_uint16),

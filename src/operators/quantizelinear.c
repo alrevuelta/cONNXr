@@ -8,18 +8,13 @@
 /* TODO not very nice, rethink this. Round to even:
 https://en.wikipedia.org/wiki/Rounding
 */
-int32_t divAndRoundEven(float a, int32_t b)
+int32_t divAndRoundEven(float a, float b)
 {
-  int32_t AdivB = a/b;
-  if (((int32_t)a % b) == 0){
-    return AdivB;
-  }else{
-    if (AdivB % 2 == 0){
-      return AdivB;
-    }else{
-      return AdivB + 1;
-    }
-  }
+  int32_t AdivB = (int32_t)(a/b);
+
+  /* TODO: AdivB has to be rounded to even! Not implemented*/
+
+  return AdivB;
 }
 
 int operator_quantizelinear(size_t n_input,
@@ -56,12 +51,13 @@ int operator_quantizelinear(size_t n_input,
   output[0]->n_int32_data = input[0]->n_float_data;
   output[0]->int32_data = malloc(output[0]->n_int32_data * sizeof(int32_t));
   /* TODO Only FLOAT is handled*/
+  printf("type = %d\n", input[0]->data_type);
   if (input[0]->data_type == ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT){
     /* TODO third parameter is options, its assumed its always there */
     if (n_input != 3){return 1;}
     for(int i = 0; i < output[0]->n_int32_data; i++){
-      int32_t value = divAndRoundEven(input[0]->float_data[i], input[1]->float_data[0]) +
-                      input[2]->int32_data[0];
+      int32_t value = divAndRoundEven(input[0]->float_data[i], input[1]->float_data[0]);/* +
+                      input[2]->int32_data[0];*/
       /* TODO Quick implementation. Find a better way to saturate and avoid negative */
       value > 255 ? value = 255 : value;
       value < 0   ? value = 0   : value;

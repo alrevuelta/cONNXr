@@ -29,6 +29,8 @@ int main(int argc, char **argv){
     //debug_prettyprint_model(model);
     convertRawDataOfTensorProto(inp0set0);
 
+    printf("values = %d\n", inp0set0->data_type);
+
     // TODO Dirty trick. I expected the input name to be included in the
     // input_0, but apparently it is not. Dont know if memory for the name
     // is allocated... but it doesnt crash

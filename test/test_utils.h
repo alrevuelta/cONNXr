@@ -64,7 +64,13 @@ void compareAlmostEqualTensorProto(Onnx__TensorProto *a, Onnx__TensorProto *b)
       CU_FAIL("int16 data_type is not implemented");
       break;
     case ONNX__TENSOR_PROTO__DATA_TYPE__INT32:
-      CU_FAIL("int32 data_type is not implemented");
+      TRACE_LEVEL0("ASSERTING EQUAL: %zu, %zu\n", a->n_int32_data, b->n_int32_data);
+      CU_ASSERT_EQUAL(a->n_int32_data, b->n_int32_data);
+      for(int i = 0; i < a->n_int32_data; i++)
+      {
+        TRACE_LEVEL0("ASSERTING EQUAL: %d, %d\n", a->int32_data[i], b->int32_data[i]);
+        CU_ASSERT_EQUAL(a->int32_data[i], b->int32_data[i]);
+      }
       break;
     case ONNX__TENSOR_PROTO__DATA_TYPE__INT64:
       CU_ASSERT_EQUAL(a->n_int64_data, b->n_int64_data);
