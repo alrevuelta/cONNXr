@@ -74,6 +74,15 @@ And use it. First parameter is the model, and second the input in `.pb` format. 
 ./connxr test/mnist/model.onnx test/mnist/test_data_set_0/input_0.pb
 ```
 
+## Supported Models
+Note that so far only few small models (order of Mb) have been tested. If you try with a huge model of hundreds of Mb or Gb weird things might happen.
+TODO
+* MNIST: https://github.com/onnx/models/tree/master/vision/classification/mnist
+* tiny YOLO v2:https://github.com/onnx/models/tree/master/vision/object_detection_segmentation/tiny_yolov2
+* tiny YOLO v3: https://github.com/onnx/models/tree/master/vision/object_detection_segmentation/tiny_yolov3 TODO!
+* https://lutzroeder.github.io/netron/ TODO
+* Quantized MNIST. TODO. Using ONNX MNIST as baseline and quantizing it. Work ongoing
+
 # Limitations
 
 * Very few basic operators are implemented, so a model that contains a not implemented operator will fail. See them inside `operators` folder
