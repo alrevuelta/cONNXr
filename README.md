@@ -82,6 +82,7 @@ TODO
 * tiny YOLO v3: https://github.com/onnx/models/tree/master/vision/object_detection_segmentation/tiny_yolov3 TODO!
 * https://lutzroeder.github.io/netron/ TODO
 * Quantized MNIST. TODO. Using ONNX MNIST as baseline and quantizing it. Work ongoing
+* Add super resolution model. TODO https://github.com/onnx/models/tree/master/vision/super_resolution/sub_pixel_cnn_2016
 
 # Limitations
 
