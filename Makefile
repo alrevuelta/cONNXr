@@ -46,7 +46,7 @@ valgrind:
 
 make build_cli:
 	rm -f connxr
-	gcc -std=c99 -Wall -D TRACE_LEVEL=0 -o connxr src/operators/*.c src/*.c src/pb/onnx.pb-c.c src/pb/protobuf-c.c
+	gcc -std=c99 -Wall -D TRACE_LEVEL=0 -o connxr src/operators/*.c src/*.c src/pb/onnx.pb-c.c src/pb/protobuf-c.c -lm
 
 #memory leak stuff TODO:
 
