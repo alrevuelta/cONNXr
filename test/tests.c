@@ -662,7 +662,7 @@ int main(int argc, char **argv)
   
   printf("CU_get_number_of_tests_failed is %d\n", CU_get_number_of_tests_failed());
   // TODO Temporal hackish solution to force CI to fail
-  if (CU_get_number_of_tests_failed != 0){
+  if (CU_get_number_of_tests_failed() != 0){
     exit (1);
   }
   
