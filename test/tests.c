@@ -658,13 +658,13 @@ int main(int argc, char **argv)
     CU_basic_run_test(suite2run, test2run);
   }
 
-  CU_cleanup_registry();
-  
+  printf("CU_get_number_of_tests_run is %d\n", CU_get_number_of_tests_run());
   printf("CU_get_number_of_tests_failed is %d\n", CU_get_number_of_tests_failed());
   // TODO Temporal hackish solution to force CI to fail
   if (CU_get_number_of_tests_failed() != 0){
     exit (1);
   }
   
+  CU_cleanup_registry();
   return CU_get_error();
 }
