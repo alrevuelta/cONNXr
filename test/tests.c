@@ -389,7 +389,7 @@ int main(int argc, char **argv)
   //CU_add_test(onnxBackendSuite,"test_qlinearconv",test_qlinearconv),
   //CU_add_test(onnxBackendSuite,"test_qlinearmatmul_2D",test_qlinearmatmul_2D),
   //CU_add_test(onnxBackendSuite,"test_qlinearmatmul_3D",test_qlinearmatmul_3D),
-  CU_add_test(onnxBackendSuite,"test_quantizelinear",test_quantizelinear),
+  //CU_add_test(onnxBackendSuite,"test_quantizelinear",test_quantizelinear),
   //CU_add_test(onnxBackendSuite,"test_range_float_type_positive_delta",test_range_float_type_positive_delta),
   //CU_add_test(onnxBackendSuite,"test_range_float_type_positive_delta_expanded",test_range_float_type_positive_delta_expanded),
   //CU_add_test(onnxBackendSuite,"test_range_int32_type_negative_delta",test_range_int32_type_negative_delta),
