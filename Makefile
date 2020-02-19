@@ -8,7 +8,7 @@ clean:
 
 build:
 	echo "Building"
-	gcc -std=c99 -Wall -D TRACE_LEVEL=0 -o runtest test/tests.c src/operators/*.c src/inference.c src/utils.c src/trace.c src/pb/onnx.pb-c.c src/pb/protobuf-c.c -lcunit
+	gcc -std=c99 -Wall -D TRACE_LEVEL=0 -o runtest test/tests.c src/operators/*.c src/inference.c src/utils.c src/trace.c src/pb/onnx.pb-c.c src/pb/protobuf-c.c -lcunit -lm
 
 onnx_backend_tests:
 	echo "Running onnx backend tests"
