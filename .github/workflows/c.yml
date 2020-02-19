@@ -30,7 +30,7 @@ jobs:
    
     - name: install_cunit_ubuntu        # For Ubuntu
       if: matrix.os == 'ubuntu-latest'
-      run: sudo apt-get install libcunit1
+      run: sudo apt-get install libcunit1 libcunit1-doc libcunit1-dev
 
 # Clean and Build
     - name: clean
