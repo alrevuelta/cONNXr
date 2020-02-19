@@ -52,13 +52,10 @@ int operator_add(size_t n_input,
     return 1;
   }
 
-  /* Move this block to a common function */
-  output[0]->dims = malloc(input[0]->n_dims * sizeof(int64_t));
-
   /* There order of operands if unknown. The longest one will determine the output */
-
   /* Quick and dirty solution */
   if (input[0]->n_dims > input[1]->n_dims){
+    output[0]->dims = malloc(input[0]->n_dims * sizeof(int64_t));
     output[0]->n_dims = input[0]->n_dims;
     output[0]->n_float_data = input[0]->n_float_data; // check other types
     for (int i = 0; i < output[0]->n_dims; i++)
@@ -66,6 +63,7 @@ int operator_add(size_t n_input,
       output[0]->dims[i] = input[0]->dims[i];
     }
   }else{
+    output[0]->dims = malloc(input[1]->n_dims * sizeof(int64_t));
     output[0]->n_dims = input[1]->n_dims;
     output[0]->n_float_data = input[1]->n_float_data; // check other types
     for (int i = 0; i < output[0]->n_dims; i++)
@@ -81,7 +79,6 @@ int operator_add(size_t n_input,
   {
     case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:
     {
-      //output[0]->n_float_data = input[0]->n_float_data;
       output[0]->float_data = malloc(output[0]->n_float_data * sizeof(float));
       /* TODO: ugly */
       for (int i = 0; i < output[0]->n_float_data; i++) {
