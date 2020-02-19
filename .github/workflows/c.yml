@@ -3,14 +3,6 @@ name: CI
 on: [push, pull_request]
 
 jobs:
-  #build-ubuntu:
-  #  runs-on: ubuntu-latest
-  #  steps:
-  #  - uses: actions/checkout@v1
-  #  - name: whatdf
-  #    run: sudo apt-get install libcunit1
-  #  - name: make
-  #    run: gcc -std=c99 -Wall -D DEBUG -o runtest test/tests.c src/*.c -I$HOME/local/include -L$HOME/local/lib -lcunit -lprotobuf-c
 
   #build-windows:
   #  runs-on: ${{ matrix.os }}
@@ -22,10 +14,12 @@ jobs:
   #  - name: make
   #    run: make
 
-  build-mac:
-    runs-on: macos-latest
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest] #TODO windows-latest
     steps:
-
 # Install dependencies:
     - uses: actions/checkout@v1
     - name: install_cunit
