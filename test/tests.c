@@ -660,6 +660,7 @@ int main(int argc, char **argv)
 
   CU_cleanup_registry();
   
+  printf("CU_get_error is %d\n", CU_get_error());
   // TODO Temporal hackish solution to force CI to fail
   if (CU_get_error() != CUE_SUCCESS){
     exit (1);
