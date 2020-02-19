@@ -659,5 +659,11 @@ int main(int argc, char **argv)
   }
 
   CU_cleanup_registry();
+  
+  // TODO Temporal hackish solution to force CI to fail
+  if (CU_get_error() != CUE_SUCCESS){
+    x = 1/0;
+  }
+  
   return CU_get_error();
 }
