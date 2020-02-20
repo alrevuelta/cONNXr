@@ -105,7 +105,8 @@ int operator_maxpool(size_t n_input,
       TRACE_LEVEL0("\n\n pad=%d\n", pads->ints[i]);
     }*/
   }
-
+  printf("%d, %d, %d, %d, %d, %d\n", h_kernel, w_kernel, h_stride, w_stride, h_pad, w_pad);
+    
   output[0]->dims[0] = input[0]->dims[0];
   output[0]->dims[1] = input[0]->dims[1];
   output[0]->dims[2] = (int64_t)floorf((float)(input[0]->dims[2] + h_pad_aux - ((h_kernel - 1) + 1)) / (float)h_stride + 1);
