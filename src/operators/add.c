@@ -96,7 +96,7 @@ int operator_add(size_t n_input,
           }else{
             /* TODO Hardcoded for TINY YOLO */
             if (input[0]->dims[0] == 3){ /* Remove this uAF*/
-              output[0]->float_data[i] = input[0]->float_data[i%3] + input[1]->float_data[i];
+              //output[0]->float_data[i] = input[0]->float_data[i%3] + input[1]->float_data[i];
             /* TODO Hardcoded for MNIST */
             }else{
               output[0]->float_data[i] = input[0]->float_data[i] + input[1]->float_data[i/(input[0]->dims[2]*input[0]->dims[3])];
