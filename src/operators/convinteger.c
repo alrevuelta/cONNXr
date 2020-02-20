@@ -55,7 +55,7 @@ int operator_convinteger(size_t n_input,
   int64_t h_pad, w_pad;
   h_pad = w_pad = 0;
   if (auto_pad != NULL){
-    if (!strcmp((char*)auto_pad->s.data, "SAME_UPPER")){
+    if (!strncmp((char*)auto_pad->s.data, "SAME_UPPER"), 10){
       if ("SAME_UPPER"){
         // This means, pad to match the output dimensions, and if not even
         // add the extra padding to the end
