@@ -67,14 +67,12 @@
   h_pad = w_pad = 0;
   if (auto_pad != NULL){
     if (!strncmp((char*)auto_pad->s.data, "SAME_UPPER", 10)){
-      if ("SAME_UPPER"){
-        // This means, pad to match the output dimensions, and if not even
-        // add the extra padding to the end
-        // TODO Quick test, even padding is assumed
-        // TODO Quick test, ignore stride, just 1
-        h_pad = -(h_kernel - 1)/2; // store the negative value of the offset
-        w_pad = -(w_kernel - 1)/2;
-      }
+      // This means, pad to match the output dimensions, and if not even
+      // add the extra padding to the end
+      // TODO Quick test, even padding is assumed
+      // TODO Quick test, ignore stride, just 1
+      h_pad = -(h_kernel - 1)/2; // store the negative value of the offset
+      w_pad = -(w_kernel - 1)/2;
     }
   }
 
