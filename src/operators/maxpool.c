@@ -79,9 +79,9 @@ int operator_maxpool(size_t n_input,
     h_pad = (h_kernel - 1)/2;
     w_pad = (w_kernel - 1)/2;
     printf("Autopad value s.data = %s\n", (char*)auto_pad->s.data);
-    if (!strcmp((char*)auto_pad->s.data, "SAME_UPPER")){
+    if (!strncmp((char*)auto_pad->s.data, "SAME_UPPER", 10)){
       // remove
-    } else if (!strcmp((char*)auto_pad->s.data, "SAME_LOWER")){
+    } else if (!strncmp((char*)auto_pad->s.data, "SAME_LOWER", 10)){
       printf("Entering SAME_LOWER\n");
       /* TODO quick n dirty*/
       if ((h_kernel - 1)%2 != 0){
