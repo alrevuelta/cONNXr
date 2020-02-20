@@ -1,35 +1,15 @@
-name: CI
-
+name: ubuntu-latest
 on: [push, pull_request]
 
 jobs:
-
-  #build-windows:
-  #  runs-on: ${{ matrix.os }}
-  #  strategy:
-  #    matrix:
-  #      os: [windows-latest, windows-2016]
-  #  steps:
-  #  - uses: actions/checkout@v1
-  #  - name: make
-  #    run: make
-
   build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [macos-latest, ubuntu-latest] #TODO windows-latest
+    runs-on: ubuntu-latest
     steps:
 # checkout
     - uses: actions/checkout@v1
       
 # Install dependancies
-    - name: install_cunit_macOS         # For macOS
-      if: matrix.os == 'macos-latest'
-      run: brew install cunit
-   
-    - name: install_cunit_ubuntu        # For Ubuntu
-      if: matrix.os == 'ubuntu-latest'
+    - name: install_cunit_ubuntu
       run: sudo apt-get install libcunit1 libcunit1-doc libcunit1-dev
 
 # Clean and Build
