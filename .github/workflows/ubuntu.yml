@@ -9,12 +9,7 @@ jobs:
     - uses: actions/checkout@v1
       
 # Install dependancies
-    - name: install_cunit_macOS         # For macOS
-      if: matrix.os == 'macos-latest'
-      run: brew install cunit
-   
-    - name: install_cunit_ubuntu        # For Ubuntu
-      if: matrix.os == 'ubuntu-latest'
+    - name: install_cunit_ubuntu
       run: sudo apt-get install libcunit1 libcunit1-doc libcunit1-dev
 
 # Clean and Build
