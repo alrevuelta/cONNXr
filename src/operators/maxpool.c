@@ -78,11 +78,9 @@ int operator_maxpool(size_t n_input,
     w_pad_aux = (w_kernel - 1);
     h_pad = (h_kernel - 1)/2;
     w_pad = (w_kernel - 1)/2;
-    printf("Autopad value s.data = %s\n", (char*)auto_pad->s.data);
     if (!strncmp((char*)auto_pad->s.data, "SAME_UPPER", 10)){
       // remove
     } else if (!strncmp((char*)auto_pad->s.data, "SAME_LOWER", 10)){
-      printf("Entering SAME_LOWER\n");
       /* TODO quick n dirty*/
       if ((h_kernel - 1)%2 != 0){
         h_pad++;
@@ -106,7 +104,6 @@ int operator_maxpool(size_t n_input,
       TRACE_LEVEL0("\n\n pad=%d\n", pads->ints[i]);
     }*/
   }
-  printf("%d, %d, %d, %d, %d, %d\n", h_kernel, w_kernel, h_stride, w_stride, h_pad, w_pad);
 
   output[0]->dims[0] = input[0]->dims[0];
   output[0]->dims[1] = input[0]->dims[1];
