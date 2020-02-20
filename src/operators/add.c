@@ -81,21 +81,26 @@ int operator_add(size_t n_input,
   {
     case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:
     {
+      printf("enter float\n");
       //output[0]->n_float_data = input[0]->n_float_data;
       output[0]->float_data = malloc(output[0]->n_float_data * sizeof(float));
+      printf("malloc\n");
       /* TODO: ugly */
       for (int i = 0; i < output[0]->n_float_data; i++) {
+        printf("inside for\n");
         /* Normal case where dimensions match */
         if (input[0]->n_dims == input[1]->n_dims) {
           output[0]->float_data[i] = input[0]->float_data[i] + input[1]->float_data[i];
         /* Broadcasting. Hardcoded not working */
         }else{
+          printf("else\n");
           /* If inside loop :( */
           if (input[1]->n_dims == 1){
             output[0]->float_data[i] = input[0]->float_data[i] + input[1]->float_data[i%input[1]->dims[0]];
           }else{
             /* TODO Hardcoded for TINY YOLO */
             if (input[0]->dims[0] == 3){ /* Remove this uAF*/
+              printf("tinyylo\n");
               //output[0]->float_data[i] = input[0]->float_data[i%3] + input[1]->float_data[i];
             /* TODO Hardcoded for MNIST */
             }else{
