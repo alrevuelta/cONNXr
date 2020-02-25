@@ -2,7 +2,7 @@
 ![macos-latest](https://github.com/alrevuelta/cONNXr/workflows/macos-latest/badge.svg) ![ubuntu-latest](https://github.com/alrevuelta/cONNXr/workflows/ubuntu-latest/badge.svg) ![windows-latest](https://github.com/alrevuelta/cONNXr/workflows/windows-latest/badge.svg)
 
 
-> A `onnx` runtime written in pure `C99` with zero dependancies focused on small embedded devices. Run inference on your machine learning models no matter which framework you train it with and no matter the device that you use.
+> A `onnx` runtime written in pure `C99` with zero dependancies focused on embedded devices. Run inference on your machine learning models no matter which framework you train it with and no matter the device that you use. This is the perfect way to go in old hardware that doesn't support fancy modern C or C++.
 
 <h2 align="center">📗 Documentation 📗</h2>
 
@@ -14,31 +14,40 @@
   <a href="doc/05_Requirements.md">05 Requirements</a>
 </p>
 
-This repo contains a pure C99 runtime to run inference on `onnx` models. You can train your model with you favourite framework (tensorflow, keras, sk-learn, you name it!) and once trained export it to a `.onnx` file, that will be used to run inference. This makes this library totally framework agnostic, no matter how you train your model, this repo will run it using the common interface that `onnx` provides. This runtime was thought for embedded devices, that have low resources and that might not be able to compile newer cpp versions, so the idea is to keep the dependancies as minimum as possible, or even zero. No GPUs or fancy processor architectures, just pure non multi-thread C99 code, compatible with almost any embedded device. Lets allow our IoT devices to run inference on the edge, but without sacrificing the tools that the big AI fishes in the industry provide.
+This repo contains a pure C99 runtime to run inference on `onnx` models. You can train your model with you favourite framework (tensorflow, keras, sk-learn, you name it!) and once trained export it to a `.onnx` file, that will be used to run inference. This makes this library totally framework agnostic, no matter how you train your model, this repo will run it using the common interface that `onnx` provides. This runtime was thought for embedded devices, that have low resources and that might not be able to compile newer cpp versions, so the idea is to keep the dependancies as minimum as possible, or even zero. No GPUs or fancy processor architectures, just pure non multi-thread C99 code, compatible with almost any embedded device. Lets allow our IoT devices to run inference on the edge, but without sacrificing the tools that the big AI fishes in the industry provide. Dealing with old hardware? This might be also for you.
 
-Note that this project is in a very early stage so its not even close to be production ready. Developers are needed so feel free to contact or contribute with a pull request. See **Help Needed** and [doc](doc) for more information about how to contribute. So far we can run inference on the `MNIST` model to recognise handwritten digits.
+Note that this project is in a very early stage so its not even close to be production ready. Developers are needed so feel free to contact or contribute with a pull request. See **Help Needed** and [doc](doc) for more information about how to contribute.
 
-# Related Projects
-Other C/C++ related projects
+# Out of the box examples
 
-| Project       | Framework     | Language  | Size |
-| ------------- |:-------------:| -----:| ----:|
-| [onnxruntime](https://github.com/microsoft/onnxruntime)   | ONNX       | x | x |
-| [darknet](https://github.com/pjreddie/darknet)            | ?          | x | x |
-| [uTensor](https://github.com/uTensor/uTensor)             | TensorFlow | x | x |
-| [nnom](https://github.com/majianjia/nnom)                 | Keras      | x | x |
-| [ELL](https://github.com/Microsoft/ELL)                   | ELL        | x | x |
-| [TF Lite](xx)                                             | TF Lite    | x | x |
-| [plaidML](https://github.com/plaidml/plaidml)             | plaidML    | x | x |
+Some very well known models are supported out of the box, just compile the command line as follows and call it with two parameters (first the `ONNX` model, and second the `input` to run inference on). Note that the input has to be a `.pb` file.
+```
+make build_cli
+```
 
+## [MNIST](https://github.com/onnx/models/tree/master/vision/classification/mnist)
+```
+./connxr test/mnist/model.onnx test/mnist/test_data_set_0/input_0.pb
+```
 
-# Install
-Check the `Makefile` inside `test` that compiles the code and run a bunch of test cases for the implemented operators + MNIST digit recognition model. Library compilation into a static library is not done yet.
+## [tiny YOLO v2](https://github.com/onnx/models/tree/master/vision/object_detection_segmentation/tiny_yolov2)
+```
+./connxr test/tiny_yolov2/Model.onnx test/tiny_yolov2/test_data_set_0/input_0.pb
+```
 
-# Example
+## [super resolution](https://github.com/onnx/models/tree/master/vision/super_resolution/sub_pixel_cnn_2016)
+```
+TODO
+```
 
-## In your code
-Note that this example won't work as it is. Some more work is needed.
+TODO:
+* tiny YOLO v3: https://github.com/onnx/models/tree/master/vision/object_detection_segmentation/tiny_yolov3 TODO!
+* https://lutzroeder.github.io/netron/ TODO
+* Quantized MNIST. TODO. Using ONNX MNIST as baseline and quantizing it. Work ongoing
+
+# In you code
+
+If you want to use `cONNXr` as part of your code, you can either include all the files in your project and compile them, or perhaps link it as a static library, but this second option is not supported yet. You can do something like this, but note that this example won't work as it is. Some more work is needed.
 
 ```c
 int main()
@@ -63,28 +72,18 @@ int main()
 }
 ```
 
-## Command Line Interface
-A simple command line interface is provided so you can easily use it from your terminal. Note that its still in a very early stage.
+# Related Projects
+Other C/C++ related projects
 
-Just compile it
-```
-make build_cli
-```
-
-And use it. First parameter is the model, and second the input in `.pb` format. In the future it might support other input formats such as images.
-```
-./connxr test/mnist/model.onnx test/mnist/test_data_set_0/input_0.pb
-```
-
-## Supported Models
-Note that so far only few small models (order of Mb) have been tested. If you try with a huge model of hundreds of Mb or Gb weird things might happen.
-TODO
-* MNIST: https://github.com/onnx/models/tree/master/vision/classification/mnist
-* tiny YOLO v2:https://github.com/onnx/models/tree/master/vision/object_detection_segmentation/tiny_yolov2
-* tiny YOLO v3: https://github.com/onnx/models/tree/master/vision/object_detection_segmentation/tiny_yolov3 TODO!
-* https://lutzroeder.github.io/netron/ TODO
-* Quantized MNIST. TODO. Using ONNX MNIST as baseline and quantizing it. Work ongoing
-* Add super resolution model. TODO https://github.com/onnx/models/tree/master/vision/super_resolution/sub_pixel_cnn_2016
+| Project       | Framework     | Language  | Size |
+| ------------- |:-------------:| -----:| ----:|
+| [onnxruntime](https://github.com/microsoft/onnxruntime)   | ONNX       | x | x |
+| [darknet](https://github.com/pjreddie/darknet)            | ?          | x | x |
+| [uTensor](https://github.com/uTensor/uTensor)             | TensorFlow | x | x |
+| [nnom](https://github.com/majianjia/nnom)                 | Keras      | x | x |
+| [ELL](https://github.com/Microsoft/ELL)                   | ELL        | x | x |
+| [TF Lite](xx)                                             | TF Lite    | x | x |
+| [plaidML](https://github.com/plaidml/plaidml)             | plaidML    | x | x |
 
 # Limitations
 
