@@ -28,6 +28,7 @@ Other C/C++ related projects
 | [nnom](https://github.com/majianjia/nnom)                 | Keras      | x | x |
 | [ELL](https://github.com/Microsoft/ELL)                   | ELL        | x | x |
 | [TF Lite](xx)                                             | TF Lite    | x | x |
+| [plaidML](https://github.com/plaidml/plaidml)             | plaidML    | x | x |
 
 
 # Install
