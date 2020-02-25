@@ -1,0 +1,43 @@
+name: windows-latest
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+# checkout
+    - uses: actions/checkout@v1
+
+# TODO This Action is not finished
+
+# Install dependancies
+    #- name: install_cunit_macOS
+    #  run: brew install cunit
+
+# Clean and Build
+    - name: clean
+      run: make clean
+    - name: build
+      run: make build
+
+# Run onnx backend unit tests (operators)
+    - name: run_onnx_backend_tests
+      run: make onnx_backend_tests
+
+# Run end to end tests on some models (i.e. MNIST, tinyYOLO,...)
+    - name: run_onnx_models_tests
+      run: make onnx_models_tests
+      
+# Run some profiling/benchmarking on some models
+    - name: run_benchmark # Get the time/cycles taken by each model
+      run: make benchmark
+    - name: run_valgrind  # Get % taken by each function
+      run: make valgrind
+
+# TODO: Memory leak checks, code coverage
+
+# Parse the output with some python script. Ideas:
+# - Display the benchmark of different models
+#    - name: postprocess_data
+#      run: xxx
