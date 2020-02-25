@@ -1,5 +1,6 @@
 # cONNXr C ONNX Runtime
-![macos-latest](https://github.com/alrevuelta/cONNXr/workflows/macos-latest/badge.svg) ![ubuntu-latest](https://github.com/alrevuelta/cONNXr/workflows/ubuntu-latest/badge.svg)
+![macos-latest](https://github.com/alrevuelta/cONNXr/workflows/macos-latest/badge.svg) ![ubuntu-latest](https://github.com/alrevuelta/cONNXr/workflows/ubuntu-latest/badge.svg) ![windows-latest](https://github.com/alrevuelta/cONNXr/workflows/windows-latest/badge.svg)
+
 
 > A `onnx` runtime written in pure `C99` with zero dependancies focused on small embedded devices. Run inference on your machine learning models no matter which framework you train it with and no matter the device that you use.
 
