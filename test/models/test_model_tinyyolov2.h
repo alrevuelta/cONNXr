@@ -20,11 +20,8 @@ void test_model_tinyyolov2(void)
   convertRawDataOfTensorProto(inp0set0);
   convertRawDataOfTensorProto(out0set0);
 
-  // TODO Dirty trick. I expected the input name to be included in the
-  // input_0, but apparently it is not. Dont know if memory for the name
-  // is allocated... but it doesnt crash
-  inp0set0->name = "image";
-  printf("%s\n\n", inp0set0->name);
+  inp0set0->name = model->graph->input[0]->name;
+  printf("%s\n", inp0set0->name);
 
   Onnx__TensorProto *inputs[] = { inp0set0 };
 
