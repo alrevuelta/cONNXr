@@ -11,7 +11,7 @@ make test
 
 If you are implementing a new operator or debugging, you might want to run only one specific test. The following command will run a specific testcase from its test suite:
 ```
-make test ts=onnxBackendSuite tc=test_operator_maxpool_1d_default
+make all ts=onnxBackendSuite tc=test_operator_maxpool_1d_default
 ```
 
 ## Operator Tests

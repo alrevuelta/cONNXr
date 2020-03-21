@@ -72,6 +72,10 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
     for (int inp = 0; inp < model->graph->node[nodeIdx]->n_input; ++inp) {
       Onnx__TensorProto *inpN =malloc(sizeof(*inpN));
       inpN = searchTensorProtoByName(model, inputs, nInputs, model->graph->node[nodeIdx]->input[inp]);
+      if (inpN->has_raw_data){
+        /* If the tensor has raw data, deserialize it */
+        convertRawDataOfTensorProto(inpN);
+      }
       nodeInputs[inp] = inpN;
       //printf("\n %d\n", model->graph->node[nodeIdx]->n_input);
     }

@@ -124,8 +124,8 @@ int main(int argc, char **argv)
    //CU_ADD_TEST(onnxBackendSuite, test_averagepool_2d_same_upper);
    //CU_ADD_TEST(onnxBackendSuite, test_averagepool_2d_strides);
    //CU_ADD_TEST(onnxBackendSuite, test_averagepool_3d_default);
-   //CU_ADD_TEST(onnxBackendSuite, test_basic_conv_with_padding);
-   //CU_ADD_TEST(onnxBackendSuite, test_basic_conv_without_padding);
+   CU_ADD_TEST(onnxBackendSuite, test_basic_conv_with_padding);
+   CU_ADD_TEST(onnxBackendSuite, test_basic_conv_without_padding);
    //CU_ADD_TEST(onnxBackendSuite, test_basic_convinteger);
    CU_ADD_TEST(onnxBackendSuite, test_batchnorm_epsilon);
    CU_ADD_TEST(onnxBackendSuite, test_batchnorm_example);
@@ -177,7 +177,7 @@ int main(int argc, char **argv)
    //CU_ADD_TEST(onnxBackendSuite, test_constantofshape_int_zeros);
    //CU_ADD_TEST(onnxBackendSuite, test_conv_with_strides_and_asymmetric_padding);
    CU_ADD_TEST(onnxBackendSuite, test_conv_with_strides_no_padding);
-   //CU_ADD_TEST(onnxBackendSuite, test_conv_with_strides_padding);
+   CU_ADD_TEST(onnxBackendSuite, test_conv_with_strides_padding);
    //CU_ADD_TEST(onnxBackendSuite, test_convinteger_with_padding);
    //CU_ADD_TEST(onnxBackendSuite, test_convtranspose);
    //CU_ADD_TEST(onnxBackendSuite, test_convtranspose_1d);
@@ -635,10 +635,10 @@ int main(int argc, char **argv)
   /* This suite tests a whole model end to end. All data is taken
    * form ONNX repository, where the model plus a set of inputs/outputs
    * is provided */
-  CU_add_test(modelsTestSuite, "test_model_mnist", test_model_mnist);
+  //CU_add_test(modelsTestSuite, "test_model_mnist", test_model_mnist);
   //CU_add_test(modelsTestSuite, "test_model_mnist_per_node", test_model_mnist_per_node);
-  CU_add_test(modelsTestSuite, "test_model_tinyyolov2", test_model_tinyyolov2);
-  //CU_add_test(modelsTestSuite, "test_model_super_resolution", test_model_super_resolution);
+  //CU_add_test(modelsTestSuite, "test_model_tinyyolov2", test_model_tinyyolov2);
+  CU_add_test(modelsTestSuite, "test_model_super_resolution", test_model_super_resolution);
 
   CU_basic_set_mode(CU_BRM_VERBOSE);
 

@@ -13,21 +13,18 @@ Onnx__TensorProto* searchTensorProtoByName(Onnx__ModelProto *model,
                                            char *name)
 {
   TRACE_LEVEL0("Searching for TensorProto with name=%s\n", name);
-  //Onnx__TensorProto *tensor = NULL;
 
-  // Search in initializers
+  /* Search in initializers */
   for (int initializer = 0; initializer < model->graph->n_initializer; initializer++)
   {
     if (!strcmp(model->graph->initializer[initializer]->name, name))
     {
-      //tensor = model->graph->initializer[initializer];
       TRACE_LEVEL0("Found TensorProto in initializer list with name=%s\n", model->graph->initializer[initializer]->name);
       return model->graph->initializer[initializer];
-      // Use return instead. Once its found, exit the function
     }
   }
 
-  // Search in inputs to the model
+  /* Search in inputs to the model */
   for (int inIdx = 0; inIdx < nInputs; inIdx++)
   {
     if (!strcmp(inputs[inIdx]->name, name))
@@ -35,11 +32,10 @@ Onnx__TensorProto* searchTensorProtoByName(Onnx__ModelProto *model,
       //tensor = inputs[inIdx];
       TRACE_LEVEL0("Found TensorProto in inputs to de model with name=%s\n", inputs[inIdx]->name);
       return inputs[inIdx];
-      // Use return instead. Once its found, exit the function
     }
   }
 
-  // Search in calculated outputs list
+  /* Search in calculated outputs list */
   for (int outputsIdx = 0; outputsIdx < _outputIdx; outputsIdx++)
   {
     if (!strcmp(_outputs[outputsIdx]->name, name))
