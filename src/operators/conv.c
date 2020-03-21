@@ -84,13 +84,13 @@
   if (input[0]->n_dims == 4){
     output[0]->dims[0] = input[0]->dims[0];
     output[0]->dims[1] = input[1]->dims[0];
-    output[0]->dims[2] = (input[0]->dims[2] - h_kernel + h_stride - h_pad*2) / h_stride;
-    output[0]->dims[3] = (input[0]->dims[3] - w_kernel + w_stride - w_pad*2) / w_stride;
+    output[0]->dims[2] = (input[0]->dims[2] - h_kernel + h_stride + h_pad*2) / h_stride;
+    output[0]->dims[3] = (input[0]->dims[3] - w_kernel + w_stride + w_pad*2) / w_stride;
   }else if (input[0]->n_dims == 2){
     output[0]->dims[0] = input[1]->dims[0];
     output[0]->dims[1] = input[1]->dims[1];
-    output[0]->dims[2] = (input[0]->dims[0] - h_kernel + h_stride - h_pad*2) / h_stride;
-    output[0]->dims[3] = (input[0]->dims[1] - w_kernel + w_stride - w_pad*2) / w_stride;
+    output[0]->dims[2] = (input[0]->dims[0] - h_kernel + h_stride + h_pad*2) / h_stride;
+    output[0]->dims[3] = (input[0]->dims[1] - w_kernel + w_stride + w_pad*2) / w_stride;
   }else if (input[0]->n_dims == 3){
     // TODO
     return -1;
