@@ -20,7 +20,7 @@ Note that this project is in a very early stage so its not even close to be prod
 
 # Out of the box examples
 
-Some very well known models are supported out of the box, just compile the command line as follows and call it with two parameters (first the `ONNX` model, and second the `input` to run inference on). Note that the input has to be a `.pb` file.
+Some very well known models are supported out of the box, just compile the command line as follows and call it with two parameters (first the `ONNX` model, and second the `input` to run inference on). Note that the input has to be a `.pb` file. If you have your own model and its not working, its probably because its using an operator that we haven't implemented yet, so feel free to open an issue and we will happy to help.
 ```
 make build_cli
 ```
