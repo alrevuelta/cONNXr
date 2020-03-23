@@ -2,7 +2,7 @@
 ![macos-latest](https://github.com/alrevuelta/cONNXr/workflows/macos-latest/badge.svg) ![ubuntu-latest](https://github.com/alrevuelta/cONNXr/workflows/ubuntu-latest/badge.svg) ![windows-latest](https://github.com/alrevuelta/cONNXr/workflows/windows-latest/badge.svg)
 
 
-> A `onnx` runtime written in pure `C99` with zero dependancies focused on embedded devices. Run inference on your machine learning models no matter which framework you train it with and no matter the device that you use. This is the perfect way to go in old hardware that doesn't support fancy modern C or C++.
+> A `onnx` runtime written in pure `C99` with zero dependencies focused on embedded devices. Run inference on your machine learning models no matter which framework you train it with and no matter the device that you use. This is the perfect way to go in old hardware that doesn't support fancy modern C or C++.
 
 <h2 align="center">📗 Documentation 📗</h2>
 
@@ -11,11 +11,11 @@
   <a href="doc/02_CodeOverview.md">02 Code Overview</a> •
   <a href="doc/03_Testing.md">03 Testing</a> •
   <a href="doc/04_Contributing.md">04 Contributing</a> •
-  <a href="doc/05_Requirements.md">05 Requirements</a>
+  <a href="doc/05_Requirements.md">05 Requirements</a> •
   <a href="doc/06_OperatorStatus.md">06 Operator Status</a>
 </p>
 
-This repo contains a pure C99 runtime to run inference on `onnx` models. You can train your model with you favourite framework (tensorflow, keras, sk-learn, you name it!) and once trained export it to a `.onnx` file, that will be used to run inference. This makes this library totally framework agnostic, no matter how you train your model, this repo will run it using the common interface that `onnx` provides. This runtime was thought for embedded devices, that have low resources and that might not be able to compile newer cpp versions, so the idea is to keep the dependancies as minimum as possible, or even zero. No GPUs or fancy processor architectures, just pure non multi-thread C99 code, compatible with almost any embedded device. Lets allow our IoT devices to run inference on the edge, but without sacrificing the tools that the big AI fishes in the industry provide. Dealing with old hardware? This might be also for you.
+This repo contains a pure C99 runtime to run inference on `onnx` models. You can train your model with you favorite framework (tensorflow, keras, sk-learn, you name it!) and once trained export it to a `.onnx` file, that will be used to run inference. This makes this library totally framework agnostic, no matter how you train your model, this repo will run it using the common interface that `onnx` provides. This runtime was thought for embedded devices, that have low resources and that might not be able to compile newer cpp versions, so the idea is to keep the dependencies as minimum as possible, or even zero. No GPUs or fancy processor architectures, just pure non multi-thread C99 code, compatible with almost any embedded device. Lets allow our IoT devices to run inference on the edge, but without sacrificing the tools that the big AI fishes in the industry provide. Dealing with old hardware? This might be also for you.
 
 Note that this project is in a very early stage so its not even close to be production ready. Developers are needed so feel free to contact or contribute with a pull request. See **Help Needed** and [doc](doc) for more information about how to contribute.
 
@@ -46,7 +46,7 @@ TODO:
 * https://lutzroeder.github.io/netron/ TODO
 * Quantized MNIST. TODO. Using ONNX MNIST as baseline and quantizing it. Work ongoing
 
-# In you code
+# In your code
 
 If you want to use `cONNXr` as part of your code, you can either include all the files in your project and compile them, or perhaps link it as a static library, but this second option is not supported yet. You can do something like this, but note that this example won't work as it is. Some more work is needed.
 
