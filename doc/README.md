@@ -5,3 +5,4 @@
 * [Testing](./03_Testing.md)
 * [How To Contribute](./04_Contributing.md)
 * [Requirements](./05_Requirements.md)
+* [Operator Status](./06_OperatorStatus.md)
