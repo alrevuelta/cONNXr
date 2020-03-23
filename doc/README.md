@@ -1,8 +1,8 @@
 # Documentation Index
 
-* 01_Introduction
-* 02_CodeOverview
-* 03_Testing
-* 04_HowToContribute
-* 05_AddNewOperator
-* 06_Requirements
+* [Introduction](./01_Introduction.md)
+* [Code Overview](./02_CodeOverview.md)
+* [Testing](./03_Testing.md)
+* [How To Contribute](./04_Contributing.md)
+* [Requirements](./05_Requirements.md)
+* [Operator Status](./06_OperatorStatus.md)
