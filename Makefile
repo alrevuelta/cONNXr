@@ -17,8 +17,13 @@ PROFILINGDIR?=profiling
 
 VARIABLE+=MODELS
 HELP_MODELS=existing models
+ifndef MODELS
 MODELS+=mnist
 MODELS+=tinyyolov2
+endif
+
+VARIABLE+=OPERATORS
+HELP_OPERATORS=operators to test (all if empty)
 
 VARIABLE+=REPEAT
 HELP_REPEAT=default repetition count if not otherwise specified by REPEAT_<modelname>
@@ -74,16 +79,28 @@ clean_objs:
 	-rmdir $(BUILDDIR)
 
 .phony:test_operators
-HELP_test_operators=run all onnx backend tests
+HELP_test_operators=run onnx backend test for each operator in OPERATORS (all if empty)
 TARGET_test+=test_operators
 test_operators: runtest
+ifeq (,$(OPERATORS))
 	$(BUILDDIR)/runtest onnxBackendSuite
+else
+	for OPERATOR in $(OPERATORS); do \
+		$(BUILDDIR)/runtest onnxBackendSuite test_$$OPERATOR; \
+	done
+endif
 
 .phony:test_models
-HELP_test_models=run all model tests
+HELP_test_models=run model test for each model in MODELS (all if empty)
 TARGET_test+=test_models
 test_models: runtest
+ifeq (,$(MODELS))
 	$(BUILDDIR)/runtest modelsTestSuite
+else
+	for MODEL in $(MODELS); do \
+		$(BUILDDIR)/runtest modelsTestSuite test_model_$$MODEL; \
+	done
+endif
 
 .phony: test
 HELP_test=run tests
