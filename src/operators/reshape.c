@@ -93,7 +93,7 @@ int operator_reshape(size_t n_input,
     {
       output[0]->dims[i] = input[1]->int64_data[i];
     }
-    TRACE_LEVEL0("-----reshaped->dims[%d] = %lld\n", i, output[0]->dims[i]);
+    TRACE_LEVEL0("-----reshaped->dims[%d] = %ld\n", i, output[0]->dims[i]);
   }
 
   // Populate some parameters

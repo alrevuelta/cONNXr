@@ -43,7 +43,7 @@ void test_model_mnist(void)
   cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
   printf("[benchmark][mnist] cycles: %f\n", (double) (end - start));
   printf("[benchmark][mnist] cpu_time_used: %f\n", cpu_time_used);
-  printf("[benchmark][mnist] CLOCKS_PER_SEC: %d\n", CLOCKS_PER_SEC);
+  printf("[benchmark][mnist] CLOCKS_PER_SEC: %ld\n", CLOCKS_PER_SEC);
 
   /* 11 is hardcoded, which is Plus214_Output_0 */
   compareAlmostEqualTensorProto(output[11], out0set0);

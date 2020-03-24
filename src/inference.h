@@ -25,7 +25,7 @@ typedef struct
               Onnx__TensorProto **output);
 } operatorptrs;
 
-static operatorptrs
+static operatorptrs __attribute__((unused))
           operatorsSet[] = {
                              {"Add", operator_add},
                              {"ArgMax", operator_argmax},

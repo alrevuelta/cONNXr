@@ -68,7 +68,7 @@ void debug_print_attributes( size_t n_attribute,  Onnx__AttributeProto **attribu
     TRACE_LEVEL0("attribute[%d]->n_ints %zu\n", j, attribute[j]->n_ints);
     for (int k = 0; k < attribute[j]->n_ints; k++)
     {
-      TRACE_LEVEL0("attribute[%d]->ints[%d] %lld\n", j, k, attribute[j]->ints[k]);
+      TRACE_LEVEL0("attribute[%d]->ints[%d] %ld\n", j, k, attribute[j]->ints[k]);
     }
 
     TRACE_LEVEL0("attribute[%d]->n_strings %zu\n", j, attribute[j]->n_strings);
@@ -120,7 +120,7 @@ void debug_print_dims(size_t n_dims, int64_t *dims)
 {
   TRACE_LEVEL0("n_dims=%zu\n", n_dims);
   for (int i = 0; i < n_dims; i++){
-    TRACE_LEVEL0("dims[%d]=%lld\n", i, dims[i]);
+    TRACE_LEVEL0("dims[%d]=%ld\n", i, dims[i]);
   }
 }
 
@@ -171,7 +171,7 @@ void Debug_PrintModelInformation( Onnx__ModelProto *model)
           TRACE_LEVEL0("Value not not set\n");
           break;
         case ONNX__TENSOR_SHAPE_PROTO__DIMENSION__VALUE_DIM_VALUE:
-          TRACE_LEVEL0("model->graph->input[%d]->type->tensor_type->shape->dim[%d]->dim_value %lld\n", i, j, model->graph->input[i]->type->tensor_type->shape->dim[j]->dim_value);
+          TRACE_LEVEL0("model->graph->input[%d]->type->tensor_type->shape->dim[%d]->dim_value %ld\n", i, j, model->graph->input[i]->type->tensor_type->shape->dim[j]->dim_value);
           break;
         case ONNX__TENSOR_SHAPE_PROTO__DIMENSION__VALUE_DIM_PARAM:
           TRACE_LEVEL0("model->graph->input[%d]->type->tensor_type->shape->dim[%d]->dim_param %s\n", i, j, model->graph->input[i]->type->tensor_type->shape->dim[j]->dim_param);
@@ -232,7 +232,7 @@ void Debug_PrintTensorProto(Onnx__TensorProto *tp)
   TRACE_LEVEL0("ndims = %zu\n", tp->n_dims);
   for (int i = 0; i < tp->n_dims; i++)
   {
-    TRACE_LEVEL0("dims[%d]=%lld\n", i, tp->dims[i]);
+    TRACE_LEVEL0("dims[%d]=%ld\n", i, tp->dims[i]);
   }
   TRACE_LEVEL0("has_data_type = %d\n", tp->has_data_type);
   TRACE_LEVEL0("data_type = %d\n", tp->data_type);
@@ -321,7 +321,7 @@ void debug_prettyprint_model(Onnx__ModelProto *model)
 
     for (int i = 0; i < model->graph->initializer[n_init]->n_dims; i++)
     {
-      TRACE_LEVEL0("%lld x ", model->graph->initializer[n_init]->dims[i]);
+      TRACE_LEVEL0("%ld x ", model->graph->initializer[n_init]->dims[i]);
     }
     //print(" | has_data_type = %d\n", tp->has_data_type);
     TRACE_LEVEL0("\t| %s\n", data_types_string[model->graph->initializer[n_init]->data_type]);

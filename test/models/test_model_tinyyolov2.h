@@ -39,7 +39,7 @@ void test_model_tinyyolov2(void)
   cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
   printf("[benchmark][tinyyolov2] cycles: %f\n", (double) (end - start));
   printf("[benchmark][tinyyolov2] cpu_time_used: %f\n", cpu_time_used);
-  printf("[benchmark][tinyyolov2] CLOCKS_PER_SEC: %d\n", CLOCKS_PER_SEC);
+  printf("[benchmark][tinyyolov2] CLOCKS_PER_SEC: %ld\n", CLOCKS_PER_SEC);
 
   printf("Will compare output 32 = %s", output[32]->name);
   compareAlmostEqualTensorProto(output[32], out0set0);

@@ -22,7 +22,7 @@ void test_model_super_resolution(void)
   printf("%s\n\n", inp0set0->name);
 
   Onnx__TensorProto *inputs[] = { inp0set0 };
-  Onnx__TensorProto **output = inference(model, inputs, 1);
+  /*Onnx__TensorProto **output =*/ inference(model, inputs, 1);
 
   //printf("Will compare output xx = %s", output[xx]->name);
   //compareAlmostEqualTensorProto(output[xx], out0set0);
