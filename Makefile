@@ -99,7 +99,7 @@ $(BENCHMARKDIR)/$(1).txt: runtest
 	# All runs will be average later on in the post processing phase
 	rm -f $(BENCHMARKDIR)/$(1).txt
 	mkdir -p $(BENCHMARKDIR)
-	for number in {1..$(REPEAT_$(1))} ; do \
+	for number in $$$$(seq $(REPEAT_$(1))) ; do \
 		echo "Benchmarking iteration "$$$$number ; \
 		$(BUILDDIR)/runtest modelsTestSuite test_model_$(1) >> $(BENCHMARKDIR)/$(1).txt ; \
   done
