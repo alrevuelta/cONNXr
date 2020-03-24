@@ -17,21 +17,21 @@ jobs:
     - name: clean
       run: make clean
     - name: build
-      run: make build
+      run: make all
 
 # Run onnx backend unit tests (operators)
-    - name: run_onnx_backend_tests
-      run: make onnx_backend_tests
+    - name: test_operators
+      run: make test_operators
 
 # Run end to end tests on some models (i.e. MNIST, tinyYOLO,...)
-    - name: run_onnx_models_tests
-      run: make onnx_models_tests
+    - name: test_models
+      run: make test_models
       
 # Run some profiling/benchmarking on some models
     - name: run_benchmark # Get the time/cycles taken by each model
       run: make benchmark
-    - name: run_valgrind  # Get % taken by each function
-      run: make valgrind
+    # - name: run_profiling  # Get % taken by each function
+    #   run: make profiling
 
 # TODO: Memory leak checks, code coverage
 
