@@ -46,13 +46,13 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
   /* Dirty trick to allow multiple runs. There is a memory leak for sure */
   _outputIdx = 0;
   TRACE_LEVEL0("Calling inference\n");
-  TRACE_LEVEL0("The graph has nodes=%zu\n", model->graph->n_node);
+  TRACE_LEVEL0("The graph has nodes=%" PRIuMAX "\n", model->graph->n_node);
 
   // Iterate all nodes in the graph
   for (int nodeIdx = 0; nodeIdx < model->graph->n_node; nodeIdx++)
   {
     char *operation = model->graph->node[nodeIdx]->op_type;
-    TRACE_LEVEL0("node=%d, operation=%s, n_input=%zu, n_output=%zu\n",
+    TRACE_LEVEL0("node=%d, operation=%s, n_input=%" PRIuMAX ", n_output=%" PRIuMAX "\n",
                  nodeIdx,
                  model->graph->node[nodeIdx]->op_type,
                  model->graph->node[nodeIdx]->n_input,

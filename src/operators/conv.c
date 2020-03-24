@@ -100,7 +100,7 @@
       output[0]->n_float_data = output[0]->dims[0]*output[0]->dims[1]*output[0]->dims[2]*output[0]->dims[3];
 
       //TODO This is wrong. n_dims can be like 2 and this will fail
-      TRACE_LEVEL0("n_flot_data = %zu\n", input[0]->n_dims);
+      TRACE_LEVEL0("n_flot_data = %" PRIuMAX "\n", input[0]->n_dims);
 
       output[0]->float_data = malloc(output[0]->n_float_data * sizeof(float));
 

@@ -37,7 +37,7 @@ void Debug_PrintArray(float *array, int m, int n)
 
 void debug_print_attributes( size_t n_attribute,  Onnx__AttributeProto **attribute)
 {
-  TRACE_LEVEL0("n_attribute %zu\n", n_attribute);
+  TRACE_LEVEL0("n_attribute %" PRIuMAX "\n", n_attribute);
   for (int j = 0; j < n_attribute; j++)
   {
     // Check AttributeProto structure for more parameters
@@ -59,30 +59,30 @@ void debug_print_attributes( size_t n_attribute,  Onnx__AttributeProto **attribu
     }
 
 
-    TRACE_LEVEL0("attribute[%d]->n_floats %zu\n", j, attribute[j]->n_floats);
+    TRACE_LEVEL0("attribute[%d]->n_floats %" PRIuMAX "\n", j, attribute[j]->n_floats);
     for (int k = 0; k < attribute[j]->n_floats; k++)
     {
       TRACE_LEVEL0("attribute[%d]->floats[%d] %f\n", j, k, attribute[j]->floats[k]);
     }
 
-    TRACE_LEVEL0("attribute[%d]->n_ints %zu\n", j, attribute[j]->n_ints);
+    TRACE_LEVEL0("attribute[%d]->n_ints %" PRIuMAX "\n", j, attribute[j]->n_ints);
     for (int k = 0; k < attribute[j]->n_ints; k++)
     {
       TRACE_LEVEL0("attribute[%d]->ints[%d] %ld\n", j, k, attribute[j]->ints[k]);
     }
 
-    TRACE_LEVEL0("attribute[%d]->n_strings %zu\n", j, attribute[j]->n_strings);
+    TRACE_LEVEL0("attribute[%d]->n_strings %" PRIuMAX "\n", j, attribute[j]->n_strings);
     for (int k = 0; k < attribute[j]->n_strings; k++)
     {
       // Type is ProtobufCBinaryData
       //TRACE_LEVEL0("attribute[%d]->strings[%d] %f\n", j, k, attribute[j]->string[k]);
     }
 
-    TRACE_LEVEL0("attribute[%d]->n_tensors %zu\n", j, attribute[j]->n_tensors);
+    TRACE_LEVEL0("attribute[%d]->n_tensors %" PRIuMAX "\n", j, attribute[j]->n_tensors);
 
 
-    TRACE_LEVEL0("attribute[%d]->n_graphs %zu\n", j, attribute[j]->n_graphs);
-    TRACE_LEVEL0("attribute[%d]->n_sparse_tensors %zu\n", j, attribute[j]->n_sparse_tensors);
+    TRACE_LEVEL0("attribute[%d]->n_graphs %" PRIuMAX "\n", j, attribute[j]->n_graphs);
+    TRACE_LEVEL0("attribute[%d]->n_sparse_tensors %" PRIuMAX "\n", j, attribute[j]->n_sparse_tensors);
 
     /*
     ProtobufCMessage base;
@@ -118,7 +118,7 @@ void debug_print_attributes( size_t n_attribute,  Onnx__AttributeProto **attribu
 
 void debug_print_dims(size_t n_dims, int64_t *dims)
 {
-  TRACE_LEVEL0("n_dims=%zu\n", n_dims);
+  TRACE_LEVEL0("n_dims=%" PRIuMAX "\n", n_dims);
   for (int i = 0; i < n_dims; i++){
     TRACE_LEVEL0("dims[%d]=%ld\n", i, dims[i]);
   }
@@ -135,7 +135,7 @@ void Debug_PrintModelInformation( Onnx__ModelProto *model)
   //--------------------------------------------------------------------------//
   TRACE_LEVEL0("model->producer_name %s\n", model->producer_name);
   TRACE_LEVEL0("model->producer_version %s\n", model->producer_version);
-  TRACE_LEVEL0("model->n_opset_import %zu\n", model->n_opset_import);
+  TRACE_LEVEL0("model->n_opset_import %" PRIuMAX "\n", model->n_opset_import);
   for (int i = 0; i < model->n_opset_import; i++) {
     TRACE_LEVEL0("model->opset_import[%d]->domain %s\n", i, model->opset_import[i]->domain);
   }
@@ -144,8 +144,8 @@ void Debug_PrintModelInformation( Onnx__ModelProto *model)
   // GRAPH
   //--------------------------------------------------------------------------//
   TRACE_LEVEL0("model->graph->name %s\n", model->graph->name);
-  TRACE_LEVEL0("model->graph->n_node %zu\n", model->graph->n_node);
-  TRACE_LEVEL0("model->graph->n_initializer %zu\n", model->graph->n_initializer);
+  TRACE_LEVEL0("model->graph->n_node %" PRIuMAX "\n", model->graph->n_node);
+  TRACE_LEVEL0("model->graph->n_initializer %" PRIuMAX "\n", model->graph->n_initializer);
   for (int n_init = 0; n_init < model->graph->n_initializer; n_init++)
   {
     TRACE_LEVEL0("model->graph->initializer[%d] %s\n", n_init, model->graph->initializer[n_init]->name);
@@ -153,14 +153,14 @@ void Debug_PrintModelInformation( Onnx__ModelProto *model)
   }
 
   // input/output data
-  TRACE_LEVEL0("model->graph->n_input %zu\n", model->graph->n_input);
-  TRACE_LEVEL0("model->graph->n_output %zu\n", model->graph->n_output);
+  TRACE_LEVEL0("model->graph->n_input %" PRIuMAX "\n", model->graph->n_input);
+  TRACE_LEVEL0("model->graph->n_output %" PRIuMAX "\n", model->graph->n_output);
 
   for (int i = 0; i < model->graph->n_input; i++) {
     TRACE_LEVEL0("model->graph->input[%d]->name %s\n", i, model->graph->input[i]->name);
     TRACE_LEVEL0("model->graph->input[%d]->type->tensor_type->has_elem_type %d\n", i, model->graph->input[i]->type->tensor_type->has_elem_type);
     TRACE_LEVEL0("model->graph->input[%d]->type->tensor_type->elem_type %d\n", i, model->graph->input[i]->type->tensor_type->elem_type);
-    TRACE_LEVEL0("model->graph->input[%d]->type->tensor_type->shape->n_dim %zu\n", i, model->graph->input[i]->type->tensor_type->shape->n_dim);
+    TRACE_LEVEL0("model->graph->input[%d]->type->tensor_type->shape->n_dim %" PRIuMAX "\n", i, model->graph->input[i]->type->tensor_type->shape->n_dim);
 
     // TODO With some models this crashes
     for (int j = 0; j < model->graph->input[i]->type->tensor_type->shape->n_dim; j++) {
@@ -188,7 +188,7 @@ void Debug_PrintModelInformation( Onnx__ModelProto *model)
     TRACE_LEVEL0("model->graph->output[%d]->name %s\n", i, model->graph->output[i]->name);
     TRACE_LEVEL0("model->graph->output[%d]->type->tensor_type->has_elem_type %d\n", i, model->graph->output[i]->type->tensor_type->has_elem_type);
     TRACE_LEVEL0("model->graph->output[%d]->type->tensor_type->elem_type %d\n", i, model->graph->output[i]->type->tensor_type->elem_type);
-    TRACE_LEVEL0("model->graph->output[%d]->type->tensor_type->shape->n_dim %zu\n", i, model->graph->output[i]->type->tensor_type->shape->n_dim);
+    TRACE_LEVEL0("model->graph->output[%d]->type->tensor_type->shape->n_dim %" PRIuMAX "\n", i, model->graph->output[i]->type->tensor_type->shape->n_dim);
     for (int j = 0; j < model->graph->input[i]->type->tensor_type->shape->n_dim; j++) {
 
       TRACE_LEVEL0("model->graph->output[%d]->type->tensor_type->shape->dim[%d]->value_case %d\n", i, j, model->graph->output[i]->type->tensor_type->shape->dim[j]->value_case);
@@ -212,11 +212,11 @@ void Debug_PrintModelInformation( Onnx__ModelProto *model)
   //--------------------------------------------------------------------------//
   for (int i = 0; i < model->graph->n_node; i++)
   {
-    TRACE_LEVEL0("model->graph->node[%d]->n_input %zu\n", i, model->graph->node[i]->n_input);
+    TRACE_LEVEL0("model->graph->node[%d]->n_input %" PRIuMAX "\n", i, model->graph->node[i]->n_input);
     for (int j = 0; j < model->graph->node[i]->n_input; j++) {
       TRACE_LEVEL0("model->graph->node[%d]->input[%d] %s\n", i, j, model->graph->node[i]->input[j]);
     }
-    TRACE_LEVEL0("model->graph->node[%d]->n_output %zu\n", i, model->graph->node[i]->n_output);
+    TRACE_LEVEL0("model->graph->node[%d]->n_output %" PRIuMAX "\n", i, model->graph->node[i]->n_output);
     for (int j = 0; j < model->graph->node[i]->n_output; j++) {
       TRACE_LEVEL0("model->graph->node[%d]->output[%d] %s\n", i, j, model->graph->node[i]->output[j]);
     }
@@ -229,7 +229,7 @@ void Debug_PrintModelInformation( Onnx__ModelProto *model)
 
 void Debug_PrintTensorProto(Onnx__TensorProto *tp)
 {
-  TRACE_LEVEL0("ndims = %zu\n", tp->n_dims);
+  TRACE_LEVEL0("ndims = %" PRIuMAX "\n", tp->n_dims);
   for (int i = 0; i < tp->n_dims; i++)
   {
     TRACE_LEVEL0("dims[%d]=%ld\n", i, tp->dims[i]);
@@ -239,22 +239,22 @@ void Debug_PrintTensorProto(Onnx__TensorProto *tp)
 
   // TODO segment
 
-  TRACE_LEVEL0("n_float_data = %zu\n", tp->n_float_data);
+  TRACE_LEVEL0("n_float_data = %" PRIuMAX "\n", tp->n_float_data);
 
   // Print float_data if needed
   for (int i = 0; i < tp->n_float_data; i++) {
     //TRACE_LEVEL0("float_data[%d] = %f\n", i, tp->float_data[i]);
   }
 
-  TRACE_LEVEL0("n_int32_data = %zu\n", tp->n_int32_data);
+  TRACE_LEVEL0("n_int32_data = %" PRIuMAX "\n", tp->n_int32_data);
 
   // Print int32_data if needed
 
-  TRACE_LEVEL0("n_string_data = %zu\n", tp->n_string_data);
+  TRACE_LEVEL0("n_string_data = %" PRIuMAX "\n", tp->n_string_data);
 
   // Print string_data if needed
 
-  TRACE_LEVEL0("n_int64_data = %zu\n", tp->n_int64_data);
+  TRACE_LEVEL0("n_int64_data = %" PRIuMAX "\n", tp->n_int64_data);
 
   // Print int64_data if needed
 
@@ -264,7 +264,7 @@ void Debug_PrintTensorProto(Onnx__TensorProto *tp)
   TRACE_LEVEL0("has_raw_data = %d\n", tp->has_raw_data);
   if (tp->has_raw_data)
   {
-    TRACE_LEVEL0("raw_data->len = %zu\n", tp->raw_data.len);
+    TRACE_LEVEL0("raw_data->len = %" PRIuMAX "\n", tp->raw_data.len);
 
     // print raw data. convert to data_type if needed like it is done in
     // utils.c
@@ -278,11 +278,11 @@ void Debug_PrintTensorProto(Onnx__TensorProto *tp)
 
   // Print data_location if needed
 
-  TRACE_LEVEL0("n_double_data = %zu\n", tp->n_double_data);
+  TRACE_LEVEL0("n_double_data = %" PRIuMAX "\n", tp->n_double_data);
 
   // Print double_data if needed
 
-  TRACE_LEVEL0("n_uint64_data = %zu\n", tp->n_uint64_data);
+  TRACE_LEVEL0("n_uint64_data = %" PRIuMAX "\n", tp->n_uint64_data);
 
   // Print uint64_data if needed
 
@@ -300,7 +300,7 @@ void debug_prettyprint_model(Onnx__ModelProto *model)
   TRACE_LEVEL0("Model:\n");
   TRACE_LEVEL0("  model->producer_name %s\n", model->producer_name);
   TRACE_LEVEL0("  model->producer_version %s\n", model->producer_version);
-  TRACE_LEVEL0("  model->n_opset_import %zu\n", model->n_opset_import);
+  TRACE_LEVEL0("  model->n_opset_import %" PRIuMAX "\n", model->n_opset_import);
   for (int i = 0; i < model->n_opset_import; i++) {
     TRACE_LEVEL0("  model->opset_import[%d]->domain %s\n", i, model->opset_import[i]->domain);
   }
@@ -310,8 +310,8 @@ void debug_prettyprint_model(Onnx__ModelProto *model)
   //--------------------------------------------------------------------------//
   TRACE_LEVEL0("Graph:\n");
   TRACE_LEVEL0("  model->graph->name %s\n", model->graph->name);
-  TRACE_LEVEL0("  model->graph->n_node %zu\n", model->graph->n_node);
-  TRACE_LEVEL0("  model->graph->n_initializer %zu\n", model->graph->n_initializer);
+  TRACE_LEVEL0("  model->graph->n_node %" PRIuMAX "\n", model->graph->n_node);
+  TRACE_LEVEL0("  model->graph->n_initializer %" PRIuMAX "\n", model->graph->n_initializer);
 
   TRACE_LEVEL0("Initializers:\n");
   for (int n_init = 0; n_init < model->graph->n_initializer; n_init++)
@@ -329,16 +329,16 @@ void debug_prettyprint_model(Onnx__ModelProto *model)
 
 /*
   TRACE_LEVEL0("Nodes:\n");
-  TRACE_LEVEL0("  model->graph->n_input %zu\n", model->graph->n_input);
-  TRACE_LEVEL0("  model->graph->n_output %zu\n", model->graph->n_output);*/
+  TRACE_LEVEL0("  model->graph->n_input %" PRIuMAX "\n", model->graph->n_input);
+  TRACE_LEVEL0("  model->graph->n_output %" PRIuMAX "\n", model->graph->n_output);*/
 
 /*
   for (int i = 0; i < model->graph->n_input; i++) {
-    TRACE_LEVEL0("%zu %s | ", i, model->graph->input[i]->name);
+    TRACE_LEVEL0("%" PRIuMAX " %s | ", i, model->graph->input[i]->name);
 
     //TRACE_LEVEL0("model->graph->input[%d]->type->tensor_type->has_elem_type %d\n", i, model->graph->input[i]->type->tensor_type->has_elem_type);
     //TRACE_LEVEL0("model->graph->input[%d]->type->tensor_type->elem_type %d\n", i, model->graph->input[i]->type->tensor_type->elem_type);
-    //TRACE_LEVEL0("model->graph->input[%d]->type->tensor_type->shape->n_dim %zu\n", i, model->graph->input[i]->type->tensor_type->shape->n_dim);
+    //TRACE_LEVEL0("model->graph->input[%d]->type->tensor_type->shape->n_dim %" PRIuMAX "\n", i, model->graph->input[i]->type->tensor_type->shape->n_dim);
 
     // TODO With some models this crashes
     for (int j = 0; j < model->graph->input[i]->type->tensor_type->shape->n_dim; j++) {
@@ -367,7 +367,7 @@ void debug_prettyprint_model(Onnx__ModelProto *model)
     //TRACE_LEVEL0("model->graph->output[%d]->name %s\n", i, model->graph->output[i]->name);
     //TRACE_LEVEL0("model->graph->output[%d]->type->tensor_type->has_elem_type %d\n", i, model->graph->output[i]->type->tensor_type->has_elem_type);
     //TRACE_LEVEL0("model->graph->output[%d]->type->tensor_type->elem_type %d\n", i, model->graph->output[i]->type->tensor_type->elem_type);
-    //TRACE_LEVEL0("model->graph->output[%d]->type->tensor_type->shape->n_dim %zu\n", i, model->graph->output[i]->type->tensor_type->shape->n_dim);
+    //TRACE_LEVEL0("model->graph->output[%d]->type->tensor_type->shape->n_dim %" PRIuMAX "\n", i, model->graph->output[i]->type->tensor_type->shape->n_dim);
     /* Is this failing?
     for (int j = 0; j < model->graph->input[i]->type->tensor_type->shape->n_dim; j++) {
 
@@ -394,13 +394,13 @@ void debug_prettyprint_model(Onnx__ModelProto *model)
   TRACE_LEVEL0("Nodes:\n");
   for (int i = 0; i < model->graph->n_node; i++)
   {
-    TRACE_LEVEL0("  %s %20.20s n_input=%zu  n_output=%zu\n",
+    TRACE_LEVEL0("  %s %20.20s n_input=%" PRIuMAX "  n_output=%" PRIuMAX "\n",
                                           model->graph->node[i]->op_type,
                                           model->graph->node[i]->name,
                                           model->graph->node[i]->n_input,
                                           model->graph->node[i]->n_output);
     //TRACE_LEVEL0("model->graph->node[%d]->op_type %s\n", i, model->graph->node[i]->op_type);
-    //TRACE_LEVEL0("model->graph->node[%d]->n_input %zu\n", i, model->graph->node[i]->n_input);
+    //TRACE_LEVEL0("model->graph->node[%d]->n_input %" PRIuMAX "\n", i, model->graph->node[i]->n_input);
     for (int j = 0; j < model->graph->node[i]->n_input; j++) {
       TRACE_LEVEL0("    input[%d] %s\n", j, model->graph->node[i]->input[j]);
     }
