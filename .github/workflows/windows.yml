@@ -15,7 +15,8 @@ jobs:
         pip install wget
         python -c 'import wget; import sys; name=wget.download(sys.argv[1]); print(name)' "https://cygwin.com/setup-x86_64.exe"
     - name: download_cunit
-      run: setup-x86_64.exe -qgnNdB -P CUnit
+      run: |
+        setup-x86_64.exe -qgnNdBA -P CUnit
       shell: cmd
 
 # Clean and Build
