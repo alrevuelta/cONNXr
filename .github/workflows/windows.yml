@@ -10,10 +10,10 @@ jobs:
     - uses: actions/checkout@v1
 
 # Install dependancies (wget not available in win)
-    - name: wget
+    - name: install_cunit
       run: |
         pip install wget
-        python3 -c 'import wget; wget.download("https://cygwin.com/setup-x86_64.exe")'
+        python -c 'import wget; wget.download("https://cygwin.com/setup-x86_64.exe")'
         setup-x86_64.exe -q -P CUnit
 
 # Clean and Build
