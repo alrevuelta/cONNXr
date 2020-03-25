@@ -9,15 +9,12 @@ jobs:
 # checkout
     - uses: actions/checkout@v1
 
-# TODO This Action is not finished
-
-# Install dependancies
+# Install dependancies (wget not available in win)
     - name: wget
-      uses: wei/wget@v1
-      with:
-        args: -qO- https://cygwin.com/setup-x86_64.exe
-    - name: install_cunit_windows
-      run: setup-x86_64.exe -q -P CUnit
+      run: |
+        pip install wget
+        python3 -c 'import wget; wget.download("https://cygwin.com/setup-x86_64.exe")'
+        setup-x86_64.exe -q -P CUnit
 
 # Clean and Build
     - name: clean
