@@ -12,8 +12,10 @@ jobs:
 # TODO This Action is not finished
 
 # Install dependancies
-    - name: download_cygwin
-      run: wget https://cygwin.com/setup-x86_64.exe
+    - name: wget
+      uses: wei/wget@v1
+      with:
+        args: -qO- https://cygwin.com/setup-x86_64.exe
     - name: install_cunit_windows
       run: setup-x86_64.exe -q -P CUnit
 
