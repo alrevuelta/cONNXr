@@ -1,11 +1,7 @@
-name: Cygwin
-on:
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - '*'
+name: windows-latest
+on: [push, pull_request]
+
+# TODO: This is a copy paste. Work on this.
 jobs:
   make:
     strategy:
@@ -38,3 +34,31 @@ jobs:
         run: |
           C:\tools\cygwin\cygwinsetup.exe -qgnNdO -R C:/tools/cygwin -l C:/tools/cygwin/package -s http://mirrors.kernel.org/sourceware/cygwin/ -P CUnit
         shell: cmd
+# End of copy paste TODO
+        
+        # Clean and Build
+      - name: clean
+        run: make clean
+      - name: build
+        run: make all
+
+# Run onnx backend unit tests (operators)
+      - name: test_operators
+        run: make test_operators
+
+# Run end to end tests on some models (i.e. MNIST, tinyYOLO,...)
+      - name: test_models
+        run: make test_models
+      
+# Run some profiling/benchmarking on some models
+      - name: run_benchmark # Get the time/cycles taken by each model
+        run: make benchmark
+    # - name: run_profiling  # Get % taken by each function
+    #   run: make profiling
+
+# TODO: Memory leak checks, code coverage
+
+# Parse the output with some python script. Ideas:
+# - Display the benchmark of different models
+#    - name: postprocess_data
+#      run: xxx
