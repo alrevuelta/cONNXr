@@ -32,7 +32,7 @@ jobs:
             ${{ runner.os }}-cygwin-package-
       - name: Install cygwin additional packages
         run: |
-          C:\tools\cygwin\cygwinsetup.exe -qgnNdO -R C:/tools/cygwin -l C:/tools/cygwin/package -s http://mirrors.kernel.org/sourceware/cygwin/ -P CUnit
+          C:\tools\cygwin\cygwinsetup.exe -qgnNdO -R C:/tools/cygwin -l C:/tools/cygwin/package -s http://mirrors.kernel.org/sourceware/cygwin/ -P CUnit,gcc-core
         shell: cmd
 # End of copy paste TODO
         
