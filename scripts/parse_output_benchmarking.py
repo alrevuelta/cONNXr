@@ -46,7 +46,7 @@ def printData(cycles, times, modelName):
 if __name__ == '__main__':
     print("Parsing benchmarking output")
 
-    allTraces = [ line for line in open('benchmarking.txt') if '[benchmark]' in line]
+    allTraces = [ line for line in open('benchmarks/result.txt') if '[benchmark]' in line]
 
     # Use the tag present in the C code
     mnist_cycles, mnist_times = getDataOfTrace(allTraces, '[mnist]')
