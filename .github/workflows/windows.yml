@@ -1,49 +1,40 @@
-name: windows-latest
-
-on: [push, pull_request]
-
+name: Cygwin
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - '*'
 jobs:
-  build:
-    runs-on: windows-latest
+  make:
+    strategy:
+      matrix:
+        test_task: [test]
+        os: [windows-2019]
+        vs: [2019]
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
+    if: "!contains(github.event.head_commit.message, '[ci skip]')"
     steps:
-# checkout
-    - uses: actions/checkout@v1
-
-# Install dependancies (wget not available in win)
-    - name: download_cygwin
-      run: |
-        pip install wget
-        python -c 'import wget; import sys; name=wget.download(sys.argv[1]); print(name)' "https://www.cygwin.com/setup-x86_64.exe"
-        
-    - name: download_cunit
-      run: |
-        setup-x86_64.exe
-        # -qgnNdBA -P CUnit
-      shell: cmd
-
-# Clean and Build
-    - name: clean
-      run: make clean
-    - name: build
-      run: make build
-
-# Run onnx backend unit tests (operators)
-    - name: run_onnx_backend_tests
-      run: make onnx_backend_tests
-
-# Run end to end tests on some models (i.e. MNIST, tinyYOLO,...)
-    - name: run_onnx_models_tests
-      run: make onnx_models_tests
-      
-# Run some profiling/benchmarking on some models
-    - name: run_benchmark # Get the time/cycles taken by each model
-      run: make benchmark
-    - name: run_valgrind  # Get % taken by each function
-      run: make valgrind
-
-# TODO: Memory leak checks, code coverage
-
-# Parse the output with some python script. Ideas:
-# - Display the benchmark of different models
-#    - name: postprocess_data
-#      run: xxx
+      - uses: actions/cache@v1
+        with:
+          path: C:\Users\runneradmin\AppData\Local\Temp\chocolatey
+          key: ${{ runner.os }}-cygwin-chocolatey-${{ matrix.os }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-cygwin-chocolatey-${{ matrix.os }}-
+            ${{ runner.os }}-cygwin-chocolatey-
+      - name: Install cygwin base packages with chocolatey
+        run: |
+          choco install --no-progress cygwin
+      - uses: actions/cache@v1
+        with:
+          path: C:\tools\cygwin\package
+          key: ${{ runner.os }}-cygwin-package-${{ matrix.os }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-cygwin-package-${{ matrix.os }}-
+            ${{ runner.os }}-cygwin-package-
+      - name: Install cygwin additional packages
+        run: |
+          C:\tools\cygwin\cygwinsetup.exe -qgnNdO -R C:/tools/cygwin -l C:/tools/cygwin/package -s http://mirrors.kernel.org/sourceware/cygwin/ -P CUnit
+        shell: cmd
