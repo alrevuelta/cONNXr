@@ -1,0 +1,113 @@
+###############################################################################
+###                          MAKEFILE TEMPLATE                              ###
+###############################################################################
+# This Makefile template can be used to qickly generate help messages for make.
+# It is based on dynamic variables (see make manual)
+#
+# THIS MAKEFILE NEEDS TO BE INCLUDED AFTER ALL DECLARATIONS
+#
+# predefined targets:
+#   default: is executed when no target is specified
+#   all: executes all steps
+#   check: check if targets can run
+#   setup: modify environment
+#   clean: remove generated files
+#   distclean: remove everything that was created by the toolchain
+#
+# to add your own targets to these predefined targets,
+# just append your target name to the uppercase variable.
+# I.e. to add your target 'build' to 'default' and 'all', do
+# ALL+=build
+# DEFAULT+=build
+#
+# own targets should be added to the 'TARGET' variable, so help can find them.
+# I.e. to add your target 'build', do
+# TARGET+=build
+#
+# if a target has subtargets, you can add them to the 'TARGET_<target>' to
+# indicate them as subtarget.
+# I.e. to add your subtarget 'build-lib' of 'build', do
+# TARGET_build+=build-lib
+#
+# to set the help text you have to set the variable 'HELP_<target>'
+# I.e to add the helptext for our 'build' target, do
+# HELP_build=builds project
+#
+# if you want to define variables, just add them to 'VARIABLES'
+# I.e to add the variable 'CXX', do
+# VARIABLE+=CXX
+# HELP_CXX=what compiler to use
+#
+
+.DEFAULT_GOAL=default
+
+HELP_default = make $(DEFAULT)
+.PHONY: default
+default: $(DEFAULT)
+
+HELP_all = make $(ALL)
+.PHONY: all
+all: $(ALL)
+
+HELP_check = make $(CHECK)
+.PHONY: check
+check: $(CHECK)
+
+HELP_setup = make $(SETUP)
+.PHONY: setup
+setup: $(SETUP)
+
+HELP_clean = make $(CLEAN)
+.PHONY: clean
+clean: $(CLEAN)
+
+HELP_distclean = make clean $(DISTCLEAN)
+.PHONY: distclean
+distclean: clean $(DISTCLEAN)
+
+.PHONY: help
+help:
+	@echo "--- help ---"
+	@[ -n "$(DEFAULT)" ]   && echo -e "make          \n\t$(HELP_default)"   || true;
+	@[ -n "$(ALL)" ]       && echo -e "make all      \n\t$(HELP_all)"       || true;
+	@[ -n "$(CHECK)" ]     && echo -e "make check    \n\t$(HELP_check)"     || true;
+	@[ -n "$(SETUP)" ]     && echo -e "make setup    \n\t$(HELP_setup)"     || true;
+	@[ -n "$(CLEAN)" ]     && echo -e "make clean    \n\t$(HELP_clean)"     || true;
+	@[ -n "$(DISTCLEAN)" ] && echo -e "make distclean\n\t$(HELP_distclean)" || true;
+	@echo
+	@$(foreach \
+		target, \
+		$(TARGET), \
+		echo "make $(target)"; \
+		[ -n "$(HELP_$(target))" ] && echo -e "\t$(HELP_$(target))" || true; \
+	)
+	@$(foreach \
+		target, \
+		$(TARGET), \
+		[ -n "$(TARGET_$(target))" ] && echo -e "\n--- $(target) sub targets ---"  || true; \
+		$(foreach \
+			subtarget, \
+			$(TARGET_$(target)), \
+				echo "make $(subtarget)"; \
+				[ -n "$(HELP_$(subtarget))" ] && echo -e "\t$(HELP_$(subtarget))" || true; \
+		) \
+	)
+	@$(foreach \
+		main, \
+		CHECK SETUP CLEAN DISTCLEAN, \
+		[ -n "$($(main))" ] && echo -e "\n--- $(main) sub targets ---"  || true; \
+		$(foreach \
+			target, \
+			$($(main)), \
+			echo "make $(target)"; \
+			[ -n "$(HELP_$(target))" ] && echo -e "\t$(HELP_$(target))" || true; \
+		) \
+	)
+	@[ -n "$(VARIABLE)" ] && echo -e "\n--- VARIABLES ---"  || true;
+	@$(foreach \
+		variable, \
+		$(VARIABLE), \
+		echo "$(variable)"; \
+		[ -n "$(HELP_$(variable))" ] && echo -e "\t$(HELP_$(variable))" || true; \
+		echo -e "\t(currently: $($(variable)))"; \
+	)
