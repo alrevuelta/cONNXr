@@ -13,11 +13,12 @@ jobs:
     - name: download_cygwin
       run: |
         pip install wget
-        python -c 'import wget; import sys; name=wget.download(sys.argv[1]); print(name)' "https://cygwin.com/setup-x86_64.exe"
-    - name: download_cunit
-      run: |
-        setup-x86_64.exe -qgnNdBA -P CUnit
-      shell: cmd
+        python -c 'import wget; import sys; name=wget.download(sys.argv[1]); print(name)' "https://raw.githubusercontent.com/transcode-open/apt-cyg/master/apt-cyg"
+        ./apt-cyg install CUnit
+    #- name: download_cunit
+    #  run: |
+    #    setup-x86_64.exe -qgnNdBA -P CUnit
+    #  shell: cmd
 
 # Clean and Build
     - name: clean
