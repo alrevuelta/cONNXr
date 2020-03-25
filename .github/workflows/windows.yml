@@ -17,7 +17,7 @@ jobs:
         
     - name: install_cunit
       run: ./apt-cyg install CUnit
-      shell: bash
+      shell: powershell
     #- name: download_cunit
     #  run: |
     #    setup-x86_64.exe -qgnNdBA -P CUnit
