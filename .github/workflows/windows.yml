@@ -38,9 +38,9 @@ jobs:
 # End of copy paste TODO
         
         # Clean and Build
+      - uses: actions/checkout@v1
       - name: clean
         run: make clean
-        shell: cmd
       - name: build
         run: make all
 
