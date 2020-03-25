@@ -13,7 +13,7 @@ jobs:
     - name: install_cunit
       run: |
         pip install wget
-        python -c 'import wget; print("https://cygwin.com/setup-x86_64.exe")'
+        python -c 'import wget; import sys; print(sys.argv[1])' "https://cygwin.com/setup-x86_64.exe"
 
 # Clean and Build
     - name: clean
