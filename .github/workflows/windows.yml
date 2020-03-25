@@ -11,34 +11,19 @@ jobs:
         vs: [2019]
       fail-fast: false
     runs-on: ${{ matrix.os }}
-    if: "!contains(github.event.head_commit.message, '[ci skip]')"
     steps:
-      - uses: actions/cache@v1
-        with:
-          path: C:\Users\runneradmin\AppData\Local\Temp\chocolatey
-          key: ${{ runner.os }}-cygwin-chocolatey-${{ matrix.os }}-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-cygwin-chocolatey-${{ matrix.os }}-
-            ${{ runner.os }}-cygwin-chocolatey-
+      - uses: actions/checkout@v1
       - name: Install cygwin base packages with chocolatey
         run: |
           choco install --no-progress cygwin
-      - uses: actions/cache@v1
-        with:
-          path: C:\tools\cygwin\package
-          key: ${{ runner.os }}-cygwin-package-${{ matrix.os }}-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-cygwin-package-${{ matrix.os }}-
-            ${{ runner.os }}-cygwin-package-
       - name: Install cygwin additional packages
         run: |
-          C:\tools\cygwin\cygwinsetup.exe -qgnNdO -R C:/tools/cygwin -l C:/tools/cygwin/package -s http://mirrors.kernel.org/sourceware/cygwin/ -P CUnit,gcc-core,make
+          C:\tools\cygwin\cygwinsetup.exe -qgnNdO -R C:/tools/cygwin -l C:/tools/cygwin/package -s http://mirrors.kernel.org/sourceware/cygwin/ -P CUnit
           dir C:\tools\cygwin\
         shell: cmd
 # End of copy paste TODO
         
         # Clean and Build
-      - uses: actions/checkout@v1
       - name: clean
         run: make clean
       - name: build
