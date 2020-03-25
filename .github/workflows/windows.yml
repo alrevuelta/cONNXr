@@ -14,7 +14,10 @@ jobs:
       run: |
         pip install wget
         python -c 'import wget; import sys; name=wget.download(sys.argv[1]); print(name)' "https://raw.githubusercontent.com/transcode-open/apt-cyg/master/apt-cyg"
-        ./apt-cyg install CUnit
+        
+    - name: install_cunit
+      run: ./apt-cyg install CUnit
+      shell: bash
     #- name: download_cunit
     #  run: |
     #    setup-x86_64.exe -qgnNdBA -P CUnit
