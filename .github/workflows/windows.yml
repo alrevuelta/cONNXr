@@ -39,6 +39,7 @@ jobs:
         # Clean and Build
       - name: clean
         run: make clean
+        shell: cmd
       - name: build
         run: make all
 
