@@ -18,7 +18,7 @@ jobs:
           choco install --no-progress cygwin
       - name: Install cygwin additional packages
         run: |
-          C:\tools\cygwin\cygwinsetup.exe -qgnNdO -R C:/tools/cygwin -l C:/tools/cygwin/package -s http://mirrors.kernel.org/sourceware/cygwin/ -P CUnit,make
+          C:\tools\cygwin\cygwinsetup.exe -qgnNdO -R C:/tools/cygwin -l C:/tools/cygwin/package -s http://mirrors.kernel.org/sourceware/cygwin/ -P CUnit,make,gcc
         shell: cmd
       - name: Set ENV
         run: |
@@ -36,14 +36,17 @@ jobs:
 # Run onnx backend unit tests (operators)
       - name: test_operators
         run: make test_operators
+        shell: cmd
 
 # Run end to end tests on some models (i.e. MNIST, tinyYOLO,...)
       - name: test_models
         run: make test_models
+        shell: cmd
       
 # Run some profiling/benchmarking on some models
       - name: run_benchmark # Get the time/cycles taken by each model
         run: make benchmark
+        shell: cmd
     # - name: run_profiling  # Get % taken by each function
     #   run: make profiling
 
