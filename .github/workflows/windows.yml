@@ -19,7 +19,6 @@ jobs:
       - name: Install cygwin additional packages
         run: |
           C:\tools\cygwin\cygwinsetup.exe -qgnNdO -R C:/tools/cygwin -l C:/tools/cygwin/package -s http://mirrors.kernel.org/sourceware/cygwin/ -P CUnit
-          dir C:\tools\cygwin\usr\bin
         shell: cmd
       - name: Set ENV
         run: |
