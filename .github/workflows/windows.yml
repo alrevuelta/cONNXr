@@ -1,37 +1,44 @@
 name: windows-latest
-
 on: [push, pull_request]
 
 jobs:
   build:
     runs-on: windows-latest
     steps:
-# checkout
-    - uses: actions/checkout@v1
+      - uses: actions/checkout@v1
+      - name: Install cygwin base packages with chocolatey
+        run: |
+          choco install --no-progress cygwin
+      - name: Install cygwin additional packages
+        run: |
+          C:\tools\cygwin\cygwinsetup.exe -qgnNdO -R C:/tools/cygwin -l C:/tools/cygwin/package -s http://mirrors.kernel.org/sourceware/cygwin/ -P CUnit,make,gcc-core,python
+        shell: cmd
+      - name: Set ENV
+        run: |
+          echo '::set-env name=PATH::C:\tools\cygwin\bin;C:\tools\cygwin\usr\bin'
+        
+  # Clean and Build
+      - name: clean
+        run: make clean
+        shell: cmd
+      - name: build
+        run: make all
+        shell: cmd
 
-# TODO This Action is not finished
+  # Run onnx backend unit tests (operators)
+      - name: test_operators
+        run: make test_operators
+        shell: cmd
 
-# Install dependancies
-    #- name: install_cunit_macOS
-    #  run: brew install cunit
-
-# Clean and Build
-    - name: clean
-      run: make clean
-    - name: build
-      run: make all
-
-# Run onnx backend unit tests (operators)
-    - name: test_operators
-      run: make test_operators
-
-# Run end to end tests on some models (i.e. MNIST, tinyYOLO,...)
-    - name: test_models
-      run: make test_models
+  # Run end to end tests on some models (i.e. MNIST, tinyYOLO,...)
+      - name: test_models
+        run: make test_models
+        shell: cmd
       
-# Run some profiling/benchmarking on some models
-    - name: run_benchmark # Get the time/cycles taken by each model
-      run: make benchmark
+  # Run some profiling/benchmarking on some models
+      - name: run_benchmark # Get the time/cycles taken by each model
+        run: make benchmark
+        shell: cmd
     # - name: run_profiling  # Get % taken by each function
     #   run: make profiling
 

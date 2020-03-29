@@ -133,7 +133,7 @@ $(BENCHMARKDIR)/result.txt: $(TARGET_benchmark)
 	mkdir -p $(dir $@)
 	cat $(BENCHMARKDIR)/*.txt > $@
 	# Run some postprocessing on the benchmarking results
-	python3 scripts/parse_output_benchmarking.py
+	python scripts/parse_output_benchmarking.py
 
 .phony:clean_benchmark
 CLEAN+=clean_benchmark
