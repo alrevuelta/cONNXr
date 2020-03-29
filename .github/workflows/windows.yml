@@ -1,16 +1,9 @@
 name: windows-latest
 on: [push, pull_request]
 
-# TODO: This is a copy paste. Work on this.
 jobs:
-  make:
-    strategy:
-      matrix:
-        test_task: [test]
-        os: [windows-2019]
-        vs: [2019]
-      fail-fast: false
-    runs-on: ${{ matrix.os }}
+  build:
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v1
       - name: Install cygwin base packages with chocolatey
@@ -23,9 +16,8 @@ jobs:
       - name: Set ENV
         run: |
           echo '::set-env name=PATH::C:\tools\cygwin\bin;C:\tools\cygwin\usr\bin'
-# End of copy paste TODO
         
-        # Clean and Build
+  # Clean and Build
       - name: clean
         run: make clean
         shell: cmd
@@ -33,17 +25,17 @@ jobs:
         run: make all
         shell: cmd
 
-# Run onnx backend unit tests (operators)
+  # Run onnx backend unit tests (operators)
       - name: test_operators
         run: make test_operators
         shell: cmd
 
-# Run end to end tests on some models (i.e. MNIST, tinyYOLO,...)
+  # Run end to end tests on some models (i.e. MNIST, tinyYOLO,...)
       - name: test_models
         run: make test_models
         shell: cmd
       
-# Run some profiling/benchmarking on some models
+  # Run some profiling/benchmarking on some models
       - name: run_benchmark # Get the time/cycles taken by each model
         run: make benchmark
         shell: cmd
