@@ -16,6 +16,8 @@ jobs:
     - name: clean
       run: make clean
     - name: build
+      env:
+        CFLAGS: -Werror
       run: make all
 
 # Run onnx backend unit tests (operators)

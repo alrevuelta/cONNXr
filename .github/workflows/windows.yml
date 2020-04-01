@@ -22,6 +22,8 @@ jobs:
         run: make clean
         shell: cmd
       - name: build
+        env:
+          CFLAGS: -Werror
         run: make all
         shell: cmd
 

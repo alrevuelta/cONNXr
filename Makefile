@@ -35,7 +35,7 @@ REPEAT_tinyyolov2=1
 CC=gcc
 CFLAGS+=-std=c99
 CFLAGS+=-Wall
-# CFLAGS+=-Werror
+# CFLAGS+=-Werror # CI jobs run with flag enabled
 CPPFLAGS+=-D TRACE_LEVEL=$(TRACE_LEVEL)
 
 #LDFLAGS+=
