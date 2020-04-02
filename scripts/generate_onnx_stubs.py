@@ -42,15 +42,7 @@ template_header = '''
 
 {deprecated_define}
 /**
- * op_status operator_{name}(
- *   size_t                  n_input,
- *   Onnx__TensorProto    ** input,
- *   size_t                  n_attribute,
- *   Onnx__AttributeProto ** attribute,
- *   size_t                  n_output,
- *   Onnx__TensorProto    ** output
- * )
-{brief}
+ * Onnx operator '{Name}'
  *
  * @param[in]  n_input     Number of inputs ({input_constraint})
  * @param[in]  input       Array of pointers to the inputs
@@ -58,12 +50,22 @@ template_header = '''
  * @param[in]  attribute   Array of pointers to the attributes
  * @param[in]  n_output    Numper of outputs ({output_constraint})
  * @param[out] output      Array of pointer to the outputs
- * @return                 status code
+ * @return                 Error code
  *
+ * @retval     OP_OK       No Error
+ * @retval     OP_ENOSYS   Operator is stubbed
+ * @retval     OP_EINVAL   Invalid argument
+ * @retval     OP_ENOMEM   Out of Memory
+ * @retval     OP_EFAULT   Invalid addr
+ * @retval     OP_EDOM     Math argument out of domain
+ * @retval     OP_ERANGE   Math result not representable
+ *
+{doc}
 {deprecated}
-{constraints}
+{types}
+{inputs}
+{outputs}
 {attributes}
- *
  * @since version {since}
  * @see {file}:{line}
 {documentation}
@@ -156,7 +158,9 @@ for schema in schemas:
   deprecated = " * "
   deprecated_define = ""
   documentation = " * "
-  constraints = []
+  types = []
+  inputs = []
+  outputs = []
   attributes = []
 
   if schema.domain == '':
@@ -168,56 +172,76 @@ for schema in schemas:
     deprecated += "@deprecated Avoid usage!"
     deprecated_define = "#define OPERATOR_{NAME}_DEPRECATED 1"
   
-  brief = format_text(" * @brief","",[schema.doc])
+  doc = format_text(" *","",[schema.doc])
 
   for c in schema.type_constraints:
-    types = list(c.allowed_type_strs)
-    types.sort()
-    constraints.append(format_text(" * @detail ", f"Type {c.type_param_str}:", [c.description, ", ".join(types)]))
+    allowed = list(c.allowed_type_strs)
+    allowed.sort()
+    types.append(f" * Type {c.type_param_str}:")
+    types.append(format_text(" * ", "  ", [c.description, ", ".join(allowed)]))
+    types.append(' * ')
+
+  if types:
+    types = "\n".join(types)
+  else:
+    types = " *"
 
   for i in schema.inputs:
-    types = list(c.allowed_type_strs)
-    types.sort()
-    constraints.append(format_text(" * @detail ", f"Input {i.typeStr} {i.name}:", [i.description, ", ".join(types)]))
+    allowed = list(c.allowed_type_strs)
+    allowed.sort()
+    inputs.append(f" * Input {i.typeStr} {i.name}:")
+    inputs.append(format_text(" * ", "  ", [i.description, ", ".join(allowed)]))
+    inputs.append(' * ')
  
+  if inputs:
+    inputs = "\n".join(inputs)
+  else:
+    inputs = " *"
+
   for o in schema.outputs:
-    types = list(c.allowed_type_strs)
-    types.sort()
-    constraints.append(format_text(" * @detail ", f"Output {o.typeStr} {o.name}:", [o.description, ", ".join(types)]))
+    allowed = list(c.allowed_type_strs)
+    allowed.sort()
+    outputs.append(f" * Output {o.typeStr} {o.name}:")
+    outputs.append(format_text(" * ", "  ", [o.description, ", ".join(allowed)]))
+    outputs.append(' * ')
+
+  if outputs:
+    outputs = "\n".join(outputs)
+  else:
+    outputs = " *"
 
   for a in schema.attributes.values():
     required = "(optional)"
     if a.required:
       required = "(required)"
-    attributes.append(format_text(" * @detail ", f"Attribute {a.type.name} {a.name}:", [a.description, required]))
+    attributes.append(f" * Attribute {a.type.name} {a.name} {required}:")
+    attributes.append(format_text(" *", "  ", [a.description]))
+    attributes.append(' * ')
 
   if attributes:
     attributes = "\n".join(attributes)
   else:
     attributes = " *"
 
-  if constraints:
-    constraints = "\n".join(constraints)
-  else:
-    constraints = " *"
-
   header = template_header.format(
     _ws_=" "*len(schema.name),
     attributes=attributes,
-    brief=brief,
-    constraints=constraints,
     deprecated_define=deprecated_define,
     deprecated=deprecated,
+    doc=doc,
     documentation=documentation,
     file=os.path.relpath(schema.file, path_include),
     input_constraint=size_constraint(schema.min_input, schema.max_input),
+    inputs=inputs,
     line=schema.line,
     Name=schema.name.capitalize(),
     name=schema.name.lower(),
     NAME=schema.name.upper(),
     output_constraint=size_constraint(schema.min_output, schema.max_output),
+    outputs=outputs,
     script=inspect.getfile(inspect.currentframe()),
     since=schema.since_version,
+    types=types,
   )
   stub = template_stub.format(
     _ws_=" "*len(schema.name),
