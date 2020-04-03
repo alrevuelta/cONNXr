@@ -2,6 +2,7 @@ import inspect
 import itertools
 import os
 import sys
+import re
 
 
 def text_range_input(schema):
@@ -297,7 +298,21 @@ def text_header_operators(schemas):
         script=text_scriptname(),
     )
 
- 
+
+def map_types(schemas):
+    typemap = {}
+    for s in schemas:
+        for c in s.type_constraints:
+            for s in c.allowed_type_strs:
+                name = sanitize_name(s)
+                if s not in typemap:
+                    typemap[s] = name
+                else:
+                    if typemap[s] != name:
+                        raise "TYPE NAME SANITIZER PRODUCES CONFLICTS"
+    return typemap
+
+
 def text_check_sameType_inline_iterate_name_checks(inputOrOutput, names):
     template = '''
       if ( strcmp({inputOrOutput}[i]->name,"{name}") == 0 ) {{
@@ -329,7 +344,7 @@ def text_check_sameType_inline_iterate(inputOrOutput, names):
 def text_check_sameType_inline(constraint, input_names, output_names):
     template_check = '''
   // check if all inputs/outputs of shared constraint {constraint} have same type
-  {{ 
+  {{
     Onnx__TensorProto *group[{max_n_group}];
     size_t n_group = 0;
     {iterate_inputs}
@@ -342,7 +357,7 @@ def text_check_sameType_inline(constraint, input_names, output_names):
   }}
   '''
     template_skip = '''
-  // skipping check for shared constraint {constraint} (single {inputOrOutput} {name}) 
+  // skipping check for shared constraint {constraint} (single {inputOrOutput} {name})
   '''
     if len(input_names) + len(output_names) < 2:
         inputOrOutput = "FIXME"
@@ -405,7 +420,7 @@ def text_check_sameType(schema):
     char                 ** output_names,
     size_t                  max_n_group
   )
-  { 
+  {
     if ( max_n_group < 2 ) return TRUE;
     Onnx__TensorProto *group[max_n_group];
     size_t n_group = 0;
@@ -479,6 +494,157 @@ def text_check_sameType_func(schema):
             )
         )
     return "\n".join(checks)
+
+
+def text_check_isType_func_call(inputOrOutput, name, types):
+    template = '''
+  {{
+    Onnx__TensorProto__DataType types[] = {{ {types} , NULL}};
+    if (!{function}({inputOrOutput}, {name}, types)) {{
+      return EINVAL;
+    }}
+  }}
+  '''
+    return template.format(
+        types=[parse_valueType(t) for t in types],
+        inputOrOutput=inputOrOutput,
+        function="operator_test_isType",
+        name=f'"{name}"',
+    )
+
+
+def text_check_isType_func(schema):
+    checks = []
+
+    for i in schema.inputs:
+        checks.append(
+            text_check_isType_func_call(
+                "input",
+                i.name,
+                i.types
+            )
+        )
+    for o in schema.outputs:
+        checks.append(
+            text_check_isType_func_call(
+                "output",
+                o.name,
+                o.types
+            )
+        )
+    return "\n".join(checks)
+
+
+def tokenize_valueType(typeStr):
+    tokens = [
+        "tensor",
+        "map",
+        "seq",
+        "\\(",
+        "\\)",
+        "float",
+        "uint8",
+        "int8",
+        "uint16",
+        "int16",
+        "int32",
+        "int64",
+        "string",
+        "bool",
+        "float16",
+        "double",
+        "uint32",
+        "uint64",
+        "complex64",
+        "complex128",
+        "bfloat16",
+        ",",
+    ]
+    re_scanner = re.compile("|".join([f" *({t})" for t in tokens]))
+    return list(filter(None, re_scanner.split(typeStr)))
+
+
+def parse_valueType(typeStr):
+    tokens = tokenize_valueType(typeStr)
+
+    def rule_start():
+        result = rules[tokens.pop(0)]()
+        if not tokens:
+            return result
+        print(tokens)
+        raise "parser error in rule_start"
+
+    def rule_tensor():
+        if tokens.pop(0) == '(':
+            result = rules[tokens.pop(0)]()
+            if tokens.pop(0) == ')':
+                return {"tensor": result}
+        raise "parser error in rule_tensor"
+
+    def rule_map():
+        if tokens.pop(0) == '(':
+            key = rules[tokens.pop(0)]()
+            if tokens.pop(0) == ',':
+                value = rules[tokens.pop(0)]()
+                if tokens.pop(0) == ')':
+                    return {"map": {"key": key, "value": value}}
+        raise "parser error in rule_map"
+
+    def rule_seq():
+        if tokens.pop(0) == '(':
+            result = rules[tokens.pop(0)]()
+            if tokens.pop(0) == ')':
+                return {"seq": result}
+        raise "parser error in rule_seq"
+
+    rules = {
+        "tensor":     rule_tensor,
+        "map":        rule_map,
+        "seq":        rule_seq,
+        "float":      lambda: "float",
+        "uint8":      lambda: "uint8",
+        "int8":       lambda: "int8",
+        "uint16":     lambda: "uint16",
+        "int16":      lambda: "int16",
+        "int32":      lambda: "int32",
+        "int64":      lambda: "int64",
+        "string":     lambda: "string",
+        "bool":       lambda: "bool",
+        "float16":    lambda: "float16",
+        "double":     lambda: "double",
+        "uint32":     lambda: "uint32",
+        "uint64":     lambda: "uint64",
+        "complex64":  lambda: "complex64",
+        "complex128": lambda: "complex128",
+        "bfloat16":   lambda: "bfloat16",
+    }
+
+    return rule_start()
+
+
+def valueType2enum(typeStr):
+    dataTypes = {
+        "tensor":     "ONNX__TYPE_PROTO__VALUE_TENSOR_TYPE",
+        "seq":        "ONNX__TYPE_PROTO__VALUE_SEQUENCE_TYPE",
+        "map":        "ONNX__TYPE_PROTO__VALUE_MAP_TYPE",
+        "float":      "ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT",
+        "uint8":      "ONNX__TENSOR_PROTO__DATA_TYPE__UINT8",
+        "int8":       "ONNX__TENSOR_PROTO__DATA_TYPE__INT8",
+        "uint16":     "ONNX__TENSOR_PROTO__DATA_TYPE__UINT16",
+        "int16":      "ONNX__TENSOR_PROTO__DATA_TYPE__INT16",
+        "int32":      "ONNX__TENSOR_PROTO__DATA_TYPE__INT32",
+        "int64":      "ONNX__TENSOR_PROTO__DATA_TYPE__INT64",
+        "string":     "ONNX__TENSOR_PROTO__DATA_TYPE__STRING",
+        "bool":       "ONNX__TENSOR_PROTO__DATA_TYPE__BOOL",
+        "float16":    "ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT16",
+        "double":     "ONNX__TENSOR_PROTO__DATA_TYPE__DOUBLE",
+        "uint32":     "ONNX__TENSOR_PROTO__DATA_TYPE__UINT32",
+        "uint64":     "ONNX__TENSOR_PROTO__DATA_TYPE__UINT64",
+        "complex64":  "ONNX__TENSOR_PROTO__DATA_TYPE__COMPLEX64",
+        "complex128": "ONNX__TENSOR_PROTO__DATA_TYPE__COMPLEX128",
+        "bfloat16":   "ONNX__TENSOR_PROTO__DATA_TYPE__BFLOAT16",
+    }
+    return dataTypes[typeStr]
 
 
 def generate_headers_operator(path, schemas):
