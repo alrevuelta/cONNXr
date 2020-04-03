@@ -297,6 +297,190 @@ def text_header_operators(schemas):
         script=text_scriptname(),
     )
 
+ 
+def text_check_sameType_inline_iterate_name_checks(inputOrOutput, names):
+    template = '''
+      if ( strcmp({inputOrOutput}[i]->name,"{name}") == 0 ) {{
+        group[n_group++] = {inputOrOutput}[i];
+        continue;
+      }}
+'''
+    return " else ".join([
+        template.format(
+            inputOrOutput=inputOrOutput,
+            name=name
+        ).strip() for name in names
+    ])
+
+
+def text_check_sameType_inline_iterate(inputOrOutput, names):
+    template = '''
+    for (int i = 0; i < n_{inputOrOutput}; i++) {{
+      {name_checks}
+    }}
+  '''
+    return template.format(
+        inputOrOutput=inputOrOutput,
+        name_checks=text_check_sameType_inline_iterate_name_checks(
+            inputOrOutput, names)
+    ).strip()
+
+
+def text_check_sameType_inline(constraint, input_names, output_names):
+    template_check = '''
+  // check if all inputs/outputs of shared constraint {constraint} have same type
+  {{ 
+    Onnx__TensorProto *group[{max_n_group}];
+    size_t n_group = 0;
+    {iterate_inputs}
+    {iterate_outputs}
+    for (int i = 1; i < n_group; i++) {{
+      if ( group[0]->data_type != group[i]->data_type ) {{
+        return EINVAL;
+      }}
+    }}
+  }}
+  '''
+    template_skip = '''
+  // skipping check for shared constraint {constraint} (single {inputOrOutput} {name}) 
+  '''
+    if len(input_names) + len(output_names) < 2:
+        inputOrOutput = "FIXME"
+        name = "FIXME"
+        if len(input_names) == 1:
+            inputOrOutput = "input"
+            name = input_names[0]
+        else:
+            inputOrOutput = "output"
+            name = output_names[0]
+        return template_skip.format(
+            constraint=constraint,
+            inputOrOutput=inputOrOutput,
+            name=name,
+        ).strip()
+    return template_check.format(
+        constraint=constraint,
+        max_n_group=len(input_names) + len(output_names),
+        iterate_inputs=text_check_sameType_inline_iterate(
+            "input", input_names),
+        iterate_outputs=text_check_sameType_inline_iterate(
+            "output", output_names),
+    )
+
+
+def text_check_sameType(schema):
+    constraint2name = {}
+    outputConstraint2name = {}
+    inputConstraint2name = {}
+    checks = []
+
+    for i in schema.inputs:
+        constraint2name.setdefault(i.typeStr, []).append(i.name)
+        inputConstraint2name.setdefault(i.typeStr, []).append(i.name)
+        outputConstraint2name.setdefault(i.typeStr, [])
+    for o in schema.outputs:
+        constraint2name.setdefault(o.typeStr, []).append(o.name)
+        outputConstraint2name.setdefault(o.typeStr, []).append(o.name)
+        inputConstraint2name.setdefault(o.typeStr, [])
+
+    for constraint, names in constraint2name.items():
+        checks.append(
+            text_check_sameType_inline(
+                constraint,
+                inputConstraint2name[constraint],
+                outputConstraint2name[constraint],
+            )
+        )
+    return "\n".join(checks)
+
+
+''' needs function like this
+  static __attribute__((always_inline))
+  bool operator_test_sameType(
+    size_t                  n_input,
+    Onnx__TensorProto    ** input,
+    char                 ** input_names,
+    size_t                  n_output,
+    Onnx__TensorProto    ** output,
+    char                 ** output_names,
+    size_t                  max_n_group
+  )
+  { 
+    if ( max_n_group < 2 ) return TRUE;
+    Onnx__TensorProto *group[max_n_group];
+    size_t n_group = 0;
+    for ( char **name = input_names; name; name++ ) {
+      for (int i = 0; i < n_input; i++) {
+        if ( strcmp(input[i]->name,*name) == 0 ) {
+          group[n_group++] = input[i];
+          break;
+        }
+      }
+    }
+    for ( char **name = output_names; name; name++ ) {
+      for (int i = 0; i < n_output; i++) {
+        if ( strcmp(output[i]->name,*name) == 0 ) {
+          group[n_group++] = output[i];
+          break;
+        }
+      }
+    }
+    for (int i = 1; i < n_group; i++) {
+      if ( group[0]->data_type != group[i]->data_type ) {
+        return FALSE;
+      }
+    }
+    return TRUE;
+  }
+'''
+
+
+def text_check_sameType_func_call(constraint, inputs, outputs):
+    template = '''
+  // check if all inputs/outputs of shared constraint {constraint} have same type
+  {{
+    char *input_names[] = {{ {input_names}, NULL }};
+    char *output_names[] = {{ {output_names}, NULL }};
+    if (!{function}(n_input, input, input_names, n_output, output, output_names, {max_n_group})) {{
+      return EINVAL;
+    }}
+  }}
+  '''
+    return template.format(
+        constraint=constraint,
+        function="operator_test_sameType",
+        input_names=" ,".join([f'"{name}"' for name in inputs]),
+        output_names=" ,".join([f'"{name}"' for name in outputs]),
+        max_n_group=len(inputs) + len(outputs),
+    )
+
+
+def text_check_sameType_func(schema):
+    constraint2name = {}
+    outputConstraint2name = {}
+    inputConstraint2name = {}
+    checks = []
+
+    for i in schema.inputs:
+        constraint2name.setdefault(i.typeStr, []).append(i.name)
+        inputConstraint2name.setdefault(i.typeStr, []).append(i.name)
+        outputConstraint2name.setdefault(i.typeStr, [])
+    for o in schema.outputs:
+        constraint2name.setdefault(o.typeStr, []).append(o.name)
+        outputConstraint2name.setdefault(o.typeStr, []).append(o.name)
+        inputConstraint2name.setdefault(o.typeStr, [])
+
+    for constraint, names in constraint2name.items():
+        checks.append(
+            text_check_sameType_func_call(
+                constraint,
+                inputConstraint2name[constraint],
+                outputConstraint2name[constraint],
+            )
+        )
+    return "\n".join(checks)
+
+
 def generate_headers_operator(path, schemas):
     for schema in schemas:
         path_dir = f"{path}/{schema.domain}"
@@ -312,10 +496,12 @@ def generate_header_operators(path, schemas):
     os.makedirs(path, exist_ok=True)
     open(path_file, "w").write(text)
 
+
 def onnx_cpp2py_export_schemas(path):
-  sys.path.insert(0, path)
-  import onnx_cpp2py_export
-  return onnx_cpp2py_export.defs.get_all_schemas()
+    sys.path.insert(0, path)
+    import onnx_cpp2py_export
+    return onnx_cpp2py_export.defs.get_all_schemas()
+
 
 if __name__ == '__main__':
     import argparse
