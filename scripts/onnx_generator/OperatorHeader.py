@@ -13,6 +13,15 @@ class OperatorHeader:
 {doxygen}
 {prototype}
 
+onnx_operator {operator_name}_resolve(
+  size_t                  n_input,
+  Onnx__TensorProto    ** input,
+  size_t                  n_attribute,
+  Onnx__AttributeProto ** attribute,
+  size_t                  n_output,
+  Onnx__TensorProto    ** output
+);
+
 {aliases}
 # endif
 '''
@@ -47,7 +56,7 @@ class OperatorHeader:
 {doc_ref}
  */
 '''
-    _template_prototype = ''' 
+    _template_prototype = '''
 {attribute}
 int {operator_name}(
   size_t                  n_input,
@@ -62,7 +71,7 @@ int {operator_name}(
     def __init__(self, schema, path):
       self.schema = schema
       self.path = path
-    
+
     def text(self):
         doxygen = self._template_doxygen.format(
             attributes=self.schema.attributes.text(" * "),
@@ -88,11 +97,12 @@ int {operator_name}(
                 attribute='__attribute__((weak, alias("operator_stub")))\nextern',
                 operator_name = f"{self.schema.operator_name}__{t}"
             )
-            for t in self.schema.constraints
+            for t in self.schema.constraints.typePermutations()
         ])
         return self._template_header.format(
             script=self._rel_path(inspect.getfile(inspect.currentframe())),
             header_name=self.schema.operator_name.upper(),
+            operator_name=self.schema.operator_name,
             doxygen = doxygen,
             prototype = prototype,
             aliases = aliases,

@@ -5,6 +5,15 @@
 #include <stdbool.h>
 #include <string.h>
 
+typedef int (*onnx_operator)(
+    size_t n_input,
+    Onnx__TensorProto** input,
+    size_t n_attribute,
+    Onnx__AttributeProto** attribute,
+    size_t n_output,
+    Onnx__TensorProto** output
+);
+
 static
 inline __attribute__((always_inline))
 size_t operator_findTensors(
@@ -19,6 +28,8 @@ size_t operator_findTensors(
     for (size_t i_name = 0; i_name < n_names, i_name++) {
       if (strcmp(tensors[i_tensor]->name,names[i_name]) == 0) {
         result[n_results++] = tensors[i_tensor];
+        if (n_results >= n_names)
+          return n_results;
         break;
       }
     }

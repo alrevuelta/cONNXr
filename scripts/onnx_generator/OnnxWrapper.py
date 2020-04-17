@@ -58,6 +58,24 @@ def format_text(prefix, start, texts):
     return "\n".join(output)
 
 class OnnxType(dict):
+    _onnxTensorDataType = {
+        "float": "ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT",
+        "uint8": "ONNX__TENSOR_PROTO__DATA_TYPE__UINT8",
+        "int8": "ONNX__TENSOR_PROTO__DATA_TYPE__INT8",
+        "uint16": "ONNX__TENSOR_PROTO__DATA_TYPE__UINT16",
+        "int16": "ONNX__TENSOR_PROTO__DATA_TYPE__INT16",
+        "int32": "ONNX__TENSOR_PROTO__DATA_TYPE__INT32",
+        "int64": "ONNX__TENSOR_PROTO__DATA_TYPE__INT64",
+        "string": "ONNX__TENSOR_PROTO__DATA_TYPE__STRING",
+        "bool": "ONNX__TENSOR_PROTO__DATA_TYPE__BOOL",
+        "float16": "ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT16",
+        "double": "ONNX__TENSOR_PROTO__DATA_TYPE__DOUBLE",
+        "uint32": "ONNX__TENSOR_PROTO__DATA_TYPE__UINT32",
+        "uint64": "ONNX__TENSOR_PROTO__DATA_TYPE__UINT64",
+        "complex64": "ONNX__TENSOR_PROTO__DATA_TYPE__COMPLEX64",
+        "complex128": "ONNX__TENSOR_PROTO__DATA_TYPE__COMPLEX128",
+        "bfloat16": "ONNX__TENSOR_PROTO__DATA_TYPE__BFLOAT16",
+    }
 
     class _Scanner:
         _tokens = {
@@ -105,7 +123,7 @@ class OnnxType(dict):
                     if longestMatch[1]:
                         tokens.append(longestMatch[1])
             return tokens
-        
+
         def consume(self, expected_token = None):
             if not expected_token:
                 return self.pop()
@@ -113,7 +131,7 @@ class OnnxType(dict):
                 raise SyntaxError(
                     f"expected '{expected_token}', but got '{self.peek()}'")
             return self.pop()
-        
+
         def peek(self, expected_token=None):
             token = self.tokens[0]
             if expected_token:
@@ -132,7 +150,7 @@ class OnnxType(dict):
                     return function()
             tokens = ", ".join([f"'{t}'" for t in token2function.keys()])
             raise SyntaxError(f"expected one of {tokens}, but got '{self.peek()}'")
-        
+
         def __repr__(self):
             return f"OnnxType._Scanner({self.string.__repr__()})"
 
@@ -158,7 +176,7 @@ class OnnxType(dict):
 
         def __init__(self, scanner):
             self.scanner = scanner
-        
+
         def __repr__(self):
             return f"OnnxType._Parser({self.scanner.__repr__()})"
 
@@ -208,25 +226,48 @@ class OnnxType(dict):
         scanner = self._Scanner(typeStr)
         parser = self._Parser(scanner)
         self.update(parser.parse())
-    
+
     def __str__(self):
-        return self._text_parseTree(self)
-    
+        return self._text_walkParseTree(self)
+
     def __repr__(self):
         return f"OnnxType({self.original.__repr__()})"
 
-    def _text_parseTree(self, node):
+    def _text_walkParseTree(self, node):
         if isinstance(node,str):
             return node.replace("_","")
         elif isinstance(node,dict):
             subresults = []
             for key,val in node.items():
-                subresults.append(key + "_" + self._text_parseTree(val))
+                subresults.append(key + "_" + self._text_walkParseTree(val))
             return "__".join(subresults)
         elif isinstance(node,tuple):
-            return "__".join([ self._text_parseTree(t) for t in node ])
+            return "__".join([ self._text_walkParseTree(t) for t in node ])
         else:
             raise BaseException(f"unknown parseTree item: '{node}'")
+
+    def onnxTensorDataTypes(self):
+        results = []
+        self._onnxTensorDataType_walkParseTree(self, results)
+        return list(filter(None,results))
+
+    def _onnxTensorDataType_walkParseTree(self, node, results):
+        if isinstance(node,str):
+            results.append(None)
+        elif isinstance(node,dict):
+            for key,val in node.items():
+                if key == "tensor":
+                    results.append(self._onnxTensorDataType[val])
+                else:
+                    self._onnxTensorDataType_walkParseTree(val,results)
+        elif isinstance(node,tuple):
+            for val in node:
+                self._onnxTensorDataType_walkParseTree(val, results)
+        else:
+            raise BaseException(f"unknown parseTree item: '{node}'")
+
+    def __hash__(self):
+        return self.original.__hash__()
 
 class OnnxTypeList(list):
     def __init__(self, typeList):
@@ -235,10 +276,10 @@ class OnnxTypeList(list):
         types.extend(typeList)
         types.sort()
         self.extend([OnnxType(t) for t in types])
-    
+
     def __str__(self):
         return ", ".join([f"{t}" for t in self])
-    
+
     def __repr__(self):
         types = ", ".join([t.original.__repr__() for t in self])
         return f"OnnxTypeList([{types}])"
@@ -263,27 +304,38 @@ class OnnxConstraint():
 
     def __repr__(self):
         return f"OnnxConstraint({self.__dict__.__repr__()})"
-            
+
 class OnnxConstraints(dict):
     def __init__(self, schema):
         super()
         for constraint in schema.type_constraints:
             self[constraint.type_param_str] = OnnxConstraint(constraint)
 
-    def __iter__(self):
-        permutations = ['']
-        for name,constraint in self.items():
-            names = [f"{name}_{t}" for t in constraint.types]
-            permutations = ["__".join(x).strip("_") for x in itertools.product(permutations, names)]
-        permutations.sort()
+    def typePermutations(self, permutations = None ):
+        return [ self.typePermutationText(p) for p in self.typePermutationsTuple() ]
 
-        for permutation in permutations:
-            yield permutation
-    
+    def typePermutationText(self, permutation):
+        return "__".join([ f"{x[0]}_{x[1]}" for x in permutation ])
+
+    def typePermutationsTuple(self):
+        return itertools.product(*[
+            list(map(lambda x: (c.name,x), c.types)) for c in self.values()
+        ])
+
+    def typePermutationsMap(self):
+        result = {}
+        for permutation in self.typePermutationsTuple():
+            tmp = result
+            constraints = []
+            for constraint in permutation:
+                constraints.append(constraint)
+                tmp = tmp.setdefault(tuple(constraints), {})
+        return result
+
     def text(self, prefix=""):
         paragraphs = [ c.text(prefix) for c in self.values() ]
         return f"\n{prefix}\n".join(paragraphs)
-    
+
     def __str__(self):
         return self.text()
 
@@ -298,7 +350,7 @@ class OnnxAttribute():
             self.required = attribute.required
             self.type = attribute.type.name
             self.description = attribute.description
-    
+
     def text(self, prefix=""):
         lines = []
         required = "(optional)"
@@ -312,7 +364,7 @@ class OnnxAttribute():
         attribute = self.__dict__.copy()
         del attribute['name']
         return f"OnnxAttribute({self.name.__repr__()}, {attribute.__repr__()})"
-    
+
     def __str__(self):
         return self.text()
 
@@ -322,11 +374,11 @@ class OnnxAttributeList(list):
         super()
         for name,attribute in schema.attributes.items():
             self.append(OnnxAttribute(name, attribute))
-    
+
     def text(self, prefix=""):
         paragraphs = [ a.text(prefix) for a in self ]
         return f"\n{prefix}\n".join(paragraphs)
-    
+
     def __str__(self):
         return self.text()
 
@@ -346,7 +398,7 @@ class OnnxInput():
             self.option = input.option.name
             self.constraint = input.typeStr
             self.types = OnnxTypeList(input.types)
-    
+
     def text(self, prefix=""):
         lines = []
         lines.append(f"{prefix}Input {self.constraint} {self.name}:")
@@ -356,7 +408,7 @@ class OnnxInput():
 
     def __repr__(self):
         return f"OnnxInput({self.__dict__.__repr__()})"
-    
+
     def __str__(self):
         return self.text()
 
@@ -365,11 +417,11 @@ class OnnxInputList(list):
     def __init__(self, schema):
         super()
         self.extend([ OnnxInput(i) for i in schema.inputs])
-    
+
     def text(self, prefix=""):
         paragraphs = [ i.text(prefix) for i in self ]
         return f"\n{prefix}\n".join(paragraphs)
-    
+
     def __str__(self):
         return self.text()
 
@@ -390,7 +442,7 @@ class OnnxOutput():
             self.option = output.option.name
             self.constraint = output.typeStr
             self.types = OnnxTypeList(output.types)
-    
+
     def text(self, prefix=""):
         lines = []
         lines.append(f"{prefix}Output {self.constraint} {self.name}:")
@@ -400,7 +452,7 @@ class OnnxOutput():
 
     def __repr__(self):
         return self.__dict__.__repr__()
-    
+
     def __str__(self):
         return self.text()
 
@@ -408,11 +460,11 @@ class OnnxOutputList(list):
     def __init__(self, schema):
         super()
         self.extend([ OnnxOutput(i) for i in schema.outputs])
-    
+
     def text(self, prefix=""):
         paragraphs = [ i.text(prefix) for i in self ]
         return f"\n{prefix}\n".join(paragraphs)
-    
+
     def __str__(self):
         return self.text()
 
@@ -425,10 +477,10 @@ class OnnxDoc():
 
     def __repr__(self):
         return f"OnnxDoc({self.doc.__repr__()})"
-    
+
     def text(self, prefix=""):
         return format_text(prefix, None, [self.doc])
-    
+
     def __str__(self):
         return self.text()
 
@@ -449,6 +501,7 @@ class OnnxSchema():
         self.range_input = None
         self.range_output = None
         self.ref_file = None
+        self._schema = None
         if isinstance(schema, dict):
             self.__dict__.update(schema)
         else:
@@ -466,6 +519,7 @@ class OnnxSchema():
             self.range_input = (schema.min_input, schema.max_input)
             self.range_output = (schema.min_output, schema.max_output)
             self.ref_file = (schema.file,schema.line)
+            self._schema = schema
 
     def __repr__(self):
       return f"OnnxSchema({self.__dict__.__repr__()})"
