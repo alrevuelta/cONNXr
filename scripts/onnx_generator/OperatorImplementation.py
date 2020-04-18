@@ -109,12 +109,13 @@ class OperatorIsOneOfTypes:
         fprintf(stderr,"tensor '%s' not found!", name);
         exit(1);
     }}
-    uint32_t types[] = {{ {types} }};
+    uint32_t types[] = {{
+        {types}
+    }};
     if (!operator_tensorIsOneOfTypes(tensor, types, {n_types})) {{
         fprintf(stderr,
-            "{inOrOutput} tensor '{name}' type is: "
-            "%u, "
-            "expected one of: {types}\\n",
+            "{inOrOutput} tensor '%s' has unexpected type: %u\\n",
+            name,
             tensor->data_type
         );
         exit(1);
@@ -148,7 +149,7 @@ class OperatorIsOneOfTypes:
                 inOrOutput = "output",
                 n_types = len(types),
                 name = o.name,
-                types = ", ".join(types),
+                types = f",\n{prefix}{prefix}".join(types),
             ).strip())
         return f"\n".join(checks).strip().replace("\n",f"\n{prefix}")
 
