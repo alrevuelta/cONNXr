@@ -51,7 +51,9 @@ onnx_operator {operator_name}_resolve(
 {inputs}
 {outputs}
 {attributes}
+ *
  * @since version {version}
+ *
 {defs_filepath}
 {doc_ref}
  */
@@ -77,7 +79,7 @@ int {operator_name}(
             attributes=self.schema.attributes.text(" * "),
             deprecated=" * " + "@deprecated Avoid usage!" * self.schema.deprecated,
             doc=self.schema.doc.text(" * "),
-            doc_ref=" * " + self.schema.ref_doc,
+            doc_ref=" * @see " + self.schema.ref_doc,
             domain=self.schema.domain,
             constraints=self.schema.constraints.text(" * "),
             range_input=self._range(*self.schema.range_input),
@@ -86,7 +88,7 @@ int {operator_name}(
             range_output=self._range(*self.schema.range_output),
             outputs=self.schema.outputs.text(" * "),
             version=self.schema.version,
-            defs_filepath=f" * {self._rel_path(self.schema.ref_file[0])}:{self.schema.ref_file[1]}",
+            defs_filepath=f" * @see {self._rel_path(self.schema.ref_file[0])}:{self.schema.ref_file[1]}",
         ).strip()
         prototype = self._template_prototype.format(
             attribute="__attribute__((deprecated))\n" * self.schema.deprecated,
