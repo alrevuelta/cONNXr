@@ -1,5 +1,6 @@
 import os
 import inspect
+import pathlib
 
 class OperatorHeader:
     _template_header = '''
@@ -110,6 +111,11 @@ int {operator_name}(
             aliases = aliases,
         )
 
+    def filename(self, path):
+        path = str(path)
+        path += f"/{self.schema.domain}"
+        path += f"/{self.schema.operator_name}.h"
+        return pathlib.Path(path)
 
     def __str__(self):
         return self.text()

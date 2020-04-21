@@ -16,6 +16,18 @@ parser.add_argument(
     help="verbose output"
 )
 parser.add_argument(
+    "-f", "--force",
+    action='count',
+    default=args.force,
+    help="overwrite existing files"
+)
+parser.add_argument(
+    "--no-header",
+    action='count',
+    default=args.no_header,
+    help="don't write headers"
+)
+parser.add_argument(
     "--header",
     nargs=1,
     metavar="<path>",
@@ -23,11 +35,30 @@ parser.add_argument(
     help=f"where to put headers in main path (default: {args.header[0]})"
 )
 parser.add_argument(
-    "--src",
+    "--no-resolve",
+    action='count',
+    default=args.no_resolve,
+    help="don't write resolver src"
+)
+parser.add_argument(
+    "--resolve",
     nargs=1,
     metavar="<path>",
-    default=args.src,
-    help=f"where to put sources in main path (default: {args.src[0]})"
+    default=args.resolve,
+    help=f"where to put resolver src in main path (default: {args.resolve[0]})"
+)
+parser.add_argument(
+    "--no-check",
+    action='count',
+    default=args.no_check,
+    help="don't write check src"
+)
+parser.add_argument(
+    "--check",
+    nargs=1,
+    metavar="<path>",
+    default=args.check,
+    help=f"where to put check src in main path (default: {args.check[0]})"
 )
 parser.add_argument(
     "-i", "--include",
@@ -53,4 +84,4 @@ parser.add_argument(
 
 args.__dict__.update(parser.parse_args().__dict__)
 
-import run
+from . import run

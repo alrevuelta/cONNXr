@@ -1,69 +1,94 @@
 import os
 import sys
 import re
+import pathlib
 from .OperatorHeader import OperatorHeader
-from .OperatorImplementation import OperatorImplementation
+from .OperatorTypeResolver import OperatorTypeResolver
+from .OperatorSanityCheck import OperatorSanityCheck
 from .OnnxWrapper import OnnxSchema
 from . import args
 
+def note(text, verbosity=0 ):
+    if verbosity <= args.verbose:
+        print(text)
+
+def warning(text, verbosity=0):
+    if verbosity <= args.verbose:
+        print(text, file=sys.stderr)
+
+def fatal(text, error=1):
+    print(text, file=sys.stderr)
+    sys.exit(error)
+
 if args.onnx:
     sys.path.insert(0, os.path.realpath(args.onnx[0]))
-    import onnx_cpp2py_export
+    try:
+        import onnx_cpp2py_export
+    except:
+        fatal("could not import onnx_cpp2py_export!")
 else:
-    from onnx import onnx_cpp2py_export
+    try:
+        from onnx import onnx_cpp2py_export
+    except:
+        fatal("could not import onnx_cpp2py_export from onnx!")
 
 all_schemas = [ OnnxSchema(s) for s in onnx_cpp2py_export.defs.get_all_schemas_with_history()]
 
 schemas = []
-print("including onnx operator schemas")
+note("including onnx operator schemas",1)
 for pattern in args.include:
     included = list(filter(lambda s: re.match(pattern,s.operator_name) != None,all_schemas))
     for s in included:
-        if (args.verbose):
-            print(f"pattern '{pattern}' included '{s.operator_name}'")
+        note(f"pattern '{pattern}' included '{s.operator_name}'",3)
         if s not in schemas:
             schemas.append(s)
-    print(f"pattern '{pattern}' included {len(included)} operator schemas")
-print(f"result: {len(schemas)} onnx operator schemas")
+    note(f"pattern '{pattern}' included {len(included)} operator schemas",2)
+note(f"continuing with {len(schemas)} of {len(all_schemas)} onnx operator schemas",1)
 
-print("excluding onnx operator schemas")
+note("excluding onnx operator schemas",1)
 for pattern in args.exclude:
     excluded = list(filter(lambda s: re.match(pattern,s.operator_name) != None ,schemas))
     for s in excluded:
-        if args.verbose:
-            print(f"pattern '{pattern}' excluded '{s.operator_name}'")
+        note(f"pattern '{pattern}' excluded '{s.operator_name}'",3)
         schemas.remove(s)
-    print(f"pattern '{pattern}' excluded {len(excluded)} operators")
-print(f"result: {len(schemas)} onnx operator schemas")
+    note(f"pattern '{pattern}' excluded {len(excluded)} operators",2)
+note(f"continuing with {len(schemas)} of {len(all_schemas)} onnx operator schemas",1)
 
-print("generating onnx operator headers")
+note("generating onnx operator headers")
 headers = [ OperatorHeader(s,args.header[0]) for s in schemas ]
+print("generating onnx operator type resolvers")
+resolvers = [ OperatorTypeResolver(s,args.header[0]) for s in schemas ]
+print("generating onnx operator sanity checks")
+checks = [ OperatorSanityCheck(s,args.header[0]) for s in schemas ]
 
-if args.path:
-    for h in headers:
-        filename = os.path.normpath(f"{h.schema.operator_name}.h")
-        dirname = os.path.realpath(f"{args.path[0]}/{args.header[0]}/{h.schema.domain}/")
-        filepath = os.path.realpath(f"{dirname}/{filename}")
-        if args.verbose:
-            print(f"writing header {filepath}")
-        os.makedirs(dirname,exist_ok=True)
-        open(filepath,"w").write(h.text())
-    print(f"wrote {len(headers)} headers")
+files = []
+if not args.path:
+    warning("skipping write because args.path is not set")
 else:
-    print("skipping write because args.path not set")
+    if not args.no_header:
+        base = f"{args.path[0]}/{args.header[0]}/"
+        for h in headers:
+            path = h.filename(base).resolve()
+            files.append((path,h))
+    if not args.no_resolve:
+        base = f"{args.path[0]}/{args.resolve[0]}/"
+        for r in resolvers:
+            path = r.filename(base).resolve()
+            files.append((path,r))
+    if not args.no_check:
+        base = f"{args.path[0]}/{args.check[0]}/"
+        for c in checks:
+            path = c.filename(base).resolve()
+            files.append((path,c))
 
-print("generating onnx operator implementations")
-implementations = [ OperatorImplementation(s,args.header[0]) for s in schemas ]
-
-if args.path:
-    for imp in implementations:
-        filename = os.path.normpath(f"{imp.schema.operator_name}.c")
-        dirname = os.path.realpath(f"{args.path[0]}/{args.src[0]}/{imp.schema.domain}/")
-        filepath = os.path.realpath(f"{dirname}/{filename}")
-        if args.verbose:
-            print(f"writing source {filepath}")
-        os.makedirs(dirname,exist_ok=True)
-        open(filepath,"w").write(imp.text())
-    print(f"wrote {len(headers)} source")
-else:
-    print("skipping write because args.path not set")
+writecount = 0
+note("Writing files",1)
+for path,obj in files:
+    if path.exists() and not args.force:
+        warning(f"skipping existing file '{path}'",1)
+        continue
+    note(f"writing file {path}",3)
+    os.makedirs(path.parent,exist_ok=True)
+    path.open("w").write(obj.text())
+    writecount += 1
+note(f"wrote {writecount} of {len(files)} files")
