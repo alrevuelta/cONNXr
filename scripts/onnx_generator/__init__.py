@@ -1,3 +1,4 @@
 from .OnnxWrapper import *
 from .OperatorHeader import *
-from .OperatorImplementation import *
+from .OperatorSanityCheck import *
+from .OperatorTypeResolver import *
