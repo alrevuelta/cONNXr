@@ -48,9 +48,23 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
   TRACE_LEVEL0("Calling inference\n");
   TRACE_LEVEL0("The graph has nodes=%zu\n", model->graph->n_node);
 
+  /* New approach, prototype */
+  /* Not really going to be called here, but when loading the model. Placed
+  here to simplify things.*/
+  operator__context** all_op_context;
+  all_op_context = resolve_check_get_input_and_attr(model,
+                                                    inputs,
+                                                    nInputs);
+
   // Iterate all nodes in the graph
   for (int nodeIdx = 0; nodeIdx < model->graph->n_node; nodeIdx++)
   {
+    /* The operators inputs havent been modified yet */
+    /* See Add as reference */
+    all_op_context.run(all_op_context);
+
+    /* Legacy code */
+    #if 0
     char *operation = model->graph->node[nodeIdx]->op_type;
     TRACE_LEVEL0("node=%d, operation=%s, n_input=%zu, n_output=%zu\n",
                  nodeIdx,
@@ -95,6 +109,8 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
 
     /* TODO this is hardcoded */
     _outputs[_outputIdx++] = nodeOutputs[0];
+
+    #endif
   }
 
   // TODO:
@@ -102,4 +118,80 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
   // Free also extra allocations within the structure (i.e. doubles...)
 
   return _outputs;
+}
+
+/* Called once the model is loaded. Resolved each operator to a its function
+and popualtes all structures with the inputs */
+operator__context** resolve_check_get_input_and_attr(
+                                     Onnx__ModelProto *model,
+                                     Onnx__TensorProto **inputs,
+                                     int nInputs)
+{
+  operator__context **all_op_context;
+  /* malloc space for model->graph->n_node
+  *  malloc also space for TensorProto or AttributeProto depending on the
+  *  operator ?
+  */
+  for (int nodeIdx = 0; nodeIdx < model->graph->n_node; nodeIdx++)
+  {
+    /* New idea prototyping, just a proof of concept */
+    if (!strcmp(model->graph->node[nodeIdx]->op_type, "Add")){
+      printf("Calling operator Add\n");
+      operator__onnx__add__input *i;
+      operator__onnx__add__output *o;
+      operator__onnx__add__attribute *a;
+
+      /* Find input 0 (which is A) and in mnist will have different
+      names depending on the node:
+      -Convolution28_Output_0
+      -Convolution110_Output_0
+      -Times212_Output_0
+      */
+
+      /* This wont work as it is. For a given node, their inputs come from
+      three different sources.
+      1)Existing initializers in the model: model->graph->initializer[i]->name
+      2)Provided input to the model: inputs[i]->name
+      3)Previously calculated outputs of a different node.
+
+      1) and 2) can be found with the existing code
+      3) Is a bit more tricky and I think we would need a table that stores
+      the pointer to that TensorProto
+      */
+      i->A = searchTensorProtoByName(model,
+                                     inputs,
+                                     nInputs,
+                                     model->graph->node[nodeIdx]->input[0]);
+
+      i->B = searchTensorProtoByName(model,
+                                    inputs,
+                                    nInputs,
+                                    model->graph->node[nodeIdx]->input[1]);
+
+
+      operator__onnx__add__context *c;
+      c->in = i;
+      c->out = o;
+      c->attr = a;
+      c.run = operator_add;
+
+      all_op_context[nodeIdx] = c;
+    }else if(!strcmp(model->graph->node[nodeIdx]->op_type, "Conv")){
+      /*...*/
+
+    }else if(!strcmp(model->graph->node[nodeIdx]->op_type, "Relu")){
+      /*...*/
+
+    }else if(!strcmp(model->graph->node[nodeIdx]->op_type, "Maxpool")){
+      /*...*/
+
+    }else if(!strcmp(model->graph->node[nodeIdx]->op_type, "Reshape")){
+      /*...*/
+
+    }else if(!strcmp(model->graph->node[nodeIdx]->op_type, "Matmul")){
+      /*...*/
+    }
+  }
+
+  return all_op_context;
 }

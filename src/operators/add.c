@@ -33,12 +33,7 @@
  *  \param[in/out]  output      Array of pointer to the outputs of the operators
  *  \return         error       Different than 0 if an error was produced
  */
-int operator_add(size_t n_input,
-                 Onnx__TensorProto **input,
-                 size_t n_attribute,
-                 Onnx__AttributeProto **attribute,
-                 size_t n_output,
-                 Onnx__TensorProto **output)
+int operator_add(operator__context *generic_context)
 {
   TRACE_LEVEL0("Calling operator_add\n");
   debug_print_dims(input[0]->n_dims, input[0]->dims);
@@ -51,6 +46,13 @@ int operator_add(size_t n_input,
     //a->dims[i] == b->dims[i]
     return 1;
   }
+
+  /* Here we can easily access all the i/o and attributes. NULL if no present */
+  operator__onnx__add__context *specific_context = (void *) generic_context;
+  //specific_context->in->A
+  //specific_context->in->B
+  //specific_context->out->C
+  //specific_context->attr
 
   /* There order of operands if unknown. The longest one will determine the output */
   /* Quick and dirty solution */

@@ -45,4 +45,6 @@ static operatorptrs
                              // Dont forget to update NUMBER_OF_OPERATORS
                            };
 
+operator__context** resolve_check_get_input_and_attr();
+
 #endif
