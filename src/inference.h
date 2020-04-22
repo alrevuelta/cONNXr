@@ -9,10 +9,17 @@
 extern Onnx__TensorProto *_outputs[MAX_NUM_OF_OUTPUTS];
 extern int _outputIdx;
 
+// Temporal tables to store the mapping between the output and the name
+#define MY_TABLE_SIZE 30
+#define MAX_STRING_SIZE 50
+extern char lazy_output_mapping_names[MY_TABLE_SIZE][MAX_STRING_SIZE];
+extern Onnx__TensorProto** lazy_outputs_mapping_tensors[MY_TABLE_SIZE];
+
 // Investigate what to do with the output. Is it always a set of TensorProto?
 Onnx__TensorProto** inference(Onnx__ModelProto *model,
                               Onnx__TensorProto **inputs,
                               int nInputs);
+/*
 
 typedef struct
 {
@@ -44,7 +51,7 @@ static operatorptrs
                              {"MatMulInteger", operator_matmulinteger}
                              // Dont forget to update NUMBER_OF_OPERATORS
                            };
-
+*/
 operator__context** resolve_check_get_input_and_attr();
 
 #endif

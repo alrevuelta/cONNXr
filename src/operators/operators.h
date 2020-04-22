@@ -2,6 +2,20 @@
 #define OPERATORS_H
 #include "../pb/onnx.pb-c.h"
 
+typedef struct operator__context {
+    Onnx__TensorProto **inputs;  // TODO rename to match the specific? in, out, attr?
+    Onnx__AttributeProto **attributes;
+    Onnx__TensorProto **outputs;
+    /* If onnx_operator type is defined here, there is
+    a circular dependancy?. Avoiding it for now */
+    /*onnx_operator run;*/
+} operator__context;
+
+
+typedef int (*onnx_operator)(
+  operator__context *context
+);
+
 int operator_add(operator__context *context);
 
 int operator_argmax(size_t n_input,
@@ -25,12 +39,7 @@ int operator_cast(size_t n_input,
                   size_t n_output,
                   Onnx__TensorProto **output);
 
-int operator_conv(size_t n_input,
-                  Onnx__TensorProto **input,
-                  size_t n_attribute,
-                  Onnx__AttributeProto **attribute,
-                  size_t n_output,
-                  Onnx__TensorProto **output);
+int operator_conv(operator__context *context);
 
 int operator_leakyrelu(size_t n_input,
                        Onnx__TensorProto **input,
@@ -39,19 +48,9 @@ int operator_leakyrelu(size_t n_input,
                        size_t n_output,
                        Onnx__TensorProto **output);
 
-int operator_matmul(size_t n_input,
-                    Onnx__TensorProto **input,
-                    size_t n_attribute,
-                    Onnx__AttributeProto **attribute,
-                    size_t n_output,
-                    Onnx__TensorProto **output);
+int operator_matmul(operator__context *context);
 
-int operator_maxpool(size_t n_input,
-                     Onnx__TensorProto **input,
-                     size_t n_attribute,
-                     Onnx__AttributeProto **attribute,
-                     size_t n_output,
-                     Onnx__TensorProto **output);
+int operator_maxpool(operator__context *context);
 
 int operator_mul(size_t n_input,
                  Onnx__TensorProto **input,
@@ -60,19 +59,9 @@ int operator_mul(size_t n_input,
                  size_t n_output,
                  Onnx__TensorProto **output);
 
-int operator_relu(size_t n_input,
-                  Onnx__TensorProto **input,
-                  size_t n_attribute,
-                  Onnx__AttributeProto **attribute,
-                  size_t n_output,
-                  Onnx__TensorProto **output);
+int operator_relu(operator__context *context);
 
-int operator_reshape(size_t n_input,
-                     Onnx__TensorProto **input,
-                     size_t n_attribute,
-                     Onnx__AttributeProto **attribute,
-                     size_t n_output,
-                     Onnx__TensorProto **output);
+int operator_reshape(operator__context *context);
 
 int operator_sigmoid(size_t n_input,
                      Onnx__TensorProto **input,
@@ -143,9 +132,6 @@ int operator_matmulinteger(size_t n_input,
  * using Python. Everything is thought to run
  * the MNIST model as a proof of concept, hence
  * only the operators that belong to that model are implemented */
-typedef int (*onnx_operator)(
-  operator__context *context
-);
 
 /* Add Operator Structs*/
 typedef struct operator__onnx__add__input{
@@ -290,13 +276,6 @@ typedef struct operator__onnx__matmul__context{
   struct operator__onnx__matmul__attribute *attr;
   onnx_operator run;
 } operator__onnx__matmul__context;
-
-typedef struct operator__context {
-    Onnx__TensorProto **inputs;
-    Onnx__AttributeProto **attributes;
-    Onnx__TensorProto **outputs;
-    onnx_operator run;
-} operator__context;
 
 
 /* Template */

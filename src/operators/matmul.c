@@ -20,16 +20,13 @@
  *  \param[in/out]  output      Array of pointer to the outputs of the operators
  *  \return         error       Different than 0 if an error was produced
  */
-int operator_matmul(size_t n_input,
-                    Onnx__TensorProto **input,
-                    size_t n_attribute,
-                    Onnx__AttributeProto **attribute,
-                    size_t n_output,
-                    Onnx__TensorProto **output)
+int operator_matmul(operator__context *context)
 {
-  TRACE_LEVEL0("Calling operator_matmul\n");
-  debug_print_dims(input[0]->n_dims, input[0]->dims);
-  debug_print_dims(input[1]->n_dims, input[1]->dims);
+
+  operator__onnx__matmul__context *sc = (operator__onnx__matmul__context *) context;
+
+  debug_print_dims(sc->in->A->n_dims, sc->in->A->dims);
+  debug_print_dims(sc->in->B->n_dims, sc->in->B->dims);
 
   if (0){
     /* TODO: Check some conditions. For example if a specific
@@ -46,45 +43,45 @@ int operator_matmul(size_t n_input,
   // dont know how to handle the different dimensions though
 
   // Allocte memory
-  output[0]->dims = malloc(2 * sizeof(int64_t));
+  sc->out->Y->dims = malloc(2 * sizeof(int64_t));
 
   // Populate some parameters
-  output[0]->n_dims       = 2;
-  output[0]->dims[0]      = input[0]->dims[0];
-  output[0]->dims[1]      = input[1]->dims[1];
-  output[0]->has_raw_data = 0;
+  sc->out->Y->n_dims       = 2;
+  sc->out->Y->dims[0]      = sc->in->A->dims[0];
+  sc->out->Y->dims[1]      = sc->in->B->dims[1];
+  sc->out->Y->has_raw_data = 0;
 
-  switch(input[0]->data_type)
+  switch(sc->in->A->data_type)
   {
     case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:
     {
-      output[0]->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT;
-      output[0]->n_float_data = input[0]->dims[0] * input[1]->dims[1];
-      output[0]->float_data = malloc(input[0]->dims[0] * input[1]->dims[1] * sizeof(float));
-      for (int i = 0; i < input[0]->dims[0]; i++) {
-        for (int j = 0; j < input[1]->dims[1]; j++) {
+      sc->out->Y->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT;
+      sc->out->Y->n_float_data = sc->in->A->dims[0] * sc->in->B->dims[1];
+      sc->out->Y->float_data = malloc(sc->in->A->dims[0] * sc->in->B->dims[1] * sizeof(float));
+      for (int i = 0; i < sc->in->A->dims[0]; i++) {
+        for (int j = 0; j < sc->in->B->dims[1]; j++) {
           float sum = 0;
-          for (int p = 0; p < input[0]->dims[1]; p++) {
-            sum += (input[0]->float_data[i*input[0]->dims[1]+p] * input[1]->float_data[p*input[1]->dims[1]+j]);
+          for (int p = 0; p < sc->in->A->dims[1]; p++) {
+            sum += (sc->in->A->float_data[i*sc->in->A->dims[1]+p] * sc->in->B->float_data[p*sc->in->B->dims[1]+j]);
             // Saturate the value?
           }
-          output[0]->float_data[i*input[1]->dims[1]+j] = sum;
+          sc->out->Y->float_data[i*sc->in->B->dims[1]+j] = sum;
         }
       }
     } break;
     case ONNX__TENSOR_PROTO__DATA_TYPE__INT32:
     {
-      output[0]->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__INT32;
-      output[0]->n_int32_data = input[0]->dims[0] * input[1]->dims[1];
-      output[0]->int32_data = malloc(input[0]->dims[0] * input[1]->dims[1] * sizeof(int32_t));
-      for (int i = 0; i < input[0]->dims[0]; i++) {
-        for (int j = 0; j < input[1]->dims[1]; j++) {
+      sc->out->Y->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__INT32;
+      sc->out->Y->n_int32_data = sc->in->A->dims[0] * sc->in->B->dims[1];
+      sc->out->Y->int32_data = malloc(sc->in->A->dims[0] * sc->in->B->dims[1] * sizeof(int32_t));
+      for (int i = 0; i < sc->in->A->dims[0]; i++) {
+        for (int j = 0; j < sc->in->B->dims[1]; j++) {
           int32_t sum = 0;
-          for (int p = 0; p < input[0]->dims[1]; p++) {
-            sum += (input[0]->int32_data[i*input[0]->dims[1]+p] * input[1]->int32_data[p*input[1]->dims[1]+j]);
+          for (int p = 0; p < sc->in->A->dims[1]; p++) {
+            sum += (sc->in->A->int32_data[i*sc->in->A->dims[1]+p] * sc->in->B->int32_data[p*sc->in->B->dims[1]+j]);
             // Saturate the value?
           }
-          output[0]->int32_data[i*input[1]->dims[1]+j] = sum;
+          sc->out->Y->int32_data[i*sc->in->B->dims[1]+j] = sum;
         }
       }
     } break;
@@ -116,6 +113,6 @@ int operator_matmul(size_t n_input,
       break;
   }
 
-  debug_print_dims(output[0]->n_dims, output[0]->dims);
+  debug_print_dims(sc->out->Y->n_dims, sc->out->Y->dims);
   return 0;
 }

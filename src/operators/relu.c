@@ -20,45 +20,34 @@
  *  \param[in/out]  output      Array of pointer to the outputs of the operators
  *  \return         error       Different than 0 if an error was produced
  */
-int operator_relu(size_t n_input,
-                  Onnx__TensorProto **input,
-                  size_t n_attribute,
-                  Onnx__AttributeProto **attribute,
-                  size_t n_output,
-                  Onnx__TensorProto **output)
+int operator_relu(operator__context *context)
  {
    TRACE_LEVEL0("Calling operator_relu\n");
-   debug_print_dims(input[0]->n_dims, input[0]->dims);
 
-   if (0){
-     /* TODO: Check some conditions. For example if a specific
-      * functionality is not supported */
-     //a->data_type == b->data_type
-     //a->n_dims == b->n_dims
-     //a->dims[i] == b->dims[i]
-     return 1;
-   }
+   operator__onnx__relu__context *sc = (operator__onnx__relu__context *) context;
 
-   output[0]->dims = malloc(input[0]->n_dims * sizeof(int64_t));
-   for (int i = 0; i < input[0]->n_dims; i++)
+   debug_print_dims(sc->in->X->n_dims, sc->in->X->dims);
+
+   sc->out->Y->dims = malloc(sc->in->X->n_dims * sizeof(int64_t));
+   for (int i = 0; i < sc->in->X->n_dims; i++)
    {
-     output[0]->dims[i] = input[0]->dims[i];
+     sc->out->Y->dims[i] = sc->in->X->dims[i];
    }
 
    // Populate some parameters
-   output[0]->n_dims       = input[0]->n_dims;
-   output[0]->has_raw_data = 0;
-   output[0]->data_type    = input[0]->data_type;
+   sc->out->Y->n_dims       = sc->in->X->n_dims;
+   sc->out->Y->has_raw_data = 0;
+   sc->out->Y->data_type    = sc->in->X->data_type;
 
-   switch(input[0]->data_type)
+   switch(sc->in->X->data_type)
    {
      case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:
      {
-       output[0]->n_float_data = input[0]->n_float_data;
-       output[0]->float_data = malloc(output[0]->n_float_data * sizeof(float));
-       for (int i = 0; i < output[0]->n_float_data; i++)
+       sc->out->Y->n_float_data = sc->in->X->n_float_data;
+       sc->out->Y->float_data = malloc(sc->out->Y->n_float_data * sizeof(float));
+       for (int i = 0; i < sc->out->Y->n_float_data; i++)
        {
-         output[0]->float_data[i] = input[0]->float_data[i] < 0 ? 0 : input[0]->float_data[i];
+         sc->out->Y->float_data[i] = sc->in->X->float_data[i] < 0 ? 0 : sc->in->X->float_data[i];
        }
      }
        break;
@@ -69,17 +58,17 @@ int operator_relu(size_t n_input,
        break;
      case ONNX__TENSOR_PROTO__DATA_TYPE__DOUBLE:
      {
-       output[0]->n_double_data = input[0]->n_double_data;
-       output[0]->double_data = malloc(output[0]->n_double_data * sizeof(double));
-       for (int i = 0; i < output[0]->n_double_data; i++)
+       sc->out->Y->n_double_data = sc->in->X->n_double_data;
+       sc->out->Y->double_data = malloc(sc->out->Y->n_double_data * sizeof(double));
+       for (int i = 0; i < sc->out->Y->n_double_data; i++)
        {
-         output[0]->double_data[i] = input[0]->double_data[i] < 0 ? 0 : input[0]->double_data[i];
+         sc->out->Y->double_data[i] = sc->in->X->double_data[i] < 0 ? 0 : sc->in->X->double_data[i];
        }
      }
        break;
      default:
        break;
    }
-   debug_print_dims(output[0]->n_dims, output[0]->dims);
+   debug_print_dims(sc->out->Y->n_dims, sc->out->Y->dims);
    return 0;
  }

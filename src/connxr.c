@@ -48,9 +48,11 @@ int main(int argc, char **argv){
     cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
     printf("Predicted in %f cycles or %f seconds\n", (double) (end - start), cpu_time_used);
 
-    /* 11 is hardcoded, which is Plus214_Output_0 */
-    for (int i = 0; i < output[11]->n_float_data; i++){
-      printf("n_float_data[%d] = %f\n", i, output[11]->float_data[i]);
+    /* Last calculated output is 11 for mnist */
+    Onnx__TensorProto *mnist_output = *lazy_outputs_mapping_tensors[11];
+
+    for (int i = 0; i < mnist_output->n_float_data; i++){
+      printf("n_float_data[%d] = %f\n", i, mnist_output->float_data[i]);
     }
   }else{
     printf("Wrong inputs\n");

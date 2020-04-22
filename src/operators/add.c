@@ -33,10 +33,9 @@
  *  \param[in/out]  output      Array of pointer to the outputs of the operators
  *  \return         error       Different than 0 if an error was produced
  */
-int operator_add(operator__context *generic_context)
+int operator_add(operator__context *context)
 {
   TRACE_LEVEL0("Calling operator_add\n");
-  debug_print_dims(input[0]->n_dims, input[0]->dims);
 
   if (0){
     /* TODO: Check some conditions. For example if a specific
@@ -48,78 +47,64 @@ int operator_add(operator__context *generic_context)
   }
 
   /* Here we can easily access all the i/o and attributes. NULL if no present */
-  operator__onnx__add__context *specific_context = (void *) generic_context;
-  //specific_context->in->A
-  //specific_context->in->B
-  //specific_context->out->C
-  //specific_context->attr
+  /* sc = specific context*/
+  operator__onnx__add__context *sc = (operator__onnx__add__context *) context;
 
   /* There order of operands if unknown. The longest one will determine the output */
   /* Quick and dirty solution */
-  if (input[0]->n_dims > input[1]->n_dims){
-    output[0]->dims = malloc(input[0]->n_dims * sizeof(int64_t));
-    output[0]->n_dims = input[0]->n_dims;
-    output[0]->n_float_data = input[0]->n_float_data; // check other types
-    for (int i = 0; i < output[0]->n_dims; i++)
+
+  if (sc->in->A->n_dims > sc->in->B->n_dims){
+    sc->out->C->dims = malloc(sc->in->A->n_dims * sizeof(int64_t));
+    sc->out->C->n_dims = sc->in->A->n_dims;
+    sc->out->C->n_float_data = sc->in->A->n_float_data; // check other types
+    for (int i = 0; i < sc->out->C->n_dims; i++)
     {
-      output[0]->dims[i] = input[0]->dims[i];
+      sc->out->C->dims[i] = sc->in->A->dims[i];
     }
   }else{
-    output[0]->dims = malloc(input[1]->n_dims * sizeof(int64_t));
-    output[0]->n_dims = input[1]->n_dims;
-    output[0]->n_float_data = input[1]->n_float_data; // check other types
-    for (int i = 0; i < output[0]->n_dims; i++)
+    sc->out->C->dims = malloc(sc->in->B->n_dims * sizeof(int64_t));
+    sc->out->C->n_dims = sc->in->B->n_dims;
+    sc->out->C->n_float_data = sc->in->B->n_float_data; // check other types
+    for (int i = 0; i < sc->out->C->n_dims; i++)
     {
-      output[0]->dims[i] = input[1]->dims[i];
+      sc->out->C->dims[i] = sc->in->B->dims[i];
     }
   }
 
-  output[0]->has_raw_data = 0;
-  output[0]->data_type = input[0]->data_type;
+  sc->out->C->has_raw_data = 0;
+  sc->out->C->data_type = sc->in->A->data_type;
 
-  switch(input[0]->data_type)
+  switch(sc->in->A->data_type)
   {
     case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:
     {
-      output[0]->float_data = malloc(output[0]->n_float_data * sizeof(float));
+      sc->out->C->float_data = malloc(sc->out->C->n_float_data * sizeof(float));
       /* TODO: ugly */
-      for (int i = 0; i < output[0]->n_float_data; i++) {
+      for (int i = 0; i < sc->out->C->n_float_data; i++) {
         /* Normal case where dimensions match */
-        if (input[0]->n_dims == input[1]->n_dims) {
-          output[0]->float_data[i] = input[0]->float_data[i] + input[1]->float_data[i];
+        if (sc->in->A->n_dims == sc->in->B->n_dims) {
+          sc->out->C->float_data[i] = sc->in->A->float_data[i] + sc->in->B->float_data[i];
         /* Broadcasting. Hardcoded not working */
         }else{
           /* If inside loop :( */
-          if (input[1]->n_dims == 1){
-            output[0]->float_data[i] = input[0]->float_data[i] + input[1]->float_data[i%input[1]->dims[0]];
+          if (sc->in->B->n_dims == 1){
+            sc->out->C->float_data[i] = sc->in->A->float_data[i] + sc->in->B->float_data[i%sc->in->B->dims[0]];
           }else{
             /* TODO Hardcoded for TINY YOLO */
-            if (input[0]->dims[0] == 3){ /* Remove this uAF*/
-              output[0]->float_data[i] = input[0]->float_data[i%3] + input[1]->float_data[i];
+            if (sc->in->A->dims[0] == 3){ /* Remove this uAF*/
+              sc->out->C->float_data[i] = sc->in->A->float_data[i%3] + sc->in->B->float_data[i];
             /* TODO Hardcoded for MNIST */
             }else{
-              output[0]->float_data[i] = input[0]->float_data[i] + input[1]->float_data[i/(input[0]->dims[2]*input[0]->dims[3])];
+              sc->out->C->float_data[i] = sc->in->A->float_data[i] + sc->in->B->float_data[i/(sc->in->A->dims[2]*sc->in->A->dims[3])];
             }
           }
         }
       }
     } break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__INT32:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__INT64:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT16:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__DOUBLE:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__UINT32:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__UINT64:
-      break;
     default:
       break;
   }
 
-  debug_print_dims(output[0]->n_dims, output[0]->dims);
+  debug_print_dims(sc->out->C->n_dims, sc->out->C->dims);
   return 0;
 }

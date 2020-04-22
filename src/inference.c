@@ -9,35 +9,12 @@
 int _outputIdx = 0;
 Onnx__TensorProto *_outputs[MAX_NUM_OF_OUTPUTS] = {};
 
-static int call_operator(char *name,
-                         size_t n_input,
-                         Onnx__TensorProto **input,
-                         size_t n_attribute,
-                         Onnx__AttributeProto **attribute,
-                         size_t n_output,
-                         Onnx__TensorProto **output)
-{
-  int i;
-  for(i = 0; i < NUMBER_OF_OPERATORS; i++) {
-    if(strcmp(operatorsSet[i].name, name) == 0) {
-      int ret = operatorsSet[i].func(n_input,
-                                     input,
-                                     n_attribute,
-                                     attribute,
-                                     n_output,
-                                     output);
-      return ret;
-    }
-  }
-  /* If it reaches this point, the operator wasnt found. Throw error? */
-  TRACE_LEVEL0("\n\nTODO: Operator %s doest not exist or its not implemented\n\n", name);
+Onnx__TensorProto** lazy_outputs_mapping_tensors[MY_TABLE_SIZE] = {};
 
-  /* break */
-  perror("There was an error calling the operator");
-  exit(1);
+char lazy_output_mapping_names[MY_TABLE_SIZE][MAX_STRING_SIZE];
 
-  return -1;
-}
+operator__context** all_op_context;
+
 
 Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **inputs, int nInputs)
 {
@@ -48,75 +25,42 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
   TRACE_LEVEL0("Calling inference\n");
   TRACE_LEVEL0("The graph has nodes=%zu\n", model->graph->n_node);
 
-  /* New approach, prototype */
-  /* Not really going to be called here, but when loading the model. Placed
-  here to simplify things.*/
-  operator__context** all_op_context;
+  printf("Resolving and getting inputs\n");
   all_op_context = resolve_check_get_input_and_attr(model,
                                                     inputs,
                                                     nInputs);
+  printf("Done resolving\n");
 
+  printf("\n\n\nRunning inference\n");
   // Iterate all nodes in the graph
   for (int nodeIdx = 0; nodeIdx < model->graph->n_node; nodeIdx++)
   {
-    /* The operators inputs havent been modified yet */
-    /* See Add as reference */
-    all_op_context.run(all_op_context);
-
-    /* Legacy code */
-    #if 0
-    char *operation = model->graph->node[nodeIdx]->op_type;
-    TRACE_LEVEL0("node=%d, operation=%s, n_input=%zu, n_output=%zu\n",
-                 nodeIdx,
-                 model->graph->node[nodeIdx]->op_type,
-                 model->graph->node[nodeIdx]->n_input,
-                 model->graph->node[nodeIdx]->n_output);
-
-    // TODO hardcoded to one output
-    size_t nOutputs = 1;
-    Onnx__TensorProto *out0 = malloc(sizeof(*out0));
-
-    /* Do this alloc inside the operator ?*/
-    Onnx__TensorProto **nodeOutputs = malloc(sizeof(*out0));
-
-    nodeOutputs[0] = out0;
-    Onnx__TensorProto **nodeInputs = malloc(sizeof(*out0) * model->graph->node[nodeIdx]->n_input);
-
-    // Populate the input array by gathering all the required inputs
-    for (int inp = 0; inp < model->graph->node[nodeIdx]->n_input; ++inp) {
-      Onnx__TensorProto *inpN =malloc(sizeof(*inpN));
-      inpN = searchTensorProtoByName(model, inputs, nInputs, model->graph->node[nodeIdx]->input[inp]);
-      nodeInputs[inp] = inpN;
-      //printf("\n %d\n", model->graph->node[nodeIdx]->n_input);
+    printf("Calculating node = %d\n", nodeIdx);
+    /* All this if will be replaced. This job will be done by the resoler */
+    if (!strcmp(model->graph->node[nodeIdx]->op_type, "Add")){
+      operator_add(all_op_context[nodeIdx]);
+    }if (!strcmp(model->graph->node[nodeIdx]->op_type, "Conv")){
+      operator_conv(all_op_context[nodeIdx]);
     }
-
-    int error = call_operator(operation,
-                              model->graph->node[nodeIdx]->n_input,
-                              nodeInputs,
-                              model->graph->node[nodeIdx]->n_attribute,
-                              model->graph->node[nodeIdx]->attribute,
-                              nOutputs,// TODO use model->graph->node[nodeIdx]->n_output
-                              nodeOutputs);
-
-    if (error){
-      perror("There was an error calling the operator");
-      exit(1);
+    if (!strcmp(model->graph->node[nodeIdx]->op_type, "Relu")){
+      operator_relu(all_op_context[nodeIdx]);
     }
-
-    /* Reuse the string */
-    out0->name = model->graph->node[nodeIdx]->output[0];
-    TRACE_LEVEL0("Storing output in list index=%d, name=%s\n", _outputIdx, out0->name);
-
-    /* TODO this is hardcoded */
-    _outputs[_outputIdx++] = nodeOutputs[0];
-
-    #endif
+    if (!strcmp(model->graph->node[nodeIdx]->op_type, "MaxPool")){
+      operator_maxpool(all_op_context[nodeIdx]);
+    }
+    if (!strcmp(model->graph->node[nodeIdx]->op_type, "Reshape")){
+      operator_reshape(all_op_context[nodeIdx]);
+    }
+    if (!strcmp(model->graph->node[nodeIdx]->op_type, "MatMul")){
+      operator_matmul(all_op_context[nodeIdx]);
+    }
   }
 
-  // TODO:
-  // Free calculaterTensors memory
-  // Free also extra allocations within the structure (i.e. doubles...)
 
+
+
+
+  // TODO. Kept from legacy
   return _outputs;
 }
 
@@ -127,37 +71,17 @@ operator__context** resolve_check_get_input_and_attr(
                                      Onnx__TensorProto **inputs,
                                      int nInputs)
 {
-  operator__context **all_op_context;
-  /* malloc space for model->graph->n_node
-  *  malloc also space for TensorProto or AttributeProto depending on the
-  *  operator ?
-  */
+  // Not sure about this malloc
+  operator__context **all_op_context = malloc(sizeof(operator__context) * model->graph->n_node);
   for (int nodeIdx = 0; nodeIdx < model->graph->n_node; nodeIdx++)
   {
     /* New idea prototyping, just a proof of concept */
     if (!strcmp(model->graph->node[nodeIdx]->op_type, "Add")){
-      printf("Calling operator Add\n");
-      operator__onnx__add__input *i;
-      operator__onnx__add__output *o;
-      operator__onnx__add__attribute *a;
+      printf("Operator at %d is Add\n", nodeIdx);
+      operator__onnx__add__input *i = malloc(sizeof(*i));
+      operator__onnx__add__output *o = malloc(sizeof(*o));
+      operator__onnx__add__attribute *a = malloc(sizeof(*a));
 
-      /* Find input 0 (which is A) and in mnist will have different
-      names depending on the node:
-      -Convolution28_Output_0
-      -Convolution110_Output_0
-      -Times212_Output_0
-      */
-
-      /* This wont work as it is. For a given node, their inputs come from
-      three different sources.
-      1)Existing initializers in the model: model->graph->initializer[i]->name
-      2)Provided input to the model: inputs[i]->name
-      3)Previously calculated outputs of a different node.
-
-      1) and 2) can be found with the existing code
-      3) Is a bit more tricky and I think we would need a table that stores
-      the pointer to that TensorProto
-      */
       i->A = searchTensorProtoByName(model,
                                      inputs,
                                      nInputs,
@@ -168,28 +92,207 @@ operator__context** resolve_check_get_input_and_attr(
                                     nInputs,
                                     model->graph->node[nodeIdx]->input[1]);
 
+      //No attr
 
-      operator__onnx__add__context *c;
+
+      operator__onnx__add__context *c = malloc(sizeof(*c));
       c->in = i;
       c->out = o;
       c->attr = a;
-      c.run = operator_add;
+      c->out->C = malloc(sizeof(*c->out->C));
+      c->out->C->name = malloc(sizeof(char) * 40);
+      strcpy(c->out->C->name, model->graph->node[nodeIdx]->output[0]);
 
-      all_op_context[nodeIdx] = c;
+
+      lazy_outputs_mapping_tensors[_outputIdx] = &c->out->C;
+      strcpy(lazy_output_mapping_names[_outputIdx], model->graph->node[nodeIdx]->output[0]);
+      _outputIdx++;
+
+      all_op_context[nodeIdx] = (operator__context*)c;
     }else if(!strcmp(model->graph->node[nodeIdx]->op_type, "Conv")){
-      /*...*/
+      printf("Operator at %d is Conv\n", nodeIdx);
+      operator__onnx__conv__input *i = malloc(sizeof(*i));
+      operator__onnx__conv__output *o = malloc(sizeof(*o));
+      operator__onnx__conv__attribute *a = malloc(sizeof(*a));
+      i->X = NULL;
+      i->W = NULL;
+      i->B = NULL;
+      /* Quick workaround to avoid accessing an element out of bound */
+      if (model->graph->node[nodeIdx]->n_input >= 1){
+        i->X = searchTensorProtoByName(model,
+                                       inputs,
+                                       nInputs,
+                                       model->graph->node[nodeIdx]->input[0]);
+      }
+      if (model->graph->node[nodeIdx]->n_input >= 2){
+        i->W = searchTensorProtoByName(model,
+                                      inputs,
+                                      nInputs,
+                                      model->graph->node[nodeIdx]->input[1]);
+      }
+      if (model->graph->node[nodeIdx]->n_input >= 3){
+        i->B = searchTensorProtoByName(model,
+                                       inputs,
+                                       nInputs,
+                                       model->graph->node[nodeIdx]->input[2]);
+      }
+
+      // Attributes. NULL is returned if not found.
+      a->auto_pad = searchAttributeNyName(model->graph->node[nodeIdx]->n_attribute, model->graph->node[nodeIdx]->attribute, "auto_pad");
+      a->dilations = searchAttributeNyName(model->graph->node[nodeIdx]->n_attribute, model->graph->node[nodeIdx]->attribute, "dilations");
+      a->group = searchAttributeNyName(model->graph->node[nodeIdx]->n_attribute, model->graph->node[nodeIdx]->attribute, "group");
+      a->kernel_shape = searchAttributeNyName(model->graph->node[nodeIdx]->n_attribute, model->graph->node[nodeIdx]->attribute, "kernel_shape");
+      a->pads = searchAttributeNyName(model->graph->node[nodeIdx]->n_attribute, model->graph->node[nodeIdx]->attribute, "pads");
+      a->strides = searchAttributeNyName(model->graph->node[nodeIdx]->n_attribute, model->graph->node[nodeIdx]->attribute, "strides");
+
+      operator__onnx__conv__context *c = malloc(sizeof(*c));
+      c->in = i;
+      c->out = o;
+      c->attr = a;
+      c->out->Y = malloc(sizeof(*c->out->Y));
+      c->out->Y->name = malloc(sizeof(char) * 40);
+      strcpy(c->out->Y->name, model->graph->node[nodeIdx]->output[0]);
+
+      lazy_outputs_mapping_tensors[_outputIdx] = &c->out->Y;
+      strcpy(lazy_output_mapping_names[_outputIdx], model->graph->node[nodeIdx]->output[0]);
+      _outputIdx++;
+
+      all_op_context[nodeIdx] = (operator__context*)c;
 
     }else if(!strcmp(model->graph->node[nodeIdx]->op_type, "Relu")){
-      /*...*/
+      printf("Operator at %d is Relu\n", nodeIdx);
+      operator__onnx__relu__input *i = malloc(sizeof(*i));
+      operator__onnx__relu__output *o = malloc(sizeof(*o));
+      operator__onnx__relu__attribute *a = malloc(sizeof(*a));
 
-    }else if(!strcmp(model->graph->node[nodeIdx]->op_type, "Maxpool")){
-      /*...*/
+      // fixed n of i/o
+      i->X = searchTensorProtoByName(model,
+                                     inputs,
+                                     nInputs,
+                                     model->graph->node[nodeIdx]->input[0]);
+
+      // not attr
+
+      operator__onnx__relu__context *c = malloc(sizeof(*c));
+      c->in = i;
+      c->out = o;
+      c->attr = a;
+      c->out->Y = malloc(sizeof(*c->out->Y));
+      c->out->Y->name = malloc(sizeof(char) * 40);
+      strcpy(c->out->Y->name, model->graph->node[nodeIdx]->output[0]);
+
+
+      lazy_outputs_mapping_tensors[_outputIdx] = &c->out->Y;
+      strcpy(lazy_output_mapping_names[_outputIdx], model->graph->node[nodeIdx]->output[0]);
+      _outputIdx++;
+
+      all_op_context[nodeIdx] = (operator__context*)c;
+
+
+    }else if(!strcmp(model->graph->node[nodeIdx]->op_type, "MaxPool")){
+      printf("Operator at %d is Maxpool\n", nodeIdx);
+      operator__onnx__maxpool__input *i = malloc(sizeof(*i));
+      operator__onnx__maxpool__output *o = malloc(sizeof(*o));
+      operator__onnx__maxpool__attribute *a = malloc(sizeof(*a));
+
+      i->X = searchTensorProtoByName(model,
+                                     inputs,
+                                     nInputs,
+                                     model->graph->node[nodeIdx]->input[0]);
+
+      // Attributes. NULL is returned if not found.
+      a->auto_pad = searchAttributeNyName(model->graph->node[nodeIdx]->n_attribute, model->graph->node[nodeIdx]->attribute, "auto_pad");
+      a->dilations = searchAttributeNyName(model->graph->node[nodeIdx]->n_attribute, model->graph->node[nodeIdx]->attribute, "dilations");
+      a->kernel_shape = searchAttributeNyName(model->graph->node[nodeIdx]->n_attribute, model->graph->node[nodeIdx]->attribute, "kernel_shape");
+      a->pads = searchAttributeNyName(model->graph->node[nodeIdx]->n_attribute, model->graph->node[nodeIdx]->attribute, "pads");
+      a->strides = searchAttributeNyName(model->graph->node[nodeIdx]->n_attribute, model->graph->node[nodeIdx]->attribute, "strides");
+
+
+      operator__onnx__maxpool__context *c = malloc(sizeof(*c));
+      c->in = i;
+      c->out = o;
+      c->attr = a;
+      c->out->Y = malloc(sizeof(*c->out->Y));
+      c->out->Y->name = malloc(sizeof(char) * 40);
+      strcpy(c->out->Y->name, model->graph->node[nodeIdx]->output[0]);
+
+      // TODO! For simplification only 1 output is stored. Maxpool has a second optional one. Not used in mnist.
+
+      lazy_outputs_mapping_tensors[_outputIdx] = &c->out->Y;
+      strcpy(lazy_output_mapping_names[_outputIdx], model->graph->node[nodeIdx]->output[0]);
+      _outputIdx++;
+
+      all_op_context[nodeIdx] = (operator__context*)c;
+
 
     }else if(!strcmp(model->graph->node[nodeIdx]->op_type, "Reshape")){
-      /*...*/
+      printf("Operator at %d is Reshape\n", nodeIdx);
+      operator__onnx__reshape__input *i = malloc(sizeof(*i));
+      operator__onnx__reshape__output *o = malloc(sizeof(*o));
+      operator__onnx__reshape__attribute *a = malloc(sizeof(*a));
 
-    }else if(!strcmp(model->graph->node[nodeIdx]->op_type, "Matmul")){
-      /*...*/
+      // fixed n of inputs
+      i->data = searchTensorProtoByName(model,
+                                     inputs,
+                                     nInputs,
+                                     model->graph->node[nodeIdx]->input[0]);
+
+      i->shape = searchTensorProtoByName(model,
+                                     inputs,
+                                     nInputs,
+                                     model->graph->node[nodeIdx]->input[0]);
+
+      // no attr
+
+      operator__onnx__reshape__context *c = malloc(sizeof(*c));
+      c->in = i;
+      c->out = o;
+      c->attr = a;
+      c->out->reshaped = malloc(sizeof(*c->out->reshaped));
+      c->out->reshaped->name = malloc(sizeof(char) * 40);
+      strcpy(c->out->reshaped->name, model->graph->node[nodeIdx]->output[0]);
+
+
+      lazy_outputs_mapping_tensors[_outputIdx] = &c->out->reshaped;
+      strcpy(lazy_output_mapping_names[_outputIdx], model->graph->node[nodeIdx]->output[0]);
+      _outputIdx++;
+
+      all_op_context[nodeIdx] = (operator__context*)c;
+
+    }else if(!strcmp(model->graph->node[nodeIdx]->op_type, "MatMul")){
+      printf("Operator at %d is Matmul\n", nodeIdx);
+      operator__onnx__matmul__input *i = malloc(sizeof(*i));
+      operator__onnx__matmul__output *o = malloc(sizeof(*o));
+      operator__onnx__matmul__attribute *a = malloc(sizeof(*a));
+
+      // fixed n of inputs
+      i->A = searchTensorProtoByName(model,
+                                     inputs,
+                                     nInputs,
+                                     model->graph->node[nodeIdx]->input[0]);
+     //
+      i->B = searchTensorProtoByName(model,
+                                    inputs,
+                                    nInputs,
+                                    model->graph->node[nodeIdx]->input[0]);
+
+     // no attr
+
+     operator__onnx__matmul__context *c = malloc(sizeof(*c));
+     c->in = i;
+     c->out = o;
+     c->attr = a;
+     c->out->Y = malloc(sizeof(*c->out->Y));
+     c->out->Y->name = malloc(sizeof(char) * 40);
+     strcpy(c->out->Y->name, model->graph->node[nodeIdx]->output[0]);
+
+
+     lazy_outputs_mapping_tensors[_outputIdx] = &c->out->Y;
+     strcpy(lazy_output_mapping_names[_outputIdx], model->graph->node[nodeIdx]->output[0]);
+     _outputIdx++;
+
+     all_op_context[nodeIdx] = (operator__context*)c;
+
     }
   }
 

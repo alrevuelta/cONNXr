@@ -21,49 +21,27 @@
  *  \param[in/out]  output      Array of pointer to the outputs of the operators
  *  \return         error       Different than 0 if an error was produced
  */
-int operator_maxpool(size_t n_input,
-                     Onnx__TensorProto **input,
-                     size_t n_attribute,
-                     Onnx__AttributeProto **attribute,
-                     size_t n_output,
-                     Onnx__TensorProto **output)
+int operator_maxpool(operator__context *context)
 {
   TRACE_LEVEL0("Calling operator_maxpool\n");
-  debug_print_dims(input[0]->n_dims, input[0]->dims);
   //debug_print_attributes(n_attribute, attribute);
 
-  if (0){
-    /* TODO: Check some conditions. For example if a specific
-     * functionality is not supported */
-    // TODO ingore dilated parameter for initial tests
-    // TODO indices are not implemented for the initial prototype
-    // TODO this is hardcoded hardcoded for 2d (dims = 4)
-    return 1;
-  }
+  operator__onnx__maxpool__context *sc = (operator__onnx__maxpool__context *) context;
 
   // number of dimensions do not change
-  output[0]->dims   = malloc(input[0]->n_dims * sizeof(int64_t));
-  output[0]->n_dims = input[0]->n_dims;
-
-  // Only kernel_shape is mandatory
-  Onnx__AttributeProto *auto_pad = searchAttributeNyName(n_attribute, attribute, "auto_pad");
-  //Onnx__AttributeProto *ceil_mode = searchAttributeNyName(n_attribute, attribute, "ceil_mode");
-  //Onnx__AttributeProto *dilations = searchAttributeNyName(n_attribute, attribute, "dilations");
-  Onnx__AttributeProto *kernel_shape = searchAttributeNyName(n_attribute, attribute, "kernel_shape");
-  Onnx__AttributeProto *pads = searchAttributeNyName(n_attribute, attribute, "pads");
-  //Onnx__AttributeProto *storage_order = searchAttributeNyName(n_attribute, attribute, "storage_order");
-  Onnx__AttributeProto *strides = searchAttributeNyName(n_attribute, attribute, "strides");
+  sc->out->Y->dims   = malloc(sc->in->X->n_dims * sizeof(int64_t));
+  sc->out->Y->n_dims = sc->in->X->n_dims;
 
   int64_t h_kernel, w_kernel, h_stride, w_stride;
   h_kernel = w_kernel = h_stride = w_stride = 1;
-  if (kernel_shape != NULL) {
-    h_kernel = kernel_shape->ints[0];
-    w_kernel = kernel_shape->ints[1];
+  if (sc->attr->kernel_shape != NULL) {
+    h_kernel = sc->attr->kernel_shape->ints[0];
+    w_kernel = sc->attr->kernel_shape->ints[1];
   }
 
-  if (strides != NULL) {
-    h_stride = strides->ints[0];
-    w_stride = strides->ints[1];
+  if (sc->attr->strides != NULL) {
+    h_stride = sc->attr->strides->ints[0];
+    w_stride = sc->attr->strides->ints[1];
   }
 
   // TODO Maybe use a smaller type
@@ -73,14 +51,14 @@ int operator_maxpool(size_t n_input,
 
   int h_pad_aux = 0;
   int w_pad_aux = 0;
-  if (auto_pad != NULL){
+  if (sc->attr->auto_pad != NULL){
     h_pad_aux = (h_kernel - 1);
     w_pad_aux = (w_kernel - 1);
     h_pad = (h_kernel - 1)/2;
     w_pad = (w_kernel - 1)/2;
-    if (!strncmp((char*)auto_pad->s.data, "SAME_UPPER", 10)){
+    if (!strncmp((char*)sc->attr->auto_pad->s.data, "SAME_UPPER", 10)){
       // remove
-    } else if (!strncmp((char*)auto_pad->s.data, "SAME_LOWER", 10)){
+    } else if (!strncmp((char*)sc->attr->auto_pad->s.data, "SAME_LOWER", 10)){
       /* TODO quick n dirty*/
       if ((h_kernel - 1)%2 != 0){
         h_pad++;
@@ -91,11 +69,11 @@ int operator_maxpool(size_t n_input,
     }
   }
 
-  if (pads != NULL){
+  if (sc->attr->pads != NULL){
     /* TODO */
-    /* Hardcoded for pads = [x, x, x, x] dim = 4*/
-    h_pad_aux = pads->ints[0] + pads->ints[2];
-    w_pad_aux = pads->ints[1] + pads->ints[3];
+    /* Hardcoded for sc->attr->pads = [x, x, x, x] dim = 4*/
+    h_pad_aux = sc->attr->pads->ints[0] + sc->attr->pads->ints[2];
+    w_pad_aux = sc->attr->pads->ints[1] + sc->attr->pads->ints[3];
     h_pad = h_pad_aux/2;
     w_pad = w_pad_aux/2;
 
@@ -105,40 +83,40 @@ int operator_maxpool(size_t n_input,
     }*/
   }
 
-  output[0]->dims[0] = input[0]->dims[0];
-  output[0]->dims[1] = input[0]->dims[1];
-  output[0]->dims[2] = (int64_t)floorf((float)(input[0]->dims[2] + h_pad_aux - ((h_kernel - 1) + 1)) / (float)h_stride + 1);
-  output[0]->dims[3] = (int64_t)floorf((float)(input[0]->dims[3] + w_pad_aux - ((w_kernel - 1) + 1)) / (float)w_stride + 1);
+  sc->out->Y->dims[0] = sc->in->X->dims[0];
+  sc->out->Y->dims[1] = sc->in->X->dims[1];
+  sc->out->Y->dims[2] = (int64_t)floorf((float)(sc->in->X->dims[2] + h_pad_aux - ((h_kernel - 1) + 1)) / (float)h_stride + 1);
+  sc->out->Y->dims[3] = (int64_t)floorf((float)(sc->in->X->dims[3] + w_pad_aux - ((w_kernel - 1) + 1)) / (float)w_stride + 1);
 
-  output[0]->has_raw_data = 0;
+  sc->out->Y->has_raw_data = 0;
 
-  switch(input[0]->data_type)
+  switch(sc->in->X->data_type)
   {
     case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:
     {
-      output[0]->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT;
-      output[0]->float_data = malloc(output[0]->dims[0]*output[0]->dims[1]*output[0]->dims[2]*output[0]->dims[3] * sizeof(float));
-      output[0]->n_float_data = output[0]->dims[0]*output[0]->dims[1]*output[0]->dims[2]*output[0]->dims[3];
+      sc->out->Y->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT;
+      sc->out->Y->float_data = malloc(sc->out->Y->dims[0]*sc->out->Y->dims[1]*sc->out->Y->dims[2]*sc->out->Y->dims[3] * sizeof(float));
+      sc->out->Y->n_float_data = sc->out->Y->dims[0]*sc->out->Y->dims[1]*sc->out->Y->dims[2]*sc->out->Y->dims[3];
 
       int b,i,j,k,m,n;
-      for(b = 0; b < output[0]->dims[0]; ++b){
-        for(k = 0; k < output[0]->dims[1]; ++k){
-          for(i = 0; i < output[0]->dims[2]; ++i){
-            for(j = 0; j < output[0]->dims[3]; ++j){
-              int out_index = j + output[0]->dims[3]*(i + output[0]->dims[2]*(k + input[0]->dims[1]*b));
+      for(b = 0; b < sc->out->Y->dims[0]; ++b){
+        for(k = 0; k < sc->out->Y->dims[1]; ++k){
+          for(i = 0; i < sc->out->Y->dims[2]; ++i){
+            for(j = 0; j < sc->out->Y->dims[3]; ++j){
+              int out_index = j + sc->out->Y->dims[3]*(i + sc->out->Y->dims[2]*(k + sc->in->X->dims[1]*b));
               float max = -999999; // TODO
               for(n = 0; n < h_kernel; ++n){
                 for(m = 0; m < w_kernel; ++m){
                   int cur_h = i*h_stride + n -h_pad;
                   int cur_w = j*w_stride + m -w_pad;
-                  int index = cur_w + input[0]->dims[3]*(cur_h + input[0]->dims[2]*(k + b*input[0]->dims[1]));
-                  int valid = (cur_h >= 0 && cur_h < (input[0]->dims[2]) &&
-                               cur_w >= 0 && cur_w < (input[0]->dims[3]));
-                  float val = (valid != 0) ? input[0]->float_data[index] : -999999; //TODO
+                  int index = cur_w + sc->in->X->dims[3]*(cur_h + sc->in->X->dims[2]*(k + b*sc->in->X->dims[1]));
+                  int valid = (cur_h >= 0 && cur_h < (sc->in->X->dims[2]) &&
+                               cur_w >= 0 && cur_w < (sc->in->X->dims[3]));
+                  float val = (valid != 0) ? sc->in->X->float_data[index] : -999999; //TODO
                   max = (val > max ? val : max);
                   }
                 }
-                output[0]->float_data[out_index] = max;
+                sc->out->Y->float_data[out_index] = max;
               }
             }
           }
@@ -153,7 +131,7 @@ int operator_maxpool(size_t n_input,
       break;
   }
 
-  debug_print_dims(output[0]->n_dims, output[0]->dims);
+  debug_print_dims(sc->out->Y->n_dims, sc->out->Y->dims);
   return 0;
 
 }
