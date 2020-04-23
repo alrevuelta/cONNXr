@@ -78,7 +78,6 @@ int operator_reshape(operator__context *context)
   }
 
   // Populate some parameters
-  sc->out->reshaped->name         = "name_is_set_afterwards\0";
   sc->out->reshaped->n_dims       = sc->in->shape->n_int64_data;
   sc->out->reshaped->has_raw_data = 0;
   sc->out->reshaped->data_type    = sc->in->data->data_type;

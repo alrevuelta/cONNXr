@@ -54,9 +54,13 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
     if (!strcmp(model->graph->node[nodeIdx]->op_type, "MatMul")){
       operator_matmul(all_op_context[nodeIdx]);
     }
+
+    Onnx__TensorProto *output = *lazy_outputs_mapping_tensors[nodeIdx];
+    printf("Debug output %d name %s\n", nodeIdx, output->name);
+    for (int i = 0; i < 5; i++){
+      //printf("Printing some values [%d] = %f\n", i, output->float_data[i]);
+    }
   }
-
-
 
 
 
@@ -240,7 +244,7 @@ operator__context** resolve_check_get_input_and_attr(
       i->shape = searchTensorProtoByName(model,
                                      inputs,
                                      nInputs,
-                                     model->graph->node[nodeIdx]->input[0]);
+                                     model->graph->node[nodeIdx]->input[1]);
 
       // no attr
 
@@ -274,7 +278,7 @@ operator__context** resolve_check_get_input_and_attr(
       i->B = searchTensorProtoByName(model,
                                     inputs,
                                     nInputs,
-                                    model->graph->node[nodeIdx]->input[0]);
+                                    model->graph->node[nodeIdx]->input[1]);
 
      // no attr
 
