@@ -20,10 +20,10 @@
  *  \param[in/out]  output      Array of pointer to the outputs of the operators
  *  \return         error       Different than 0 if an error was produced
  */
-int operator_matmul(operator__context *context)
+int operator_matmul(struct operator__context *context)
 {
 
-  operator__onnx__matmul__context *sc = (operator__onnx__matmul__context *) context;
+  struct operator__onnx__matmul__context *sc = (void *) context;
 
   debug_print_dims(sc->in->A->n_dims, sc->in->A->dims);
   debug_print_dims(sc->in->B->n_dims, sc->in->B->dims);

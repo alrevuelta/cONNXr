@@ -21,11 +21,11 @@
  *  \param[in/out]  output      Array of pointer to the outputs of the operators
  *  \return         error       Different than 0 if an error was produced
  */
- int operator_conv(operator__context *context)
+ int operator_conv(struct operator__context *context)
 {
   TRACE_LEVEL0("Calling operator_conv\n");
 
-  operator__onnx__conv__context *sc = (operator__onnx__conv__context *) context;
+  struct operator__onnx__conv__context *sc = (void *) context;
 
   if (sc->in->X->n_dims != 4){
     /* TODO: Check some conditions. For example if a specific

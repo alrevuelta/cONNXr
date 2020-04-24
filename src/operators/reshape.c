@@ -21,11 +21,11 @@
  *  \param[in/out]  output      Array of pointer to the outputs of the operators
  *  \return         error       Different than 0 if an error was produced
  */
-int operator_reshape(operator__context *context)
+int operator_reshape(struct operator__context *context)
 {
   TRACE_LEVEL0("Calling operator_reshape\n");
 
-  operator__onnx__reshape__context *sc = (operator__onnx__reshape__context *) context;
+  struct operator__onnx__reshape__context *sc = (void *) context;
 
   // Not sure about this implementation. It just swaps the dimensions
   // and does not change the data.

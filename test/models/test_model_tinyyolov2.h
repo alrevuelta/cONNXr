@@ -31,8 +31,14 @@ void test_model_tinyyolov2(void)
   clock_t start, end;
   double cpu_time_used;
 
+  struct operator__context** all_op_context = resolve_check_get_input_and_attr(model,
+                                                    inputs,
+                                                    1);
+
   start = clock();
-  Onnx__TensorProto **output = inference(model, inputs, 1);
+
+  Onnx__TensorProto **output = inference(all_op_context,
+                                         model->graph->n_node);
   end = clock();
 
   // TODO Is CLOCKS_PER_SEC ok to use?

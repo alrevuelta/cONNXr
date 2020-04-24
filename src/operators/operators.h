@@ -2,21 +2,30 @@
 #define OPERATORS_H
 #include "../pb/onnx.pb-c.h"
 
-typedef struct operator__context {
+
+/*
+typedef int (*onnx_operator)(
+  int x
+);*/
+
+
+//typedef int (*Operation)(struct operator__context);
+
+//typedef struct operator__context operator__context, *onnx_operator;
+
+struct operator__context{
     Onnx__TensorProto **inputs;  // TODO rename to match the specific? in, out, attr?
     Onnx__AttributeProto **attributes;
     Onnx__TensorProto **outputs;
-    /* If onnx_operator type is defined here, there is
-    a circular dependancy?. Avoiding it for now */
-    /*onnx_operator run;*/
-} operator__context;
+    int (*operator)(struct operator__context*);
+};
 
 
-typedef int (*onnx_operator)(
-  operator__context *context
-);
 
-int operator_add(operator__context *context);
+
+
+
+int operator_add(struct operator__context *context);
 
 int operator_argmax(size_t n_input,
                     Onnx__TensorProto **input,
@@ -39,7 +48,7 @@ int operator_cast(size_t n_input,
                   size_t n_output,
                   Onnx__TensorProto **output);
 
-int operator_conv(operator__context *context);
+int operator_conv(struct operator__context *context);
 
 int operator_leakyrelu(size_t n_input,
                        Onnx__TensorProto **input,
@@ -48,9 +57,9 @@ int operator_leakyrelu(size_t n_input,
                        size_t n_output,
                        Onnx__TensorProto **output);
 
-int operator_matmul(operator__context *context);
+int operator_matmul(struct operator__context *context);
 
-int operator_maxpool(operator__context *context);
+int operator_maxpool(struct operator__context *context);
 
 int operator_mul(size_t n_input,
                  Onnx__TensorProto **input,
@@ -59,9 +68,9 @@ int operator_mul(size_t n_input,
                  size_t n_output,
                  Onnx__TensorProto **output);
 
-int operator_relu(operator__context *context);
+int operator_relu(struct operator__context *context);
 
-int operator_reshape(operator__context *context);
+int operator_reshape(struct operator__context *context);
 
 int operator_sigmoid(size_t n_input,
                      Onnx__TensorProto **input,
@@ -134,88 +143,88 @@ int operator_matmulinteger(size_t n_input,
  * only the operators that belong to that model are implemented */
 
 /* Add Operator Structs*/
-typedef struct operator__onnx__add__input{
+struct operator__onnx__add__input{
   Onnx__TensorProto *A;
   Onnx__TensorProto *B;
-} operator__onnx__add__input;
+};
 
-typedef struct operator__onnx__add__output{
+struct operator__onnx__add__output{
   Onnx__TensorProto *C;
-} operator__onnx__add__output;
+};
 
-typedef struct operator__onnx__add__attribute{
+struct operator__onnx__add__attribute{
   //No attributes
-} operator__onnx__add__attribute;
+};
 
-typedef struct operator__onnx__add__context{
+struct operator__onnx__add__context{
   struct operator__onnx__add__input *in;
   struct operator__onnx__add__output *out;
   struct operator__onnx__add__attribute *attr;
-  onnx_operator run;
-} operator__onnx__add__context;
+  int (*operator)(struct operator__context*);
+};
 
 /* Conv operator */
-typedef struct operator__onnx__conv__input{
+struct operator__onnx__conv__input{
   Onnx__TensorProto *X;
   Onnx__TensorProto *W;
   Onnx__TensorProto *B;
-} operator__onnx__conv__input;
+};
 
-typedef struct operator__onnx__conv__output{
+struct operator__onnx__conv__output{
   Onnx__TensorProto *Y;
-} operator__onnx__conv__output;
+};
 
-typedef struct operator__onnx__conv__attribute{
+struct operator__onnx__conv__attribute{
   Onnx__AttributeProto *auto_pad;
   Onnx__AttributeProto *dilations;
   Onnx__AttributeProto *group;
   Onnx__AttributeProto *kernel_shape;
   Onnx__AttributeProto *pads;
   Onnx__AttributeProto *strides;
-} operator__onnx__conv__attribute;
+};
 
-typedef struct operator__onnx__conv__context{
+struct operator__onnx__conv__context{
   struct operator__onnx__conv__input *in;
   struct operator__onnx__conv__output *out;
   struct operator__onnx__conv__attribute *attr;
-  onnx_operator run;
-} operator__onnx__conv__context;
+  int (*operator)(struct operator__context*);
+};
 
 
 
 /* Relu operator */
-typedef struct operator__onnx__relu__input{
+struct operator__onnx__relu__input{
   Onnx__TensorProto *X;
-} operator__onnx__relu__input;
+};
 
-typedef struct operator__onnx__relu__output{
+struct operator__onnx__relu__output{
   Onnx__TensorProto *Y;
-} operator__onnx__relu__output;
+};
 
-typedef struct operator__onnx__relu__attribute{
+struct operator__onnx__relu__attribute{
   // Not attributes
-} operator__onnx__relu__attribute;
+};
 
-typedef struct operator__onnx__relu__context{
+struct operator__onnx__relu__context{
   struct operator__onnx__relu__input *in;
   struct operator__onnx__relu__output *out;
   struct operator__onnx__relu__attribute *attr;
-  onnx_operator run;
-} operator__onnx__relu__context;
+  int (*operator)(struct operator__context*);
+};
 
 
 
 /* Maxpool operator */
-typedef struct operator__onnx__maxpool__input{
+struct operator__onnx__maxpool__input{
   Onnx__TensorProto *X;
-} operator__onnx__maxpool__input;
+};
 
-typedef struct operator__onnx__maxpool__output{
+struct operator__onnx__maxpool__output{
   Onnx__TensorProto *Y;
   Onnx__TensorProto *Indices;
-} operator__onnx__maxpool__output;
+};
 
-typedef struct operator__onnx__maxpool__attribute{
+struct operator__onnx__maxpool__attribute{
   Onnx__AttributeProto *auto_pad;
   Onnx__AttributeProto *ceil_mode;
   Onnx__AttributeProto *dilations;
@@ -223,59 +232,59 @@ typedef struct operator__onnx__maxpool__attribute{
   Onnx__AttributeProto *pads;
   Onnx__AttributeProto *storage_order;
   Onnx__AttributeProto *strides;
-} operator__onnx__maxpool__attribute;
+};
 
-typedef struct operator__onnx__maxpool__context{
+struct operator__onnx__maxpool__context{
   struct operator__onnx__maxpool__input *in;
   struct operator__onnx__maxpool__output *out;
   struct operator__onnx__maxpool__attribute *attr;
-  onnx_operator run;
-} operator__onnx__maxpool__context;
+  int (*operator)(struct operator__context*);
+};
 
 
 /* Reshape operator */
-typedef struct operator__onnx__reshape__input{
+struct operator__onnx__reshape__input{
   Onnx__TensorProto *data;
   Onnx__TensorProto *shape;
-} operator__onnx__reshape__input;
+};
 
-typedef struct operator__onnx__reshape__output{
+struct operator__onnx__reshape__output{
   Onnx__TensorProto *reshaped;
-} operator__onnx__reshape__output;
+};
 
-typedef struct operator__onnx__reshape__attribute{
+struct operator__onnx__reshape__attribute{
   // Not attributes
-} operator__onnx__reshape__attribute;
+};
 
-typedef struct operator__onnx__reshape__context{
+struct operator__onnx__reshape__context{
   struct operator__onnx__reshape__input *in;
   struct operator__onnx__reshape__output *out;
   struct operator__onnx__reshape__attribute *attr;
-  onnx_operator run;
-} operator__onnx__reshape__context;
+  int (*operator)(struct operator__context*);
+};
 
 
 
 /* Matmul */
-typedef struct operator__onnx__matmul__input{
+struct operator__onnx__matmul__input{
   Onnx__TensorProto *A;
   Onnx__TensorProto *B;
-} operator__onnx__matmul__input;
+};
 
-typedef struct operator__onnx__matmul__output{
+struct operator__onnx__matmul__output{
   Onnx__TensorProto *Y;
-} operator__onnx__matmul__output;
+};
 
-typedef struct operator__onnx__matmul__attribute{
+struct operator__onnx__matmul__attribute{
   // No attributes
-} operator__onnx__matmul__attribute;
+};
 
-typedef struct operator__onnx__matmul__context{
+struct operator__onnx__matmul__context{
   struct operator__onnx__matmul__input *in;
   struct operator__onnx__matmul__output *out;
   struct operator__onnx__matmul__attribute *attr;
-  onnx_operator run;
-} operator__onnx__matmul__context;
+  int (*operator)(struct operator__context*);
+};
 
 
 /* Template */

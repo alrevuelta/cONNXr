@@ -33,7 +33,7 @@
  *  \param[in/out]  output      Array of pointer to the outputs of the operators
  *  \return         error       Different than 0 if an error was produced
  */
-int operator_add(operator__context *context)
+int operator_add(struct operator__context *context)
 {
   TRACE_LEVEL0("Calling operator_add\n");
 
@@ -48,7 +48,7 @@ int operator_add(operator__context *context)
 
   /* Here we can easily access all the i/o and attributes. NULL if no present */
   /* sc = specific context*/
-  operator__onnx__add__context *sc = (operator__onnx__add__context *) context;
+  struct operator__onnx__add__context *sc = (void *) context;
 
   /* There order of operands if unknown. The longest one will determine the output */
   /* Quick and dirty solution */

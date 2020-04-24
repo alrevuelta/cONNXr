@@ -38,9 +38,14 @@ int main(int argc, char **argv){
     clock_t start, end;
     double cpu_time_used;
 
-    printf("Running inference on %s model...", model->graph->name);
+    struct operator__context** all_op_context = resolve_check_get_input_and_attr(model,
+                                                      inputs,
+                                                      1);
+
+    printf("Running inference on %s model...\n", model->graph->name);
     start = clock();
-    Onnx__TensorProto **output = inference(model, inputs, 1);
+    Onnx__TensorProto **output = inference(all_op_context,
+                                           model->graph->n_node);
     end = clock();
     printf("ok!\n"); // TODO Print nok if it fails
 

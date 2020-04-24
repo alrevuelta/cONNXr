@@ -20,11 +20,11 @@
  *  \param[in/out]  output      Array of pointer to the outputs of the operators
  *  \return         error       Different than 0 if an error was produced
  */
-int operator_relu(operator__context *context)
+int operator_relu(struct operator__context *context)
  {
    TRACE_LEVEL0("Calling operator_relu\n");
 
-   operator__onnx__relu__context *sc = (operator__onnx__relu__context *) context;
+   struct operator__onnx__relu__context *sc = (void *) context;
 
    debug_print_dims(sc->in->X->n_dims, sc->in->X->dims);
 

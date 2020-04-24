@@ -31,8 +31,12 @@ void test_model_mnist(void)
   clock_t start, end;
   double cpu_time_used;
 
+  struct operator__context** all_op_context = resolve_check_get_input_and_attr(model,
+                                                    inputs,
+                                                    1);
   start = clock();
-  Onnx__TensorProto **output = inference(model, inputs, 1);
+  Onnx__TensorProto **output = inference(all_op_context,
+                                         model->graph->n_node);
   end = clock();
 
   /* TODO: Could be nice to use model->graph->name if we can be sure that
@@ -96,7 +100,12 @@ static void test_model_mnist_node(char *outputName)
   convertRawDataOfTensorProto(out0set0);
   inp0set0->name = "Input3";
   Onnx__TensorProto *inputs[] = { inp0set0 };
-  Onnx__TensorProto **output = inference(model, inputs, 1);
+
+  struct operator__context** all_op_context = resolve_check_get_input_and_attr(model,
+                                                    inputs,
+                                                    1);
+  Onnx__TensorProto **output = inference(all_op_context,
+                                         model->graph->n_node);
 
   int outputToAssert = 4;
   TRACE_LEVEL0("Asserting output %s", output[outputToAssert]->name);

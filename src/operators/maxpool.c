@@ -21,12 +21,12 @@
  *  \param[in/out]  output      Array of pointer to the outputs of the operators
  *  \return         error       Different than 0 if an error was produced
  */
-int operator_maxpool(operator__context *context)
+int operator_maxpool(struct operator__context *context)
 {
   TRACE_LEVEL0("Calling operator_maxpool\n");
   //debug_print_attributes(n_attribute, attribute);
 
-  operator__onnx__maxpool__context *sc = (operator__onnx__maxpool__context *) context;
+  struct operator__onnx__maxpool__context *sc = (void *) context;
 
   // number of dimensions do not change
   sc->out->Y->dims   = malloc(sc->in->X->n_dims * sizeof(int64_t));
