@@ -2,27 +2,78 @@ import inspect
 import os
 import pathlib
 
-class OperatorIsOneOfTypes:
+class OperatorCheckAttributes:
+    _template_condition = '''
+            {{
+                .skip = {skip},
+                .name = "{name}",
+                .optional = {optional},
+                .type = {type},
+            }}
+'''
     _template_check = '''
-{{ // check if tensor '{name}' has valid type
-    Onnx__TensorProto *tensor = NULL;
-    const char *name = "{name}";
-    size_t n_tensor = operator_findTensors(&tensor, &name, 1, {inOrOutput}, n_{inOrOutput});
-    if (n_tensor == 0) {{
-        fprintf(stderr,"tensor '%s' not found!", name);
-        exit(1);
+    {{ // check if attributes have valid types
+        operator_check_condition_attribute conditions[{n_conditions}] = {{
+            {conditions}
+        }};
+        check &= operator_check_attributes("{operator_name}",
+                                           {n_conditions},
+                                           conditions,
+                                           attribute);
     }}
-    uint32_t types[] = {{
+'''
+
+    def __init__(self, schema):
+        self.schema = schema
+
+    def text(self,prefix=""):
+        conditions = []
+        for attribute in self.schema.attributes:
+            conditions.append(self._template_condition.format(
+                skip = "false",
+                name = attribute.name,
+                optional = attribute.optional,
+                type = attribute.type
+            ).strip())
+
+        return self._template_check.format(
+            n_conditions = len(conditions),
+            conditions = f",".join(conditions),
+            operator_name = self.schema.operator_name,
+        ).strip()
+
+    def __str__(self):
+        return self.text()
+
+    def __repr__(self):
+        return f"{self.__name__}({self.schema.__repr__()})"
+
+
+class OperatorCheckTensors:
+    _template_types = '''
+    uint32_t types_{name}[{n_types}] = {{
         {types}
     }};
-    if (!operator_tensorIsOneOfTypes(tensor, types, {n_types})) {{
-        fprintf(stderr,
-            "{inOrOutput} tensor '%s' has unexpected type: %u\\n",
-            name,
-            tensor->data_type
-        );
-        exit(1);
-    }}
+'''
+    _template_condition = '''
+        {{
+            .skip = {skip},
+            .name = "{name}",
+            .optional = {optional},
+            .n_types = {n_types},
+            .types  = types_{name}
+        }}
+'''
+    _template_check = '''
+{{ // check if {tensors} tensors have valid types
+    {types}
+    operator_check_condition_tensor conditions[{n_conditions}] = {{
+        {conditions}
+    }};
+    valid &= operator_check_tensors("{operator_name}",
+                                     {n_conditions},
+                                     conditions,
+                                     {tensors});
 }}
 '''
     def __init__(self, schema):
@@ -30,78 +81,78 @@ class OperatorIsOneOfTypes:
 
     def text(self, prefix=""):
         checks = []
-        for i in self.schema.inputs:
-            types = set()
-            for t in i.types:
-                for tt in t.onnxTensorDataTypes():
-                    types.add(tt)
-
-            checks.append(self._template_check.format(
-                inOrOutput = "input",
-                n_types = len(types),
-                name = i.name,
-                types = ", ".join(types),
+        input_types = []
+        input_conditions = []
+        output_types = []
+        output_conditions = []
+        for input in self.schema.inputs:
+            types = [ t.onnxTensorDataTypes()[0] for t in input.types ]
+            input_types.append(self._template_types.format(
+                name = input.name,
+                n_types = len(input.types),
+                types = f",\n{' '*8}".join(types)
             ).strip())
-
-        for o in self.schema.outputs:
-            types = set()
-            for t in o.types:
-                for tt in t.onnxTensorDataTypes():
-                    types.add(tt)
-            checks.append(self._template_check.format(
-                inOrOutput = "output",
-                n_types = len(types),
-                name = o.name,
-                types = f",\n{prefix}{prefix}".join(types),
+            input_conditions.append(self._template_condition.format(
+                skip = "false",
+                name = input.name,
+                optional = "true" if input.optional else "false",
+                n_types = len(types)
             ).strip())
+        checks.append(self._template_check.format(
+            types = f"\n{' '*4}".join(input_types),
+            n_conditions = len(input_conditions),
+            conditions = ",".join(input_conditions),
+            operator_name = f"{self.schema.operator_name} input",
+            tensors = "input"
+        ).strip())
+        for output in self.schema.outputs:
+            types = [ t.onnxTensorDataTypes()[0] for t in output.types ]
+            output_types.append(self._template_types.format(
+                name = output.name,
+                n_types = len(output.types),
+                types = f"\n{' '*8}".join(types)
+            ).strip())
+            output_conditions.append(self._template_condition.format(
+                skip = "false",
+                name = output.name,
+                optional = "true" if output.optional else "false",
+                n_types = len(types)
+            ).strip())
+        checks.append(self._template_check.format(
+            types = f"\n{' '*4}".join(output_types),
+            n_conditions = len(output_conditions),
+            conditions = ",".join(output_conditions),
+            operator_name = f"{self.schema.operator_name} output",
+            tensors = "output"
+        ).strip())
         return f"\n".join(checks).strip().replace("\n",f"\n{prefix}")
 
     def __str__(self):
         return self.text()
 
     def __repr__(self):
-        return f"OperatorIsOneOfTypes({self.schema.__repr__()})"
+        return f"{self.__name__}({self.schema.__repr__()})"
 
 
-class OperatorCheckInOrOutputNumber:
+class OperatorCheckRange:
     _template = '''
-{{ // check if inputs and outputs have valid range
-    if (n_input < {min_in}) {{
-        fprintf(stderr,
-            "mismatch of input tensors: "
-            "found %" PRId64 ", "
-            "expected at least {min_in}\\n",
-            n_input
-        );
-        exit(1);
-    }}
-    if (n_input > {max_in}) {{
-        fprintf(stderr,
-            "mismatch of input tensors: "
-            "found %" PRId64 ", "
-            "expected at most {max_in}\\n",
-            n_input
-        );
-        exit(1);
-    }}
-    if (n_output < {min_out}) {{
-        fprintf(stderr,
-            "mismatch of output tensors: "
-            "found %" PRId64 ", "
-            "expected at least {min_out}\\n",
-            n_output
-        );
-        exit(1);
-    }}
-    if (n_output > {max_out}) {{
-        fprintf(stderr,
-            "mismatch of output tensors: "
-            "found %" PRId64 ", "
-            "expected at most {max_out}\\n",
-            n_output
-        );
-        exit(1);
-    }}
+{{ // check if argument number is in valid range
+    operator_check_condition_range condition_input = {{
+        .name = "input",
+        .min  = {min_input},
+        .max  = {max_input}
+    }};
+    operator_check_condition_range condition_output = {{
+        .name = "output",
+        .min  = {min_output},
+        .max  = {max_output}
+    }};
+    valid &= operator_check_constraint({operator_name},
+                                       &condition_input,
+                                       n_input);
+    valid &= operator_check_constraint({operator_name},
+                                       &condition_output,
+                                       n_output);
 }}
 '''
 
@@ -110,45 +161,42 @@ class OperatorCheckInOrOutputNumber:
 
     def text(self, prefix=""):
         return self._template.format(
-            min_in = self.schema.range_input[0],
-            max_in = self.schema.range_input[1],
-            min_out = self.schema.range_output[0],
-            max_out = self.schema.range_output[1],
+            max_input = self.schema.range_input[1],
+            max_output = self.schema.range_output[1],
+            min_input = self.schema.range_input[0],
+            min_output = self.schema.range_output[0],
+            operator_name = self.schema.operator_name,
         ).strip().replace("\n",f"\n{prefix}")
 
     def __str__(self):
         return self.text()
 
     def __repr__(self):
-        return f"OperatorCheckInOrOutputNumber({self.schema.__repr__()})"
+        return f"{self.__name__}({self.schema.__repr__()})"
 
-class OperatorCheckSameType:
+class OperatorCheckConstraints:
+    _template_condition = '''
+        {{
+            .skip = {skip},
+            .name = "{name}",
+            .optional = {optional}
+        }}
+'''
     _template_check = '''
 {{ // check if multiple tensors constrained by '{constraint}' have same type
-    size_t n_tensors = 0;
-    Onnx__TensorProto *tensors[{n_tensors_max}];
-    {find_inputs}
-    {find_outputs}
-    if ( !operator_tensorsAreOfSameType( tensors, n_tensors ) ) {{
-        fprintf(stderr, "tensor type mismatch between: ")
-        for (size_t i = 0; i < n_tensors; i++) {{
-            fprintf(stderr, "%s, ", tensors[i]->name);
-        }}
-    fprintf(stderr, "\\n");
-    exit(1);
-    }}
-}}
-'''
-    _template_find = '''
-{{ // find {inOrOutput}s for constraint '{constraint}'
-    char *names = {{ {names} }};
-    n_tensors += operator_findTensors(
-        tensors,
-        names,
-        sizeof(names)/sizeof(*names),
-        {inOrOutput_list},
-        {inOrOutput_length}
-    );
+    operator_check_condition_constraint conditions_input[{n_conditions_input}] = {{
+        {conditions_input}
+    }};
+    operator_check_condition_constraint conditions_output[{n_conditions_output}] = {{
+        {conditions_output}
+    }};
+    valid &= operator_check_constraint("{operator_name} {constraint}",
+                                       {n_conditions_input},
+                                       conditions_input,
+                                       input,
+                                       {n_conditions_output},
+                                       conditions_output,
+                                       output);
 }}
 '''
 
@@ -157,66 +205,45 @@ class OperatorCheckSameType:
 
     def text(self,prefix=""):
         checks = []
-        constraint2both = {}
-        constraint2input = {}
-        constraint2output = {}
-        for input in self.schema.inputs:
-            if input.constraint in self.schema.constraints:
-                constraint2both.setdefault(input.constraint, []).append(input)
-                constraint2input.setdefault(input.constraint, []).append(input)
-                constraint2output.setdefault(input.constraint, [])
-        for output in self.schema.outputs:
-            if output.constraint in self.schema.constraints:
-                constraint2both.setdefault(output.constraint, []).append(output)
-                constraint2input.setdefault(output.constraint, [])
-                constraint2output.setdefault(output.constraint, []).append(output)
-        for constraint, inOrOutputs in constraint2both.items():
-            if len(inOrOutputs) < 2:
-                checks.append(f"// skip check if multiple tensors constrained by '{constraint}' have same type ({len(inOrOutputs)} tensor)")
-            else:
-                find_inputs = f"// no input for constraint '{constraint}'"
-                find_outputs = f"// no output for constraint '{constraint}'"
-                inputs = constraint2input[constraint]
-                outputs = constraint2output[constraint]
-                if inputs:
-                    find_inputs = self._template_find.format(
-                        constraint=constraint,
-                        inOrOutput="input",
-                        names=" ".join([f'"{i.name}"' for i in inputs]),
-                        inOrOutput_list="input",
-                        inOrOutput_length=len(inputs)
-                    ).strip()
-                if outputs:
-                    find_outputs = self._template_find.format(
-                        constraint=constraint,
-                        inOrOutput="output",
-                        names=", ".join([f'"{o.name}"' for o in outputs]),
-                        inOrOutput_list="output",
-                        inOrOutput_length=len(outputs)
-                    ).strip()
-                checks.append(self._template_check.format(
-                    constraint=constraint,
-                    n_tensors_max=len(inOrOutputs),
-                    find_inputs=find_inputs,
-                    find_outputs=find_outputs
+        for constraint in self.schema.constraints.keys():
+            conditions_input = []
+            conditions_output = []
+            for input in self.schema.inputs:
+                conditions_input.append(self._template_condition.format(
+                    skip = "false" if input.constraint == constraint else "true",
+                    name = input.name,
+                    optional = "true" if input.optional else "false",
                 ).strip())
+            for output in self.schema.outputs:
+                conditions_output.append(self._template_condition.format(
+                    skip = "false" if output.constraint == constraint else "true",
+                    name = output.name,
+                    optional = "true" if output.optional else "false",
+                ).strip())
+
+            checks.append(self._template_check.format(
+                conditions_input = ",".join(conditions_input),
+                conditions_output = ",".join(conditions_output),
+                constraint = constraint,
+                n_conditions_input = len(conditions_input),
+                n_conditions_output = len(conditions_output),
+                operator_name = self.schema.operator_name,
+            ))
         return f"\n".join(checks).strip().replace("\n",f"\n{prefix}")
 
     def __str__(self):
         return self.text()
 
     def __repr__(self):
-        return f"OperatorCheckSameType({self.schema.__repr__()})"
+        return f"{self.__name__}({self.schema.__repr__()})"
 
 
 class OperatorSanityCheck:
     _template = '''
 //this file was generated by {script}
 #include "{operator_name}.h"
-#include <inttypes.h>
-#include <stdio.h>
 
-onnx_operator {operator_name}_resolve(
+bool {operator_name}_check(
     size_t                  n_input,
     Onnx__TensorProto    ** input,
     size_t                  n_attribute,
@@ -224,26 +251,28 @@ onnx_operator {operator_name}_resolve(
     size_t                  n_output,
     Onnx__TensorProto    ** output
 ){{
-    {checks_inOrOutput_number}
-    {checks_sameType}
-    {checks_ofType}
+    bool valid = true;
+    {check_tensors}
+    {check_attributes}
+    {check_constraints}
+    return valid;
 }}
 '''
 
     def __init__(self, schema, path):
         self.schema = schema
         self.path = path
-        self.checks_inOrOutput_number = OperatorCheckInOrOutputNumber(self.schema).text(" "*4)
-        self.checks_sameType = OperatorCheckSameType(self.schema).text(" "*4)
-        self.checks_ofType = OperatorIsOneOfTypes(self.schema).text(" "*4)
+        self.check_tensors = OperatorCheckTensors(self.schema).text(" "*4)
+        self.check_attributes = OperatorCheckAttributes(self.schema).text(" "*4)
+        self.check_constraints = OperatorCheckConstraints(self.schema).text(" "*4)
 
     def text(self):
       return self._template.format(
         script=self._rel_path(inspect.getfile(inspect.currentframe())),
         operator_name=self.schema.operator_name,
-        checks_inOrOutput_number=self.checks_inOrOutput_number,
-        checks_sameType=self.checks_sameType,
-        checks_ofType=self.checks_ofType,
+        check_tensors=self.check_tensors,
+        check_attributes=self.check_attributes,
+        check_constraints=self.check_constraints,
       )
 
     def filename(self, path):
@@ -259,4 +288,5 @@ onnx_operator {operator_name}_resolve(
         return self.text()
 
     def __repr__(self):
-        return f"OperatorSanityCheck({self.schema.__repr__()}, {self.path.__repr__()})"
+        return f"{self.__name__}({self.schema.__repr__()}, {self.path.__repr__()})"
+
