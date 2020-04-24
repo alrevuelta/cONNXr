@@ -343,20 +343,17 @@ class OnnxAttribute():
     def __init__(self, name, attribute):
         self.name = name
         if isinstance(attribute, dict):
-            self.required = attribute['required']
+            self.optional = attribute['optional']
             self.type = attribute['type']
             self.description = attribute['description']
         else:
-            self.required = attribute.required
+            self.optional = attribute.required
             self.type = attribute.type.name
             self.description = attribute.description
 
     def text(self, prefix=""):
         lines = []
-        required = "(optional)"
-        if self.required:
-            required = "(required)"
-        lines.append(f"{prefix}Attribute {self.type} {self.name} {required}:")
+        lines.append(f"{prefix}Attribute {self.type} {self.name} {'(optional)'*self.optional}:")
         lines.append(format_text(prefix + "  ", None, [self.description]))
         return "\n".join(lines)
 
@@ -388,14 +385,16 @@ class OnnxInput():
             self.name = input['name']
             self.description = input['description']
             self.isHomogeneous = input['isHomogeneous']
-            self.option = input['option']
+            self.optional = input['optional']
+            self.variadic = input['variadic']
             self.constraint = input['constraint']
             self.types = input['types']
         else:
             self.name = input.name
             self.description = input.description.strip()
             self.isHomogeneous = input.isHomogeneous
-            self.option = input.option.name
+            self.optional = (input.option.name == "Optional")
+            self.variadic = (input.option.name == "Variadic")
             self.constraint = input.typeStr
             self.types = OnnxTypeList(input.types)
 
@@ -432,14 +431,16 @@ class OnnxOutput():
             self.name = output['name']
             self.description = output['description']
             self.isHomogeneous = output['isHomogeneous']
-            self.option = output['option']
+            self.optional = output['optional']
+            self.variadic = output['variadic']
             self.constraint = output['constraint']
             self.types = output['types']
         else:
             self.name = output.name
             self.description = output.description
             self.isHomogeneous = output.isHomogeneous
-            self.option = output.option.name
+            self.optional = (output.option.name == "Optional")
+            self.variadic = (output.option.name == "Variadic")
             self.constraint = output.typeStr
             self.types = OnnxTypeList(output.types)
 
