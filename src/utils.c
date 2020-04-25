@@ -39,17 +39,12 @@ Onnx__TensorProto* searchTensorProtoByName(Onnx__ModelProto *model,
     }
   }
 
-  /* As a quick prototype, I have created
-  two tables that store previous outputs and its name.
-  */
-  // lazy_outputs_mapping_tensors
-  // lazy_output_mapping_names
-  for (int outputsIdx = 0; outputsIdx < _outputIdx; outputsIdx++)
+  for (int outputsIdx = 0; outputsIdx < tensor_table->n_tensors; outputsIdx++)
   {
-    if (!strcmp(lazy_output_mapping_names[outputsIdx], name))
+    if (!strcmp(tensor_table->named_tensors[outputsIdx].name, name))
     {
       TRACE_LEVEL0("Found TensorProto in outputs list with name=%s\n", name);
-      return *lazy_outputs_mapping_tensors[outputsIdx];
+      return *tensor_table->named_tensors[outputsIdx].tensor;
     }
   }
 

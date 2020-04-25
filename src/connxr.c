@@ -38,14 +38,15 @@ int main(int argc, char **argv){
     clock_t start, end;
     double cpu_time_used;
 
-    struct operator__context** all_op_context = resolve_check_get_input_and_attr(model,
+    struct operator__context** all_op_context = resolve_check_get_input_and_attr(
+                                                      model,
                                                       inputs,
                                                       1);
 
     printf("Running inference on %s model...\n", model->graph->name);
     start = clock();
-    Onnx__TensorProto **output = inference(all_op_context,
-                                           model->graph->n_node);
+    inference(all_op_context,
+              model->graph->n_node);
     end = clock();
     printf("ok!\n"); // TODO Print nok if it fails
 
@@ -54,7 +55,9 @@ int main(int argc, char **argv){
     printf("Predicted in %f cycles or %f seconds\n", (double) (end - start), cpu_time_used);
 
     /* Last calculated output is 11 for mnist */
-    Onnx__TensorProto *mnist_output = *lazy_outputs_mapping_tensors[11];
+    //Onnx__TensorProto *mnist_output = *lazy_outputs_mapping_tensors[11];
+    struct operator__onnx__add__context *out = (void *)(all_op_context[11]);
+    Onnx__TensorProto *mnist_output = out->out->C;
 
     for (int i = 0; i < mnist_output->n_float_data; i++){
       printf("n_float_data[%d] = %f\n", i, mnist_output->float_data[i]);

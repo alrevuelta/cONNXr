@@ -6,22 +6,10 @@
 #include "trace.h"
 #include "inference.h"
 
-int _outputIdx = 0;
-Onnx__TensorProto *_outputs[MAX_NUM_OF_OUTPUTS] = {};
+struct output_tensors* tensor_table;
 
-Onnx__TensorProto** lazy_outputs_mapping_tensors[MY_TABLE_SIZE] = {};
-
-char lazy_output_mapping_names[MY_TABLE_SIZE][MAX_STRING_SIZE];
-
-//struct operator__context** all_op_context;
-
-
-Onnx__TensorProto** inference(struct operator__context** all_op_context, int n_nodes)
+void inference(struct operator__context** all_op_context, int n_nodes)
 {
-  //int error = 0;
-
-  /* Dirty trick to allow multiple runs. There is a memory leak for sure */
-  _outputIdx = 0;
   TRACE_LEVEL0("Calling inference\n");
 
   // Iterate all nodes in the graph
@@ -30,11 +18,6 @@ Onnx__TensorProto** inference(struct operator__context** all_op_context, int n_n
     printf("Calculating node = %d\n", nodeIdx);
     all_op_context[nodeIdx]->operator(all_op_context[nodeIdx]);
   }
-
-
-
-  // TODO. Kept from legacy
-  return _outputs;
 }
 
 /* Called once the model is loaded. Resolved each operator to a its function
@@ -46,6 +29,10 @@ struct operator__context** resolve_check_get_input_and_attr(
 {
   // Not sure about this malloc
   struct operator__context **all_op_context = malloc(sizeof(struct operator__context) * model->graph->n_node);
+
+  tensor_table = malloc(sizeof(*tensor_table));
+  tensor_table->n_tensors = 0;
+
   for (int nodeIdx = 0; nodeIdx < model->graph->n_node; nodeIdx++)
   {
     /* New idea prototyping, just a proof of concept */
@@ -79,10 +66,10 @@ struct operator__context** resolve_check_get_input_and_attr(
       // Resolver operator
       c->operator = operator_add;
 
-
-      lazy_outputs_mapping_tensors[_outputIdx] = &c->out->C;
-      strcpy(lazy_output_mapping_names[_outputIdx], model->graph->node[nodeIdx]->output[0]);
-      _outputIdx++;
+      int tensor_idx = tensor_table->n_tensors;
+      tensor_table->named_tensors[tensor_idx].tensor = &c->out->C;
+      strcpy(tensor_table->named_tensors[tensor_idx].name, model->graph->node[nodeIdx]->output[0]);
+      tensor_table->n_tensors++;
 
       all_op_context[nodeIdx] = (struct operator__context*)c;
     }else if(!strcmp(model->graph->node[nodeIdx]->op_type, "Conv")){
@@ -132,9 +119,10 @@ struct operator__context** resolve_check_get_input_and_attr(
       // Resolver operator
       c->operator = operator_conv;
 
-      lazy_outputs_mapping_tensors[_outputIdx] = &c->out->Y;
-      strcpy(lazy_output_mapping_names[_outputIdx], model->graph->node[nodeIdx]->output[0]);
-      _outputIdx++;
+      int tensor_idx = tensor_table->n_tensors;
+      tensor_table->named_tensors[tensor_idx].tensor = &c->out->Y;
+      strcpy(tensor_table->named_tensors[tensor_idx].name, model->graph->node[nodeIdx]->output[0]);
+      tensor_table->n_tensors++;
 
       all_op_context[nodeIdx] = (struct operator__context*)c;
 
@@ -164,9 +152,10 @@ struct operator__context** resolve_check_get_input_and_attr(
       c->operator = operator_relu;
 
 
-      lazy_outputs_mapping_tensors[_outputIdx] = &c->out->Y;
-      strcpy(lazy_output_mapping_names[_outputIdx], model->graph->node[nodeIdx]->output[0]);
-      _outputIdx++;
+      int tensor_idx = tensor_table->n_tensors;
+      tensor_table->named_tensors[tensor_idx].tensor = &c->out->Y;
+      strcpy(tensor_table->named_tensors[tensor_idx].name, model->graph->node[nodeIdx]->output[0]);
+      tensor_table->n_tensors++;
 
       all_op_context[nodeIdx] = (struct operator__context*)c;
 
@@ -203,9 +192,10 @@ struct operator__context** resolve_check_get_input_and_attr(
 
       // TODO! For simplification only 1 output is stored. Maxpool has a second optional one. Not used in mnist.
 
-      lazy_outputs_mapping_tensors[_outputIdx] = &c->out->Y;
-      strcpy(lazy_output_mapping_names[_outputIdx], model->graph->node[nodeIdx]->output[0]);
-      _outputIdx++;
+      int tensor_idx = tensor_table->n_tensors;
+      tensor_table->named_tensors[tensor_idx].tensor = &c->out->Y;
+      strcpy(tensor_table->named_tensors[tensor_idx].name, model->graph->node[nodeIdx]->output[0]);
+      tensor_table->n_tensors++;
 
       all_op_context[nodeIdx] = (struct operator__context*)c;
 
@@ -241,10 +231,10 @@ struct operator__context** resolve_check_get_input_and_attr(
       c->operator = operator_reshape;
 
 
-
-      lazy_outputs_mapping_tensors[_outputIdx] = &c->out->reshaped;
-      strcpy(lazy_output_mapping_names[_outputIdx], model->graph->node[nodeIdx]->output[0]);
-      _outputIdx++;
+      int tensor_idx = tensor_table->n_tensors;
+      tensor_table->named_tensors[tensor_idx].tensor = &c->out->reshaped;
+      strcpy(tensor_table->named_tensors[tensor_idx].name, model->graph->node[nodeIdx]->output[0]);
+      tensor_table->n_tensors++;
 
       all_op_context[nodeIdx] = (struct operator__context*)c;
 
@@ -279,10 +269,10 @@ struct operator__context** resolve_check_get_input_and_attr(
      c->operator = operator_matmul;
 
 
-
-     lazy_outputs_mapping_tensors[_outputIdx] = &c->out->Y;
-     strcpy(lazy_output_mapping_names[_outputIdx], model->graph->node[nodeIdx]->output[0]);
-     _outputIdx++;
+     int tensor_idx = tensor_table->n_tensors;
+     tensor_table->named_tensors[tensor_idx].tensor = &c->out->Y;
+     strcpy(tensor_table->named_tensors[tensor_idx].name, model->graph->node[nodeIdx]->output[0]);
+     tensor_table->n_tensors++;
 
      all_op_context[nodeIdx] = (struct operator__context*)c;
 

@@ -3,20 +3,20 @@
 #include "pb/onnx.pb-c.h"
 #include "operators/operators.h"
 
-// TODO Hardcoded for initial tests
-#define MAX_NUM_OF_OUTPUTS 40
-#define NUMBER_OF_OPERATORS 14
-extern Onnx__TensorProto *_outputs[MAX_NUM_OF_OUTPUTS];
-extern int _outputIdx;
+struct named_tensor {
+  char                name[50];   // name given by model
+  Onnx__TensorProto **tensor;     // points to the tensor in the context
+};
 
-// Temporal tables to store the mapping between the output and the name
-#define MY_TABLE_SIZE 30
-#define MAX_STRING_SIZE 50
-extern char lazy_output_mapping_names[MY_TABLE_SIZE][MAX_STRING_SIZE];
-extern Onnx__TensorProto** lazy_outputs_mapping_tensors[MY_TABLE_SIZE];
+struct output_tensors {
+  struct named_tensor  named_tensors[30]; //todo quick test
+  int                  n_tensors;         // number of tensors in the struct
+};
+
+extern struct output_tensors* tensor_table;
 
 // Investigate what to do with the output. Is it always a set of TensorProto?
-Onnx__TensorProto** inference(struct operator__context** all_op_context, int n_nodes);
+void inference(struct operator__context** all_op_context, int n_nodes);
 
 struct operator__context** resolve_check_get_input_and_attr();
 
