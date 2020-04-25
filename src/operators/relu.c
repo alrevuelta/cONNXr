@@ -39,36 +39,13 @@ int operator_relu(struct operator__context *context)
    sc->out->Y->has_raw_data = 0;
    sc->out->Y->data_type    = sc->in->X->data_type;
 
-   switch(sc->in->X->data_type)
+   sc->out->Y->n_float_data = sc->in->X->n_float_data;
+   sc->out->Y->float_data = malloc(sc->out->Y->n_float_data * sizeof(float));
+   for (int i = 0; i < sc->out->Y->n_float_data; i++)
    {
-     case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:
-     {
-       sc->out->Y->n_float_data = sc->in->X->n_float_data;
-       sc->out->Y->float_data = malloc(sc->out->Y->n_float_data * sizeof(float));
-       for (int i = 0; i < sc->out->Y->n_float_data; i++)
-       {
-         sc->out->Y->float_data[i] = sc->in->X->float_data[i] < 0 ? 0 : sc->in->X->float_data[i];
-       }
-     }
-       break;
-     case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT16:
-     {
-       // TODO
-     }
-       break;
-     case ONNX__TENSOR_PROTO__DATA_TYPE__DOUBLE:
-     {
-       sc->out->Y->n_double_data = sc->in->X->n_double_data;
-       sc->out->Y->double_data = malloc(sc->out->Y->n_double_data * sizeof(double));
-       for (int i = 0; i < sc->out->Y->n_double_data; i++)
-       {
-         sc->out->Y->double_data[i] = sc->in->X->double_data[i] < 0 ? 0 : sc->in->X->double_data[i];
-       }
-     }
-       break;
-     default:
-       break;
+     sc->out->Y->float_data[i] = sc->in->X->float_data[i] < 0 ? 0 : sc->in->X->float_data[i];
    }
+
    debug_print_dims(sc->out->Y->n_dims, sc->out->Y->dims);
    return 0;
  }

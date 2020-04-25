@@ -82,49 +82,13 @@ int operator_reshape(struct operator__context *context)
   sc->out->reshaped->has_raw_data = 0;
   sc->out->reshaped->data_type    = sc->in->data->data_type;
 
-  switch(sc->in->data->data_type)
-  {
-    case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:
-    {
-      sc->out->reshaped->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT;
-      sc->out->reshaped->n_float_data = sc->in->data->n_float_data;
-      sc->out->reshaped->float_data = malloc(sc->in->data->n_float_data * sizeof(float));
-      for (int i = 0; i < sc->in->data->n_float_data; i++) {
-        sc->out->reshaped->float_data[i] = sc->in->data->float_data[i];
-      }
-    }
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__UINT8:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__INT8:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__UINT16:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__INT16:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__INT32:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__INT64:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__STRING:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__BOOL:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT16:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__DOUBLE:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__UINT32:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__UINT64:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__COMPLEX64:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__COMPLEX128:
-      break;
-    default:
-      break;
+  sc->out->reshaped->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT;
+  sc->out->reshaped->n_float_data = sc->in->data->n_float_data;
+  sc->out->reshaped->float_data = malloc(sc->in->data->n_float_data * sizeof(float));
+  for (int i = 0; i < sc->in->data->n_float_data; i++) {
+    sc->out->reshaped->float_data[i] = sc->in->data->float_data[i];
   }
+  
   debug_print_dims(sc->out->reshaped->n_dims, sc->out->reshaped->dims);
   return 0;
 }

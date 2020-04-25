@@ -74,35 +74,27 @@ int operator_add(struct operator__context *context)
   sc->out->C->has_raw_data = 0;
   sc->out->C->data_type = sc->in->A->data_type;
 
-  switch(sc->in->A->data_type)
-  {
-    case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:
-    {
-      sc->out->C->float_data = malloc(sc->out->C->n_float_data * sizeof(float));
-      /* TODO: ugly */
-      for (int i = 0; i < sc->out->C->n_float_data; i++) {
-        /* Normal case where dimensions match */
-        if (sc->in->A->n_dims == sc->in->B->n_dims) {
-          sc->out->C->float_data[i] = sc->in->A->float_data[i] + sc->in->B->float_data[i];
-        /* Broadcasting. Hardcoded not working */
+  sc->out->C->float_data = malloc(sc->out->C->n_float_data * sizeof(float));
+  /* TODO: ugly */
+  for (int i = 0; i < sc->out->C->n_float_data; i++) {
+    /* Normal case where dimensions match */
+    if (sc->in->A->n_dims == sc->in->B->n_dims) {
+      sc->out->C->float_data[i] = sc->in->A->float_data[i] + sc->in->B->float_data[i];
+    /* Broadcasting. Hardcoded not working */
+    }else{
+      /* If inside loop :( */
+      if (sc->in->B->n_dims == 1){
+        sc->out->C->float_data[i] = sc->in->A->float_data[i] + sc->in->B->float_data[i%sc->in->B->dims[0]];
+      }else{
+        /* TODO Hardcoded for TINY YOLO */
+        if (sc->in->A->dims[0] == 3){ /* Remove this uAF*/
+          sc->out->C->float_data[i] = sc->in->A->float_data[i%3] + sc->in->B->float_data[i];
+        /* TODO Hardcoded for MNIST */
         }else{
-          /* If inside loop :( */
-          if (sc->in->B->n_dims == 1){
-            sc->out->C->float_data[i] = sc->in->A->float_data[i] + sc->in->B->float_data[i%sc->in->B->dims[0]];
-          }else{
-            /* TODO Hardcoded for TINY YOLO */
-            if (sc->in->A->dims[0] == 3){ /* Remove this uAF*/
-              sc->out->C->float_data[i] = sc->in->A->float_data[i%3] + sc->in->B->float_data[i];
-            /* TODO Hardcoded for MNIST */
-            }else{
-              sc->out->C->float_data[i] = sc->in->A->float_data[i] + sc->in->B->float_data[i/(sc->in->A->dims[2]*sc->in->A->dims[3])];
-            }
-          }
+          sc->out->C->float_data[i] = sc->in->A->float_data[i] + sc->in->B->float_data[i/(sc->in->A->dims[2]*sc->in->A->dims[3])];
         }
       }
-    } break;
-    default:
-      break;
+    }
   }
 
   debug_print_dims(sc->out->C->n_dims, sc->out->C->dims);

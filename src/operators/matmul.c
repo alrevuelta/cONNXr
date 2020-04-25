@@ -51,66 +51,18 @@ int operator_matmul(struct operator__context *context)
   sc->out->Y->dims[1]      = sc->in->B->dims[1];
   sc->out->Y->has_raw_data = 0;
 
-  switch(sc->in->A->data_type)
-  {
-    case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:
-    {
-      sc->out->Y->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT;
-      sc->out->Y->n_float_data = sc->in->A->dims[0] * sc->in->B->dims[1];
-      sc->out->Y->float_data = malloc(sc->in->A->dims[0] * sc->in->B->dims[1] * sizeof(float));
-      for (int i = 0; i < sc->in->A->dims[0]; i++) {
-        for (int j = 0; j < sc->in->B->dims[1]; j++) {
-          float sum = 0;
-          for (int p = 0; p < sc->in->A->dims[1]; p++) {
-            sum += (sc->in->A->float_data[i*sc->in->A->dims[1]+p] * sc->in->B->float_data[p*sc->in->B->dims[1]+j]);
-            // Saturate the value?
-          }
-          sc->out->Y->float_data[i*sc->in->B->dims[1]+j] = sum;
-        }
+  sc->out->Y->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT;
+  sc->out->Y->n_float_data = sc->in->A->dims[0] * sc->in->B->dims[1];
+  sc->out->Y->float_data = malloc(sc->in->A->dims[0] * sc->in->B->dims[1] * sizeof(float));
+  for (int i = 0; i < sc->in->A->dims[0]; i++) {
+    for (int j = 0; j < sc->in->B->dims[1]; j++) {
+      float sum = 0;
+      for (int p = 0; p < sc->in->A->dims[1]; p++) {
+        sum += (sc->in->A->float_data[i*sc->in->A->dims[1]+p] * sc->in->B->float_data[p*sc->in->B->dims[1]+j]);
+        // Saturate the value?
       }
-    } break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__INT32:
-    {
-      sc->out->Y->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__INT32;
-      sc->out->Y->n_int32_data = sc->in->A->dims[0] * sc->in->B->dims[1];
-      sc->out->Y->int32_data = malloc(sc->in->A->dims[0] * sc->in->B->dims[1] * sizeof(int32_t));
-      for (int i = 0; i < sc->in->A->dims[0]; i++) {
-        for (int j = 0; j < sc->in->B->dims[1]; j++) {
-          int32_t sum = 0;
-          for (int p = 0; p < sc->in->A->dims[1]; p++) {
-            sum += (sc->in->A->int32_data[i*sc->in->A->dims[1]+p] * sc->in->B->int32_data[p*sc->in->B->dims[1]+j]);
-            // Saturate the value?
-          }
-          sc->out->Y->int32_data[i*sc->in->B->dims[1]+j] = sum;
-        }
-      }
-    } break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__INT64:
-    {
-      // TODO
-      // Use n_int64_data, int64_data
-    } break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT16:
-    {
-      // TODO
-    } break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__DOUBLE:
-    {
-      // TODO
-      // Use n_double_data, double_data
-    } break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__UINT32:
-    {
-      // TODO
-      // Note sure but use n_uint64_data and uint64_data (same as uint64)
-    } break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__UINT64:
-    {
-      // TODO
-      // Note sure but use n_uint64_data and uint64_data (same as uint64)
-    } break;
-    default:
-      break;
+      sc->out->Y->float_data[i*sc->in->B->dims[1]+j] = sum;
+    }
   }
 
   debug_print_dims(sc->out->Y->n_dims, sc->out->Y->dims);
