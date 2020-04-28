@@ -130,8 +130,8 @@ onnx_operator {operator_name}_resolveType(
         switch=self.switch
       )
 
-    def filename(self, path):
-        path = str(path)
+    def filename(self):
+        path = str(self.path)
         path += f"/{self.schema.domain}"
         path += f"/{self.schema.operator_name}_resolveType.c"
         return pathlib.Path(path)

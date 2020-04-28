@@ -275,8 +275,8 @@ bool {operator_name}_check(
         check_constraints=self.check_constraints,
       )
 
-    def filename(self, path):
-        path = str(path)
+    def filename(self):
+        path = str(self.path)
         path += f"/{self.schema.domain}"
         path += f"/{self.schema.operator_name}_check.c"
         return pathlib.Path(path)

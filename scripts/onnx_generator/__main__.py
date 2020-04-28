@@ -61,6 +61,19 @@ parser.add_argument(
     help=f"where to put check src in main path (default: {args.check[0]})"
 )
 parser.add_argument(
+    "--no-sets",
+    action='count',
+    default=args.no_sets,
+    help="don't write sets src"
+)
+parser.add_argument(
+    "--sets",
+    nargs=1,
+    metavar="<path>",
+    default=args.sets,
+    help=f"where to put sets src in main path (default: {args.sets[0]})"
+)
+parser.add_argument(
     "-i", "--include",
     metavar="<regex>",
     nargs='+',
