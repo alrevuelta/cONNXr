@@ -63,8 +63,12 @@ CPPFLAGS+=-D TRACE_LEVEL=$(TRACE_LEVEL)
 LDLIBS+=-lcunit
 LDLIBS+=-lm
 
-SRCDIR+=src/operators
+INCDIR+=include
+INCDIR+=src
+INCDIR+=src/pb
+CPPFLAGS+=$(foreach DIR, $(INCDIR),-I $(DIR) )
 
+SRCDIR+=src/operators
 SRCDIR+=src/operators/check/onnx
 SRCDIR+=src/operators/resolve/onnx
 SRCDIR+=src/operators/implementation
@@ -73,9 +77,9 @@ SRCS+=$(foreach DIR, $(SRCDIR), $(wildcard $(DIR)/*.c))
 SRCS+=src/inference.c
 SRCS+=src/trace.c
 SRCS+=src/utils.c
-OBJS=$(SRCS:%.c=$(BUILDDIR)/obj/%.o)
+OBJS=$(SRCS:%.c=$(BUILDDIR)/%.o)
 
-$(BUILDDIR)/obj/%.o:%.c
+$(BUILDDIR)/%.o:%.c
 	@mkdir -p $(dir $@)
 	$(CC) -o $@ -c $(CFLAGS) $(CPPFLAGS) $^
 
@@ -89,19 +93,12 @@ ALL+=runtest
 TARGET+=runtest
 runtest: $(BUILDDIR)/runtest
 $(BUILDDIR)/runtest: $(OBJS)
-	$(CC) -o $@ test/tests.c $^ $(LDFLAGS) $(LDLIBS)
+	$(CC) -o $@ src/test/tests.c $^ $(CPPFLAGS) $(LDFLAGS) $(LDLIBS)
 
-.phony: clean_runtest
-CLEAN+=clean_runtest
-clean_runtest:
-	rm -f $(BUILDDIR)/runtest
-	-rmdir $(BUILDDIR)
-
-.phony: clean_objs
-CLEAN+=clean_objs
-clean_objs:
-	rm -rf $(BUILDDIR)/obj
-	-rmdir $(BUILDDIR)
+.phony: clean_build
+CLEAN+=clean_build
+clean_build:
+	rm -rf $(BUILDDIR)
 
 .phony:test_operators
 HELP_test_operators=run onnx backend test for each operator in OPERATORS (all if empty)
@@ -171,13 +168,7 @@ TARGET+=connxr
 ALL+=connxr
 connxr: $(BUILDDIR)/connxr
 $(BUILDDIR)/connxr: $(OBJS)
-	$(CC) -o $@ src/connxr.c $^ $(LDFLAGS) $(LDLIBS)
-
-.phony:clean_connxr
-CLEAN+=clean_connxr
-clean_connxr:
-	rm -f $(BUILDDIR)/connxr
-	-rmdir $(BUILDDIR)
+	$(CC) -o $@ src/connxr.c $^ $(CPPFLAGS) $(LDFLAGS) $(LDLIBS)
 
 define PROFILING_MODEL
 HELP_profiling_$(1)=run $(1) profiling

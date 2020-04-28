@@ -1,7 +1,7 @@
 #ifndef INFERENCE_H
 #define INFERENCE_H
-#include "pb/onnx.pb-c.h"
-#include "operators/operators.h"
+#include "onnx.pb-c.h"
+#include "operators.h"
 
 // TODO Hardcoded for initial tests
 #define MAX_NUM_OF_OUTPUTS 40

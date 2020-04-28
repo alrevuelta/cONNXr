@@ -5,9 +5,9 @@
 #include <CUnit/Basic.h>
 #include <glob.h>
 
-#include "../src/trace.h"
-#include "../src/inference.h"
-#include "../src/utils.h"
+#include "trace.h"
+#include "inference.h"
+#include "utils.h"
 #include <glob.h>
 
 #define FLOAT_TOLERANCE 0.001f

@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include "../trace.h"
+#include "trace.h"
 #include "operators.h"
 
 /*! \fn COPY_PASTE_FUNCTION_DECLARATION

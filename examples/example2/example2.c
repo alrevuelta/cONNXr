@@ -2,11 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../../src/inference.h"
-#include "../../src/trace.h"
-#include "../../src/utils.h"
-#include "../../src/pb/onnx.pb-c.h"
-#include "../../src/pb/protobuf-c.h"
+#include "inference.h"
+#include "trace.h"
+#include "utils.h"
+#include "onnx.pb-c.h"
+#include "protobuf-c.h"
 
 /* This is an example where the model is hardcoded into a variable, so no
  * reading is needed. Might be useful for devices that don't have a file

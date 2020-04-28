@@ -4,16 +4,16 @@
 #include <stdlib.h>
 #include <string.h>
 
-/*#include "../src/pb/onnx.pb-c.h"*/
+/*#include "onnx.pb-c.h"*/
 /* This example is using nanopb */
-#include "../src/pb/nanopb/onnx.pb.h"
-#include "../src/pb/nanopb/pb.h" /* is this needed?*/
-#include "../src/pb/nanopb/pb_common.h"
-#include "../src/pb/nanopb/pb_decode.h"
-#include "../src/pb/nanopb/pb_encode.h" /* Not needed ?*/
+#include "nanopb/onnx.pb.h"
+#include "nanopb/pb.h" /* is this needed?*/
+#include "nanopb/pb_common.h"
+#include "nanopb/pb_decode.h"
+#include "nanopb/pb_encode.h" /* Not needed ?*/
 
-#include "../src/trace.h"
-#include "../src/inference.h"
+#include "trace.h"
+#include "inference.h"
 
 bool decode_node(pb_istream_t *istream, const pb_field_t *field, void **arg)
 {
