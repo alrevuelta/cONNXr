@@ -2,8 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include <inttypes.h>
-#include "../trace.h"
+#include "trace.h"
 #include "operators.h"
 
 /*! \fn COPY_PASTE_FUNCTION_DECLARATION
@@ -21,24 +20,20 @@
  *  \param[in/out]  output      Array of pointer to the outputs of the operators
  *  \return         error       Different than 0 if an error was produced
  */
-int operator_reshape(size_t n_input,
-                     Onnx__TensorProto **input,
-                     size_t n_attribute,
-                     Onnx__AttributeProto **attribute,
-                     size_t n_output,
-                     Onnx__TensorProto **output)
+int operator_cast(size_t n_input,
+                  Onnx__TensorProto **input,
+                  size_t n_attribute,
+                  Onnx__AttributeProto **attribute,
+                  size_t n_output,
+                  Onnx__TensorProto **output)
 {
-  TRACE_LEVEL0("Calling operator_reshape\n");
-
-  if (0){
-    /* TODO: Check some conditions. For example if a specific
-     * functionality is not supported */
-    return 1;
-  }
-
+  TRACE_LEVEL0("Calling operator_cast\n");
   debug_print_dims(input[0]->n_dims, input[0]->dims);
 
   if (0){
+    // TODO Just a prototype. Not tested
+    // TODO Scientific notation is not supported, like 1e-5
+    // TODO Only float to int64 conversion is supported
     /* TODO: Check some conditions. For example if a specific
      * functionality is not supported */
     //a->data_type == b->data_type
@@ -47,72 +42,47 @@ int operator_reshape(size_t n_input,
     return -1;
   }
 
-  // Not sure about this implementation. It just swaps the dimensions
-  // and does not change the data.
-  output[0]->dims = malloc(input[1]->n_int64_data * sizeof(int64_t));
+  /* TODO: This is hardcoded */
+  int to = ONNX__TENSOR_PROTO__DATA_TYPE__INT64;
 
-  // Note that the dimension that is applied is encoded as a
-  // int64 field. So shape its assumed to have data_type int64
-
-  for (int i = 0; i < input[1]->n_int64_data; i++)
+  output[0]->dims = malloc(input[0]->n_dims * sizeof(int64_t));
+  for (int i = 0; i < input[0]->n_dims; i++)
   {
-    // The dimension can be n, 0 or -1.
-    if (input[1]->int64_data[i] == 0)
-    {
-      // If 0 the dimension is not changed
-      output[0]->dims[i] = input[0]->dims[i];
-    }
-    else if (input[1]->int64_data[i] == -1)
-    {
-      // If -1 the dimension is inferred from the remaining dim
-      // Only 1 parameter can be -1
-
-      // This is ugly af, just to make it work for now
-      uint64_t totalDimData = 1;
-      for (int j = 0; j < input[0]->n_dims; j++)
-      {
-        totalDimData *= input[0]->dims[j];
-      }
-
-      uint64_t totalShape = 1;
-
-      for (int j = 0; j < input[1]->n_int64_data; j++)
-      {
-        if (input[1]->int64_data[j] > 0)
-        {
-          totalShape *= input[1]->int64_data[j];
-        }
-        else if (input[1]->int64_data[j] == 0)
-        {
-          totalShape *= input[0]->dims[j];
-        }
-        // Just ignore if -1
-      }
-      output[0]->dims[i] = totalDimData/totalShape;
-    }
-    else
-    {
-      output[0]->dims[i] = input[1]->int64_data[i];
-    }
-    TRACE_LEVEL0("-----reshaped->dims[%d] = %" PRId64 "\n", i, output[0]->dims[i]);
+    output[0]->dims[i] = input[0]->dims[i];
   }
 
   // Populate some parameters
-  output[0]->name         = "name_is_set_afterwards\0";
-  output[0]->n_dims       = input[1]->n_int64_data;
+  output[0]->n_dims       = input[0]->n_dims;
   output[0]->has_raw_data = 0;
-  output[0]->data_type    = input[0]->data_type;
+  output[0]->data_type    = to;
 
+  // TODO Set unused parameters to 0?
   switch(input[0]->data_type)
   {
+    case ONNX__TENSOR_PROTO__DATA_TYPE__UNDEFINED:
+      break;
     case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:
     {
-      output[0]->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT;
-      output[0]->n_float_data = input[0]->n_float_data;
-      output[0]->float_data = malloc(input[0]->n_float_data * sizeof(float));
-      for (int i = 0; i < input[0]->n_float_data; i++) {
-        output[0]->float_data[i] = input[0]->float_data[i];
+      // Hardcode conversion to int64 or double only
+      if (to == ONNX__TENSOR_PROTO__DATA_TYPE__INT64)
+      {
+        output[0]->n_int64_data = input[0]->n_float_data;
+        output[0]->int64_data = malloc(output[0]->n_int64_data * sizeof(int64_t));
+        for (int i = 0; i < output[0]->n_int64_data; i++)
+        {
+          output[0]->int64_data[i] = (int64_t)input[0]->float_data[i];
+        }
       }
+      else if (to == ONNX__TENSOR_PROTO__DATA_TYPE__DOUBLE)
+      {
+        output[0]->n_double_data = input[0]->n_double_data;
+        output[0]->double_data = malloc(output[0]->n_double_data * sizeof(double));
+        for (int i = 0; i < output[0]->n_double_data; i++)
+        {
+          output[0]->double_data[i] = (double)input[0]->float_data[i];
+        }
+      }
+      // TODO Conversion from float to other types
     }
       break;
     case ONNX__TENSOR_PROTO__DATA_TYPE__UINT8:
@@ -134,6 +104,8 @@ int operator_reshape(size_t n_input,
     case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT16:
       break;
     case ONNX__TENSOR_PROTO__DATA_TYPE__DOUBLE:
+    {
+    }
       break;
     case ONNX__TENSOR_PROTO__DATA_TYPE__UINT32:
       break;
@@ -143,9 +115,12 @@ int operator_reshape(size_t n_input,
       break;
     case ONNX__TENSOR_PROTO__DATA_TYPE__COMPLEX128:
       break;
+    case ONNX__TENSOR_PROTO__DATA_TYPE__BFLOAT16:
+      break;
     default:
       break;
   }
+
   debug_print_dims(output[0]->n_dims, output[0]->dims);
   return 0;
 }

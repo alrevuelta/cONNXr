@@ -1,6 +1,6 @@
 #ifndef OPERATORS_H
 #define OPERATORS_H
-#include "../pb/onnx.pb-c.h"
+#include "onnx.pb-c.h"
 
 int operator_add(size_t n_input,
                  Onnx__TensorProto **input,

@@ -4,15 +4,15 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../src/pb/onnx.pb-c.h"
-#include "../src/trace.h"
-#include "test_utils.h"
+#include "onnx.pb-c.h"
+#include "trace.h"
+#include "test/test_utils.h"
 
-#include "operators/test_onnx_backend_operators.h"
-#include "models/test_model_mnist.h"
-#include "models/test_model_tinyyolov2.h"
-#include "models/test_model_super_resolution.h"
-#include "models/common_models.h"
+#include "test/test_onnx_backend_operators.h"
+#include "test/models/test_model_mnist.h"
+#include "test/models/test_model_tinyyolov2.h"
+#include "test/models/test_model_super_resolution.h"
+#include "test/models/common_models.h"
 
 int main(int argc, char **argv)
 {

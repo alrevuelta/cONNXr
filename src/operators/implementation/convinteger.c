@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include "../trace.h"
-#include "../utils.h"
+#include "trace.h"
+#include "utils.h"
 #include "operators.h"
 
 int operator_convinteger(size_t n_input,

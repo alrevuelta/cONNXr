@@ -1,8 +1,8 @@
 #ifndef TEST_COMMON_MODELS_H
 #define TEST_COMMON_MODELS_H
-#include "../../src/trace.h"
-#include "../../src/inference.h"
-#include "../../src/utils.h"
+#include "trace.h"
+#include "inference.h"
+#include "utils.h"
 
 #include <time.h>
 

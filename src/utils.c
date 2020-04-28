@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "pb/onnx.pb-c.h"
+#include "onnx.pb-c.h"
 #include "utils.h"
 #include "trace.h"
 #include "inference.h"

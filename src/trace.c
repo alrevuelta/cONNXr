@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <inttypes.h>
-#include "pb/onnx.pb-c.h"
+#include "onnx.pb-c.h"
 #include "trace.h"
 
 char data_types_string[][20] = {

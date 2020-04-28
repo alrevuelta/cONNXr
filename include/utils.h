@@ -1,6 +1,6 @@
 #ifndef UTILS_H
 #define UTILS_H
-#include "pb/onnx.pb-c.h"
+#include "onnx.pb-c.h"
 
 /* Max size for strings */
 #define MAX_CHAR_SIZE 50

@@ -1,11 +1,11 @@
 #ifndef TEST_COMMON_OPERATORS_H
 #define TEST_COMMON_OPERATORS_H
 
-#include "../../src/trace.h"
-#include "../../src/inference.h"
-#include "../../src/utils.h"
-#include "../../src/operators/operators.h"
-#include "../test_utils.h"
+#include "trace.h"
+#include "inference.h"
+#include "utils.h"
+#include "operators.h"
+#include "test_utils.h"
 
 int init_onnxBackendSuite(void)
 {
