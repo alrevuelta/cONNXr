@@ -5,6 +5,7 @@ import pathlib
 from .OperatorHeader import OperatorHeader
 from .OperatorTypeResolver import OperatorTypeResolver
 from .OperatorSanityCheck import OperatorSanityCheck
+from .OperatorSets import OperatorSets
 from .OnnxWrapper import OnnxSchema
 from . import args
 
@@ -55,35 +56,38 @@ for pattern in args.exclude:
 note(f"continuing with {len(schemas)} of {len(all_schemas)} onnx operator schemas",1)
 
 note("generating onnx operator headers")
-headers = [ OperatorHeader(s,args.header[0]) for s in schemas ]
-print("generating onnx operator type resolvers")
-resolvers = [ OperatorTypeResolver(s,args.header[0]) for s in schemas ]
-print("generating onnx operator sanity checks")
-checks = [ OperatorSanityCheck(s,args.header[0]) for s in schemas ]
+path = f"{args.path[0]}/{args.header[0]}/"
+headers = [ OperatorHeader(s,path) for s in schemas ]
+note("generating onnx operator type resolvers")
+path = f"{args.path[0]}/{args.resolve[0]}/"
+resolvers = [ OperatorTypeResolver(s,path) for s in schemas ]
+note("generating onnx operator sanity checks")
+path = f"{args.path[0]}/{args.check[0]}/"
+checks = [ OperatorSanityCheck(s,path) for s in schemas ]
+note("generating onnx operator sets")
+path = f"{args.path[0]}/{args.sets[0]}/"
+sets = OperatorSets(schemas,path)
 
 files = []
 if not args.path:
     warning("skipping write because args.path is not set")
 else:
     if not args.no_header:
-        base = f"{args.path[0]}/{args.header[0]}/"
         for h in headers:
-            path = h.filename(base).resolve()
-            files.append((path,h))
+            files.append(h)
     if not args.no_resolve:
-        base = f"{args.path[0]}/{args.resolve[0]}/"
         for r in resolvers:
-            path = r.filename(base).resolve()
-            files.append((path,r))
+            files.append(r)
     if not args.no_check:
-        base = f"{args.path[0]}/{args.check[0]}/"
         for c in checks:
-            path = c.filename(base).resolve()
-            files.append((path,c))
+            files.append(c)
+    if not args.no_sets:
+        files.append(sets)
 
 writecount = 0
 note("Writing files",1)
-for path,obj in files:
+for obj in files:
+    path = obj.filename().resolve()
     if path.exists() and not args.force:
         warning(f"skipping existing file '{path}'",1)
         continue

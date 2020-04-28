@@ -111,8 +111,8 @@ int {operator_name}(
             aliases = aliases,
         )
 
-    def filename(self, path):
-        path = str(path)
+    def filename(self):
+        path = str(self.path)
         path += f"/{self.schema.domain}"
         path += f"/{self.schema.operator_name}.h"
         return pathlib.Path(path)
