@@ -38,6 +38,18 @@ FORMAT+=!**/pb/**/*
 FORMAT+=!**/third_party/**/*
 endif
 
+VARIABLE+=ONNX_CUSTOM
+HELP_ONNX_CUSTOM=use custom onnx installation
+ONNX_CUSTOM=
+
+VARIABLE+=ONNX_INCLUDE
+HELP_ONNX_INCLUDE=which schemas to include
+ONNX_INCLUDE='.*'
+
+VARIABLE+=ONNX_EXCLUDE
+HELP_ONNX_EXCLUDE=which schemas to exclude
+ONNX_EXCLUDE=
+
 $(foreach MODEL, $(MODELS), $(eval REPEAT_$(MODEL)=$(REPEAT)))
 REPEAT_tinyyolov2=1
 
@@ -52,6 +64,10 @@ LDLIBS+=-lcunit
 LDLIBS+=-lm
 
 SRCDIR+=src/operators
+
+SRCDIR+=src/operators/check/onnx
+SRCDIR+=src/operators/resolve/onnx
+SRCDIR+=src/operators/implementation
 SRCDIR+=src/pb
 SRCS+=$(foreach DIR, $(SRCDIR), $(wildcard $(DIR)/*.c))
 SRCS+=src/inference.c
@@ -210,5 +226,17 @@ format-check:
 	| xargs -I % sh -c \
 	"uncrustify -c ./.uncrustify.cfg -f % \
 	 | git -c 'color.diff.new=normal 22' -c 'color.diff.old=normal 88' diff --exit-code --no-index --color --word-diff=color % -"
+
+.phony:onnx_generator
+HELP_onnx_generator=generate various onnx sources and headers
+TARGET+=onnx_generator
+onnx_generator:
+	cd scripts; python -m onnx_generator \
+	$(if $(ONNX_CUSTOM), --onnx $(abspath $(ONNX_CUSTOM))) \
+	$(if $(ONNX_INCLUDE), $(foreach PATTERN, $(ONNX_INCLUDE), -i '$(PATTERN)')) \
+	$(if $(ONNX_EXCLUDE), $(foreach PATTERN, $(ONNX_EXCLUDE), -e '$(PATTERN)')) \
+	-vvvvv \
+	--force \
+	$(shell git rev-parse --show-toplevel)
 
 include .Makefile.template
