@@ -29,6 +29,15 @@ VARIABLE+=REPEAT
 HELP_REPEAT=default repetition count if not otherwise specified by REPEAT_<modelname>
 REPEAT=10
 
+VARIABLE+=FORMAT
+HELP_FORMAT=which files to format (git wildcards)
+ifndef FORMAT
+FORMAT+=**/*.h
+FORMAT+=**/*.c
+FORMAT+=!**/pb/**/*
+FORMAT+=!**/third_party/**/*
+endif
+
 $(foreach MODEL, $(MODELS), $(eval REPEAT_$(MODEL)=$(REPEAT)))
 REPEAT_tinyyolov2=1
 
@@ -63,7 +72,7 @@ HELP_runtest=build runtest binary
 ALL+=runtest
 TARGET+=runtest
 runtest: $(BUILDDIR)/runtest
-$(BUILDDIR)/runtest: $(OBJS) 
+$(BUILDDIR)/runtest: $(OBJS)
 	$(CC) -o $@ test/tests.c $^ $(LDFLAGS) $(LDLIBS)
 
 .phony: clean_runtest
@@ -125,7 +134,7 @@ endef
 $(foreach MODEL, $(MODELS), $(eval $(call BENCHMARK_MODEL,$(MODEL))))
 
 .phony:benchmark
-HELP_benchmark=run benchmarks of all MODELS 
+HELP_benchmark=run benchmarks of all MODELS
 TARGET+=benchmark
 benchmark: $(BENCHMARKDIR)/result.txt
 $(BENCHMARKDIR)/result.txt: $(TARGET_benchmark)
@@ -186,5 +195,20 @@ clean_profiling:
 #	rm -f gprof
 #	gcc -std=c99 -D xxx -pg ../src/operators/*.c ../src/trace.c ../src/utils.c ../src/inference.c ../src/pb/onnx.pb-c.c -o gprof tests.c -I/usr/local/include -L/usr/local/lib -lcunit -lprotobuf-c
 #	./gprof $(ts) $(tc)
+
+.phony:format
+HELP_format=run uncrustify to format code
+TARGET+=format
+format:
+	git ls-files -ico $(foreach PATTERN, $(FORMAT),-x '$(PATTERN)' ) | uncrustify -c ./.uncrustify.cfg -F - --no-backup --replace
+
+.phony:format-check
+HELP_format-check=check if code needs formatting and show diffs
+TARGET+=format-check
+format-check:
+	git ls-files -ico $(foreach PATTERN, $(FORMAT),-x '$(PATTERN)' ) \
+	| xargs -I % sh -c \
+	"uncrustify -c ./.uncrustify.cfg -f % \
+	 | git -c 'color.diff.new=normal 22' -c 'color.diff.old=normal 88' diff --exit-code --no-index --color --word-diff=color % -"
 
 include .Makefile.template
