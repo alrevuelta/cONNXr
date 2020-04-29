@@ -340,6 +340,22 @@ class OnnxConstraints(dict):
         return self.text()
 
 class OnnxAttribute():
+    _onnxAttributeDataType = {
+        "UNDEFINED"      : "ONNX__ATTRIBUTE_PROTO__ATTRIBUTE_TYPE__UNDEFINED",
+        "FLOAT"          : "ONNX__ATTRIBUTE_PROTO__ATTRIBUTE_TYPE__FLOAT",
+        "INT"            : "ONNX__ATTRIBUTE_PROTO__ATTRIBUTE_TYPE__INT",
+        "STRING"         : "ONNX__ATTRIBUTE_PROTO__ATTRIBUTE_TYPE__STRING",
+        "TENSOR"         : "ONNX__ATTRIBUTE_PROTO__ATTRIBUTE_TYPE__TENSOR",
+        "GRAPH"          : "ONNX__ATTRIBUTE_PROTO__ATTRIBUTE_TYPE__GRAPH",
+        "SPARSE_TENSOR"  : "ONNX__ATTRIBUTE_PROTO__ATTRIBUTE_TYPE__SPARSE_TENSOR",
+        "FLOATS"         : "ONNX__ATTRIBUTE_PROTO__ATTRIBUTE_TYPE__FLOATS",
+        "INTS"           : "ONNX__ATTRIBUTE_PROTO__ATTRIBUTE_TYPE__INTS",
+        "STRINGS"        : "ONNX__ATTRIBUTE_PROTO__ATTRIBUTE_TYPE__STRINGS",
+        "TENSORS"        : "ONNX__ATTRIBUTE_PROTO__ATTRIBUTE_TYPE__TENSORS",
+        "GRAPHS"         : "ONNX__ATTRIBUTE_PROTO__ATTRIBUTE_TYPE__GRAPHS",
+        "SPARSE_TENSORS" : "ONNX__ATTRIBUTE_PROTO__ATTRIBUTE_TYPE__SPARSE_TENSORS",
+    }
+
     def __init__(self, name, attribute):
         self.name = name
         if isinstance(attribute, dict):
@@ -356,6 +372,9 @@ class OnnxAttribute():
         lines.append(f"{prefix}Attribute {self.type} {self.name} {'(optional)'*self.optional}:")
         lines.append(format_text(prefix + "  ", None, [self.description]))
         return "\n".join(lines)
+
+    def onnxAttributeDataType(self):
+        return self._onnxAttributeDataType[self.type]
 
     def __repr__(self):
         attribute = self.__dict__.copy()
