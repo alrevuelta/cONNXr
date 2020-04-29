@@ -1,6 +1,7 @@
-#include "operators/operator_check.h"
+#include "operators/check_operator.h"
 #include <inttypes.h>
 #include <stdio.h>
+#include <string.h>
 
 const char*
 attributeTypeString(uint32_t type)
@@ -81,8 +82,8 @@ tensorTypeString(uint32_t type)
 }
 
 bool
-operator_check_range(char* prefix,
-                     operator_check_condition_range* condition,
+check_operator_range(char* prefix,
+                     check_operator_condition_range* condition,
                      size_t number)
 {
   if (number < condition->min) {
@@ -109,13 +110,13 @@ operator_check_range(char* prefix,
 }
 
 bool
-operator_check_attributes(char* prefix,
+check_operator_attributes(char* prefix,
                           size_t n_conditions,
-                          operator_check_condition_attribute* conditions,
+                          check_operator_condition_attribute* conditions,
                           Onnx__AttributeProto** attributes)
 {
   for (size_t i_cond = 0; i_cond < n_conditions; i_cond++) {
-    operator_check_condition_attribute* cond = &conditions[i_cond];
+    check_operator_condition_attribute* cond = &conditions[i_cond];
     Onnx__AttributeProto* attr = attributes[i_cond];
     if (cond->skip) {
       continue;
@@ -125,15 +126,15 @@ operator_check_attributes(char* prefix,
         continue;
       }
       fprintf(stderr,
-              "%s: did not found non-optional attribute '%s' at pos %u!\n",
+              "%s: missing non-optional attribute '%s' at pos %" PRIu64 "!\n",
               prefix,
               conditions[i_cond].name,
               i_cond);
       return false;
     }
-    if (strcmp(conditions[i_cond].name != attr->name) != 0) {
+    if (strcmp(conditions[i_cond].name, attr->name) != 0) {
       fprintf(stderr,
-              "%s: attribute '%s' at pos %u has wrong name '%s'\n",
+              "%s: attribute '%s' at pos %" PRIu64 " has wrong name '%s'\n",
               prefix,
               conditions[i_cond].name,
               i_cond,
@@ -142,7 +143,7 @@ operator_check_attributes(char* prefix,
     }
     if (conditions[i_cond].type != attr->type) {
       fprintf(stderr,
-              "%s: attribute '%s' at pos %u has wrong type! "
+              "%s: attribute '%s' at pos %" PRIu64 " has wrong type! "
               "got '%s', but expected '%s'\n",
               prefix,
               conditions[i_cond].name,
@@ -156,13 +157,13 @@ operator_check_attributes(char* prefix,
 }
 
 bool
-operator_check_tensors(char* prefix,
+check_operator_tensors(char* prefix,
                        size_t n_conditions,
-                       operator_check_condition_tensor* conditions,
+                       check_operator_condition_tensor* conditions,
                        Onnx__TensorProto** tensors)
 {
   for (size_t i_cond = 0; i_cond < n_conditions; i_cond++) {
-    operator_check_condition_tensor* cond = &conditions[i_cond];
+    check_operator_condition_tensor* cond = &conditions[i_cond];
     Onnx__TensorProto* tensor = tensors[i_cond];
     if (cond->skip) {
       continue;
@@ -172,7 +173,7 @@ operator_check_tensors(char* prefix,
         continue;
       }
       fprintf(stderr,
-              "%s: did not found non-optional tensor '%s' at pos %u!\n",
+              "%s: did not found non-optional tensor '%s' at pos %" PRIu64 "!\n",
               prefix,
               cond->name,
               i_cond);
@@ -187,7 +188,7 @@ operator_check_tensors(char* prefix,
     }
     if (!validType) {
       fprintf(stderr,
-              "%s: tensor '%s' ('%s') at pos %u has wrong type! "
+              "%s: tensor '%s' ('%s') at pos %" PRIu64 " has wrong type! "
               "got '%s', but expected one of ",
               prefix,
               cond->name,
@@ -201,7 +202,7 @@ operator_check_tensors(char* prefix,
           fprintf(stderr, ", ");
         }
       }
-      fprintf(stderr, '\n');
+      fprintf(stderr, "\n");
       return false;
     }
   }
@@ -209,13 +210,13 @@ operator_check_tensors(char* prefix,
 }
 
 bool
-operator_check_constraint(
+check_operator_constraint(
   char* prefix,
   size_t n_conditions_input,
-  operator_check_condition_constraint* conditions_input,
+  check_operator_condition_constraint* conditions_input,
   Onnx__TensorProto** inputs,
   size_t n_conditions_output,
-  operator_check_condition_constraint* conditions_output,
+  check_operator_condition_constraint* conditions_output,
   Onnx__TensorProto** outputs)
 {
   char* kind_input = "input";
@@ -228,7 +229,7 @@ operator_check_constraint(
   char* ref_kind = NULL;
 
   for (size_t i_cond = 0; i_cond < n_conditions_input; i_cond++) {
-    operator_check_condition_constraint* cond = &conditions_input[i_cond];
+    check_operator_condition_constraint* cond = &conditions_input[i_cond];
     Onnx__TensorProto* input = inputs[i_cond];
     if (cond->skip) {
       continue;
@@ -258,7 +259,7 @@ operator_check_constraint(
     }
   }
   for (size_t i_cond = 0; i_cond < n_conditions_output; i_cond++) {
-    operator_check_condition_constraint* cond = &conditions_output[i_cond];
+    check_operator_condition_constraint* cond = &conditions_output[i_cond];
     Onnx__TensorProto* output = outputs[i_cond];
     if (cond->skip) {
       continue;
