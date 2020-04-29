@@ -11,5 +11,5 @@ operator_status operator_stub(
     Onnx__TensorProto** output
 ) {
   fprintf(stderr, "operator not implemented!\n");
-  exit(1);
+  return OP_ENOSYS;
 }
