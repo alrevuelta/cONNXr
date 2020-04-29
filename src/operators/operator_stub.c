@@ -1,8 +1,8 @@
 #include <stdio.h>
 
-#include "onnx.pb-c.h"
+#include "operators/operator_stub.h"
 
-int operator_stub(
+operator_status operator_stub(
     size_t n_input,
     Onnx__TensorProto** input,
     size_t n_attribute,
