@@ -3,6 +3,7 @@
 
 #include "operator.h"
 #include <stddef.h>
+#include <string.h>
 
 typedef struct operator_set_entry operator_set_entry;
 typedef struct operator_set       operator_set;
@@ -30,5 +31,25 @@ struct operator_sets
 };
 
 extern operator_sets all_operator_sets;
+
+static __attribute__((unused))
+operator_resolver find_operator_resolver(
+    char *name,
+    size_t version
+) {
+    for( size_t i_set = 0; i_set < all_operator_sets.length; i_set++ ) {
+        operator_set *set = all_operator_sets.sets[i_set];
+        if (set->version != version) {
+            continue;
+        }
+        for (size_t i_entry; i_entry < set->length; i_entry++) {
+            operator_set_entry *entry = &set->entries[i_entry];
+            if (strcmp(entry->name,name) == 0) {
+                return entry->resolver;
+            }
+        }
+    }
+    return NULL;
+}
 
 #endif
