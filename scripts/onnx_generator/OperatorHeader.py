@@ -8,13 +8,13 @@ class OperatorHeader:
 # ifndef OPERATOR_{header_name}_H
 # define OPERATOR_{header_name}_H
 
-# include "operator.h"
-# include "onnx.pb-c.h"
+# include "operators/operator.h"
+# include "operators/operator_stub.h"
 
 {doxygen}
 {prototype}
 
-onnx_operator {operator_name}_resolve(
+operator_executer resolve_{operator_name}(
   size_t                  n_input,
   Onnx__TensorProto    ** input,
   size_t                  n_attribute,
@@ -61,7 +61,7 @@ onnx_operator {operator_name}_resolve(
 '''
     _template_prototype = '''
 {attribute}
-int {operator_name}(
+operator_status {operator_name}(
   size_t                  n_input,
   Onnx__TensorProto    ** input,
   size_t                  n_attribute,
@@ -92,12 +92,13 @@ int {operator_name}(
             defs_filepath=f" * @see {self._rel_path(self.schema.ref_file[0])}:{self.schema.ref_file[1]}",
         ).strip()
         prototype = self._template_prototype.format(
-            attribute="__attribute__((deprecated))\n" * self.schema.deprecated,
+            attribute="__attribute__((deprecated))\n" if self.schema.deprecated else "" ,
             operator_name = self.schema.operator_name,
         ).strip()
         aliases = "".join([
             self._template_prototype.format(
-                attribute='__attribute__((weak, alias("operator_stub")))\nextern',
+                # attribute=f'extern __attribute__((weak{", deprecated" if self.schema.deprecated else ""}))',
+                attribute=f'extern __attribute__((weak))',
                 operator_name = f"{self.schema.operator_name}__{t}"
             )
             for t in self.schema.constraints.typePermutations()
@@ -111,8 +112,8 @@ int {operator_name}(
             aliases = aliases,
         )
 
-    def filename(self):
-        path = str(self.path)
+    def filename(self, path=None):
+        path = str(self.path) if path == None else str(path)
         path += f"/{self.schema.domain}"
         path += f"/{self.schema.operator_name}.h"
         return pathlib.Path(path)

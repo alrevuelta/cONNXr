@@ -66,7 +66,7 @@ path = f"{args.path[0]}/{args.check[0]}/"
 checks = [ OperatorSanityCheck(s,path) for s in schemas ]
 note("generating onnx operator sets")
 path = f"{args.path[0]}/{args.sets[0]}/"
-sets = OperatorSets(schemas,path)
+sets = OperatorSets(headers,path)
 
 files = []
 if not args.path:
