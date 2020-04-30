@@ -12,4 +12,6 @@ no_sets = 0
 force = 0
 include = [".*"]
 exclude = []
-path = []
+version = ["all"]
+domains  = ["all"]
+path = [""]
