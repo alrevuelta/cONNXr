@@ -74,6 +74,20 @@ parser.add_argument(
     help=f"where to put sets src in main path (default: {args.sets[0]})"
 )
 parser.add_argument(
+    "--domains",
+    nargs='+',
+    metavar="<domain>",
+    default=args.domains,
+    help=f"what domain to include (default: {args.domains[0]})"
+)
+parser.add_argument(
+    "--version",
+    nargs=1,
+    metavar="<version>",
+    default=args.version,
+    help=f"what version to include (<number>, 'latest' or 'all') (default: {args.version[0]})"
+)
+parser.add_argument(
     "-i", "--include",
     metavar="<regex>",
     nargs='+',
