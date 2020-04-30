@@ -33,6 +33,23 @@ else:
     except:
         fatal("could not import onnx_cpp2py_export from onnx!")
 
+note(f"onnx: {args.onnx}",3)
+note(f"verbose: {args.verbose}",3)
+note(f"header: {args.header}",3)
+note(f"no_header: {args.no_header}",3)
+note(f"check: {args.check}",3)
+note(f"no_check: {args.no_check}",3)
+note(f"resolve: {args.resolve}",3)
+note(f"no_resolve: {args.no_resolve}",3)
+note(f"sets: {args.sets}",3)
+note(f"no_sets: {args.no_sets}",3)
+note(f"force: {args.force}",3)
+note(f"include: {args.include}",3)
+note(f"exclude: {args.exclude}",3)
+note(f"version: {args.version}",3)
+note(f"domains: {args.domains}",3)
+note(f"path: {args.path}",3)
+
 all_schemas = [ OnnxSchema(s) for s in onnx_cpp2py_export.defs.get_all_schemas_with_history()]
 num_schemas = len(all_schemas)
 
