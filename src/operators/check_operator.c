@@ -89,7 +89,7 @@ check_operator_range(char* prefix,
   if (number < condition->min) {
     fprintf(stderr,
             "%s: %s number is too small! "
-            "expected at least %" PRId64 ", but got %" PRId64 "\n",
+            "expected at least %zu, but got %zu\n",
             prefix,
             condition->name,
             condition->min,
@@ -99,7 +99,7 @@ check_operator_range(char* prefix,
   if (number > condition->max) {
     fprintf(stderr,
             "%s: %s number is too large! "
-            "expected at most %" PRId64 ", but got %" PRId64 "\n",
+            "expected at most %zu, but got %zu\n",
             prefix,
             condition->name,
             condition->max,
@@ -126,7 +126,7 @@ check_operator_attributes(char* prefix,
         continue;
       }
       fprintf(stderr,
-              "%s: missing non-optional attribute '%s' at pos %" PRIu64 "!\n",
+              "%s: missing non-optional attribute '%s' at pos %zu!\n",
               prefix,
               conditions[i_cond].name,
               i_cond);
@@ -134,7 +134,7 @@ check_operator_attributes(char* prefix,
     }
     if (strcmp(conditions[i_cond].name, attr->name) != 0) {
       fprintf(stderr,
-              "%s: attribute '%s' at pos %" PRIu64 " has wrong name '%s'\n",
+              "%s: attribute '%s' at pos %zu has wrong name '%s'\n",
               prefix,
               conditions[i_cond].name,
               i_cond,
@@ -143,7 +143,7 @@ check_operator_attributes(char* prefix,
     }
     if (conditions[i_cond].type != attr->type) {
       fprintf(stderr,
-              "%s: attribute '%s' at pos %" PRIu64 " has wrong type! "
+              "%s: attribute '%s' at pos %zu has wrong type! "
               "got '%s', but expected '%s'\n",
               prefix,
               conditions[i_cond].name,
@@ -173,7 +173,7 @@ check_operator_tensors(char* prefix,
         continue;
       }
       fprintf(stderr,
-              "%s: did not found non-optional tensor '%s' at pos %" PRIu64 "!\n",
+              "%s: did not found non-optional tensor '%s' at pos %zu!\n",
               prefix,
               cond->name,
               i_cond);
@@ -188,7 +188,7 @@ check_operator_tensors(char* prefix,
     }
     if (!validType) {
       fprintf(stderr,
-              "%s: tensor '%s' ('%s') at pos %" PRIu64 " has wrong type! "
+              "%s: tensor '%s' ('%s') at pos %zu has wrong type! "
               "got '%s', but expected one of ",
               prefix,
               cond->name,
