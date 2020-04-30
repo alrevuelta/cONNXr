@@ -5,19 +5,13 @@ import pathlib
 class OperatorTypeSwitch:
     _template_resolveType = '''
 uint32_t {constraint} = 0;
-{{ // get type of constraint '{constraint}'
-    const char *name = "{name}";
-    Onnx__TensorProto *tensor = NULL;
-    size_t n_tensor = operator_findTensors(&tensor, &name, 1, {inOrOutput}, n_{inOrOutput});
-    if (n_tensor == 0) {{
-        fprintf(stderr,"tensor '%s' not found!", name);
-        return NULL;
-    }}
-    {constraint} = tensor->data_type;
+if (ctx->{inOrOutput}->{name}) {{
+    {constraint} = ctx->{inOrOutput}->{name}->tensor->data_type;
 }}
 '''
     _template_switch = '''
 switch ( {constraint} ) {{
+    case 0: //constrained tensor is not set (maybe optional?), just take next case
     {cases}
     default: {{
         fprintf(stderr, "no matching type for constraint '{constraint}' found!\\n");
@@ -26,7 +20,7 @@ switch ( {constraint} ) {{
 }}
 '''
     _template_case = '''
-case {case}: {content} break;
+case {case}: {{ {content} break; }}
 '''
 
     _template = '''
@@ -49,23 +43,32 @@ case {case}: {content} break;
         cases = []
 
         for constraint in self.schema.constraints.keys():
+            inOrOutput = None
+            name = None
+            optional = False
             for input in self.schema.inputs:
-                if constraint == input.constraint:
-                    resolveTypes.append(self._template_resolveType.format(
-                        constraint = constraint,
-                        inOrOutput = "input",
-                        name = input.name,
-                    ).strip())
-                    break
+                if constraint != input.constraint:
+                    continue
+                inOrOutput = "input"
+                name = input.name
+                if input.optional:
+                    continue
+                break
             else:
                 for output in self.schema.outputs:
-                    if constraint == output.constraint:
-                        resolveTypes.append(self._template_resolveType.format(
-                            constraint = constraint,
-                            inOrOutput = "output",
-                            name = output.name,
-                        ).strip())
-                        break
+                    if constraint != output.constraint:
+                        continue
+                    inOrOutput = "output"
+                    name = output.name
+                    if output.optional:
+                        continue
+                    break
+            resolveTypes.append(self._template_resolveType.format(
+                constraint = constraint,
+                inOrOutput = inOrOutput,
+                name = name,
+            ).strip())
+
 
         permutationsMap = self.schema.constraints.typePermutationsMap()
         if not permutationsMap:
@@ -108,12 +111,7 @@ class OperatorTypeResolver:
 #include <stdio.h>
 
 operator_executer resolve_{operator_name}(
-    size_t                  n_input,
-    Onnx__TensorProto    ** input,
-    size_t                  n_attribute,
-    Onnx__AttributeProto ** attribute,
-    size_t                  n_output,
-    Onnx__TensorProto    ** output
+    operator_context__{operator_name} *ctx
 ){{
     operator_executer executer = (operator_executer) &operator_stub;
     {switch}
