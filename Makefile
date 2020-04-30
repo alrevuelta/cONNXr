@@ -40,11 +40,26 @@ endif
 
 VARIABLE+=ONNX_CUSTOM
 HELP_ONNX_CUSTOM=use custom onnx installation
-ONNX_CUSTOM=
+ONNX_CUSTOM=third_party/onnx/onnx.build
 
 VARIABLE+=ONNX_INCLUDE
 HELP_ONNX_INCLUDE=which schemas to include
-ONNX_INCLUDE='.*'
+ifndef ONNX_INCLUDE
+ONNX_INCLUDE+="^Conv$$"
+ONNX_INCLUDE+="^Add$$"
+ONNX_INCLUDE+="^Relu$$"
+ONNX_INCLUDE+="^MaxPool$$"
+ONNX_INCLUDE+="^Reshape$$"
+ONNX_INCLUDE+="^MatMul$$"
+endif
+
+VARIABLE+=ONNX_VERSION
+HELP_ONNX_VERSION=which onnx version to use
+ONNX_VERSION=latest
+
+VARIABLE+=ONNX_DOMAINS
+HELP_ONNX_DOMAINS=which onnx domains to use
+ONNX_DOMAINS=onnx
 
 VARIABLE+=ONNX_EXCLUDE
 HELP_ONNX_EXCLUDE=which schemas to exclude
@@ -224,9 +239,11 @@ TARGET+=onnx_generator
 onnx_generator:
 	cd scripts; python -m onnx_generator \
 	$(if $(ONNX_CUSTOM), --onnx $(abspath $(ONNX_CUSTOM))) \
-	$(if $(ONNX_INCLUDE), $(foreach PATTERN, $(ONNX_INCLUDE), -i '$(PATTERN)')) \
-	$(if $(ONNX_EXCLUDE), $(foreach PATTERN, $(ONNX_EXCLUDE), -e '$(PATTERN)')) \
-	-vvvvv \
+	$(if $(ONNX_INCLUDE), --include $(ONNX_INCLUDE)) \
+	$(if $(ONNX_EXCLUDE), --exclude $(ONNX_EXCLUDE)) \
+	$(if $(ONNX_VERSION), --version $(ONNX_VERSION)) \
+	$(if $(ONNX_DOMAINS), --domains $(ONNX_DOMAINS)) \
+	-vv \
 	--force \
 	$(shell git rev-parse --show-toplevel)
 
