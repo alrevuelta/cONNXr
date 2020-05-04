@@ -10,7 +10,8 @@
 Onnx__TensorProto* searchTensorProtoByName(Onnx__ModelProto *model,
                                            Onnx__TensorProto **inputs,
                                            int nInputs,
-                                           char *name)
+                                           char *name,
+                                           runtime_outputs *runtime_outputs)
 {
   TRACE_LEVEL0("Searching for TensorProto with name=%s\n", name);
   //Onnx__TensorProto *tensor = NULL;
@@ -40,12 +41,13 @@ Onnx__TensorProto* searchTensorProtoByName(Onnx__ModelProto *model,
   }
 
   // Search in calculated outputs list
-  for (int outputsIdx = 0; outputsIdx < _outputIdx; outputsIdx++)
+  for (int outputsIdx = 0; outputsIdx < runtime_outputs->length; outputsIdx++)
   {
-    if (!strcmp(_outputs[outputsIdx]->name, name))
+    printf("Searching %s\n", runtime_outputs->tensors[outputsIdx].name);
+    if (!strcmp(runtime_outputs->tensors[outputsIdx].name, name))
     {
-      TRACE_LEVEL0("Found TensorProto in outputs list with name=%s\n", _outputs[outputsIdx]->name);
-      return _outputs[outputsIdx];
+      TRACE_LEVEL0("Found TensorProto in outputs list with name=%s\n", runtime_outputs->tensors[outputsIdx].name);
+      return runtime_outputs->tensors[outputsIdx].tensor;
     }
   }
 

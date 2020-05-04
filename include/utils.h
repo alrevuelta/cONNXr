@@ -1,6 +1,7 @@
 #ifndef UTILS_H
 #define UTILS_H
 #include "onnx.pb-c.h"
+#include "runtime_context.h"
 
 /* Max size for strings */
 #define MAX_CHAR_SIZE 50
@@ -8,7 +9,8 @@
 Onnx__TensorProto* searchTensorProtoByName(Onnx__ModelProto *model,
                                            Onnx__TensorProto **inputs,
                                            int nInputs,
-                                           char *name);
+                                           char *name,
+                                           runtime_outputs *runtime_outputs);
 Onnx__AttributeProto* searchAttributeNyName(size_t n_attribute,
                                             Onnx__AttributeProto **attribute,
                                             char *name);

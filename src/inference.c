@@ -7,6 +7,13 @@
 #include "inference.h"
 #include "runtime_context.h"
 
+#include "operators/onnx/operator__onnx__add__7.h"
+#include "operators/onnx/operator__onnx__relu__6.h"
+#include "operators/onnx/operator__onnx__conv__11.h"
+#include "operators/onnx/operator__onnx__matmul__9.h"
+#include "operators/onnx/operator__onnx__reshape__5.h"
+#include "operators/onnx/operator__onnx__maxpool__11.h"
+
 int _outputIdx = 0;
 Onnx__TensorProto *_outputs[MAX_NUM_OF_OUTPUTS] = {};
 
@@ -45,12 +52,15 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
 
   /* Resolving the context. Will be moved out when working */
   runtime_context rt_context;
+  runtime_outputs rt_outputs;
+
+  rt_outputs.length = 0;
   rt_context =  resolve_runtime_context(
     model,
     inputs,
-    nInputs
+    nInputs,
+    &rt_outputs
   );
-
 
   /* Dirty trick to allow multiple runs. There is a memory leak for sure */
   _outputIdx = 0;
