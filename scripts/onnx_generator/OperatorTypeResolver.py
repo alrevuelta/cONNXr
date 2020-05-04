@@ -113,8 +113,11 @@ class OperatorTypeResolver:
 operator_executer resolve_{operator_name}(
     operator_context__{operator_name} *ctx
 ){{
-    operator_executer executer = (operator_executer) &operator_stub;
+    operator_executer executer = NULL;
     {switch}
+    if (!executer) {{
+        executer = &operator_stub;
+    }}
     return executer;
 }}
 '''
