@@ -5,6 +5,7 @@
 #include "utils.h"
 #include "trace.h"
 #include "inference.h"
+#include "runtime_context.h"
 
 int _outputIdx = 0;
 Onnx__TensorProto *_outputs[MAX_NUM_OF_OUTPUTS] = {};
@@ -41,7 +42,15 @@ static int call_operator(char *name,
 
 Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **inputs, int nInputs)
 {
-  //int error = 0;
+
+  /* Resolving the context. Will be moved out when working */
+  runtime_context rt_context;
+  rt_context =  resolve_runtime_context(
+    model,
+    inputs,
+    nInputs
+  );
+
 
   /* Dirty trick to allow multiple runs. There is a memory leak for sure */
   _outputIdx = 0;

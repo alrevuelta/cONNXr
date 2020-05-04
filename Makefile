@@ -87,9 +87,11 @@ SRCDIR+=src/operators
 SRCDIR+=src/operators/check/onnx
 SRCDIR+=src/operators/resolve/onnx
 SRCDIR+=src/operators/implementation
+SRCDIR+=src/operators/implementation/onnx
 SRCDIR+=src/pb
 SRCS+=$(foreach DIR, $(SRCDIR), $(wildcard $(DIR)/*.c))
 SRCS+=src/inference.c
+SRCS+=src/runtime_context.c
 SRCS+=src/trace.c
 SRCS+=src/utils.c
 OBJS=$(SRCS:%.c=$(BUILDDIR)/%.o)
@@ -238,7 +240,9 @@ HELP_onnx_generator=generate various onnx sources and headers
 TARGET+=onnx_generator
 onnx_generator:
 	cd scripts; python -m onnx_generator \
-	$(if $(ONNX_CUSTOM), --onnx $(abspath $(ONNX_CUSTOM))) \
+	# TODO No path need to be provided if using pip onnx
+	# But of course, it should be installed
+	#$(if $(ONNX_CUSTOM), --onnx $(abspath $(ONNX_CUSTOM))) \
 	$(if $(ONNX_INCLUDE), --include $(ONNX_INCLUDE)) \
 	$(if $(ONNX_EXCLUDE), --exclude $(ONNX_EXCLUDE)) \
 	$(if $(ONNX_VERSION), --version $(ONNX_VERSION)) \
