@@ -90,7 +90,11 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
     // Populate the input array by gathering all the required inputs
     for (int inp = 0; inp < model->graph->node[nodeIdx]->n_input; ++inp) {
       Onnx__TensorProto *inpN =malloc(sizeof(*inpN));
-      inpN = searchTensorProtoByName(model, inputs, nInputs, model->graph->node[nodeIdx]->input[inp]);
+      inpN = searchTensorProtoByName(model,
+        inputs,
+        nInputs,
+        model->graph->node[nodeIdx]->input[inp],
+        &rt_outputs);
       nodeInputs[inp] = inpN;
       //printf("\n %d\n", model->graph->node[nodeIdx]->n_input);
     }
