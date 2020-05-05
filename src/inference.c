@@ -51,6 +51,7 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
 {
 
   /* Resolving the context. Will be moved out when working */
+  /*
   runtime_context rt_context;
   runtime_outputs rt_outputs;
 
@@ -60,7 +61,7 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
     inputs,
     nInputs,
     &rt_outputs
-  );
+  );*/
 
   /* Dirty trick to allow multiple runs. There is a memory leak for sure */
   _outputIdx = 0;
