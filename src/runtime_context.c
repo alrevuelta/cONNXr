@@ -159,10 +159,6 @@ runtime_context resolve_runtime_context(
       rc.contexts[nodeIdx] = *(operator_context*)(&local_ctx);
 
     }else if(!strcmp(model->graph->node[nodeIdx]->op_type, "MatMul")){
-
-
-      printf("debug %s\n", runtime_outputs->tensors[9].tensor->name);
-
       printf("Operator at %d is Matmul\n", nodeIdx);
       operator_context__operator__onnx__matmul__9 local_ctx;
 
@@ -170,8 +166,6 @@ runtime_context resolve_runtime_context(
       POPULATE_INPUT(A, 0);
       POPULATE_INPUT(B, 1);
       STORE_OUTPUT(Y, 0);
-
-      printf("debug2 %s\n", runtime_outputs->tensors[9].tensor->name);
 
       local_ctx.operator = resolve_operator__onnx__matmul__9(&local_ctx);
       rc.contexts[nodeIdx] = *(operator_context*)(&local_ctx);
