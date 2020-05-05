@@ -42,7 +42,7 @@ operator_resolver find_operator_resolver(
         if (set->version != version) {
             continue;
         }
-        for (size_t i_entry; i_entry < set->length; i_entry++) {
+        for (size_t i_entry = 0; i_entry < set->length; i_entry++) {
             operator_set_entry *entry = &set->entries[i_entry];
             if (strcmp(entry->name,name) == 0) {
                 return entry->resolver;

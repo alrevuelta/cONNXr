@@ -94,7 +94,7 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
         inputs,
         nInputs,
         model->graph->node[nodeIdx]->input[inp],
-        &rt_outputs);
+        NULL); // TODO
       nodeInputs[inp] = inpN;
       //printf("\n %d\n", model->graph->node[nodeIdx]->n_input);
     }
