@@ -3,8 +3,10 @@
 
 #include "operators/operator.h"
 
-operator_status operator_stub(
-    void *ctx
-);
+extern operator_info operator_stub_info;
+
+operator_status operator_stub(operator_context *ctx);
+
+operator_executer operator_stub_resolver(operator_context *ctx);
 
 #endif
