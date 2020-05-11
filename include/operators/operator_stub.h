@@ -2,10 +2,12 @@
 #define OPERATOR_STUB_H
 
 #include "operators/operator.h"
+#include "operators/operator_info.h"
 
-// TODO Move to the same file as node_context
-operator_status operator_stub(
-    node_context *ctx
-);
+extern operator_info operator_stub_info;
+
+operator_status operator_stub(node_context *ctx);
+
+operator_executer operator_stub_resolver(node_context *ctx);
 
 #endif
