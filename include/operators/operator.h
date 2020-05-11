@@ -6,10 +6,6 @@
 
 // TODO Remove unused code
 typedef struct operator_context operator_context;
-typedef struct operator_tensor           operator_tensor;
-typedef struct operator_context_tensor     operator_context_input;
-typedef struct operator_context_tensor     operator_context_output;
-typedef struct operator_context_attribute  operator_context_attribute;
 typedef enum operator_status    operator_status;
 typedef struct node_context  node_context;
 typedef operator_status (*operator_executer)(node_context *ctx);
@@ -35,31 +31,13 @@ enum operator_status {
   OP_ERANGE = ERANGE  // Math result not representable
 };
 
-struct operator_tensor
-{
-    Onnx__TensorProto *tensor;
-    operator_context  *origin;
-    char              *name;
-};
-
-struct operator_context_tensor
-{
-    size_t  length;
-    operator_tensor *tensor[];
-};
-
-struct operator_context_attribute
-{
-    size_t                length;
-    Onnx__AttributeProto *attribute[];
-};
-
 struct operator_context
 {
-    operator_context_input      *input;
-    operator_context_output     *output;
-    operator_context_attribute  *attribute;
-    operator_executer operator;
+    Onnx__NodeProto       *node;
+    Onnx__TensorProto    **input;
+    Onnx__TensorProto    **output;
+    Onnx__AttributeProto **attribute;
+    operator_executer      executor;
 };
 
 #endif

@@ -6,23 +6,15 @@
 #include <string.h>
 #include <stdio.h>
 
-typedef struct operator_set_entry operator_set_entry;
 typedef struct operator_set       operator_set;
 typedef struct operator_sets      operator_sets;
 
-struct operator_set_entry
-{
-    char             *name;
-    operator_resolver resolver;
-};
-
 struct operator_set
 {
-    size_t              version;
-    char               *domain;
-    size_t              length;
-    operator_set_entry  entries[];
-
+    size_t         version;
+    char          *domain;
+    size_t         length;
+    operator_info *entries[];
 };
 
 struct operator_sets
