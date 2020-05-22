@@ -9,6 +9,10 @@
 int _outputIdx = 0;
 Onnx__TensorProto *_outputs[MAX_NUM_OF_OUTPUTS] = {};
 
+node_context all_context[50];
+int _populatedIdx = -1;
+
+#if 0
 static int call_operator(char *name,
                          size_t n_input,
                          Onnx__TensorProto **input,
@@ -38,16 +42,74 @@ static int call_operator(char *name,
 
   return -1;
 }
+#endif
 
 Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **inputs, int nInputs)
 {
-  //int error = 0;
-
   /* Dirty trick to allow multiple runs. There is a memory leak for sure */
   _outputIdx = 0;
-  TRACE_LEVEL0("Calling inference\n");
+
+
+  /* Resolving operators and input/outputs. Has to be moved outside of infeference */
+  TRACE_LEVEL0("Resolving\n");
+  _populatedIdx = -1;
+  for (int nodeIdx = 0; nodeIdx < model->graph->n_node; nodeIdx++)
+  {
+    all_context[nodeIdx].onnx_node = model->graph->node[nodeIdx];
+
+    // Search the inputs for a node
+    all_context[nodeIdx].inputs = malloc(sizeof(Onnx__TensorProto) * model->graph->node[nodeIdx]->n_input);
+    for (int i = 0; i < model->graph->node[nodeIdx]->n_input; i++)
+    {
+      all_context[nodeIdx].inputs[i] = malloc(sizeof(Onnx__TensorProto));
+      all_context[nodeIdx].inputs[i] = searchTensorProtoByName(model, inputs, nInputs, model->graph->node[nodeIdx]->input[i]);
+    }
+
+    // Allocate memory for future outputs and set the name
+    all_context[nodeIdx].outputs = malloc(sizeof(Onnx__TensorProto) * model->graph->node[nodeIdx]->n_output);
+    for (int i = 0; i < model->graph->node[nodeIdx]->n_output; i++)
+    {
+      all_context[nodeIdx].outputs[i] = malloc(sizeof(Onnx__TensorProto));
+      all_context[nodeIdx].outputs[i]->name = malloc(sizeof(char) * 50);
+      strcpy(all_context[nodeIdx].outputs[i]->name, model->graph->node[nodeIdx]->output[i]);
+    }
+
+    // Resolve operator. Hardcoded for MNIST
+
+    if (!strcmp(model->graph->node[nodeIdx]->op_type, "Add")){
+      all_context[nodeIdx].resolved_op = &operator_add;
+    }else if(!strcmp(model->graph->node[nodeIdx]->op_type, "Conv")){
+      all_context[nodeIdx].resolved_op = &operator_conv;
+    }else if(!strcmp(model->graph->node[nodeIdx]->op_type, "Reshape")){
+      all_context[nodeIdx].resolved_op = &operator_reshape;
+    }else if(!strcmp(model->graph->node[nodeIdx]->op_type, "Relu")){
+      all_context[nodeIdx].resolved_op = &operator_relu;
+    }else if(!strcmp(model->graph->node[nodeIdx]->op_type, "MaxPool")){
+      all_context[nodeIdx].resolved_op = &operator_maxpool;
+    }else if(!strcmp(model->graph->node[nodeIdx]->op_type, "MatMul")){
+      all_context[nodeIdx].resolved_op = &operator_matmul;
+   }
+    _populatedIdx++;
+  }
+
+  TRACE_LEVEL0("\n\nCalling inference\n");
   TRACE_LEVEL0("The graph has nodes=%zu\n", model->graph->n_node);
 
+  /* Run inference */
+  for (int nodeIdx = 0; nodeIdx < model->graph->n_node; nodeIdx++)
+  {
+    all_context[nodeIdx].resolved_op(&all_context[nodeIdx]);
+  }
+
+
+  // Print the output for MNIST
+  printf("\n\nFinal output name = %s\n\n", all_context[11].outputs[0]->name);
+  for (int i = 0; i < all_context[11].outputs[0]->n_float_data; i++){
+    printf("n_float_data[%d] = %f\n", i, all_context[11].outputs[0]->float_data[i]);
+  }
+
+
+#if 0
   // Iterate all nodes in the graph
   for (int nodeIdx = 0; nodeIdx < model->graph->n_node; nodeIdx++)
   {
@@ -96,6 +158,8 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
     /* TODO this is hardcoded */
     _outputs[_outputIdx++] = nodeOutputs[0];
   }
+
+  #endif
 
   // TODO:
   // Free calculaterTensors memory

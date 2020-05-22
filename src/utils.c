@@ -4,7 +4,6 @@
 #include "onnx.pb-c.h"
 #include "utils.h"
 #include "trace.h"
-#include "inference.h"
 
 // TODO Rethink this function?
 Onnx__TensorProto* searchTensorProtoByName(Onnx__ModelProto *model,
@@ -49,7 +48,66 @@ Onnx__TensorProto* searchTensorProtoByName(Onnx__ModelProto *model,
     }
   }
 
+  // Search in new context. Only for outputs
+
+  if (_populatedIdx != -1)
+  {
+    // Iterate all populated nodes
+    for (int node_i = 0; node_i < _populatedIdx+1; node_i++)
+    {
+      for (int output_i = 0; output_i < all_context[node_i].onnx_node->n_output; output_i++){
+        printf("\n Searching %s, found %s\n", name, all_context[node_i].outputs[output_i]->name);
+        if (!strcmp(all_context[node_i].outputs[output_i]->name, name))
+        {
+          TRACE_LEVEL0("Found TensorProto in outputs from new context name=%s\n", all_context[node_i].outputs[output_i]->name);
+          return all_context[node_i].outputs[output_i];
+        }
+      }
+    }
+  }
+
   TRACE_LEVEL0("%s was not found anywhere, maybe you should worry\n", name);
+  return NULL;
+}
+
+Onnx__TensorProto* searchInputByName(node_context *ctx,
+                                     int index)
+{
+  // Just return null if we are accesing an optional parameters that is not present
+  if (index > ctx->onnx_node->n_input-1)
+  {
+    return NULL;
+  }
+
+  for (int i = 0; i < ctx->onnx_node->n_input; i++)
+  {
+    printf("Searching inputs %s, %s\n", ctx->inputs[i]->name, ctx->onnx_node->input[index]);
+    if (!strcmp(ctx->inputs[i]->name, ctx->onnx_node->input[index]))
+    {
+      return ctx->inputs[i];
+    }
+  }
+  printf("%s not found\n", ctx->onnx_node->input[index]);
+  return NULL;
+}
+
+Onnx__TensorProto* searchOutputByName(node_context *ctx,
+                                      int index)
+{
+  // Just return null if we are accesing an optional parameters that is not present
+  if (index > ctx->onnx_node->n_output-1)
+  {
+    return NULL;
+  }
+
+  for (int i = 0; i < ctx->onnx_node->n_output; i++)
+  {
+    if (!strcmp(ctx->outputs[i]->name, ctx->onnx_node->output[index]))
+    {
+      return ctx->outputs[i];
+    }
+  }
+  printf("%s not found\n", ctx->onnx_node->output[index]);
   return NULL;
 }
 
