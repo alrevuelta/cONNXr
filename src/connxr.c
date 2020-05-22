@@ -38,7 +38,9 @@ int main(int argc, char **argv){
     clock_t start, end;
     double cpu_time_used;
 
-    printf("Running inference on %s model...", model->graph->name);
+    printf("Resolving model...\n");
+    resolve(model, inputs, 1);
+    printf("Running inference on %s model...\n", model->graph->name);
     start = clock();
     Onnx__TensorProto **output = inference(model, inputs, 1);
     end = clock();
@@ -48,9 +50,9 @@ int main(int argc, char **argv){
     cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
     printf("Predicted in %f cycles or %f seconds\n", (double) (end - start), cpu_time_used);
 
-    /* 11 is hardcoded, which is Plus214_Output_0 */
-    for (int i = 0; i < output[11]->n_float_data; i++){
-      printf("n_float_data[%d] = %f\n", i, output[11]->float_data[i]);
+    /* Print the last output which should be the model output */
+    for (int i = 0; i < all_context[_populatedIdx].outputs[0]->n_float_data; i++){
+      printf("n_float_data[%d] = %f\n", i, all_context[_populatedIdx].outputs[0]->float_data[i]);
     }
   }else{
     printf("Wrong inputs\n");

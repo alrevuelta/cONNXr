@@ -38,18 +38,7 @@ Onnx__TensorProto* searchTensorProtoByName(Onnx__ModelProto *model,
     }
   }
 
-  // Search in calculated outputs list
-  for (int outputsIdx = 0; outputsIdx < _outputIdx; outputsIdx++)
-  {
-    if (!strcmp(_outputs[outputsIdx]->name, name))
-    {
-      TRACE_LEVEL0("Found TensorProto in outputs list with name=%s\n", _outputs[outputsIdx]->name);
-      return _outputs[outputsIdx];
-    }
-  }
-
   // Search in new context. Only for outputs
-
   if (_populatedIdx != -1)
   {
     // Iterate all populated nodes
