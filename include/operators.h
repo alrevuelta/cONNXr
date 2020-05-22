@@ -2,7 +2,6 @@
 #define OPERATORS_H
 #include "onnx.pb-c.h"
 
-
 typedef struct node_context  node_context;
 
 struct node_context{
