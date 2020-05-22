@@ -2,19 +2,24 @@
 #define OPERATORS_H
 #include "onnx.pb-c.h"
 
-int operator_add(size_t n_input,
-                 Onnx__TensorProto **input,
-                 size_t n_attribute,
-                 Onnx__AttributeProto **attribute,
-                 size_t n_output,
-                 Onnx__TensorProto **output);
+
+typedef struct node_context  node_context;
+
+struct node_context{
+  Onnx__NodeProto     *onnx_node;
+  Onnx__TensorProto  **inputs;
+  Onnx__TensorProto  **outputs;
+  int (*resolved_op)(node_context *ctx);
+};
+
+int operator_add(node_context *ctx);
 
 int operator_argmax(size_t n_input,
-                    Onnx__TensorProto **input,
-                    size_t n_attribute,
-                    Onnx__AttributeProto **attribute,
-                    size_t n_output,
-                    Onnx__TensorProto **output);
+                   Onnx__TensorProto **input,
+                   size_t n_attribute,
+                   Onnx__AttributeProto **attribute,
+                   size_t n_output,
+                   Onnx__TensorProto **output);
 
 int operator_batchnormalization(size_t n_input,
                                 Onnx__TensorProto **input,
@@ -30,12 +35,7 @@ int operator_cast(size_t n_input,
                   size_t n_output,
                   Onnx__TensorProto **output);
 
-int operator_conv(size_t n_input,
-                  Onnx__TensorProto **input,
-                  size_t n_attribute,
-                  Onnx__AttributeProto **attribute,
-                  size_t n_output,
-                  Onnx__TensorProto **output);
+int operator_conv(node_context *ctx);
 
 int operator_leakyrelu(size_t n_input,
                        Onnx__TensorProto **input,
@@ -44,19 +44,9 @@ int operator_leakyrelu(size_t n_input,
                        size_t n_output,
                        Onnx__TensorProto **output);
 
-int operator_matmul(size_t n_input,
-                    Onnx__TensorProto **input,
-                    size_t n_attribute,
-                    Onnx__AttributeProto **attribute,
-                    size_t n_output,
-                    Onnx__TensorProto **output);
+int operator_matmul(node_context *ctx);
 
-int operator_maxpool(size_t n_input,
-                     Onnx__TensorProto **input,
-                     size_t n_attribute,
-                     Onnx__AttributeProto **attribute,
-                     size_t n_output,
-                     Onnx__TensorProto **output);
+int operator_maxpool(node_context *ctx);
 
 int operator_mul(size_t n_input,
                  Onnx__TensorProto **input,
@@ -65,19 +55,9 @@ int operator_mul(size_t n_input,
                  size_t n_output,
                  Onnx__TensorProto **output);
 
-int operator_relu(size_t n_input,
-                  Onnx__TensorProto **input,
-                  size_t n_attribute,
-                  Onnx__AttributeProto **attribute,
-                  size_t n_output,
-                  Onnx__TensorProto **output);
+int operator_relu(node_context *ctx);
 
-int operator_reshape(size_t n_input,
-                     Onnx__TensorProto **input,
-                     size_t n_attribute,
-                     Onnx__AttributeProto **attribute,
-                     size_t n_output,
-                     Onnx__TensorProto **output);
+int operator_reshape(node_context *ctx);
 
 int operator_sigmoid(size_t n_input,
                      Onnx__TensorProto **input,

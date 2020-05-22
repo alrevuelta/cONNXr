@@ -21,15 +21,16 @@
  *  \param[in/out]  output      Array of pointer to the outputs of the operators
  *  \return         error       Different than 0 if an error was produced
  */
-int operator_maxpool(size_t n_input,
-                     Onnx__TensorProto **input,
-                     size_t n_attribute,
-                     Onnx__AttributeProto **attribute,
-                     size_t n_output,
-                     Onnx__TensorProto **output)
+int operator_maxpool(node_context *ctx)
 {
   TRACE_LEVEL0("Calling operator_maxpool\n");
-  debug_print_dims(input[0]->n_dims, input[0]->dims);
+
+  Onnx__TensorProto *X = searchInputByName(ctx, 0);
+
+  Onnx__TensorProto *Y = searchOutputByName(ctx, 0);
+  Onnx__TensorProto *Indices = searchOutputByName(ctx, 1);
+
+  debug_print_dims(X->n_dims, X->dims);
   //debug_print_attributes(n_attribute, attribute);
 
   if (0){
@@ -42,17 +43,17 @@ int operator_maxpool(size_t n_input,
   }
 
   // number of dimensions do not change
-  output[0]->dims   = malloc(input[0]->n_dims * sizeof(int64_t));
-  output[0]->n_dims = input[0]->n_dims;
+  Y->dims   = malloc(X->n_dims * sizeof(int64_t));
+  Y->n_dims = X->n_dims;
 
   // Only kernel_shape is mandatory
-  Onnx__AttributeProto *auto_pad = searchAttributeNyName(n_attribute, attribute, "auto_pad");
-  //Onnx__AttributeProto *ceil_mode = searchAttributeNyName(n_attribute, attribute, "ceil_mode");
-  //Onnx__AttributeProto *dilations = searchAttributeNyName(n_attribute, attribute, "dilations");
-  Onnx__AttributeProto *kernel_shape = searchAttributeNyName(n_attribute, attribute, "kernel_shape");
-  Onnx__AttributeProto *pads = searchAttributeNyName(n_attribute, attribute, "pads");
-  //Onnx__AttributeProto *storage_order = searchAttributeNyName(n_attribute, attribute, "storage_order");
-  Onnx__AttributeProto *strides = searchAttributeNyName(n_attribute, attribute, "strides");
+  Onnx__AttributeProto *auto_pad = searchAttributeNyName(ctx->onnx_node->n_attribute,ctx->onnx_node->attribute, "auto_pad");
+  //Onnx__AttributeProto *ceil_mode = searchAttributeNyName(ctx->onnx_node->n_attribute,ctx->onnx_node->attribute, "ceil_mode");
+  //Onnx__AttributeProto *dilations = searchAttributeNyName(ctx->onnx_node->n_attribute,ctx->onnx_node->attribute, "dilations");
+  Onnx__AttributeProto *kernel_shape = searchAttributeNyName(ctx->onnx_node->n_attribute,ctx->onnx_node->attribute, "kernel_shape");
+  Onnx__AttributeProto *pads = searchAttributeNyName(ctx->onnx_node->n_attribute,ctx->onnx_node->attribute, "pads");
+  //Onnx__AttributeProto *storage_order = searchAttributeNyName(ctx->onnx_node->n_attribute,ctx->onnx_node->attribute, "storage_order");
+  Onnx__AttributeProto *strides = searchAttributeNyName(ctx->onnx_node->n_attribute, ctx->onnx_node->attribute, "strides");
 
   int64_t h_kernel, w_kernel, h_stride, w_stride;
   h_kernel = w_kernel = h_stride = w_stride = 1;
@@ -105,40 +106,40 @@ int operator_maxpool(size_t n_input,
     }*/
   }
 
-  output[0]->dims[0] = input[0]->dims[0];
-  output[0]->dims[1] = input[0]->dims[1];
-  output[0]->dims[2] = (int64_t)floorf((float)(input[0]->dims[2] + h_pad_aux - ((h_kernel - 1) + 1)) / (float)h_stride + 1);
-  output[0]->dims[3] = (int64_t)floorf((float)(input[0]->dims[3] + w_pad_aux - ((w_kernel - 1) + 1)) / (float)w_stride + 1);
+  Y->dims[0] = X->dims[0];
+  Y->dims[1] = X->dims[1];
+  Y->dims[2] = (int64_t)floorf((float)(X->dims[2] + h_pad_aux - ((h_kernel - 1) + 1)) / (float)h_stride + 1);
+  Y->dims[3] = (int64_t)floorf((float)(X->dims[3] + w_pad_aux - ((w_kernel - 1) + 1)) / (float)w_stride + 1);
 
-  output[0]->has_raw_data = 0;
+  Y->has_raw_data = 0;
 
-  switch(input[0]->data_type)
+  switch(X->data_type)
   {
     case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:
     {
-      output[0]->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT;
-      output[0]->float_data = malloc(output[0]->dims[0]*output[0]->dims[1]*output[0]->dims[2]*output[0]->dims[3] * sizeof(float));
-      output[0]->n_float_data = output[0]->dims[0]*output[0]->dims[1]*output[0]->dims[2]*output[0]->dims[3];
+      Y->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT;
+      Y->float_data = malloc(Y->dims[0]*Y->dims[1]*Y->dims[2]*Y->dims[3] * sizeof(float));
+      Y->n_float_data = Y->dims[0]*Y->dims[1]*Y->dims[2]*Y->dims[3];
 
       int b,i,j,k,m,n;
-      for(b = 0; b < output[0]->dims[0]; ++b){
-        for(k = 0; k < output[0]->dims[1]; ++k){
-          for(i = 0; i < output[0]->dims[2]; ++i){
-            for(j = 0; j < output[0]->dims[3]; ++j){
-              int out_index = j + output[0]->dims[3]*(i + output[0]->dims[2]*(k + input[0]->dims[1]*b));
+      for(b = 0; b < Y->dims[0]; ++b){
+        for(k = 0; k < Y->dims[1]; ++k){
+          for(i = 0; i < Y->dims[2]; ++i){
+            for(j = 0; j < Y->dims[3]; ++j){
+              int out_index = j + Y->dims[3]*(i + Y->dims[2]*(k + X->dims[1]*b));
               float max = -999999; // TODO
               for(n = 0; n < h_kernel; ++n){
                 for(m = 0; m < w_kernel; ++m){
                   int cur_h = i*h_stride + n -h_pad;
                   int cur_w = j*w_stride + m -w_pad;
-                  int index = cur_w + input[0]->dims[3]*(cur_h + input[0]->dims[2]*(k + b*input[0]->dims[1]));
-                  int valid = (cur_h >= 0 && cur_h < (input[0]->dims[2]) &&
-                               cur_w >= 0 && cur_w < (input[0]->dims[3]));
-                  float val = (valid != 0) ? input[0]->float_data[index] : -999999; //TODO
+                  int index = cur_w + X->dims[3]*(cur_h + X->dims[2]*(k + b*X->dims[1]));
+                  int valid = (cur_h >= 0 && cur_h < (X->dims[2]) &&
+                               cur_w >= 0 && cur_w < (X->dims[3]));
+                  float val = (valid != 0) ? X->float_data[index] : -999999; //TODO
                   max = (val > max ? val : max);
                   }
                 }
-                output[0]->float_data[out_index] = max;
+                Y->float_data[out_index] = max;
               }
             }
           }
@@ -153,7 +154,7 @@ int operator_maxpool(size_t n_input,
       break;
   }
 
-  debug_print_dims(output[0]->n_dims, output[0]->dims);
+  debug_print_dims(Y->n_dims, Y->dims);
   return 0;
 
 }

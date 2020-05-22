@@ -2,6 +2,7 @@
 #define INFERENCE_H
 #include "onnx.pb-c.h"
 #include "operators.h"
+#include "operators/operator.h"
 
 // TODO Hardcoded for initial tests
 #define MAX_NUM_OF_OUTPUTS 40
@@ -9,11 +10,18 @@
 extern Onnx__TensorProto *_outputs[MAX_NUM_OF_OUTPUTS];
 extern int _outputIdx;
 
+// Quick solution. Shows the last populated idx in node_context
+extern int _populatedIdx;
+
+
+
+
 // Investigate what to do with the output. Is it always a set of TensorProto?
 Onnx__TensorProto** inference(Onnx__ModelProto *model,
                               Onnx__TensorProto **inputs,
                               int nInputs);
 
+/*
 typedef struct
 {
   char *name;
@@ -23,8 +31,13 @@ typedef struct
               Onnx__AttributeProto **attribute,
               size_t n_output,
               Onnx__TensorProto **output);
-} operatorptrs;
+} operatorptrs;*/
 
+
+
+extern node_context all_context[50];
+
+/*
 __attribute__((unused))
 static operatorptrs
           operatorsSet[] = {
@@ -43,6 +56,6 @@ static operatorptrs
                              {"ConvInteger", operator_convinteger},
                              {"MatMulInteger", operator_matmulinteger}
                              // Dont forget to update NUMBER_OF_OPERATORS
-                           };
+                           };*/
 
 #endif
