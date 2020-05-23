@@ -163,14 +163,13 @@ void testOperator(char *outputName)
   Onnx__TensorProto *out0set0 = openTensorProtoFile(outputPath);
   convertRawDataOfTensorProto(out0set0);
 
+  resolve(model, inputs, nInputs);
   printf("Running inference\n");
   Onnx__TensorProto **output = inference(model, inputs, nInputs);
 
   /* Some operators have more than two outputs to assert */
-  int outputToAssert = 0;
-  TRACE_LEVEL0("Asserting output %s", output[outputToAssert]->name);
-
-  compareAlmostEqualTensorProto(output[outputToAssert], out0set0);
+  printf("Will compare output %d = %s", _populatedIdx, all_context[_populatedIdx].outputs[0]->name);
+  compareAlmostEqualTensorProto(all_context[_populatedIdx].outputs[0], out0set0);
 }
 
 #endif

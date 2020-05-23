@@ -4,6 +4,7 @@
 #include <math.h>
 #include "trace.h"
 #include "operators.h"
+#include "utils.h"
 
 /*! \fn COPY_PASTE_FUNCTION_DECLARATION
  *  \brief COPY_PASTE_AND_FORMAT_ONNX_DOCUMENTATION. INPUTS/OUTPUTS/CONSTRAINTS
@@ -20,15 +21,15 @@
  *  \param[in/out]  output      Array of pointer to the outputs of the operators
  *  \return         error       Different than 0 if an error was produced
  */
-int operator_cast(size_t n_input,
-                  Onnx__TensorProto **input,
-                  size_t n_attribute,
-                  Onnx__AttributeProto **attribute,
-                  size_t n_output,
-                  Onnx__TensorProto **output)
+int operator_cast(node_context *ctx)
 {
   TRACE_LEVEL0("Calling operator_cast\n");
-  debug_print_dims(input[0]->n_dims, input[0]->dims);
+
+  Onnx__TensorProto *input = searchInputByName(ctx, 0);
+
+  Onnx__TensorProto *output = searchOutputByName(ctx, 0);
+
+  debug_print_dims(input->n_dims, input->dims);
 
   if (0){
     // TODO Just a prototype. Not tested
@@ -45,19 +46,19 @@ int operator_cast(size_t n_input,
   /* TODO: This is hardcoded */
   int to = ONNX__TENSOR_PROTO__DATA_TYPE__INT64;
 
-  output[0]->dims = malloc(input[0]->n_dims * sizeof(int64_t));
-  for (int i = 0; i < input[0]->n_dims; i++)
+  output->dims = malloc(input->n_dims * sizeof(int64_t));
+  for (int i = 0; i < input->n_dims; i++)
   {
-    output[0]->dims[i] = input[0]->dims[i];
+    output->dims[i] = input->dims[i];
   }
 
   // Populate some parameters
-  output[0]->n_dims       = input[0]->n_dims;
-  output[0]->has_raw_data = 0;
-  output[0]->data_type    = to;
+  output->n_dims       = input->n_dims;
+  output->has_raw_data = 0;
+  output->data_type    = to;
 
   // TODO Set unused parameters to 0?
-  switch(input[0]->data_type)
+  switch(input->data_type)
   {
     case ONNX__TENSOR_PROTO__DATA_TYPE__UNDEFINED:
       break;
@@ -66,20 +67,20 @@ int operator_cast(size_t n_input,
       // Hardcode conversion to int64 or double only
       if (to == ONNX__TENSOR_PROTO__DATA_TYPE__INT64)
       {
-        output[0]->n_int64_data = input[0]->n_float_data;
-        output[0]->int64_data = malloc(output[0]->n_int64_data * sizeof(int64_t));
-        for (int i = 0; i < output[0]->n_int64_data; i++)
+        output->n_int64_data = input->n_float_data;
+        output->int64_data = malloc(output->n_int64_data * sizeof(int64_t));
+        for (int i = 0; i < output->n_int64_data; i++)
         {
-          output[0]->int64_data[i] = (int64_t)input[0]->float_data[i];
+          output->int64_data[i] = (int64_t)input->float_data[i];
         }
       }
       else if (to == ONNX__TENSOR_PROTO__DATA_TYPE__DOUBLE)
       {
-        output[0]->n_double_data = input[0]->n_double_data;
-        output[0]->double_data = malloc(output[0]->n_double_data * sizeof(double));
-        for (int i = 0; i < output[0]->n_double_data; i++)
+        output->n_double_data = input->n_double_data;
+        output->double_data = malloc(output->n_double_data * sizeof(double));
+        for (int i = 0; i < output->n_double_data; i++)
         {
-          output[0]->double_data[i] = (double)input[0]->float_data[i];
+          output->double_data[i] = (double)input->float_data[i];
         }
       }
       // TODO Conversion from float to other types
@@ -121,6 +122,6 @@ int operator_cast(size_t n_input,
       break;
   }
 
-  debug_print_dims(output[0]->n_dims, output[0]->dims);
+  debug_print_dims(output->n_dims, output->dims);
   return 0;
 }

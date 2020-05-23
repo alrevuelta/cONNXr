@@ -31,6 +31,7 @@ void test_model_mnist(void)
   clock_t start, end;
   double cpu_time_used;
 
+  resolve(model, inputs, 1);
   start = clock();
   Onnx__TensorProto **output = inference(model, inputs, 1);
   end = clock();
@@ -46,7 +47,8 @@ void test_model_mnist(void)
   printf("[benchmark][mnist] CLOCKS_PER_SEC: %d\n", CLOCKS_PER_SEC);
 
   /* 11 is hardcoded, which is Plus214_Output_0 */
-  compareAlmostEqualTensorProto(output[11], out0set0);
+  printf("Will compare output %d = %s", _populatedIdx, all_context[_populatedIdx].outputs[0]->name);
+  compareAlmostEqualTensorProto(all_context[_populatedIdx].outputs[0], out0set0);
 
   TRACE_LEVEL0("End: test_model_mnist");
 }

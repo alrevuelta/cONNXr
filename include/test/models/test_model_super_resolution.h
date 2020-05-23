@@ -21,6 +21,7 @@ void test_model_super_resolution(void)
   inp0set0->name = "input";
   printf("%s\n\n", inp0set0->name);
 
+  //resolve(model, inputs, 1);
   Onnx__TensorProto *inputs[] = { inp0set0 };
   Onnx__TensorProto **output = inference(model, inputs, 1);
 

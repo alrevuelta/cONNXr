@@ -4,6 +4,7 @@
 #include <math.h>
 #include "trace.h"
 #include "operators.h"
+#include "utils.h"
 
 /*! \fn COPY_PASTE_FUNCTION_DECLARATION
  *  \brief COPY_PASTE_AND_FORMAT_ONNX_DOCUMENTATION. INPUTS/OUTPUTS/CONSTRAINTS
@@ -20,14 +21,15 @@
  *  \param[in/out]  output      Array of pointer to the outputs of the operators
  *  \return         error       Different than 0 if an error was produced
  */
-int operator_argmax(size_t n_input,
-                    Onnx__TensorProto **input,
-                    size_t n_attribute,
-                    Onnx__AttributeProto **attribute,
-                    size_t n_output,
-                    Onnx__TensorProto **output)
+int operator_argmax(node_context *ctx)
 {
   TRACE_LEVEL0("Calling operator_argmax\n");
+
+  Onnx__TensorProto *axis = searchInputByName(ctx, 0);
+  //Onnx__TensorProto *keepdims = searchInputByName(ctx, 1);
+  //Onnx__TensorProto *select_last_index = searchInputByName(ctx, 2);
+
+  Onnx__TensorProto *data = searchOutputByName(ctx, 0);
 
   if (0){
     /* TODO: Check some conditions. For example if a specific
@@ -42,40 +44,40 @@ int operator_argmax(size_t n_input,
     return 1;
   }
 
-  debug_print_dims(input[0]->n_dims, input[0]->dims);
+  debug_print_dims(axis->n_dims, axis->dims);
 
   // Allocte memory
-  output[0]->dims = malloc(input[0]->dims[1] * sizeof(int64_t));
+  data->dims = malloc(axis->dims[1] * sizeof(int64_t));
 
   // Populate some parameters
-  output[0]->n_dims       = 1;
-  output[0]->dims[0]      = input[0]->dims[1];
-  output[0]->has_raw_data = 0;
+  data->n_dims       = 1;
+  data->dims[0]      = axis->dims[1];
+  data->has_raw_data = 0;
 
   // INT64 is hardcoded by design
-  output[0]->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__INT64;
-  output[0]->n_int64_data = input[0]->dims[1];
-  output[0]->int64_data = malloc(output[0]->n_int64_data * sizeof(int64_t));
+  data->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__INT64;
+  data->n_int64_data = axis->dims[1];
+  data->int64_data = malloc(data->n_int64_data * sizeof(int64_t));
 
-  switch(input[0]->data_type)
+  switch(axis->data_type)
   {
     case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:
     {
-      for (int i = 0; i < input[0]->dims[1]; i++)
+      for (int i = 0; i < axis->dims[1]; i++)
       {
         // init maxval to the first elemen
-        float maxval = input[0]->float_data[i];
+        float maxval = axis->float_data[i];
         int64_t maxind = 0;
         // todo start from j = 1?
-        for (int j = 0; j < input[0]->dims[0]; j++)
+        for (int j = 0; j < axis->dims[0]; j++)
         {
-          if (input[0]->float_data[i + input[0]->dims[1] * j] > maxval)
+          if (axis->float_data[i + axis->dims[1] * j] > maxval)
           {
             maxind = j;
-            maxval = input[0]->float_data[i + input[0]->dims[1] * j];
+            maxval = axis->float_data[i + axis->dims[1] * j];
           }
         }
-        output[0]->int64_data[i] = maxind;
+        data->int64_data[i] = maxind;
       }
     } break;
     case ONNX__TENSOR_PROTO__DATA_TYPE__INT32:
@@ -95,6 +97,6 @@ int operator_argmax(size_t n_input,
     default:
       break;
   }
-  debug_print_dims(output[0]->n_dims, output[0]->dims);
+  debug_print_dims(data->n_dims, data->dims);
   return 0;
 }

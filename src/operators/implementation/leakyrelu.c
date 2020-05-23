@@ -4,6 +4,7 @@
 #include <math.h>
 #include "trace.h"
 #include "operators.h"
+#include "utils.h"
 
 /*! \fn COPY_PASTE_FUNCTION_DECLARATION
  *  \brief COPY_PASTE_AND_FORMAT_ONNX_DOCUMENTATION. INPUTS/OUTPUTS/CONSTRAINTS
@@ -20,13 +21,13 @@
  *  \param[in/out]  output      Array of pointer to the outputs of the operators
  *  \return         error       Different than 0 if an error was produced
  */
- int operator_leakyrelu(size_t n_input,
-                        Onnx__TensorProto **input,
-                        size_t n_attribute,
-                        Onnx__AttributeProto **attribute,
-                        size_t n_output,
-                        Onnx__TensorProto **output)
+ int operator_leakyrelu(node_context *ctx)
  {
+
+   Onnx__TensorProto *X = searchInputByName(ctx, 0);
+
+   Onnx__TensorProto *Y = searchOutputByName(ctx, 0);
+
    TRACE_LEVEL0("Calling operator_leakyrelu\n");
 
    if (0){
@@ -35,15 +36,15 @@
      return 1;
    }
 
-   debug_print_dims(input[0]->n_dims, input[0]->dims);
+   debug_print_dims(X->n_dims, X->dims);
 
    /* TODO Alpha is not always float */
    /* Default value */
    float alpha = 0.01;
 
    /* If there is an attribute, its alpha */
-   if (n_attribute == 1){
-     alpha = attribute[0]->f;
+   if (ctx->onnx_node->n_attribute == 1){
+     alpha = ctx->onnx_node->attribute[0]->f;
    }
 
    if (0){
@@ -55,28 +56,28 @@
      return -1;
    }
 
-   output[0]->dims = malloc(input[0]->n_dims * sizeof(int64_t));
-   for (int i = 0; i < input[0]->n_dims; i++)
+   Y->dims = malloc(X->n_dims * sizeof(int64_t));
+   for (int i = 0; i < X->n_dims; i++)
    {
-     output[0]->dims[i] = input[0]->dims[i];
+     Y->dims[i] = X->dims[i];
    }
 
    // Populate some parameters
-   output[0]->n_dims       = input[0]->n_dims;
-   output[0]->has_raw_data = 0;
-   output[0]->data_type    = input[0]->data_type;
+   Y->n_dims       = X->n_dims;
+   Y->has_raw_data = 0;
+   Y->data_type    = X->data_type;
 
-   switch(input[0]->data_type)
+   switch(X->data_type)
    {
      case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:
      {
-       output[0]->n_float_data = input[0]->n_float_data;
-       output[0]->float_data = malloc(output[0]->n_float_data * sizeof(float));
-       for (int i = 0; i < output[0]->n_float_data; i++)
+       Y->n_float_data = X->n_float_data;
+       Y->float_data = malloc(Y->n_float_data * sizeof(float));
+       for (int i = 0; i < Y->n_float_data; i++)
        {
-         output[0]->float_data[i] = input[0]->float_data[i] < 0 ?
-                                    input[0]->float_data[i] * alpha :
-                                    input[0]->float_data[i];
+         Y->float_data[i] = X->float_data[i] < 0 ?
+                                    X->float_data[i] * alpha :
+                                    X->float_data[i];
        }
      }
        break;
@@ -87,17 +88,17 @@
        break;
      case ONNX__TENSOR_PROTO__DATA_TYPE__DOUBLE:
      {
-       output[0]->n_double_data = input[0]->n_double_data;
-       output[0]->double_data = malloc(output[0]->n_double_data * sizeof(double));
-       for (int i = 0; i < output[0]->n_double_data; i++)
+       Y->n_double_data = X->n_double_data;
+       Y->double_data = malloc(Y->n_double_data * sizeof(double));
+       for (int i = 0; i < Y->n_double_data; i++)
        {
-         output[0]->double_data[i] = input[0]->double_data[i] < 0 ? 0 : input[0]->double_data[i];
+         Y->double_data[i] = X->double_data[i] < 0 ? 0 : X->double_data[i];
        }
      }
        break;
      default:
        break;
    }
-   debug_print_dims(output[0]->n_dims, output[0]->dims);
+   debug_print_dims(Y->n_dims, Y->dims);
    return 0;
  }

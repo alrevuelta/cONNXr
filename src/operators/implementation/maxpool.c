@@ -28,7 +28,7 @@ int operator_maxpool(node_context *ctx)
   Onnx__TensorProto *X = searchInputByName(ctx, 0);
 
   Onnx__TensorProto *Y = searchOutputByName(ctx, 0);
-  Onnx__TensorProto *Indices = searchOutputByName(ctx, 1);
+  //Onnx__TensorProto *Indices = searchOutputByName(ctx, 1);
 
   debug_print_dims(X->n_dims, X->dims);
   //debug_print_attributes(n_attribute, attribute);
