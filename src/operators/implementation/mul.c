@@ -4,6 +4,7 @@
 #include <math.h>
 #include "trace.h"
 #include "operators.h"
+#include "utils.h"
 
 /*! \fn COPY_PASTE_FUNCTION_DECLARATION
  *  \brief COPY_PASTE_AND_FORMAT_ONNX_DOCUMENTATION. INPUTS/OUTPUTS/CONSTRAINTS
@@ -20,14 +21,14 @@
  *  \param[in/out]  output      Array of pointer to the outputs of the operators
  *  \return         error       Different than 0 if an error was produced
  */
- int operator_mul(size_t n_input,
-                  Onnx__TensorProto **input,
-                  size_t n_attribute,
-                  Onnx__AttributeProto **attribute,
-                  size_t n_output,
-                  Onnx__TensorProto **output)
+ int operator_mul(node_context *ctx)
 {
   TRACE_LEVEL0("Calling operator_mul\n");
+
+  Onnx__TensorProto *A = searchInputByName(ctx, 0);
+  Onnx__TensorProto *B = searchInputByName(ctx, 1);
+
+  Onnx__TensorProto *C = searchOutputByName(ctx, 0);
 
   if (0){
     /* TODO: Check some conditions. For example if a specific
@@ -38,21 +39,21 @@
   /* TODO: Hardcoded for tiny YOLO */
 
   /* Move this block to a common function */
-  output[0]->dims   = malloc(input[0]->n_dims * sizeof(int64_t));
-  output[0]->n_dims = input[0]->n_dims;
+  C->dims   = malloc(A->n_dims * sizeof(int64_t));
+  C->n_dims = A->n_dims;
 
-  for (int i = 0; i < input[0]->n_dims; i++)
+  for (int i = 0; i < A->n_dims; i++)
   {
-    output[0]->dims[i] = input[0]->dims[i];
+    C->dims[i] = A->dims[i];
   }
-  output[0]->has_raw_data = 0;
-  output[0]->data_type = input[0]->data_type;
+  C->has_raw_data = 0;
+  C->data_type = A->data_type;
 
-  output[0]->n_float_data = input[0]->n_float_data;
-  output[0]->float_data = malloc(output[0]->n_float_data * sizeof(float));
+  C->n_float_data = A->n_float_data;
+  C->float_data = malloc(C->n_float_data * sizeof(float));
 
-  for (int i = 0; i < input[0]->n_float_data; i++){
-    output[0]->float_data[i] = input[0]->float_data[i] * input[1]->float_data[0];
+  for (int i = 0; i < A->n_float_data; i++){
+    C->float_data[i] = A->float_data[i] * B->float_data[0];
   }
   return 0;
 }

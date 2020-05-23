@@ -4,6 +4,7 @@
 #include <math.h>
 #include "trace.h"
 #include "operators.h"
+#include "utils.h"
 
 /* TODO
 // Works with 1 dimension.
@@ -22,12 +23,7 @@ void xx(void *x, int dimx, int dimy)
 }*/
 
 
-int operator_softmax(size_t n_input,
-                     Onnx__TensorProto **input,
-                     size_t n_attribute,
-                     Onnx__AttributeProto **attribute,
-                     size_t n_output,
-                     Onnx__TensorProto **output)
+int operator_softmax(node_context *ctx)
 {
   printf("Operator softmax not implemented\n");
   return 1;

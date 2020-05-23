@@ -4,13 +4,9 @@
 #include <math.h>
 #include "trace.h"
 #include "operators.h"
+#include "utils.h"
 
-int operator_matmulinteger(size_t n_input,
-                           Onnx__TensorProto **input,
-                           size_t n_attribute,
-                           Onnx__AttributeProto **attribute,
-                           size_t n_output,
-                           Onnx__TensorProto **output)
+int operator_matmulinteger(node_context *ctx)
 {
   TRACE_LEVEL0("Calling operator_matmulinteger\n");
   if (0){

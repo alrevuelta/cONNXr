@@ -4,13 +4,9 @@
 #include <math.h>
 #include "trace.h"
 #include "operators.h"
+#include "utils.h"
 
-int operator_zipmap(size_t n_input,
-                    Onnx__TensorProto **input,
-                    size_t n_attribute,
-                    Onnx__AttributeProto **attribute,
-                    size_t n_output,
-                    Onnx__TensorProto **output)
+int operator_zipmap(node_context *ctx)
 {
   printf("Operator zipmap not implemented\n");
   return 1;
