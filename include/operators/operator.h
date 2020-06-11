@@ -2,6 +2,7 @@
 #define OPERATOR_H
 
 #include "onnx.pb-c.h"
+#include "operators.h"
 #include <errno.h>
 
 typedef struct operator_context operator_context;
@@ -10,8 +11,8 @@ typedef struct operator_context_tensor     operator_context_input;
 typedef struct operator_context_tensor     operator_context_output;
 typedef struct operator_context_attribute  operator_context_attribute;
 typedef enum operator_status    operator_status;
-typedef operator_status (*operator_executer)(void *ctx);
-typedef operator_executer (*operator_resolver)(void *ctx);
+typedef operator_status (*operator_executer)(node_context *ctx);
+typedef operator_executer (*operator_resolver)(node_context *ctx);
 
 enum operator_status {
   OP_OK     = 0,

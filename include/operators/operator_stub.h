@@ -3,8 +3,9 @@
 
 #include "operators/operator.h"
 
+// TODO Move to the same file as node_context
 operator_status operator_stub(
-    void *ctx
+    node_context *ctx
 );
 
 #endif

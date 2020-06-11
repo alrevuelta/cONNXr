@@ -51,6 +51,11 @@ ONNX_INCLUDE+="^Relu$$"
 ONNX_INCLUDE+="^MaxPool$$"
 ONNX_INCLUDE+="^Reshape$$"
 ONNX_INCLUDE+="^MatMul$$"
+ONNX_INCLUDE+="^ArgMax$$"
+ONNX_INCLUDE+="^BatchNormalization$$"
+ONNX_INCLUDE+="^Sigmoid$$"
+ONNX_INCLUDE+="^Softmax$$"
+ONNX_INCLUDE+="^Mul$$"
 endif
 
 VARIABLE+=ONNX_VERSION
@@ -238,7 +243,6 @@ HELP_onnx_generator=generate various onnx sources and headers
 TARGET+=onnx_generator
 onnx_generator:
 	cd scripts; python -m onnx_generator \
-	$(if $(ONNX_CUSTOM), --onnx $(abspath $(ONNX_CUSTOM))) \
 	$(if $(ONNX_INCLUDE), --include $(ONNX_INCLUDE)) \
 	$(if $(ONNX_EXCLUDE), --exclude $(ONNX_EXCLUDE)) \
 	$(if $(ONNX_VERSION), --version $(ONNX_VERSION)) \
