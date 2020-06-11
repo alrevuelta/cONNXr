@@ -4,6 +4,7 @@
 
 typedef struct node_context  node_context;
 
+// TODO Move this to a file named operator_interface
 struct node_context{
   Onnx__NodeProto     *onnx_node;
   Onnx__TensorProto  **inputs;

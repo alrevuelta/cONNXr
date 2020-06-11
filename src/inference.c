@@ -5,6 +5,7 @@
 #include "utils.h"
 #include "trace.h"
 #include "inference.h"
+#include "operators/operator_sets.h"
 
 // Won't be global in the future
 node_context all_context[50];
@@ -19,6 +20,20 @@ void resolve(Onnx__ModelProto *model,
   _populatedIdx = -1;
   for (int nodeIdx = 0; nodeIdx < model->graph->n_node; nodeIdx++)
   {
+
+    // Prototyping
+    // Check model->opset_import->has_version must be True
+    // More than 1 opset can be imported. Iterate n_opset_import
+    printf("\n\n\nTesting %lld\n\n\n", model->opset_import[0]->version);
+    //find_operator_resolver(model->graph->node[nodeIdx]->op_type, 10);
+
+    // Steps to resolve the operator
+    // First get the operator resolver funtion
+    // Use the operator resolver function to map the type with the specific
+    // function
+
+
+
     all_context[nodeIdx].onnx_node = model->graph->node[nodeIdx];
 
     // Search the inputs for a node
