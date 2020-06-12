@@ -9,6 +9,7 @@
 operator_executer resolve_operator__onnx__add__7(
     node_context *ctx
 ){
+  printf("Resolving add");
     operator_executer executer = NULL;
     {
     uint32_t T = 0;
@@ -25,7 +26,7 @@ operator_executer resolve_operator__onnx__add__7(
         //case ONNX__TENSOR_PROTO__DATA_TYPE__UINT32: { executer = (operator_executer) &operator__onnx__add__7__T_tensor_uint32; break; }
         //case ONNX__TENSOR_PROTO__DATA_TYPE__UINT64: { executer = (operator_executer) &operator__onnx__add__7__T_tensor_uint64; break; }
         default: {
-            fprintf(stderr, "no matching type for constraint 'T' found!\n");
+            fprintf(stderr, "[add] no matching type for constraint 'T' found!\n");
             break;
         }
     }

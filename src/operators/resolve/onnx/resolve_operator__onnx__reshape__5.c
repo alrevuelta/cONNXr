@@ -9,6 +9,7 @@
 operator_executer resolve_operator__onnx__reshape__5(
     node_context *ctx
 ){
+  printf("Resolving reshape");
     operator_executer executer = NULL;
     {
     uint32_t T = 0;
@@ -33,7 +34,7 @@ operator_executer resolve_operator__onnx__reshape__5(
         //case ONNX__TENSOR_PROTO__DATA_TYPE__UINT64: { executer = (operator_executer) &operator__onnx__reshape__5__T_tensor_uint64; break; }
         //case ONNX__TENSOR_PROTO__DATA_TYPE__UINT8: { executer = (operator_executer) &operator__onnx__reshape__5__T_tensor_uint8; break; }
         default: {
-            fprintf(stderr, "no matching type for constraint 'T' found!\n");
+            fprintf(stderr, "[reshape] no matching type for constraint 'T' found!\n");
             break;
         }
     }

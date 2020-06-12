@@ -9,6 +9,7 @@
 operator_executer resolve_operator__onnx__argmax__12(
     node_context *ctx
 ){
+  printf("Resolving argmax");
     operator_executer executer = NULL;
     {
     uint32_t T = 0;
@@ -29,7 +30,7 @@ operator_executer resolve_operator__onnx__argmax__12(
         //case ONNX__TENSOR_PROTO__DATA_TYPE__UINT64: { executer = (operator_executer) &operator__onnx__argmax__12__T_tensor_uint64; break; }
         //case ONNX__TENSOR_PROTO__DATA_TYPE__UINT8: { executer = (operator_executer) &operator__onnx__argmax__12__T_tensor_uint8; break; }
         default: {
-            fprintf(stderr, "no matching type for constraint 'T' found!\n");
+            fprintf(stderr, "[argmax] no matching type for constraint 'T' found!\n");
             break;
         }
     }

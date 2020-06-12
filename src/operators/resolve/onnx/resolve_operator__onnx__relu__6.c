@@ -9,6 +9,7 @@
 operator_executer resolve_operator__onnx__relu__6(
     node_context *ctx
 ){
+  printf("Resolving relu");
     operator_executer executer = NULL;
     {
     uint32_t T = 0;
@@ -21,7 +22,7 @@ operator_executer resolve_operator__onnx__relu__6(
         case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT: { executer = (operator_executer) &operator__onnx__relu__6__T_tensor_float; break; }
         //case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT16: { executer = (operator_executer) &operator__onnx__relu__6__T_tensor_float16; break; }
         default: {
-            fprintf(stderr, "no matching type for constraint 'T' found!\n");
+            fprintf(stderr, "[relu] no matching type for constraint 'T' found!\n");
             break;
         }
     }
