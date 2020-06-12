@@ -9,6 +9,7 @@
 operator_executer resolve_operator__onnx__maxpool__12(
     node_context *ctx
 ){
+  printf("Resolving maxpool");
     operator_executer executer = NULL;
     {
     uint32_t T = 0;
@@ -23,7 +24,7 @@ operator_executer resolve_operator__onnx__maxpool__12(
         case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT: { executer = (operator_executer) &operator__onnx__maxpool__12__T_tensor_float__I_tensor_int64; break; }
         /* Edited manually */
         default: {
-            fprintf(stderr, "no matching type for constraint 'T' found!\n");
+            fprintf(stderr, "[maxpool] no matching type for constraint 'T' found!\n");
             break;
         }
     }
