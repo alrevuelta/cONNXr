@@ -80,6 +80,9 @@ operator_status operator__onnx__conv__11__T_tensor_float(
 
   Y->has_raw_data = 0;
 
+  // TODO
+  Y->data_type = X->data_type;
+
   switch(X->data_type)
   {
     case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:

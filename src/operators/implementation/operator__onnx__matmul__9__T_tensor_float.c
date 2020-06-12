@@ -43,6 +43,7 @@ operator_status operator__onnx__matmul__9__T_tensor_float(
   Y->dims[1]      = B->dims[1];
   Y->has_raw_data = 0;
 
+  // TODO Move int32 to a new func.
   switch(A->data_type)
   {
     case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:
