@@ -10,6 +10,7 @@ no_resolve = 0
 sets = ["src/operators/"]
 no_sets = 0
 force = 0
+dryrun = 0
 include = [".*"]
 exclude = []
 version = ["all"]
