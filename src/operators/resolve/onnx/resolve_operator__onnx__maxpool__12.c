@@ -9,10 +9,11 @@
 operator_executer resolve_operator__onnx__maxpool__12(
     node_context *ctx
 ){
-  printf("Resolving maxpool");
+  printf("Resolving maxpool\n");
     operator_executer executer = NULL;
     {
     uint32_t T = 0;
+    printf("data_type=%d\n", ctx->inputs[0]->data_type);
     if (ctx->inputs[0]) {
         T = ctx->inputs[0]->data_type;
     }
