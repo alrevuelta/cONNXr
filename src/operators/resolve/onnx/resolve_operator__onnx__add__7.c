@@ -32,6 +32,7 @@ operator_executer resolve_operator__onnx__add__7(
     }
 }
     if (!executer) {
+      printf("Executer for add not found, returning stub\n");
         executer = &operator_stub;
     }
     return executer;

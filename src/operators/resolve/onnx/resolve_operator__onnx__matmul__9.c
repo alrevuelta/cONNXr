@@ -32,6 +32,7 @@ operator_executer resolve_operator__onnx__matmul__9(
     }
 }
     if (!executer) {
+      printf("Executer for matmul not found, returning stub\n");
         executer = &operator_stub;
     }
     return executer;

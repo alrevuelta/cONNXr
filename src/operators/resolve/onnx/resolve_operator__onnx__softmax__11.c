@@ -28,6 +28,7 @@ operator_executer resolve_operator__onnx__softmax__11(
     }
 }
     if (!executer) {
+      printf("Executer for softmax not found, returning stub\n");
         executer = &operator_stub;
     }
     return executer;

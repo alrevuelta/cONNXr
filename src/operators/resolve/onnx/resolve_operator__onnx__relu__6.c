@@ -28,6 +28,7 @@ operator_executer resolve_operator__onnx__relu__6(
     }
 }
     if (!executer) {
+      printf("Executer for relu not found, returning stub\n");
         executer = &operator_stub;
     }
     return executer;

@@ -36,6 +36,7 @@ operator_executer resolve_operator__onnx__argmax__12(
     }
 }
     if (!executer) {
+      printf("Executer for argmax not found, returning stub\n");
         executer = &operator_stub;
     }
     return executer;

@@ -32,6 +32,7 @@ operator_executer resolve_operator__onnx__maxpool__12(
 
 
     if (!executer) {
+      printf("Executer for maxpool not found, returning stub\n");
         executer = &operator_stub;
     }
     return executer;

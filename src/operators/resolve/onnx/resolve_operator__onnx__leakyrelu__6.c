@@ -28,6 +28,7 @@ operator_executer resolve_operator__onnx__leakyrelu__6(
     }
 }
     if (!executer) {
+      printf("Executer for leakyrelu not found, returning stub\n");
         executer = &operator_stub;
     }
     return executer;
