@@ -53,6 +53,9 @@ operator_status operator__onnx__batchnormalization__9__T_tensor_float(
   // TODO: Is this working? No mem is allocated
   Y->has_raw_data = 0;
 
+  // TODO
+  Y->data_type = X->data_type;
+
   /* The order of inputs is assumed to be:
    * [0] X
    * [1] scale
