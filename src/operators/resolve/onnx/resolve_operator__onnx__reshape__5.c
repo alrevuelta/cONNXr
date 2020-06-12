@@ -40,6 +40,7 @@ operator_executer resolve_operator__onnx__reshape__5(
     }
 }
     if (!executer) {
+      printf("Executer for reshape not found, returning stub\n");
         executer = &operator_stub;
     }
     return executer;

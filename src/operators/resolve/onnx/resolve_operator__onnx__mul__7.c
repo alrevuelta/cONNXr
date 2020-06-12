@@ -32,6 +32,7 @@ operator_executer resolve_operator__onnx__mul__7(
     }
 }
     if (!executer) {
+      printf("Executer for mul not found, returning stub\n");
         executer = &operator_stub;
     }
     return executer;

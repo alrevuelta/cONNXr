@@ -28,6 +28,7 @@ operator_executer resolve_operator__onnx__conv__11(
     }
 }
     if (!executer) {
+      printf("Executer for conv not found, returning stub\n");
         executer = &operator_stub;
     }
     return executer;
