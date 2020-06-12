@@ -80,6 +80,32 @@ parser.add_argument(
     help=f"where to put sets src in main path (default: {args.sets[0]})"
 )
 parser.add_argument(
+    "--no-info-header",
+    action='count',
+    default=args.no_info_header,
+    help="don't write info headers"
+)
+parser.add_argument(
+    "--info-header",
+    nargs=1,
+    metavar="<path>",
+    default=args.info_header,
+    help=f"where to put info headers in main path (default: {args.info_header[0]})"
+)
+parser.add_argument(
+    "--no-info-src",
+    action='count',
+    default=args.no_info_src,
+    help="don't write info srcs"
+)
+parser.add_argument(
+    "--info-src",
+    nargs=1,
+    metavar="<path>",
+    default=args.info_src,
+    help=f"where to put info srcs in main path (default: {args.info_src[0]})"
+)
+parser.add_argument(
     "--domains",
     nargs='+',
     metavar="<domain>",
