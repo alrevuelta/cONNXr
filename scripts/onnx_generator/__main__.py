@@ -22,6 +22,12 @@ parser.add_argument(
     help="overwrite existing files"
 )
 parser.add_argument(
+    "-n", "--dryrun",
+    action='count',
+    default=args.dryrun,
+    help="do not write anything"
+)
+parser.add_argument(
     "--no-header",
     action='count',
     default=args.no_header,
