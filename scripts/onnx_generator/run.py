@@ -181,7 +181,8 @@ else:
             warning(f"skipping existing file '{path}'",1)
             continue
         note(f"writing file {path}",3)
+        if not args.dryrun:
         os.makedirs(path.parent,exist_ok=True)
-        path.open("w").write(obj.text())
+            path.open("w").write(str(obj))
         writecount += 1
 note(f"wrote {writecount} of {len(files)} files")
