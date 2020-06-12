@@ -7,6 +7,7 @@ from .OperatorTypeResolver import OperatorTypeResolver
 from .OperatorSanityCheck import OperatorSanityCheck
 from .OperatorSets import OperatorSets
 from .OnnxWrapper import OnnxSchema
+from . import OperatorInfo
 from . import args
 
 def note(text, verbosity=0 ):
@@ -156,19 +157,26 @@ checks = [ OperatorSanityCheck(s,path) for s in schemas ]
 note("generating onnx operator sets")
 path = f"{args.path[-1]}/{args.sets[-1]}/"
 sets = OperatorSets(headers,path)
+note("generating onnx operator info sources")
+path = f"{args.path[-1]}/{args.info_src[-1]}/"
+info_srcs = [ OperatorInfo.Source(s, path) for s in schemas ]
+note("generating onnx operator info headers")
+path = f"{args.path[-1]}/{args.info_header[-1]}/"
+info_headers = [ OperatorInfo.Header(s, path) for s in schemas ]
 
 files = []
 if not args.no_header:
-    for h in headers:
-        files.append(h)
+    files.extend(headers)
 if not args.no_resolve:
-    for r in resolvers:
-        files.append(r)
+    files.extend(resolvers)
 if not args.no_check:
-    for c in checks:
-        files.append(c)
+    files.extend(checks)
 if not args.no_sets:
     files.append(sets)
+if not args.no_info_src:
+    files.extend(info_srcs)
+if not args.no_info_header:
+    files.extend(info_headers)
 
 writecount = 0
 note("Writing files",1)
@@ -182,7 +190,7 @@ else:
             continue
         note(f"writing file {path}",3)
         if not args.dryrun:
-        os.makedirs(path.parent,exist_ok=True)
+            os.makedirs(path.parent,exist_ok=True)
             path.open("w").write(str(obj))
         writecount += 1
 note(f"wrote {writecount} of {len(files)} files")
