@@ -45,8 +45,8 @@ operator_resolver find_operator_resolver(
         }
         for (size_t i_entry = 0; i_entry < set->length; i_entry++) {
             operator_set_entry *entry = &set->entries[i_entry];
-            printf("\nFound opname:%s version:%zu", name, version);
             if (strcmp(entry->name,name) == 0) {
+                printf("Found opname:%s version:%zu\n", name, version);
                 return entry->resolver;
             }
         }

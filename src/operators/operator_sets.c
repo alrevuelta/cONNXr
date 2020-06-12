@@ -8,6 +8,7 @@
 #include "operators/onnx/operator__onnx__sigmoid__6.h"
 #include "operators/onnx/operator__onnx__reshape__5.h"
 #include "operators/onnx/operator__onnx__conv__11.h"
+#include "operators/onnx/operator__onnx__leakyrelu__6.h"
 #include "operators/onnx/operator__onnx__batchnormalization__9.h"
 #include "operators/onnx/operator__onnx__argmax__12.h"
 #include "operators/onnx/operator__onnx__matmul__9.h"
@@ -29,7 +30,7 @@ operator_set operator_set__onnx__5 = {
 operator_set operator_set__onnx__6 = {
   .version = 6,
   .domain  = "onnx",
-  .length  = 3,
+  .length  = 4,
   .entries = {
     {
   .name = "Relu",
@@ -40,6 +41,9 @@ operator_set operator_set__onnx__6 = {
 },{
   .name = "Reshape",
   .resolver = (operator_resolver) &resolve_operator__onnx__reshape__5
+},{
+  .name = "LeakyRelu",
+  .resolver = (operator_resolver) &resolve_operator__onnx__leakyrelu__6
 }
   }
 };
@@ -47,7 +51,7 @@ operator_set operator_set__onnx__6 = {
 operator_set operator_set__onnx__7 = {
   .version = 7,
   .domain  = "onnx",
-  .length  = 5,
+  .length  = 6,
   .entries = {
     {
   .name = "Relu",
@@ -61,6 +65,9 @@ operator_set operator_set__onnx__7 = {
 },{
   .name = "Reshape",
   .resolver = (operator_resolver) &resolve_operator__onnx__reshape__5
+},{
+  .name = "LeakyRelu",
+  .resolver = (operator_resolver) &resolve_operator__onnx__leakyrelu__6
 },{
   .name = "Add",
   .resolver = (operator_resolver) &resolve_operator__onnx__add__7
@@ -71,7 +78,7 @@ operator_set operator_set__onnx__7 = {
 operator_set operator_set__onnx__9 = {
   .version = 9,
   .domain  = "onnx",
-  .length  = 7,
+  .length  = 8,
   .entries = {
     {
   .name = "Relu",
@@ -85,6 +92,9 @@ operator_set operator_set__onnx__9 = {
 },{
   .name = "Reshape",
   .resolver = (operator_resolver) &resolve_operator__onnx__reshape__5
+},{
+  .name = "LeakyRelu",
+  .resolver = (operator_resolver) &resolve_operator__onnx__leakyrelu__6
 },{
   .name = "BatchNormalization",
   .resolver = (operator_resolver) &resolve_operator__onnx__batchnormalization__9
@@ -101,7 +111,7 @@ operator_set operator_set__onnx__9 = {
 operator_set operator_set__onnx__11 = {
   .version = 11,
   .domain  = "onnx",
-  .length  = 9,
+  .length  = 10,
   .entries = {
     {
   .name = "Softmax",
@@ -121,6 +131,9 @@ operator_set operator_set__onnx__11 = {
 },{
   .name = "Conv",
   .resolver = (operator_resolver) &resolve_operator__onnx__conv__11
+},{
+  .name = "LeakyRelu",
+  .resolver = (operator_resolver) &resolve_operator__onnx__leakyrelu__6
 },{
   .name = "BatchNormalization",
   .resolver = (operator_resolver) &resolve_operator__onnx__batchnormalization__9
@@ -137,7 +150,7 @@ operator_set operator_set__onnx__11 = {
 operator_set operator_set__onnx__12 = {
   .version = 12,
   .domain  = "onnx",
-  .length  = 11,
+  .length  = 12,
   .entries = {
     {
   .name = "Softmax",
@@ -157,6 +170,9 @@ operator_set operator_set__onnx__12 = {
 },{
   .name = "Conv",
   .resolver = (operator_resolver) &resolve_operator__onnx__conv__11
+},{
+  .name = "LeakyRelu",
+  .resolver = (operator_resolver) &resolve_operator__onnx__leakyrelu__6
 },{
   .name = "BatchNormalization",
   .resolver = (operator_resolver) &resolve_operator__onnx__batchnormalization__9

@@ -10,5 +10,6 @@ operator_status operator__onnx__sigmoid__6__T_tensor_float(
     node_context *ctx
 )
 {
-  return 0;
+  printf("Operator sigmoid not implemented\n");
+  return 1;
 }

@@ -56,6 +56,7 @@ ONNX_INCLUDE+="^BatchNormalization$$"
 ONNX_INCLUDE+="^Sigmoid$$"
 ONNX_INCLUDE+="^Softmax$$"
 ONNX_INCLUDE+="^Mul$$"
+ONNX_INCLUDE+="^LeakyRelu$$"
 endif
 
 VARIABLE+=ONNX_VERSION
