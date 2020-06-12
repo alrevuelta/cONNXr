@@ -20,13 +20,13 @@ struct operator_info_attribute
 
 struct operator_info_tensor
 {
-  char    *name;
-  bool     optional;
-  bool     variadic;
-  bool     homogeneous;
-  char    *constraint;
-  size_t   n_types;
-  uint32_t types[];
+  char     *name;
+  bool      optional;
+  bool      variadic;
+  bool      homogeneous;
+  char     *constraint;
+  size_t    n_types;
+  uint32_t *types;
 };
 
 struct operator_info_constraint
