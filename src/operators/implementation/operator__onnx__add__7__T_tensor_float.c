@@ -21,9 +21,6 @@ operator_status operator__onnx__add__7__T_tensor_float(
   if (0){
     /* TODO: Check some conditions. For example if a specific
      * functionality is not supported */
-    //a->data_type == b->data_type
-    //a->n_dims == b->n_dims
-    //a->dims[i] == b->dims[i]
     return 1;
   }
 
@@ -49,48 +46,27 @@ operator_status operator__onnx__add__7__T_tensor_float(
 
   C->has_raw_data = 0;
   C->data_type = A->data_type;
-
-  switch(A->data_type)
-  {
-    case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:
-    {
-      C->float_data = malloc(C->n_float_data * sizeof(float));
-      /* TODO: ugly */
-      for (int i = 0; i < C->n_float_data; i++) {
-        /* Normal case where dimensions match */
-        if (A->n_dims == B->n_dims) {
-          C->float_data[i] = A->float_data[i] + B->float_data[i];
-        /* Broadcasting. Hardcoded not working */
+  C->float_data = malloc(C->n_float_data * sizeof(float));
+  /* TODO: ugly */
+  for (int i = 0; i < C->n_float_data; i++) {
+    /* Normal case where dimensions match */
+    if (A->n_dims == B->n_dims) {
+      C->float_data[i] = A->float_data[i] + B->float_data[i];
+    /* Broadcasting. Hardcoded not working */
+    }else{
+      /* If inside loop :( */
+      if (B->n_dims == 1){
+        C->float_data[i] = A->float_data[i] + B->float_data[i%B->dims[0]];
+      }else{
+        /* TODO Hardcoded for TINY YOLO */
+        if (A->dims[0] == 3){ /* Remove this uAF*/
+          C->float_data[i] = A->float_data[i%3] + B->float_data[i];
+        /* TODO Hardcoded for MNIST */
         }else{
-          /* If inside loop :( */
-          if (B->n_dims == 1){
-            C->float_data[i] = A->float_data[i] + B->float_data[i%B->dims[0]];
-          }else{
-            /* TODO Hardcoded for TINY YOLO */
-            if (A->dims[0] == 3){ /* Remove this uAF*/
-              C->float_data[i] = A->float_data[i%3] + B->float_data[i];
-            /* TODO Hardcoded for MNIST */
-            }else{
-              C->float_data[i] = A->float_data[i] + B->float_data[i/(A->dims[2]*A->dims[3])];
-            }
-          }
+          C->float_data[i] = A->float_data[i] + B->float_data[i/(A->dims[2]*A->dims[3])];
         }
       }
-    } break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__INT32:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__INT64:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT16:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__DOUBLE:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__UINT32:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__UINT64:
-      break;
-    default:
-      break;
+    }
   }
 
   debug_print_dims(C->n_dims, C->dims);

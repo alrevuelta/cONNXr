@@ -42,69 +42,35 @@ operator_status operator__onnx__matmul__9__T_tensor_float(
   Y->dims[0]      = A->dims[0];
   Y->dims[1]      = B->dims[1];
   Y->has_raw_data = 0;
+  Y->data_type    = ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT;
+  Y->n_float_data = A->dims[0] * B->dims[1];
+  Y->float_data   = malloc(A->dims[0] * B->dims[1] * sizeof(float));
 
-  // TODO Move int32 to a new func.
-  switch(A->data_type)
-  {
-    case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:
-    {
-      Y->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT;
-      Y->n_float_data = A->dims[0] * B->dims[1];
-      Y->float_data = malloc(A->dims[0] * B->dims[1] * sizeof(float));
-      for (int i = 0; i < A->dims[0]; i++) {
-        for (int j = 0; j < B->dims[1]; j++) {
-          float sum = 0;
-          for (int p = 0; p < A->dims[1]; p++) {
-            sum += (A->float_data[i*A->dims[1]+p] * B->float_data[p*B->dims[1]+j]);
-            // Saturate the value?
-          }
-          Y->float_data[i*B->dims[1]+j] = sum;
-        }
+  for (int i = 0; i < A->dims[0]; i++) {
+    for (int j = 0; j < B->dims[1]; j++) {
+      float sum = 0;
+      for (int p = 0; p < A->dims[1]; p++) {
+        sum += (A->float_data[i*A->dims[1]+p] * B->float_data[p*B->dims[1]+j]);
+        // Saturate the value?
       }
-    } break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__INT32:
-    {
-      Y->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__INT32;
-      Y->n_int32_data = A->dims[0] * B->dims[1];
-      Y->int32_data = malloc(A->dims[0] * B->dims[1] * sizeof(int32_t));
-      for (int i = 0; i < A->dims[0]; i++) {
-        for (int j = 0; j < B->dims[1]; j++) {
-          int32_t sum = 0;
-          for (int p = 0; p < A->dims[1]; p++) {
-            sum += (A->int32_data[i*A->dims[1]+p] * B->int32_data[p*B->dims[1]+j]);
-            // Saturate the value?
-          }
-          Y->int32_data[i*B->dims[1]+j] = sum;
-        }
-      }
-    } break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__INT64:
-    {
-      // TODO
-      // Use n_int64_data, int64_data
-    } break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT16:
-    {
-      // TODO
-    } break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__DOUBLE:
-    {
-      // TODO
-      // Use n_double_data, double_data
-    } break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__UINT32:
-    {
-      // TODO
-      // Note sure but use n_uint64_data and uint64_data (same as uint64)
-    } break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__UINT64:
-    {
-      // TODO
-      // Note sure but use n_uint64_data and uint64_data (same as uint64)
-    } break;
-    default:
-      break;
+      Y->float_data[i*B->dims[1]+j] = sum;
+    }
   }
+
+  /* TODO Create new function for INT32
+  Y->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__INT32;
+  Y->n_int32_data = A->dims[0] * B->dims[1];
+  Y->int32_data = malloc(A->dims[0] * B->dims[1] * sizeof(int32_t));
+  for (int i = 0; i < A->dims[0]; i++) {
+    for (int j = 0; j < B->dims[1]; j++) {
+      int32_t sum = 0;
+      for (int p = 0; p < A->dims[1]; p++) {
+        sum += (A->int32_data[i*A->dims[1]+p] * B->int32_data[p*B->dims[1]+j]);
+        // Saturate the value?
+      }
+      Y->int32_data[i*B->dims[1]+j] = sum;
+    }
+  }*/
 
   debug_print_dims(Y->n_dims, Y->dims);
   return 0;

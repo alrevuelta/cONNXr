@@ -65,10 +65,10 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
   /* Run inference */
   for (int nodeIdx = 0; nodeIdx < model->graph->n_node; nodeIdx++)
   {
-    printf("inference on node \n");
+    printf("Running node %d\n", nodeIdx);
     all_context[nodeIdx].resolved_op(&all_context[nodeIdx]);
   }
 
   // TODO
-  return 0;
+  //return 0;
 }

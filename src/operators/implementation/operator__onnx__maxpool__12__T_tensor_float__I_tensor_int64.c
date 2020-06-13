@@ -97,49 +97,34 @@ operator_status operator__onnx__maxpool__12__T_tensor_float__I_tensor_int64(
   Y->dims[1] = X->dims[1];
   Y->dims[2] = (int64_t)floorf((float)(X->dims[2] + h_pad_aux - ((h_kernel - 1) + 1)) / (float)h_stride + 1);
   Y->dims[3] = (int64_t)floorf((float)(X->dims[3] + w_pad_aux - ((w_kernel - 1) + 1)) / (float)w_stride + 1);
-
   Y->has_raw_data = 0;
+  Y->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT;
+  Y->float_data = malloc(Y->dims[0]*Y->dims[1]*Y->dims[2]*Y->dims[3] * sizeof(float));
+  Y->n_float_data = Y->dims[0]*Y->dims[1]*Y->dims[2]*Y->dims[3];
 
-  switch(X->data_type)
-  {
-    case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:
-    {
-      Y->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT;
-      Y->float_data = malloc(Y->dims[0]*Y->dims[1]*Y->dims[2]*Y->dims[3] * sizeof(float));
-      Y->n_float_data = Y->dims[0]*Y->dims[1]*Y->dims[2]*Y->dims[3];
-
-      int b,i,j,k,m,n;
-      for(b = 0; b < Y->dims[0]; ++b){
-        for(k = 0; k < Y->dims[1]; ++k){
-          for(i = 0; i < Y->dims[2]; ++i){
-            for(j = 0; j < Y->dims[3]; ++j){
-              int out_index = j + Y->dims[3]*(i + Y->dims[2]*(k + X->dims[1]*b));
-              float max = -999999; // TODO
-              for(n = 0; n < h_kernel; ++n){
-                for(m = 0; m < w_kernel; ++m){
-                  int cur_h = i*h_stride + n -h_pad;
-                  int cur_w = j*w_stride + m -w_pad;
-                  int index = cur_w + X->dims[3]*(cur_h + X->dims[2]*(k + b*X->dims[1]));
-                  int valid = (cur_h >= 0 && cur_h < (X->dims[2]) &&
-                               cur_w >= 0 && cur_w < (X->dims[3]));
-                  float val = (valid != 0) ? X->float_data[index] : -999999; //TODO
-                  max = (val > max ? val : max);
-                  }
-                }
-                Y->float_data[out_index] = max;
+  int b,i,j,k,m,n;
+  for(b = 0; b < Y->dims[0]; ++b){
+    for(k = 0; k < Y->dims[1]; ++k){
+      for(i = 0; i < Y->dims[2]; ++i){
+        for(j = 0; j < Y->dims[3]; ++j){
+          int out_index = j + Y->dims[3]*(i + Y->dims[2]*(k + X->dims[1]*b));
+          float max = -999999; // TODO
+          for(n = 0; n < h_kernel; ++n){
+            for(m = 0; m < w_kernel; ++m){
+              int cur_h = i*h_stride + n -h_pad;
+              int cur_w = j*w_stride + m -w_pad;
+              int index = cur_w + X->dims[3]*(cur_h + X->dims[2]*(k + b*X->dims[1]));
+              int valid = (cur_h >= 0 && cur_h < (X->dims[2]) &&
+                           cur_w >= 0 && cur_w < (X->dims[3]));
+              float val = (valid != 0) ? X->float_data[index] : -999999; //TODO
+              max = (val > max ? val : max);
               }
             }
+            Y->float_data[out_index] = max;
           }
         }
       }
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT16:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__DOUBLE:
-      break;
-    default:
-      break;
-  }
+    }
 
   debug_print_dims(Y->n_dims, Y->dims);
   return 0;

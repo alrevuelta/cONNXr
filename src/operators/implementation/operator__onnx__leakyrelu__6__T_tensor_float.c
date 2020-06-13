@@ -20,7 +20,7 @@
    if (0){
      /* TODO: Check some conditions. For example if a specific
       * functionality is not supported */
-     return 1;
+     return -1;
    }
 
    debug_print_dims(X->n_dims, X->dims);
@@ -34,15 +34,6 @@
      alpha = ctx->onnx_node->attribute[0]->f;
    }
 
-   if (0){
-     /* TODO: Check some conditions. For example if a specific
-      * functionality is not supported */
-     //a->data_type == b->data_type
-     //a->n_dims == b->n_dims
-     //a->dims[i] == b->dims[i]
-     return -1;
-   }
-
    Y->dims = malloc(X->n_dims * sizeof(int64_t));
    for (int i = 0; i < X->n_dims; i++)
    {
@@ -54,38 +45,15 @@
    Y->has_raw_data = 0;
    Y->data_type    = X->data_type;
 
-   switch(X->data_type)
+   Y->n_float_data = X->n_float_data;
+   Y->float_data = malloc(Y->n_float_data * sizeof(float));
+   for (int i = 0; i < Y->n_float_data; i++)
    {
-     case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:
-     {
-       Y->n_float_data = X->n_float_data;
-       Y->float_data = malloc(Y->n_float_data * sizeof(float));
-       for (int i = 0; i < Y->n_float_data; i++)
-       {
-         Y->float_data[i] = X->float_data[i] < 0 ?
-                                    X->float_data[i] * alpha :
-                                    X->float_data[i];
-       }
-     }
-       break;
-     case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT16:
-     {
-       // TODO
-     }
-       break;
-     case ONNX__TENSOR_PROTO__DATA_TYPE__DOUBLE:
-     {
-       Y->n_double_data = X->n_double_data;
-       Y->double_data = malloc(Y->n_double_data * sizeof(double));
-       for (int i = 0; i < Y->n_double_data; i++)
-       {
-         Y->double_data[i] = X->double_data[i] < 0 ? 0 : X->double_data[i];
-       }
-     }
-       break;
-     default:
-       break;
+     Y->float_data[i] = X->float_data[i] < 0 ?
+                                X->float_data[i] * alpha :
+                                X->float_data[i];
    }
+
    debug_print_dims(Y->n_dims, Y->dims);
    return 0;
  }

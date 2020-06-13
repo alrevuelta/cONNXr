@@ -83,67 +83,54 @@ operator_status operator__onnx__conv__11__T_tensor_float(
   // TODO
   Y->data_type = X->data_type;
 
-  switch(X->data_type)
-  {
-    case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:
-    {
-      Y->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT;
-      Y->n_float_data = Y->dims[0]*Y->dims[1]*Y->dims[2]*Y->dims[3];
+  Y->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT;
+  Y->n_float_data = Y->dims[0]*Y->dims[1]*Y->dims[2]*Y->dims[3];
 
-      //TODO This is wrong. n_dims can be like 2 and this will fail
-      TRACE_LEVEL0("n_flot_data = %zu\n", X->n_dims);
+  //TODO This is wrong. n_dims can be like 2 and this will fail
+  TRACE_LEVEL0("n_flot_data = %zu\n", X->n_dims);
 
-      Y->float_data = malloc(Y->n_float_data * sizeof(float));
+  Y->float_data = malloc(Y->n_float_data * sizeof(float));
 
-      int b,i,j,k,m,n,d;
-      for(b = 0; b < Y->dims[0]; ++b){
-        for(k = 0; k < Y->dims[1]; ++k){
-          for(i = 0; i < Y->dims[2]; ++i){
-            for(j = 0; j < Y->dims[3]; ++j){
-              // TODO replace all this calculations by macros?
-              int out_index = j + Y->dims[3]*(i + Y->dims[2]*(k + X->dims[1]*b));
-              float value = 0;
-              for(d = 0; d < W->dims[1]; ++d){
-                for(n = 0; n < h_kernel; ++n){   // TODO use W->dims[2] instead?
-                  for(m = 0; m < w_kernel; ++m){ // TODO use W->dims[3] instead?
-                    int cur_h = i*h_stride + n + h_pad;
-                    int cur_w = j*w_stride + m + w_pad;
+  int b,i,j,k,m,n,d;
+  for(b = 0; b < Y->dims[0]; ++b){
+    for(k = 0; k < Y->dims[1]; ++k){
+      for(i = 0; i < Y->dims[2]; ++i){
+        for(j = 0; j < Y->dims[3]; ++j){
+          // TODO replace all this calculations by macros?
+          int out_index = j + Y->dims[3]*(i + Y->dims[2]*(k + X->dims[1]*b));
+          float value = 0;
+          for(d = 0; d < W->dims[1]; ++d){
+            for(n = 0; n < h_kernel; ++n){   // TODO use W->dims[2] instead?
+              for(m = 0; m < w_kernel; ++m){ // TODO use W->dims[3] instead?
+                int cur_h = i*h_stride + n + h_pad;
+                int cur_w = j*w_stride + m + w_pad;
 
-                    /* This is hardcoded to make it work with mnist model, where
-                    the input is 1x1x28x28 */
-                    int index = cur_w + X->dims[3]*(cur_h + X->dims[2]*(d + 0*X->dims[1]));
-                    //TRACE_LEVEL0("%d,%d,%d index=%d\n", d, cur_h, cur_w, index);
+                /* This is hardcoded to make it work with mnist model, where
+                the input is 1x1x28x28 */
+                int index = cur_w + X->dims[3]*(cur_h + X->dims[2]*(d + 0*X->dims[1]));
+                //TRACE_LEVEL0("%d,%d,%d index=%d\n", d, cur_h, cur_w, index);
 
-                    int valid = (cur_h >= 0 && cur_h < X->dims[2] &&
-                                 cur_w >= 0 && cur_w < X->dims[3]);
-                    float val = (valid != 0) ? X->float_data[index] : 0;
-                    int index_kernel = k*W->dims[3]*W->dims[2]*W->dims[1] + d*W->dims[3]*W->dims[2] + n*h_kernel + m; // change h_kernel by W->dims[x]
-                    value += val * W->float_data[index_kernel];
-                    //TRACE_LEVEL0("%fx%f+\n", val, W->float_data[index_kernel]);
-                  }
-                }
-              }
-              Y->float_data[out_index] = value;
-
-              /* TODO This is a huge crap to make it work with tinyYOLO
-              It adds the bias, but this if will waste a lot of time. Make
-              this nice!
-              */
-              if (ctx->onnx_node->n_input == 3){
-                Y->float_data[out_index] += B->float_data[k];
+                int valid = (cur_h >= 0 && cur_h < X->dims[2] &&
+                             cur_w >= 0 && cur_w < X->dims[3]);
+                float val = (valid != 0) ? X->float_data[index] : 0;
+                int index_kernel = k*W->dims[3]*W->dims[2]*W->dims[1] + d*W->dims[3]*W->dims[2] + n*h_kernel + m; // change h_kernel by W->dims[x]
+                value += val * W->float_data[index_kernel];
+                //TRACE_LEVEL0("%fx%f+\n", val, W->float_data[index_kernel]);
               }
             }
+          }
+          Y->float_data[out_index] = value;
+
+          /* TODO This is a huge crap to make it work with tinyYOLO
+          It adds the bias, but this if will waste a lot of time. Make
+          this nice!
+          */
+          if (ctx->onnx_node->n_input == 3){
+            Y->float_data[out_index] += B->float_data[k];
           }
         }
       }
     }
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__DOUBLE:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__BFLOAT16:
-      break;
-    default:
-      break;
   }
 
   debug_print_dims(Y->n_dims, Y->dims);

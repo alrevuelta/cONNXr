@@ -37,37 +37,21 @@ operator_status operator__onnx__relu__6__T_tensor_float(
    Y->n_dims       = X->n_dims;
    Y->has_raw_data = 0;
    Y->data_type    = X->data_type;
-
-   switch(X->data_type)
+   Y->n_float_data = X->n_float_data;
+   Y->float_data = malloc(Y->n_float_data * sizeof(float));
+   
+   for (int i = 0; i < Y->n_float_data; i++)
    {
-     case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:
-     {
-       Y->n_float_data = X->n_float_data;
-       Y->float_data = malloc(Y->n_float_data * sizeof(float));
-       for (int i = 0; i < Y->n_float_data; i++)
-       {
-         Y->float_data[i] = X->float_data[i] < 0 ? 0 : X->float_data[i];
-       }
-     }
-       break;
-     case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT16:
-     {
-       // TODO
-     }
-       break;
-     case ONNX__TENSOR_PROTO__DATA_TYPE__DOUBLE:
-     {
-       Y->n_double_data = X->n_double_data;
-       Y->double_data = malloc(Y->n_double_data * sizeof(double));
-       for (int i = 0; i < Y->n_double_data; i++)
-       {
-         Y->double_data[i] = X->double_data[i] < 0 ? 0 : X->double_data[i];
-       }
-     }
-       break;
-     default:
-       break;
+     Y->float_data[i] = X->float_data[i] < 0 ? 0 : X->float_data[i];
    }
+
+   /* TODO Create new func for this
+   Y->n_double_data = X->n_double_data;
+   Y->double_data = malloc(Y->n_double_data * sizeof(double));
+   for (int i = 0; i < Y->n_double_data; i++)
+   {
+     Y->double_data[i] = X->double_data[i] < 0 ? 0 : X->double_data[i];
+   }*/
    debug_print_dims(Y->n_dims, Y->dims);
    return 0;
  }

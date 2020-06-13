@@ -81,57 +81,21 @@
     {
       reshaped->dims[i] = shape->int64_data[i];
     }
-    TRACE_LEVEL0("-----reshaped->dims[%d] = %" PRId64 "\n", i, reshaped->dims[i]);
+    TRACE_LEVEL0("reshaped->dims[%d] = %" PRId64 "\n", i, reshaped->dims[i]);
   }
 
   // Populate some parameters
   reshaped->n_dims       = shape->n_int64_data;
   reshaped->has_raw_data = 0;
   reshaped->data_type    = data->data_type;
+  reshaped->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT;
+  reshaped->n_float_data = data->n_float_data;
+  reshaped->float_data = malloc(data->n_float_data * sizeof(float));
 
-  switch(data->data_type)
-  {
-    case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:
-    {
-      reshaped->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT;
-      reshaped->n_float_data = data->n_float_data;
-      reshaped->float_data = malloc(data->n_float_data * sizeof(float));
-      for (int i = 0; i < data->n_float_data; i++) {
-        reshaped->float_data[i] = data->float_data[i];
-      }
-    }
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__UINT8:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__INT8:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__UINT16:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__INT16:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__INT32:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__INT64:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__STRING:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__BOOL:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT16:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__DOUBLE:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__UINT32:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__UINT64:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__COMPLEX64:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__COMPLEX128:
-      break;
-    default:
-      break;
+  for (int i = 0; i < data->n_float_data; i++) {
+    reshaped->float_data[i] = data->float_data[i];
   }
+
   debug_print_dims(reshaped->n_dims, reshaped->dims);
   return 0;
 }

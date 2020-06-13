@@ -45,44 +45,21 @@ operator_status operator__onnx__argmax__12__T_tensor_float(
   data->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__INT64;
   data->n_int64_data = axis->dims[1];
   data->int64_data = malloc(data->n_int64_data * sizeof(int64_t));
-
-  switch(axis->data_type)
+  for (int i = 0; i < axis->dims[1]; i++)
   {
-    case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:
+    // init maxval to the first elemen
+    float maxval = axis->float_data[i];
+    int64_t maxind = 0;
+    // todo start from j = 1?
+    for (int j = 0; j < axis->dims[0]; j++)
     {
-      for (int i = 0; i < axis->dims[1]; i++)
+      if (axis->float_data[i + axis->dims[1] * j] > maxval)
       {
-        // init maxval to the first elemen
-        float maxval = axis->float_data[i];
-        int64_t maxind = 0;
-        // todo start from j = 1?
-        for (int j = 0; j < axis->dims[0]; j++)
-        {
-          if (axis->float_data[i + axis->dims[1] * j] > maxval)
-          {
-            maxind = j;
-            maxval = axis->float_data[i + axis->dims[1] * j];
-          }
-        }
-        data->int64_data[i] = maxind;
+        maxind = j;
+        maxval = axis->float_data[i + axis->dims[1] * j];
       }
-    } break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__INT32:
-      // TODO
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__INT64:
-    {
-    } break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT16:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__DOUBLE:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__UINT32:
-      break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__UINT64:
-      break;
-    default:
-      break;
+    }
+    data->int64_data[i] = maxind;
   }
   debug_print_dims(data->n_dims, data->dims);
   return 0;

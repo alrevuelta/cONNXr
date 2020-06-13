@@ -48,67 +48,21 @@ operator_status operator__onnx__batchnormalization__9__T_tensor_float(
   for(int i = 0; i < Y->n_dims; i++){
     Y->dims[i] = X->dims[i];
   }
-
-  // Populate some parameters
-  // TODO: Is this working? No mem is allocated
+  
   Y->has_raw_data = 0;
 
   // TODO
   Y->data_type = X->data_type;
 
-  /* The order of inputs is assumed to be:
-   * [0] X
-   * [1] scale
-   * [2] B
-   * [3] mean
-   * [4] var
-   */
-  switch(X->data_type)
-  {
-    /* TODO Hardcoded for N x C x D1 x D2 */
-    /* Input tensors have dimension C */
-    case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:
-    {
-      Y->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT;
-      Y->n_float_data = X->n_float_data;
-      Y->float_data = malloc(Y->n_float_data * sizeof(float));
-      for (int i = 0; i < Y->n_float_data; i++) {
-        int index = (i/(X->dims[2] * X->dims[3])) % X->dims[1];
-        //TRACE_LEVEL0("input=%f\n", X->float_data[i]);
-        //TRACE_LEVEL0("index=%dmean=%f, var=%f, scale=%f, B=%f\n", index, mean, var, scale, B);
-        Y->float_data[i] = (X->float_data[i] - mean->float_data[index]) / sqrtf(var->float_data[index] + eps);
-        Y->float_data[i] = scale->float_data[index] * Y->float_data[i] + B->float_data[index];
-      }
-    } break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__INT32:
-    {
-    } break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__INT64:
-    {
-      // TODO
-      // Use n_int64_data, int64_data
-    } break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT16:
-    {
-      // TODO
-    } break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__DOUBLE:
-    {
-      // TODO
-      // Use n_double_data, double_data
-    } break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__UINT32:
-    {
-      // TODO
-      // Note sure but use n_uint64_data and uint64_data (same as uint64)
-    } break;
-    case ONNX__TENSOR_PROTO__DATA_TYPE__UINT64:
-    {
-      // TODO
-      // Note sure but use n_uint64_data and uint64_data (same as uint64)
-    } break;
-    default:
-      break;
+  Y->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT;
+  Y->n_float_data = X->n_float_data;
+  Y->float_data = malloc(Y->n_float_data * sizeof(float));
+  for (int i = 0; i < Y->n_float_data; i++) {
+    int index = (i/(X->dims[2] * X->dims[3])) % X->dims[1];
+    //TRACE_LEVEL0("input=%f\n", X->float_data[i]);
+    //TRACE_LEVEL0("index=%dmean=%f, var=%f, scale=%f, B=%f\n", index, mean, var, scale, B);
+    Y->float_data[i] = (X->float_data[i] - mean->float_data[index]) / sqrtf(var->float_data[index] + eps);
+    Y->float_data[i] = scale->float_data[index] * Y->float_data[i] + B->float_data[index];
   }
 
   return 0;
