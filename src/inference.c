@@ -70,5 +70,5 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
   }
 
   // TODO
-  //return 0;
+  return 0;
 }
