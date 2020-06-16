@@ -2,85 +2,11 @@ import os
 import inspect
 import pathlib
 
-class OperatorHeaderContextArray:
-    _template = '''
-typedef struct operator_context_{kind}__{name} {{
-    size_t length;
-    {content}
-}} operator_context_{kind}_{name};
-'''
-
-    def __init__(self, name, kind, content):
-        self.name = name
-        self.kind = kind
-        self.content = content
-
-    def text(self):
-        return self._template.format(
-            name=self.name,
-            kind=self.kind,
-            content = "\n".join([ f"{c}" for c in self.content])
-        ).strip()
-
-    def __str__(self):
-        return self.text()
-
-    def __repr__(self):
-        return f"{self.__class__}({self.schema.__repr__()})"
-
-class OperatorHeaderContextInput(OperatorHeaderContextArray):
-    def __init__(self, schema):
-        self.schema = schema
-        super().__init__(
-            self.schema.operator_name,
-            "input",
-            [f"operator_tensor *{i.name};" for i in self.schema.inputs]
-        )
-
-class OperatorHeaderContextOutput(OperatorHeaderContextArray):
-    def __init__(self, schema):
-        self.schema = schema
-        super().__init__(
-            self.schema.operator_name,
-            "output",
-            [f"operator_tensor *{o.name};" for o in self.schema.outputs]
-        )
-class OperatorHeaderContextAttribute(OperatorHeaderContextArray):
-    def __init__(self, schema):
-        self.schema = schema
-        super().__init__(
-            self.schema.operator_name,
-            "attribute",
-            [f"Onnx__AttributeProto *{a.name};" for a in self.schema.attributes]
-        )
-class OperatorHeaderContext:
-    _template = '''
-typedef struct operator_context__{name} {{
-    struct operator_context_input__{name}     *input;
-    struct operator_context_output__{name}    *output;
-    struct operator_context_attribute__{name} *attribute;
-    operator_executer                          operator;
-}} operator_context__{name};
-'''
-    def __init__(self, schema):
-        self.schema = schema
-
-    def text(self):
-        return self._template.format(
-            name=self.schema.operator_name,
-        ).strip()
-
-    def __str__(self):
-        return self.text()
-
-    def __repr__(self):
-        return f"{self.__class__}({self.schema.__repr__()})"
-
 class OperatorHeaderPrototype:
     _template = '''
 {attribute}
 {return_type} {prefix}{name}{suffix}(
-    operator_context__{name} *ctx
+    node_context *ctx
 );
 '''
     def __init__(self, name, prefix="",suffix="", return_type="operator_status", attribute=""):
@@ -133,14 +59,6 @@ class OperatorHeaderPrototypeResolver(OperatorHeaderPrototype):
 class OperatorHeaderDoxygen:
     _template = '''
 
-{context_input}
-
-{context_output}
-
-{context_attribute}
-
-{context}
-
 /**
  * {domain} operator '{name}' version {version}
  *
@@ -166,10 +84,6 @@ class OperatorHeaderDoxygen:
 
     def text(self):
         return self._template.format(
-            context_input = OperatorHeaderContextInput(self.schema),
-            context_output = OperatorHeaderContextOutput(self.schema),
-            context_attribute = OperatorHeaderContextAttribute(self.schema),
-            context = OperatorHeaderContext(self.schema),
             attributes=self.schema.attributes.text(" * "),
             deprecated=" * @deprecated Avoid usage!" if self.schema.deprecated else " * ",
             doc=self.schema.doc.text(" * "),
@@ -208,6 +122,7 @@ class OperatorHeader:
 
 # include "operators/operator.h"
 # include "operators/operator_stub.h"
+# include "operators.h"
 
 {doxygen}
 {prototype}

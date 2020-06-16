@@ -4,6 +4,7 @@
 #include "operator.h"
 #include <stddef.h>
 #include <string.h>
+#include <stdio.h>
 
 typedef struct operator_set_entry operator_set_entry;
 typedef struct operator_set       operator_set;
@@ -42,9 +43,10 @@ operator_resolver find_operator_resolver(
         if (set->version != version) {
             continue;
         }
-        for (size_t i_entry; i_entry < set->length; i_entry++) {
+        for (size_t i_entry = 0; i_entry < set->length; i_entry++) {
             operator_set_entry *entry = &set->entries[i_entry];
             if (strcmp(entry->name,name) == 0) {
+                printf("Found opname:%s version:%zu\n", name, version);
                 return entry->resolver;
             }
         }

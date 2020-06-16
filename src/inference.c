@@ -5,6 +5,7 @@
 #include "utils.h"
 #include "trace.h"
 #include "inference.h"
+#include "operators/operator_sets.h"
 
 // Won't be global in the future
 node_context all_context[50];
@@ -36,42 +37,22 @@ void resolve(Onnx__ModelProto *model,
       all_context[nodeIdx].outputs[i] = malloc(sizeof(Onnx__TensorProto));
       all_context[nodeIdx].outputs[i]->name = malloc(sizeof(char) * 50);
       strcpy(all_context[nodeIdx].outputs[i]->name, model->graph->node[nodeIdx]->output[i]);
+
+      // TODO This is unset at this point but set afterward inside each
+      // function. However there is a problem because some node output
+      // is some node else input. Hence if the type is unset it can't
+      // be resolved. Hardcoded to FLOAT but this is a HUGE TODO
+      all_context[nodeIdx].outputs[i]->data_type = 1;
     }
 
-    // Hardcoded
-    if (!strcmp(model->graph->node[nodeIdx]->op_type, "Add")){
-      all_context[nodeIdx].resolved_op = &operator_add;
-    }else if(!strcmp(model->graph->node[nodeIdx]->op_type, "ArgMax")){
-      all_context[nodeIdx].resolved_op = &operator_argmax;
-    }else if(!strcmp(model->graph->node[nodeIdx]->op_type, "BatchNormalization")){
-      all_context[nodeIdx].resolved_op = &operator_batchnormalization;
-    }else if(!strcmp(model->graph->node[nodeIdx]->op_type, "Cast")){
-      all_context[nodeIdx].resolved_op = &operator_cast;
-    }else if(!strcmp(model->graph->node[nodeIdx]->op_type, "Conv")){
-      all_context[nodeIdx].resolved_op = &operator_conv;
-    }else if(!strcmp(model->graph->node[nodeIdx]->op_type, "ConvInteger")){
-      all_context[nodeIdx].resolved_op = &operator_convinteger;
-    }else if(!strcmp(model->graph->node[nodeIdx]->op_type, "LeakyRelu")){
-      all_context[nodeIdx].resolved_op = &operator_leakyrelu;
-    }else if(!strcmp(model->graph->node[nodeIdx]->op_type, "MatMul")){
-      all_context[nodeIdx].resolved_op = &operator_matmul;
-    }else if(!strcmp(model->graph->node[nodeIdx]->op_type, "MatMulInteger")){
-      all_context[nodeIdx].resolved_op = &operator_matmulinteger;
-    }else if(!strcmp(model->graph->node[nodeIdx]->op_type, "MaxPool")){
-      all_context[nodeIdx].resolved_op = &operator_maxpool;
-    }else if(!strcmp(model->graph->node[nodeIdx]->op_type, "Mul")){
-      all_context[nodeIdx].resolved_op = &operator_mul;
-    }else if(!strcmp(model->graph->node[nodeIdx]->op_type, "QuantizeLinear")){
-      all_context[nodeIdx].resolved_op = &operator_quantizelinear;
-    }else if(!strcmp(model->graph->node[nodeIdx]->op_type, "Relu")){
-      all_context[nodeIdx].resolved_op = &operator_relu;
-    }else if(!strcmp(model->graph->node[nodeIdx]->op_type, "Reshape")){
-      all_context[nodeIdx].resolved_op = &operator_reshape;
-    }else if(!strcmp(model->graph->node[nodeIdx]->op_type, "Sigmoid")){
-      all_context[nodeIdx].resolved_op = &operator_sigmoid;
-    }else if(!strcmp(model->graph->node[nodeIdx]->op_type, "Softmax")){
-      all_context[nodeIdx].resolved_op = &operator_softmax;
-   }
+    /*** Prototyping ***/
+    // Check model->opset_import->has_version must be True
+    // More than 1 opset can be imported. Iterate n_opset_import
+    // model->opset_import[0]->version
+    // TODO Hackish temporal solution. Use opset 12.
+    operator_resolver resolver = find_operator_resolver(model->graph->node[nodeIdx]->op_type, 12);
+    operator_executer executer = resolver(&all_context[nodeIdx]);
+    all_context[nodeIdx].resolved_op = executer;
     _populatedIdx++;
   }
 }
@@ -84,6 +65,7 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
   /* Run inference */
   for (int nodeIdx = 0; nodeIdx < model->graph->n_node; nodeIdx++)
   {
+    printf("Running node %d\n", nodeIdx);
     all_context[nodeIdx].resolved_op(&all_context[nodeIdx]);
   }
 

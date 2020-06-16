@@ -1,15 +1,7 @@
 #ifndef OPERATORS_H
 #define OPERATORS_H
 #include "onnx.pb-c.h"
-
-typedef struct node_context  node_context;
-
-struct node_context{
-  Onnx__NodeProto     *onnx_node;
-  Onnx__TensorProto  **inputs;
-  Onnx__TensorProto  **outputs;
-  int (*resolved_op)(node_context *ctx);
-};
+#include "operators/operator.h"
 
 int operator_add(node_context *ctx);
 

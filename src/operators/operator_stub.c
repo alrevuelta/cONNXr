@@ -3,7 +3,7 @@
 #include "operators/operator_stub.h"
 
 operator_status operator_stub(
-    void *ctx
+    node_context *ctx
 ) {
     fprintf(stderr, "operator not implemented!\n");
     return OP_ENOSYS;
