@@ -4,7 +4,6 @@
 #include <math.h>
 #include <inttypes.h>
 #include "trace.h"
-#include "operators.h"
 #include "utils.h"
 
  operator_status operator__onnx__reshape__5__T_tensor_float(

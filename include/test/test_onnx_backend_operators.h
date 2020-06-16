@@ -4,7 +4,6 @@
 #include "trace.h"
 #include "inference.h"
 #include "utils.h"
-#include "operators.h"
 #include "test_utils.h"
 
 int init_onnxBackendSuite(void)

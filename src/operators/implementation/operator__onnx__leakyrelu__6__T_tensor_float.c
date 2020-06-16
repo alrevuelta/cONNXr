@@ -3,7 +3,6 @@
 #include <string.h>
 #include <math.h>
 #include "trace.h"
-#include "operators.h"
 #include "utils.h"
 
  operator_status operator__onnx__leakyrelu__6__T_tensor_float(

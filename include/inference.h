@@ -1,7 +1,6 @@
 #ifndef INFERENCE_H
 #define INFERENCE_H
 #include "onnx.pb-c.h"
-#include "operators.h"
 #include "operators/operator.h"
 
 Onnx__TensorProto** inference(Onnx__ModelProto *model,

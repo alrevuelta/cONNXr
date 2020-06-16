@@ -3,7 +3,6 @@
 #include <string.h>
 #include <math.h>
 #include "trace.h"
-#include "operators.h"
 #include "utils.h"
 
 operator_status operator__onnx__relu__6__T_tensor_float(
@@ -39,7 +38,7 @@ operator_status operator__onnx__relu__6__T_tensor_float(
    Y->data_type    = X->data_type;
    Y->n_float_data = X->n_float_data;
    Y->float_data = malloc(Y->n_float_data * sizeof(float));
-   
+
    for (int i = 0; i < Y->n_float_data; i++)
    {
      Y->float_data[i] = X->float_data[i] < 0 ? 0 : X->float_data[i];

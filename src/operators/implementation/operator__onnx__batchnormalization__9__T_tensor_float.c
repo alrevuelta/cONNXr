@@ -3,7 +3,6 @@
 #include <string.h>
 #include <math.h>
 #include "trace.h"
-#include "operators.h"
 #include "utils.h"
 
 operator_status operator__onnx__batchnormalization__9__T_tensor_float(
@@ -48,7 +47,7 @@ operator_status operator__onnx__batchnormalization__9__T_tensor_float(
   for(int i = 0; i < Y->n_dims; i++){
     Y->dims[i] = X->dims[i];
   }
-  
+
   Y->has_raw_data = 0;
 
   // TODO

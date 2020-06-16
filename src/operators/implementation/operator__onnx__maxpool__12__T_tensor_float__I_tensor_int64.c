@@ -4,7 +4,6 @@
 #include <math.h>
 #include "trace.h"
 #include "utils.h"
-#include "operators.h"
 
 operator_status operator__onnx__maxpool__12__T_tensor_float__I_tensor_int64(
     node_context *ctx

@@ -12,17 +12,14 @@ Onnx__TensorProto* searchTensorProtoByName(Onnx__ModelProto *model,
                                            char *name)
 {
   TRACE_LEVEL0("Searching for TensorProto with name=%s\n", name);
-  //Onnx__TensorProto *tensor = NULL;
 
   // Search in initializers
   for (int initializer = 0; initializer < model->graph->n_initializer; initializer++)
   {
     if (!strcmp(model->graph->initializer[initializer]->name, name))
     {
-      //tensor = model->graph->initializer[initializer];
       TRACE_LEVEL0("Found TensorProto in initializer list with name=%s\n", model->graph->initializer[initializer]->name);
       return model->graph->initializer[initializer];
-      // Use return instead. Once its found, exit the function
     }
   }
 
@@ -31,10 +28,8 @@ Onnx__TensorProto* searchTensorProtoByName(Onnx__ModelProto *model,
   {
     if (!strcmp(inputs[inIdx]->name, name))
     {
-      //tensor = inputs[inIdx];
       TRACE_LEVEL0("Found TensorProto in inputs to de model with name=%s\n", inputs[inIdx]->name);
       return inputs[inIdx];
-      // Use return instead. Once its found, exit the function
     }
   }
 
@@ -45,7 +40,7 @@ Onnx__TensorProto* searchTensorProtoByName(Onnx__ModelProto *model,
     for (int node_i = 0; node_i < _populatedIdx+1; node_i++)
     {
       for (int output_i = 0; output_i < all_context[node_i].onnx_node->n_output; output_i++){
-        printf("\n Searching %s, found %s\n", name, all_context[node_i].outputs[output_i]->name);
+        TRACE_LEVEL0("Searching %s, found %s\n", name, all_context[node_i].outputs[output_i]->name);
         if (!strcmp(all_context[node_i].outputs[output_i]->name, name))
         {
           TRACE_LEVEL0("Found TensorProto in outputs from new context name=%s\n", all_context[node_i].outputs[output_i]->name);
@@ -139,6 +134,8 @@ Onnx__ModelProto* openOnnxFile(char *fname){
 
 Onnx__TensorProto *openTensorProtoFile(char *fname){
   Onnx__TensorProto *model = NULL;
+
+  TRACE_LEVEL0("Opening .pb file %s\n", fname);
 
   FILE *fl = fopen(fname, "r");
   if (fl == NULL){

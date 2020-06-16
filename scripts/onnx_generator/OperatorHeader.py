@@ -122,7 +122,6 @@ class OperatorHeader:
 
 # include "operators/operator.h"
 # include "operators/operator_stub.h"
-# include "operators.h"
 
 {doxygen}
 {prototype}

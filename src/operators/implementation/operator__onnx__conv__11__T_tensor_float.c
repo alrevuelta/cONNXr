@@ -4,7 +4,6 @@
 #include <math.h>
 #include "trace.h"
 #include "utils.h"
-#include "operators.h"
 
 operator_status operator__onnx__conv__11__T_tensor_float(
     node_context *ctx
