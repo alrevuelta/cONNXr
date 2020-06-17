@@ -3,7 +3,6 @@
 #include <string.h>
 #include <math.h>
 #include "trace.h"
-#include "operators.h"
 #include "utils.h"
 
 /* TODO

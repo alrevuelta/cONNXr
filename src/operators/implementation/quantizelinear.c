@@ -1,3 +1,5 @@
+/* This is not being used. Something might be reused */
+#if 0
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -73,3 +75,4 @@ int operator_quantizelinear(node_context *ctx)
 
   return 0;
 }
+#endif

@@ -5,7 +5,6 @@
 
 # include "operators/operator.h"
 # include "operators/operator_stub.h"
-# include "operators.h"
 
 /**
  * onnx operator 'Conv' version 11

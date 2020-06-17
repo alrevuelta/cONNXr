@@ -214,11 +214,6 @@ clean_profiling:
 
 #memory leak stuff TODO:
 
-#nanopb:
-#	rm -f prototest
-#	gcc -std=c99 -Wall -D xxx -o prototest test_nanopb.c ../src/pb/nanopb/onnx.pb.c ../src/pb/nanopb/pb_common.c ../src/pb/nanopb/pb_decode.c ../src/pb/nanopb/pb_encode.c -I/usr/local/include -L/usr/local/lib -lcunit
-#	./prototest $(ts) $(tc)
-
 #gprof:
 #	rm -f gprof
 #	gcc -std=c99 -D xxx -pg ../src/operators/*.c ../src/trace.c ../src/utils.c ../src/inference.c ../src/pb/onnx.pb-c.c -o gprof tests.c -I/usr/local/include -L/usr/local/lib -lcunit -lprotobuf-c
