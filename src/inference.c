@@ -32,7 +32,7 @@ void resolve(Onnx__ModelProto *model,
         /* If the tensor has raw data, deserialize it */
         printf("input %s has raw data\n", all_context[nodeIdx].inputs[i]->name);
         // TODO: Not tested. Crashing but currently not needed
-        //convertRawDataOfTensorProto(all_context[nodeIdx].inputs[i]);
+        convertRawDataOfTensorProto(all_context[nodeIdx].inputs[i]);
       }
     }
 

@@ -99,6 +99,7 @@ Onnx__AttributeProto* searchAttributeNyName( size_t n_attribute,
                                              Onnx__AttributeProto **attribute,
                                              char *name)
 {
+  TRACE_LEVEL0("Searching for AttributeProto with name=%s\n", name);
   for (int i = 0; i < n_attribute; i++){
     if (!strcmp(attribute[i]->name, name)){
       TRACE_LEVEL0("Attribute %s was found\n", name);
@@ -237,14 +238,16 @@ int convertRawDataOfTensorProto(Onnx__TensorProto *tensor)
     }
 
     // TODO is this allowed?
-    free(tensor->raw_data.data);
+    //free(tensor->raw_data.data);
+    /* Set this to avoid unserializing again */
     tensor->has_raw_data = 0;
-    tensor->raw_data.len = 0;
+    //tensor->raw_data.len = 0;
   }
   else
   {
     TRACE_LEVEL0("Input tensor doesnt have raw_data, doing nothing\n");
   }
+  TRACE_LEVEL0("Done unserializing\n");
 
   return 0;
 }

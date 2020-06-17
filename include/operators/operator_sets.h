@@ -51,6 +51,9 @@ operator_resolver find_operator_resolver(
             }
         }
     }
+    printf("Resolver not found opname:%s version:%zu\n", name, version);
+    // TODO Break here? Doesn't make sense to continue if the resolver is
+    // not found
     return NULL;
 }
 

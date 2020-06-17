@@ -57,6 +57,8 @@ ONNX_INCLUDE+="^Sigmoid$$"
 ONNX_INCLUDE+="^Softmax$$"
 ONNX_INCLUDE+="^Mul$$"
 ONNX_INCLUDE+="^LeakyRelu$$"
+ONNX_INCLUDE+="^Constant$$"
+ONNX_INCLUDE+="^Transpose$$"
 endif
 
 VARIABLE+=ONNX_VERSION
