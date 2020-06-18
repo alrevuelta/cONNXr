@@ -76,15 +76,18 @@ int main()
 # Related Projects
 Other C/C++ related projects
 
-| Project       | Framework     | Language  | Size |
+| Project       | ModelFormat     | Language  | Size |
 | ------------- |:-------------:| -----:| ----:|
-| [onnxruntime](https://github.com/microsoft/onnxruntime)   | ONNX       | x | x |
-| [darknet](https://github.com/pjreddie/darknet)            | ?          | x | x |
-| [uTensor](https://github.com/uTensor/uTensor)             | TensorFlow | x | x |
-| [nnom](https://github.com/majianjia/nnom)                 | Keras      | x | x |
-| [ELL](https://github.com/Microsoft/ELL)                   | ELL        | x | x |
-| [TF Lite](xx)                                             | TF Lite    | x | x |
-| [plaidML](https://github.com/plaidml/plaidml)             | plaidML    | x | x |
+| [onnxruntime](https://github.com/microsoft/onnxruntime)   | onnx | x | x |
+| [darknet](https://github.com/pjreddie/darknet)            | x    | x | x |
+| [uTensor](https://github.com/uTensor/uTensor)             | x    | x | x |
+| [nnom](https://github.com/majianjia/nnom)                 | x    | x | x |
+| [ELL](https://github.com/Microsoft/ELL)                   | x    | x | x |
+| [TF Lite](xx)                                             | x    | x | x |
+| [plaidML](https://github.com/plaidml/plaidml)             | x    | x | x |
+| [deepC](https://github.com/ai-techsystems/deepC)          | x    | x | x |
+| [onnc](https://github.com/ONNC/onnc)                      | x    | x | x |
+
 
 # Limitations
 
