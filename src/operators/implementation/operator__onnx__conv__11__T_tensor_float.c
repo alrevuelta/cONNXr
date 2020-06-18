@@ -79,8 +79,8 @@ operator_status operator__onnx__conv__11__T_tensor_float(
     Y->dims[2] = (X->dims[2] - h_kernel + h_stride + h_pad*2) / h_stride;
     Y->dims[3] = (X->dims[3] - w_kernel + w_stride + w_pad*2) / w_stride;
   }else if (X->n_dims == 2){
-    Y->dims[0] = W->dims[0];
-    Y->dims[1] = W->dims[1];
+    Y->dims[0] = 1; //Hardcoded
+    Y->dims[1] = W->dims[0];
     Y->dims[2] = (X->dims[0] - h_kernel + h_stride + h_pad*2) / h_stride;
     Y->dims[3] = (X->dims[1] - w_kernel + w_stride + w_pad*2) / w_stride;
   }else if (X->n_dims == 3){
@@ -145,18 +145,21 @@ operator_status operator__onnx__conv__11__T_tensor_float(
 
           Y->float_data[out_index] = value;
           //printf("%lld\n", out_index);
-          printf("[%lld]=%f\n", out_index, value);
+          //printf("[%lld]=%f\n", out_index, value);
 
           /* TODO This is a huge crap to make it work with tinyYOLO
           It adds the bias, but this if will waste a lot of time. Make
           this nice!
           */
-          if (ctx->onnx_node->n_input == 3){
+          if (B != NULL){
             Y->float_data[out_index] += B->float_data[k];
           }
         }
+        //printf("done dim1\n");
       }
+      printf("done dim2\n");
     }
+    printf("done dim3\n");
   }
 
   debug_print_dims(Y->n_dims, Y->dims);

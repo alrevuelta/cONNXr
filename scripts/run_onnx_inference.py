@@ -69,7 +69,9 @@ print_model_outputs(model_path, inputDict, print_tensor=False)
 #print_specific_output(model_path, inputDict, '9', print_tensor=True)
 sess = rt.InferenceSession(model_path)
 out = sess.run(None, inputDict)
+
 print(out[0].shape)
 print(out[0])
+print(out[0][:,:,0:5,0:5])
 
 print("input", inputs[0])
