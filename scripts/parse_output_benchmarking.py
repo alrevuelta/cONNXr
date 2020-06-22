@@ -48,8 +48,8 @@ if __name__ == '__main__':
 
     models_to_benchmark = ['mnist', 'tinyyolov2', 'super_resolution']
     for model in models_to_benchmark:
-        with open(f'benchmarks/{model}.txt') as file:
+        with open('benchmarks/'+model+'.txt') as file:
             lines = file.readlines()
             just_benchmarking = [line for line in lines if '[benchmark]' in line]
-            cycles, times = getDataOfTrace(just_benchmarking, f'[{model}]')
+            cycles, times = getDataOfTrace(just_benchmarking, '['+model+']')
             printData(cycles, times, model)
