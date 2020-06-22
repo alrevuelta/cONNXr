@@ -26,8 +26,6 @@ operator_status operator__onnx__constant__12__T_tensor_float(
     /*TODO*/
   }else if (!strcmp(value->name, "value")){
     printf("n_dims %zu\n", value->t->n_dims);
-    printf("dims[0] %lld\n", value->t->dims[0]);
-
     printf("name value = %s\n", value->name);
     printf("n_tensors %zu\n", value->n_tensors);
     printf("type %u\n", value->type);
