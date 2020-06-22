@@ -15,7 +15,7 @@ def calculateAvg(lst):
 
 def getDataOfTrace(alltraces, trace2search):
     # search the traces we are interested in
-    foundTraces = [ line for line in allTraces if trace2search in line]
+    foundTraces = [ line for line in alltraces if trace2search in line]
 
     # get information of cycles and cpu time
     foundCycles = [ line for line in foundTraces if tag_cycles in line]
@@ -38,21 +38,18 @@ def printData(cycles, times, modelName):
     if cycles != [] and times != []:
         print(""); print("---------------------------")
         print(modelName, "Benchmarking"); print("---------------------------")
-        print(modelName, "Averaged values =", len(cycles))
+        print(modelName, "Averaged runs =", len(cycles))
         print(modelName, "Cycles", calculateAvg(cycles))
         print(modelName, "Seconds", calculateAvg(times))
-        print(times)
+        print("All times", times)
 
 if __name__ == '__main__':
     print("Parsing benchmarking output")
 
-    allTraces = [ line for line in open('benchmarks/result.txt') if '[benchmark]' in line]
-
-    # Use the tag present in the C code
-    mnist_cycles, mnist_times = getDataOfTrace(allTraces, '[mnist]')
-    tinyyolov2_cycles, tinyyolov2_times = getDataOfTrace(allTraces, '[tinyyolov2]')
-    super_resolution_cycles, super_resolution_times = getDataOfTrace(allTraces, '[super_resolution]')
-
-    printData(mnist_cycles, mnist_times, 'mnist')
-    printData(tinyyolov2_cycles, tinyyolov2_times, 'tinyyolov2')
-    printData(tinyyolov2_cycles, tinyyolov2_times, 'super_resolution')
+    models_to_benchmark = ['mnist', 'tinyyolov2', 'super_resolution']
+    for model in models_to_benchmark:
+        with open(f'benchmarks/{model}.txt') as file:
+            lines = file.readlines()
+            just_benchmarking = [line for line in lines if '[benchmark]' in line]
+            cycles, times = getDataOfTrace(just_benchmarking, f'[{model}]')
+            printData(cycles, times, model)

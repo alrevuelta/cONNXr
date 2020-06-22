@@ -28,7 +28,7 @@ HELP_OPERATORS=operators to test (all if empty)
 
 VARIABLE+=REPEAT
 HELP_REPEAT=default repetition count if not otherwise specified by REPEAT_<modelname>
-REPEAT=10
+REPEAT=1
 
 VARIABLE+=FORMAT
 HELP_FORMAT=which files to format (git wildcards)
@@ -76,6 +76,8 @@ ONNX_EXCLUDE=
 
 $(foreach MODEL, $(MODELS), $(eval REPEAT_$(MODEL)=$(REPEAT)))
 REPEAT_tinyyolov2=1
+REPEAT_super_resolution=1
+REPEAT_mnist=5
 
 CC=gcc
 CFLAGS+=-std=c99
