@@ -230,6 +230,7 @@ void Debug_PrintModelInformation( Onnx__ModelProto *model)
 
 void Debug_PrintTensorProto(Onnx__TensorProto *tp)
 {
+  TRACE_LEVEL0("Printing tensorProto with name %s\n", tp->name);
   TRACE_LEVEL0("ndims = %zu\n", tp->n_dims);
   for (int i = 0; i < tp->n_dims; i++)
   {
@@ -243,8 +244,10 @@ void Debug_PrintTensorProto(Onnx__TensorProto *tp)
   TRACE_LEVEL0("n_float_data = %zu\n", tp->n_float_data);
 
   // Print float_data if needed
-  for (int i = 0; i < tp->n_float_data; i++) {
-    //TRACE_LEVEL0("float_data[%d] = %f\n", i, tp->float_data[i]);
+  // Plot just first 10 values
+  int float_to_print = tp->n_float_data > 10 ? 10 : tp->n_float_data;
+  for (int i = 0; i < float_to_print; i++) {
+    TRACE_LEVEL0("float_data[%d] = %f\n", i, tp->float_data[i]);
   }
 
   TRACE_LEVEL0("n_int32_data = %zu\n", tp->n_int32_data);

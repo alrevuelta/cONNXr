@@ -39,7 +39,7 @@ void compareAlmostEqualTensorProto(Onnx__TensorProto *a, Onnx__TensorProto *b)
       for(int i = 0; i < a->n_float_data; i++)
       {
         if (fabs(a->float_data[i] - b->float_data[i]) > FLOAT_TOLERANCE){
-          TRACE_LEVEL0("%i, %f, %f\n", i, a->float_data[i], b->float_data[i]);
+          TRACE_LEVEL0("Does not match %i, %f, %f\n", i, a->float_data[i], b->float_data[i]);
         }
         CU_ASSERT(fabs(a->float_data[i] - b->float_data[i]) < FLOAT_TOLERANCE);
       }

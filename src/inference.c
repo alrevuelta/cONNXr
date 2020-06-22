@@ -32,7 +32,7 @@ void resolve(Onnx__ModelProto *model,
         /* If the tensor has raw data, deserialize it */
         printf("input %s has raw data\n", all_context[nodeIdx].inputs[i]->name);
         // TODO: Not tested. Crashing but currently not needed
-        //convertRawDataOfTensorProto(all_context[nodeIdx].inputs[i]);
+        convertRawDataOfTensorProto(all_context[nodeIdx].inputs[i]);
       }
     }
 
@@ -41,6 +41,7 @@ void resolve(Onnx__ModelProto *model,
     for (int i = 0; i < model->graph->node[nodeIdx]->n_output; i++)
     {
       all_context[nodeIdx].outputs[i] = malloc(sizeof(Onnx__TensorProto));
+      init_tensor_proto(all_context[nodeIdx].outputs[i]);
       all_context[nodeIdx].outputs[i]->name = malloc(sizeof(char) * 50);
       strcpy(all_context[nodeIdx].outputs[i]->name, model->graph->node[nodeIdx]->output[i]);
 
@@ -73,6 +74,7 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
   {
     printf("Running node %d\n", nodeIdx);
     all_context[nodeIdx].resolved_op(&all_context[nodeIdx]);
+    Debug_PrintTensorProto(all_context[nodeIdx].outputs[0]);
   }
 
   // TODO

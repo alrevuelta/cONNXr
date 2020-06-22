@@ -38,12 +38,11 @@ make build_cli
 
 ## [super resolution](https://github.com/onnx/models/tree/master/vision/super_resolution/sub_pixel_cnn_2016)
 ```
-TODO
+build/connxr test/super_resolution/super_resolution.onnx test/super_resolution/test_data_set_0/input_0.pb
 ```
 
 TODO:
 * tiny YOLO v3: https://github.com/onnx/models/tree/master/vision/object_detection_segmentation/tiny_yolov3 TODO!
-* https://lutzroeder.github.io/netron/ TODO
 * Quantized MNIST. TODO. Using ONNX MNIST as baseline and quantizing it. Work ongoing
 
 # In your code

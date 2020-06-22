@@ -99,6 +99,7 @@ Onnx__AttributeProto* searchAttributeNyName( size_t n_attribute,
                                              Onnx__AttributeProto **attribute,
                                              char *name)
 {
+  TRACE_LEVEL0("Searching for AttributeProto with name=%s\n", name);
   for (int i = 0; i < n_attribute; i++){
     if (!strcmp(attribute[i]->name, name)){
       TRACE_LEVEL0("Attribute %s was found\n", name);
@@ -237,14 +238,16 @@ int convertRawDataOfTensorProto(Onnx__TensorProto *tensor)
     }
 
     // TODO is this allowed?
-    free(tensor->raw_data.data);
+    //free(tensor->raw_data.data);
+    /* Set this to avoid unserializing again */
     tensor->has_raw_data = 0;
-    tensor->raw_data.len = 0;
+    //tensor->raw_data.len = 0;
   }
   else
   {
     TRACE_LEVEL0("Input tensor doesnt have raw_data, doing nothing\n");
   }
+  TRACE_LEVEL0("Done unserializing\n");
 
   return 0;
 }
@@ -299,4 +302,61 @@ void mallocTensorProto(Onnx__TensorProto *tp,
     tp->n_uint64_data = n_data;
     tp->uint64_data = malloc(n_data * sizeof(uint64_t));
   }
+}
+
+void init_tensor_proto(Onnx__TensorProto *tp){
+  /* All fields are the following
+  ProtobufCMessage base;
+  size_t n_dims;
+  int64_t *dims;
+  protobuf_c_boolean has_data_type;
+  int32_t data_type;
+  Onnx__TensorProto__Segment *segment;
+  size_t n_float_data;
+  float *float_data;
+  size_t n_int32_data;
+  int32_t *int32_data;
+  size_t n_string_data;
+  ProtobufCBinaryData *string_data;
+  size_t n_int64_data;
+  int64_t *int64_data;
+  char *name;
+  char *doc_string;
+  protobuf_c_boolean has_raw_data;
+  ProtobufCBinaryData raw_data;
+  size_t n_external_data;
+  Onnx__StringStringEntryProto **external_data;
+  protobuf_c_boolean has_data_location;
+  Onnx__TensorProto__DataLocation data_location;
+  size_t n_double_data;
+  double *double_data;
+  size_t n_uint64_data;
+  uint64_t *uint64_data;
+  */
+  //tp->base = xx;
+  tp->n_dims = 0;
+  tp->dims = NULL;
+  tp->has_data_type = 1;
+  tp->data_type = 0;
+  tp->segment = NULL;
+  tp->n_float_data = 0;
+  tp->float_data = NULL;
+  tp->n_int32_data = 0;
+  tp->int32_data = NULL;
+  tp->n_string_data = 0;
+  tp->string_data = NULL;
+  tp->n_int64_data = 0;
+  tp->int64_data = NULL;
+  tp->name = NULL;
+  tp->doc_string = NULL;
+  tp->has_raw_data = 0;
+  //tp->raw_data = xx;
+  tp->n_external_data = 0;
+  tp->external_data = NULL;
+  tp->has_data_location = 0;
+  //tp->data_location = xx;
+  tp->n_double_data = 0;
+  tp->double_data = NULL;
+  tp->n_uint64_data = 0;
+  tp->uint64_data = NULL;
 }

@@ -9,46 +9,69 @@ from timeit import Timer
 import numpy
 import sys
 import subprocess
+from skl2onnx.helpers.onnx_helper import select_model_inputs_outputs
+from skl2onnx.helpers.onnx_helper import save_onnx_model
+from skl2onnx.helpers.onnx_helper import enumerate_model_node_outputs
+from skl2onnx.helpers.onnx_helper import load_onnx_model
 """
     file:        run_onnx_inference.py
 
-    description: Given a onnx model and a set of input(s), uses the onnxruntime library
-    to run inference on it. Some initial tests to benchmark the time it takes to run
-    with the official onnx library, and compare against our CONNX implementation
+    description: tool for debugging purposes. just open a model and run
+    inference on it using the official onnx runtime. Some code also is
+    provided to inspect the intermediate outputs of a model.
 """
 
-
-def speed(inst, number=10, repeat=20):
-    timer = Timer(inst, globals=globals())
-    raw = numpy.array(timer.repeat(repeat, number=number))
-    ave = raw.sum() / len(raw) / number
-    mi, ma = raw.min() / number, raw.max() / number
-    print("Average %1.3g min=%1.3g max=%1.3g" % (ave, mi, ma))
-    return ave
-
-test_data_dir = '../test/mnist/test_data_set_0'
+test_data_dir = 'test/super_resolution/test_data_set_0'
+model_path = 'test/super_resolution/super_resolution.onnx'
+input_name = "input"
 
 inputs = []
 inputs_num = len(glob.glob(os.path.join(test_data_dir, 'input_*.pb')))
+print("inputs_num", inputs_num)
 
 for i in range(inputs_num):
     input_file = os.path.join(test_data_dir, 'input_{}.pb'.format(i))
     tensor = onnx.TensorProto()
     with open(input_file, 'rb') as f:
         tensor.ParseFromString(f.read())
-    inputs.append(numpy_helper.to_array(tensor))
+    tensor = numpy_helper.to_array(tensor)
+    tensor = np.expand_dims(tensor, axis=(0, 1))
+    inputs.append(tensor)
+    print(tensor.dtype)
+    print("tensor.shape =", tensor.shape)
 
 inputDict = {
-    "Input3": inputs[0]
+    input_name: inputs[0]
 }
 
-sess = rt.InferenceSession('../test/mnist/model.onnx')
+"""
+Prints the intermediate outputs of a given model with extra information
+like dimensions.
+"""
+def print_model_outputs(model_path, input_tensor, print_tensor=False):
+    model_onnx = load_onnx_model(model_path)
+    for idx, out in enumerate(enumerate_model_node_outputs(model_onnx)):
+        print_specific_output(model_path, input_tensor, out, print_tensor)
+        
+
+def print_specific_output(model_path, input_tensor, output_name, print_tensor=False):
+    model_onnx = load_onnx_model(model_path)
+    num_onnx = select_model_inputs_outputs(model_onnx, output_name)
+    save_onnx_model(num_onnx, "remove_temp.onnx")
+    sess = rt.InferenceSession("remove_temp.onnx")
+    out_tensor = sess.run(None, input_tensor)
+    print("name", output_name, "shape", out_tensor[0].shape)
+    if print_tensor:
+        print(out_tensor[0])
 
 
-#outputs = sess.run(None, inputDict)
-speed("sess.run(None, inputDict)")
+print_model_outputs(model_path, inputDict, print_tensor=False)
+#print_specific_output(model_path, inputDict, '9', print_tensor=True)
+sess = rt.InferenceSession(model_path)
+out = sess.run(None, inputDict)
 
-speed("sess.run(None, inputDict); sess.run(None, inputDict)")
+print(out[0].shape)
+print(out[0])
+print(out[0][:,:,0:5,0:5])
 
-#speed("subprocess.run(.././/runtest)")
-subprocess.run(".././runtest")
+print("input", inputs[0])

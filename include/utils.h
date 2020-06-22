@@ -27,4 +27,6 @@ void mallocTensorProto(Onnx__TensorProto *tp,
                        size_t n_dims,
                        size_t n_data);
 
+void init_tensor_proto(Onnx__TensorProto *tp);
+
 #endif
