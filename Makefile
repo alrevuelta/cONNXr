@@ -159,9 +159,9 @@ define BENCHMARK_MODEL
 HELP_benchmark_$(1)=run $(1) benchmark
 TARGET_benchmark+=benchmark_$(1)
 benchmark_$(1): $(BENCHMARKDIR)/$(1).txt
+#Dont trace to run faster
+TRACE_LEVEL=-1
 $(BENCHMARKDIR)/$(1).txt: runtest
-	# TODO Benchmarking should run without many logging crap to avoid performance loss
-	# All runs will be average later on in the post processing phase
 	rm -f $(BENCHMARKDIR)/$(1).txt
 	mkdir -p $(BENCHMARKDIR)
 	for number in $$$$(seq $(REPEAT_$(1))) ; do \
@@ -175,11 +175,9 @@ $(foreach MODEL, $(MODELS), $(eval $(call BENCHMARK_MODEL,$(MODEL))))
 .phony:benchmark
 HELP_benchmark=run benchmarks of all MODELS
 TARGET+=benchmark
-benchmark: $(BENCHMARKDIR)/result.txt
-$(BENCHMARKDIR)/result.txt: $(TARGET_benchmark)
+benchmark: $(TARGET_benchmark)
 	rm -f $@
 	mkdir -p $(dir $@)
-	cat $(BENCHMARKDIR)/*.txt > $@
 	# Run some postprocessing on the benchmarking results
 	python scripts/parse_output_benchmarking.py
 
