@@ -52,7 +52,7 @@ int main(int argc, char **argv){
 
     /* Print the last output which should be the model output */
     for (int i = 0; i < all_context[_populatedIdx].outputs[0]->n_float_data; i++){
-      printf("n_float_data[%d] = %f\n", i, all_context[_populatedIdx].outputs[0]->float_data[i]);
+      //printf("n_float_data[%d] = %f\n", i, all_context[_populatedIdx].outputs[0]->float_data[i]);
     }
   }else{
     printf("Wrong inputs\n");

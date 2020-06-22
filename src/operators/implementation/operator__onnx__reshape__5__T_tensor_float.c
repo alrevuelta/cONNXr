@@ -16,6 +16,8 @@
   Onnx__TensorProto *shape = searchInputByName(ctx, 1);
   Onnx__TensorProto *reshaped = searchOutputByName(ctx, 0);
 
+  Debug_PrintTensorProto(shape);
+
   if (0){
     /* TODO: Check some conditions. For example if a specific
      * functionality is not supported */
@@ -23,15 +25,6 @@
   }
 
   debug_print_dims(data->n_dims, data->dims);
-
-  if (0){
-    /* TODO: Check some conditions. For example if a specific
-     * functionality is not supported */
-    //a->data_type == b->data_type
-    //a->n_dims == b->n_dims
-    //a->dims[i] == b->dims[i]
-    return -1;
-  }
 
   // Not sure about this implementation. It just swaps the dimensions
   // and does not change the data.
@@ -86,10 +79,10 @@
   // Populate some parameters
   reshaped->n_dims       = shape->n_int64_data;
   reshaped->has_raw_data = 0;
-  reshaped->data_type    = data->data_type;
-  reshaped->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT;
+  //reshaped->data_type    = data->data_type;
+  reshaped->data_type    = ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT;
   reshaped->n_float_data = data->n_float_data;
-  reshaped->float_data = malloc(data->n_float_data * sizeof(float));
+  reshaped->float_data   = malloc(data->n_float_data * sizeof(float));
 
   for (int i = 0; i < data->n_float_data; i++) {
     reshaped->float_data[i] = data->float_data[i];

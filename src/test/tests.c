@@ -475,15 +475,15 @@ int main(int argc, char **argv)
   //CU_add_test(onnxBackendSuite,"test_reduce_sum_square_negative_axes_keepdims_random",test_reduce_sum_square_negative_axes_keepdims_random),
   //CU_add_test(onnxBackendSuite,"test_reflect_pad",test_reflect_pad),
   CU_add_test(onnxBackendSuite,"test_relu",test_relu),
-  //CU_add_test(onnxBackendSuite,"test_reshape_extended_dims",test_reshape_extended_dims),
-  //CU_add_test(onnxBackendSuite,"test_reshape_negative_dim",test_reshape_negative_dim),
-  //CU_add_test(onnxBackendSuite,"test_reshape_negative_extended_dims",test_reshape_negative_extended_dims),
-  //CU_add_test(onnxBackendSuite,"test_reshape_one_dim",test_reshape_one_dim),
-  //CU_add_test(onnxBackendSuite,"test_reshape_reduced_dims",test_reshape_reduced_dims),
-  //CU_add_test(onnxBackendSuite,"test_reshape_reordered_all_dims",test_reshape_reordered_all_dims),
-  //CU_add_test(onnxBackendSuite,"test_reshape_reordered_last_dims",test_reshape_reordered_last_dims),
-  //CU_add_test(onnxBackendSuite,"test_reshape_zero_and_negative_dim",test_reshape_zero_and_negative_dim),
-  //CU_add_test(onnxBackendSuite,"test_reshape_zero_dim",test_reshape_zero_dim),
+  CU_add_test(onnxBackendSuite,"test_reshape_extended_dims",test_reshape_extended_dims),
+  CU_add_test(onnxBackendSuite,"test_reshape_negative_dim",test_reshape_negative_dim),
+  CU_add_test(onnxBackendSuite,"test_reshape_negative_extended_dims",test_reshape_negative_extended_dims),
+  CU_add_test(onnxBackendSuite,"test_reshape_one_dim",test_reshape_one_dim),
+  CU_add_test(onnxBackendSuite,"test_reshape_reduced_dims",test_reshape_reduced_dims),
+  CU_add_test(onnxBackendSuite,"test_reshape_reordered_all_dims",test_reshape_reordered_all_dims),
+  CU_add_test(onnxBackendSuite,"test_reshape_reordered_last_dims",test_reshape_reordered_last_dims),
+  CU_add_test(onnxBackendSuite,"test_reshape_zero_and_negative_dim",test_reshape_zero_and_negative_dim),
+  CU_add_test(onnxBackendSuite,"test_reshape_zero_dim",test_reshape_zero_dim),
   //CU_add_test(onnxBackendSuite,"test_resize_downsample_scales_cubic",test_resize_downsample_scales_cubic),
   //CU_add_test(onnxBackendSuite,"test_resize_downsample_scales_cubic_A_n0p5_exclude_outside",test_resize_downsample_scales_cubic_A_n0p5_exclude_outside),
   //CU_add_test(onnxBackendSuite,"test_resize_downsample_scales_cubic_align_corners",test_resize_downsample_scales_cubic_align_corners),
@@ -600,10 +600,10 @@ int main(int argc, char **argv)
   //CU_add_test(onnxBackendSuite,"test_top_k_smallest",test_top_k_smallest),
   CU_add_test(onnxBackendSuite,"test_transpose_all_permutations_0",test_transpose_all_permutations_0),
   CU_add_test(onnxBackendSuite,"test_transpose_all_permutations_1",test_transpose_all_permutations_1),
-  //CU_add_test(onnxBackendSuite,"test_transpose_all_permutations_2",test_transpose_all_permutations_2),
-  //CU_add_test(onnxBackendSuite,"test_transpose_all_permutations_3",test_transpose_all_permutations_3),
-  //CU_add_test(onnxBackendSuite,"test_transpose_all_permutations_4",test_transpose_all_permutations_4),
-  //CU_add_test(onnxBackendSuite,"test_transpose_all_permutations_5",test_transpose_all_permutations_5),
+  CU_add_test(onnxBackendSuite,"test_transpose_all_permutations_2",test_transpose_all_permutations_2),
+  CU_add_test(onnxBackendSuite,"test_transpose_all_permutations_3",test_transpose_all_permutations_3),
+  CU_add_test(onnxBackendSuite,"test_transpose_all_permutations_4",test_transpose_all_permutations_4),
+  CU_add_test(onnxBackendSuite,"test_transpose_all_permutations_5",test_transpose_all_permutations_5),
   //CU_add_test(onnxBackendSuite,"test_transpose_default",test_transpose_default),
   //CU_add_test(onnxBackendSuite,"test_unique_not_sorted_without_axis",test_unique_not_sorted_without_axis),
   //CU_add_test(onnxBackendSuite,"test_unique_sorted_with_axis",test_unique_sorted_with_axis),
@@ -637,7 +637,7 @@ int main(int argc, char **argv)
    * is provided */
   CU_add_test(modelsTestSuite, "test_model_mnist", test_model_mnist);
   CU_add_test(modelsTestSuite, "test_model_tinyyolov2", test_model_tinyyolov2);
-  //CU_add_test(modelsTestSuite, "test_model_super_resolution", test_model_super_resolution);
+  CU_add_test(modelsTestSuite, "test_model_super_resolution", test_model_super_resolution);
 
   CU_basic_set_mode(CU_BRM_VERBOSE);
 

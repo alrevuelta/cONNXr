@@ -51,6 +51,8 @@ if __name__ == '__main__':
     # Use the tag present in the C code
     mnist_cycles, mnist_times = getDataOfTrace(allTraces, '[mnist]')
     tinyyolov2_cycles, tinyyolov2_times = getDataOfTrace(allTraces, '[tinyyolov2]')
+    super_resolution_cycles, super_resolution_times = getDataOfTrace(allTraces, '[super_resolution]')
 
     printData(mnist_cycles, mnist_times, 'mnist')
     printData(tinyyolov2_cycles, tinyyolov2_times, 'tinyyolov2')
+    printData(tinyyolov2_cycles, tinyyolov2_times, 'super_resolution')

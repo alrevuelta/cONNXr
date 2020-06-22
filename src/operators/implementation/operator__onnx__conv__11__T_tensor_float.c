@@ -32,8 +32,8 @@ operator_status operator__onnx__conv__11__T_tensor_float(
 
   // Borrowed form https://github.com/pjreddie/darknet/blob/61c9d02ec461e30d55762ec7669d6a1d3c356fb2/src/convolutional_layer.c#L445
   Onnx__AttributeProto *auto_pad     = searchAttributeNyName(ctx->onnx_node->n_attribute,ctx->onnx_node->attribute, "auto_pad");
-  Onnx__AttributeProto *dilations    = searchAttributeNyName(ctx->onnx_node->n_attribute,ctx->onnx_node->attribute, "dilations");
-  Onnx__AttributeProto *group        = searchAttributeNyName(ctx->onnx_node->n_attribute,ctx->onnx_node->attribute, "group");
+  //Onnx__AttributeProto *dilations    = searchAttributeNyName(ctx->onnx_node->n_attribute,ctx->onnx_node->attribute, "dilations");
+  //Onnx__AttributeProto *group        = searchAttributeNyName(ctx->onnx_node->n_attribute,ctx->onnx_node->attribute, "group");
   Onnx__AttributeProto *kernel_shape = searchAttributeNyName(ctx->onnx_node->n_attribute,ctx->onnx_node->attribute, "kernel_shape");
   Onnx__AttributeProto *pads         = searchAttributeNyName(ctx->onnx_node->n_attribute,ctx->onnx_node->attribute, "pads");
   Onnx__AttributeProto *strides      = searchAttributeNyName(ctx->onnx_node->n_attribute,ctx->onnx_node->attribute, "strides");
@@ -139,9 +139,8 @@ operator_status operator__onnx__conv__11__T_tensor_float(
               }
             }
           }else{
-
+            /* TODO */
           }
-
 
           Y->float_data[out_index] = value;
           //printf("%lld\n", out_index);
@@ -155,11 +154,8 @@ operator_status operator__onnx__conv__11__T_tensor_float(
             Y->float_data[out_index] += B->float_data[k];
           }
         }
-        //printf("done dim1\n");
       }
-      printf("done dim2\n");
     }
-    printf("done dim3\n");
   }
 
   debug_print_dims(Y->n_dims, Y->dims);

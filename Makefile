@@ -20,6 +20,7 @@ HELP_MODELS=existing models
 ifndef MODELS
 MODELS+=mnist
 MODELS+=tinyyolov2
+MODELS+=super_resolution
 endif
 
 VARIABLE+=OPERATORS

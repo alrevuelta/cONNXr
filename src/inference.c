@@ -73,6 +73,7 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
   {
     printf("Running node %d\n", nodeIdx);
     all_context[nodeIdx].resolved_op(&all_context[nodeIdx]);
+    Debug_PrintTensorProto(all_context[nodeIdx].outputs[0]);
   }
 
   // TODO
