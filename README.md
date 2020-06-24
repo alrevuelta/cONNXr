@@ -119,4 +119,4 @@ Other C/C++ related projects
 This project is not associated in any way with ONNX and it is not an official solution nor officially supported by ONNX, it is just an application build on top of the `.onnx` format that aims to help people that want to run inference in devices that are not supported by the official runtimes. Use at your own risk.
 
 # License
-TODO
+[MIT License](https://github.com/alrevuelta/cONNXr/blob/master/LICENSE)
