@@ -43,7 +43,6 @@ struct operator_info_range
 struct operator_info
 {
   char                     *name;
-  operator_resolver         resolver;
   operator_info_range       range_input;
   operator_info_range       range_output;
   size_t                    n_attribute;
