@@ -498,8 +498,8 @@ class OnnxDoc():
     def __repr__(self):
         return f"OnnxDoc({self.doc.__repr__()})"
 
-    def text(self, prefix=""):
-        return format_text(prefix, None, [self.doc])
+    def text(self, prefix=" * "):
+        return prefix + f"\n{prefix}".join(self.doc.split('\n'))
 
     def __str__(self):
         return self.text()
