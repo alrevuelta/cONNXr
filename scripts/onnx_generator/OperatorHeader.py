@@ -1,8 +1,57 @@
-import os
-import inspect
-import pathlib
+from .Template import Template
 
-class OperatorHeaderPrototype:
+class ContextArray(Template):
+    _template = '''
+typedef struct operator_context_{kind}__{name} {{
+    size_t length;
+    {content}
+}} operator_context_{kind}_{name};
+'''
+
+    def __init__(self, name, kind, content):
+        self.name = name
+        self.kind = kind
+        self.content = content
+
+class ContextInput(ContextArray):
+    def __init__(self, schema):
+        self.schema = schema
+        super().__init__(
+            self.schema.operator_name,
+            "input",
+            [f"operator_tensor *{i.name};" for i in self.schema.inputs]
+        )
+
+class ContextOutput(ContextArray):
+    def __init__(self, schema):
+        self.schema = schema
+        super().__init__(
+            self.schema.operator_name,
+            "output",
+            [f"operator_tensor *{o.name};" for o in self.schema.outputs]
+        )
+class ContextAttribute(ContextArray):
+    def __init__(self, schema):
+        self.schema = schema
+        super().__init__(
+            self.schema.operator_name,
+            "attribute",
+            [f"Onnx__AttributeProto *{a.name};" for a in self.schema.attributes]
+        )
+class Context(Template):
+    _template = '''
+typedef struct operator_context__{name} {{
+    struct operator_context_input__{name}     *input;
+    struct operator_context_output__{name}    *output;
+    struct operator_context_attribute__{name} *attribute;
+    operator_executer                          operator;
+}} operator_context__{name};
+'''
+    def __init__(self, schema):
+        self.schema = schema
+        self.name = schema.operator_name
+
+class Prototype(Template):
     _template = '''
 {attribute}
 {return_type} {prefix}{name}{suffix}(
@@ -16,47 +65,25 @@ class OperatorHeaderPrototype:
         self.attribute = attribute
         self.return_type = return_type
 
-    def text(self):
-        return self._template.format(
-            name=self.name,
-            prefix=self.prefix,
-            suffix=self.suffix,
-            attribute=self.attribute,
-            return_type = self.return_type
-        ).strip()
-
-    def __str__(self):
-        return self.text()
-
-    def __repr__(self):
-        return f"{self.__class__}({self.schema.__repr__()})"
-
-class OperatorHeaderPrototypeAliases:
+class PrototypeAliases(Template):
+    _template = "{aliases}"
     def __init__(self, schema):
         self.schema = schema
-
-    def text(self):
-        return "\n".join([OperatorHeaderPrototypeAlias(
+        self.aliases = "\n".join([str(PrototypeAlias(
                             self.schema.operator_name,
                             t
-                          ).text()
+                          ))
                           for t in self.schema.constraints.typePermutations() ])
 
-    def __str__(self):
-        return self.text()
-
-    def __repr__(self):
-        return f"{self.__class__}({self.schema.__repr__()})"
-
-class OperatorHeaderPrototypeAlias(OperatorHeaderPrototype):
+class PrototypeAlias(Prototype):
     def __init__(self, name, type):
         super().__init__(f"{name}", suffix=f"__{type}", attribute='extern __attribute__((weak))')
 
-class OperatorHeaderPrototypeResolver(OperatorHeaderPrototype):
+class PrototypeResolver(Prototype):
     def __init__(self, name):
         super().__init__(name, prefix=f"resolve_", return_type='operator_executer')
 
-class OperatorHeaderDoxygen:
+class Doxygen(Template):
     _template = '''
 
 /**
@@ -81,23 +108,23 @@ class OperatorHeaderDoxygen:
     def __init__(self, schema, path):
         self.schema = schema
         self.path   = path
-
-    def text(self):
-        return self._template.format(
-            attributes=self.schema.attributes.text(" * "),
-            deprecated=" * @deprecated Avoid usage!" if self.schema.deprecated else " * ",
-            doc=self.schema.doc.text(" * "),
-            doc_ref=f" * @see {self.schema.ref_doc}",
-            domain=self.schema.domain,
-            constraints=self.schema.constraints.text(" * "),
-            range_input=self._range(*self.schema.range_input),
-            inputs=self.schema.inputs.text(" * "),
-            name=self.schema.name,
-            range_output=self._range(*self.schema.range_output),
-            outputs=self.schema.outputs.text(" * "),
-            version=self.schema.version,
-            defs_filepath=f" * @see {self._rel_path(self.schema.ref_file[0])}:{self.schema.ref_file[1]}",
-        ).strip()
+        self.context_input = ContextInput(self.schema)
+        self.context_output = ContextOutput(self.schema)
+        self.context_attribute = ContextAttribute(self.schema)
+        self.context = Context(self.schema)
+        self.attributes=self.schema.attributes.text(" * ")
+        self.deprecated=" * @deprecated Avoid usage!" if self.schema.deprecated else " * "
+        self.doc=self.schema.doc.text(" * ")
+        self.doc_ref=f" * @see {self.schema.ref_doc}"
+        self.domain=self.schema.domain
+        self.constraints=self.schema.constraints.text(" * ")
+        self.range_input=self._range(*self.schema.range_input)
+        self.inputs=self.schema.inputs.text(" * ")
+        self.name=self.schema.name
+        self.range_output=self._range(*self.schema.range_output)
+        self.outputs=self.schema.outputs.text(" * ")
+        self.version=self.schema.version
+        self.defs_filepath=f" * @see {self.scriptpath(self.schema.ref_file[0])}:{self.schema.ref_file[1]}"
 
     def _range(self, min, max):
         if (min == max):
@@ -105,18 +132,11 @@ class OperatorHeaderDoxygen:
         else:
             return f"{min} to {max}"
 
-    def _rel_path(self, path):
-        return os.path.relpath(os.path.realpath(path),os.path.realpath(self.path))
-
-    def __str__(self):
-        return self.text()
-
-    def __repr__(self):
-        return f"{self.__class__}({self.schema.__repr__()})"
-
-class OperatorHeader:
-    _template_header = '''
-//this file was generated by {script}
+class Header(Template):
+    _basepath = "{path}"
+    _filepath = "{schema.domain}/{schema.operator_name}.h"
+    _template = '''
+//this file was generated by {scriptpath}
 # ifndef OPERATOR_{header_name}_H
 # define OPERATOR_{header_name}_H
 
@@ -133,31 +153,10 @@ class OperatorHeader:
 '''
 
     def __init__(self, schema, path):
-      self.schema = schema
-      self.path = path
-
-    def text(self):
-        return self._template_header.format(
-            script=self._rel_path(inspect.getfile(inspect.currentframe())),
-            header_name=self.schema.operator_name.upper(),
-            operator_name=self.schema.operator_name,
-            doxygen = OperatorHeaderDoxygen(self.schema, self.path),
-            prototype = OperatorHeaderPrototype(self.schema.operator_name),
-            resolver = OperatorHeaderPrototypeResolver(self.schema.operator_name),
-            aliases = OperatorHeaderPrototypeAliases(self.schema)
-        )
-
-    def filename(self, path=None):
-        path = str(self.path) if path == None else str(path)
-        path += f"/{self.schema.domain}"
-        path += f"/{self.schema.operator_name}.h"
-        return pathlib.Path(path)
-
-    def _rel_path(self, path):
-        return os.path.relpath(os.path.realpath(path),os.path.realpath(self.path))
-
-    def __str__(self):
-        return self.text()
-
-    def __repr__(self):
-        return f"{self.__class__}({self.schema.__repr__()})"
+        self.schema = schema
+        self.path = path
+        self.header_name=self.schema.operator_name.upper()
+        self.doxygen = Doxygen(self.schema, self.path)
+        self.prototype = Prototype(self.schema.operator_name)
+        self.resolver = PrototypeResolver(self.schema.operator_name)
+        self.aliases = PrototypeAliases(self.schema)
