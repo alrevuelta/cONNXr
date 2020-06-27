@@ -132,6 +132,13 @@ class Doxygen(Template):
         else:
             return f"{min} to {max}"
 
+class Info(Template):
+    _template = '''
+extern __attribute__((weak)) operator_info info_{schema.operator_name};
+'''
+    def __init__(self, schema):
+        self.schema = schema
+
 class Header(Template):
     _basepath = "{path}"
     _filepath = "{schema.domain}/{schema.operator_name}.h"
@@ -142,11 +149,14 @@ class Header(Template):
 
 # include "operators/operator.h"
 # include "operators/operator_stub.h"
+# include "operators/operator_info.h"
 
 {doxygen}
 {prototype}
 
 {resolver}
+
+{info}
 
 {aliases}
 # endif
@@ -155,8 +165,9 @@ class Header(Template):
     def __init__(self, schema, path):
         self.schema = schema
         self.path = path
-        self.header_name=self.schema.operator_name.upper()
-        self.doxygen = Doxygen(self.schema, self.path)
-        self.prototype = Prototype(self.schema.operator_name)
-        self.resolver = PrototypeResolver(self.schema.operator_name)
-        self.aliases = PrototypeAliases(self.schema)
+        self.header_name=schema.operator_name.upper()
+        self.doxygen = Doxygen(schema, path)
+        self.prototype = Prototype(schema.operator_name)
+        self.resolver = PrototypeResolver(schema.operator_name)
+        self.info = Info(schema)
+        self.aliases = PrototypeAliases(schema)

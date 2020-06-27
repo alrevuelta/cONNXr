@@ -156,9 +156,6 @@ sets = OperatorSets.Source(headers,path)
 note("generating onnx operator info sources")
 path = f"{args.path[-1]}/{args.info_src[-1]}/"
 info_srcs = [ OperatorInfo.Source(s, path) for s in schemas ]
-note("generating onnx operator info headers")
-path = f"{args.path[-1]}/{args.info_header[-1]}/"
-info_headers = [ OperatorInfo.Header(s, path) for s in schemas ]
 
 files = []
 if not args.no_header:
@@ -169,8 +166,6 @@ if not args.no_sets:
     files.append(sets)
 if not args.no_info_src:
     files.extend(info_srcs)
-if not args.no_info_header:
-    files.extend(info_headers)
 
 writecount = 0
 note("Writing files",1)
