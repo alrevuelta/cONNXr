@@ -6,6 +6,7 @@ from contextlib import suppress
 class Template:
     _template = ""
     _filepath = ""
+    _basepath = ""
 
     def __repr__(self):
         name = self.__class__.__name__
@@ -19,8 +20,12 @@ class Template:
             return value()
         return value
 
-    def filepath(self, absolute=True):
-        path = pathlib.Path(self._filepath.format_map(self))
+    def filepath(self, absolute=True, based=True):
+        path = ""
+        if based:
+            path += self._basepath.format_map(self) + "/"
+        path += self._filepath.format_map(self)
+        path = pathlib.Path(path)
         if absolute:
             return path.resolve()
         else:

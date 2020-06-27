@@ -2,10 +2,9 @@ import os
 import sys
 import re
 import pathlib
-from .OperatorHeader import OperatorHeader
-from .OperatorTypeResolver import OperatorTypeResolver
-from .OperatorSanityCheck import OperatorSanityCheck
-from .OperatorSets import OperatorSets
+from . import OperatorHeader
+from . import OperatorTypeResolver
+from . import OperatorSets
 from .OnnxWrapper import OnnxSchema
 from . import OperatorInfo
 from . import args
@@ -147,16 +146,13 @@ for name2version2schema in domain2name2version2schema.values():
 
 note("generating onnx operator headers")
 path = f"{args.path[-1]}/{args.header[-1]}/"
-headers = [ OperatorHeader(s,path) for s in schemas ]
+headers = [ OperatorHeader.Header(s,path) for s in schemas ]
 note("generating onnx operator type resolvers")
 path = f"{args.path[-1]}/{args.resolve[-1]}/"
-resolvers = [ OperatorTypeResolver(s,path) for s in schemas ]
-note("generating onnx operator sanity checks")
-path = f"{args.path[-1]}/{args.check[-1]}/"
-checks = [ OperatorSanityCheck(s,path) for s in schemas ]
+resolvers = [ OperatorTypeResolver.Source(s,path) for s in schemas ]
 note("generating onnx operator sets")
 path = f"{args.path[-1]}/{args.sets[-1]}/"
-sets = OperatorSets(headers,path)
+sets = OperatorSets.Source(headers,path)
 note("generating onnx operator info sources")
 path = f"{args.path[-1]}/{args.info_src[-1]}/"
 info_srcs = [ OperatorInfo.Source(s, path) for s in schemas ]
@@ -169,8 +165,6 @@ if not args.no_header:
     files.extend(headers)
 if not args.no_resolve:
     files.extend(resolvers)
-if not args.no_check:
-    files.extend(checks)
 if not args.no_sets:
     files.append(sets)
 if not args.no_info_src:
@@ -184,7 +178,7 @@ if not args.path[-1]:
     warning("skipping write because args.path is not set")
 else:
     for obj in files:
-        path = obj.filename().resolve()
+        path = obj.filepath()
         if path.exists() and not args.force:
             warning(f"skipping existing file '{path}'",1)
             continue

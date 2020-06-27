@@ -1,15 +1,44 @@
-import inspect
-import os
-import pathlib
+from .Template import Template
 
-class OperatorTypeSwitch:
-    _template_resolveType = '''
+class CaseSkip(Template):
+    _template = '''
+/* skip non tensor constraint '{constraint}' ('{original}') */
+'''
+    def __init__(self, constraint, original):
+        self.constraint = constraint
+        self.original = original
+
+class CaseSwitch(Template):
+    _template = '''
+case {case}: {{ {switch} break; }}
+'''
+    def __init__(self, schema, case, permutationsMap):
+        self.case = case
+        self.switch = Switch(schema, permutationsMap)
+
+class CaseExecuter(Template):
+    _template = '''
+case {case}: {{ executer = (operator_executer) &{operator_name}__{typePermutationText}; break; }}
+'''
+    def __init__(self, case, operator_name, typePermutationText):
+        self.case = case
+        self.operator_name = operator_name
+        self.typePermutationText = typePermutationText
+
+class Type(Template):
+    _template = '''
 uint32_t {constraint} = 0;
 if (ctx->{inOrOutput}->{name}) {{
     {constraint} = ctx->{inOrOutput}->{name}->tensor->data_type;
 }}
 '''
-    _template_switch = '''
+    def __init__(self, constraint, inOrOutput, name):
+        self.constraint = constraint
+        self.inOrOutput = inOrOutput
+        self.name = name
+
+class Switch(Template):
+    _template = '''
 switch ( {constraint} ) {{
     case 0: //constrained tensor is not set (maybe optional?), just take next case
     {cases}
@@ -19,26 +48,33 @@ switch ( {constraint} ) {{
     }}
 }}
 '''
-    _template_case = '''
-case {case}: {{ {content} break; }}
-'''
+    def __init__(self, schema, permutationMap):
+        self.schema = schema
+        self.constraint = list(permutationMap.keys())[0][-1][0]
+        cases = []
+        for k,v in permutationMap.items():
+            case = k[-1][1].onnxTensorDataTypes()
+            if not case:
+                cases.append(CaseSkip(k[-1][0],k[-1][1].original))
+                continue
+            if not v:
+                operator_name = self.schema.operator_name
+                typePermutationText = self.schema.constraints.typePermutationText(k)
+                cases.append(CaseExecuter(case[0],operator_name,typePermutationText))
+            else:
+                cases.append(CaseSwitch( schema, case[0],v))
+        self.cases = "\n".join(map(str,cases))
 
+class Resolve(Template):
     _template = '''
 {{
-    {resolveTypes}
+    {types}
     {switch}
 }}
 '''
     def __init__(self, schema):
         self.schema = schema
 
-    def __str__(self):
-        return self.text()
-
-    def __repr__(self):
-        return f"OperatorTypeSwitch({self.schema.__repr__()})"
-
-    def text(self, indent=4):
         resolveTypes = []
         cases = []
 
@@ -63,55 +99,27 @@ case {case}: {{ {content} break; }}
                     if output.optional:
                         continue
                     break
-            resolveTypes.append(self._template_resolveType.format(
-                constraint = constraint,
-                inOrOutput = inOrOutput,
-                name = name,
-            ).strip())
+            resolveTypes.append(Type(constraint,inOrOutput,name))
+        permutationsMap = schema.constraints.typePermutationsMap()
+        self.types = "\n".join([ str(t) for t in resolveTypes ])
+        if permutationsMap:
+            self.switch = Switch(schema, permutationsMap)
+        else:
+            self.switch = "/* skipping constraint check, because no constraint exist */"
 
 
-        permutationsMap = self.schema.constraints.typePermutationsMap()
-        if not permutationsMap:
-            return "/* skipping constraint test, because no constraint exist */"
-        return self._template.format(
-            resolveTypes = "\n".join(resolveTypes).strip().replace("\n",f"\n{' '*indent}"),
-            switch = self._text_walkPermutationsMap(permutationsMap, indent).replace('\n','\n'+' '*indent)
-        ).strip()
-
-    def _text_walkPermutationsMap(self, node, indent=4):
-        cases = []
-        for k,v in node.items():
-            case = k[-1][1].onnxTensorDataTypes()
-            if not case:
-                cases.append(f"/* skip non tensor constraint '{k[-1][0]}' ('{k[-1][1].original}') */")
-                continue
-            operator_name = self.schema.operator_name
-            typePermutationText = self.schema.constraints.typePermutationText(k)
-            if not v:
-                cases.append(self._template_case.format(
-                    case = case[0],
-                    content = f"executer = (operator_executer) &{operator_name}__{typePermutationText};"
-                ).strip())
-            else:
-                cases.append(self._template_case.format(
-                    case = case[0],
-                    content = self._text_walkPermutationsMap(v,indent)
-                ).strip())
-        return self._template_switch.format(
-            constraint = list(node.keys())[0][-1][0],
-            cases = "\n".join(cases).replace('\n','\n'+' '*indent)
-        ).strip()
-
-class OperatorTypeResolver:
+class Source(Template):
+    _basepath = "{path}"
+    _filepath = "{schema.domain}/resolve_{schema.operator_name}.c"
     _template = '''
-//this file was generated by {script}
-#include "operators/{domain}/{operator_name}.h"
+//this file was generated by {scriptpath}
+#include "operators/{schema.domain}/{schema.operator_name}.h"
 #include "operators/operator_stub.h"
 #include <inttypes.h>
 #include <stdio.h>
 
-operator_executer resolve_{operator_name}(
-    operator_context__{operator_name} *ctx
+operator_executer resolve_{schema.operator_name}(
+    operator_context__{schema.operator_name} *ctx
 ){{
     operator_executer executer = NULL;
     {switch}
@@ -125,27 +133,4 @@ operator_executer resolve_{operator_name}(
     def __init__(self, schema, path):
         self.schema = schema
         self.path = path
-        self.switch = OperatorTypeSwitch(self.schema).text()
-
-    def text(self):
-      return self._template.format(
-        script=self._rel_path(inspect.getfile(inspect.currentframe())),
-        operator_name=self.schema.operator_name,
-        switch=self.switch,
-        domain=self.schema.domain,
-      )
-
-    def filename(self):
-        path = str(self.path)
-        path += f"/{self.schema.domain}"
-        path += f"/resolve_{self.schema.operator_name}.c"
-        return pathlib.Path(path)
-
-    def _rel_path(self, path):
-        return os.path.relpath(os.path.realpath(path),os.path.realpath(self.path))
-
-    def __str__(self):
-        return self.text()
-
-    def __repr__(self):
-        return f"OperatorTypeResolver({self.schema.__repr__()}, {self.path.__repr__()})"
+        self.switch = Resolve(self.schema)
