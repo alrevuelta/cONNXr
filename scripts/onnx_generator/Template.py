@@ -19,12 +19,17 @@ class Template:
             return value()
         return value
 
-    def filepath(self):
-        return pathlib.Path(self._filepath.format_map(self)).resolve()
+    def filepath(self, absolute=True):
+        path = pathlib.Path(self._filepath.format_map(self))
+        if absolute:
+            return path.resolve()
+        else:
+            return path
 
-    def scriptpath(self):
+    def scriptpath(self, target=None):
         start  = os.path.realpath(self.filepath())
-        target = os.path.realpath(inspect.getfile(self.__class__))
+        if not target:
+            target = os.path.realpath(inspect.getfile(self.__class__))
         return os.path.relpath(target,start)
 
     def __str__(self):
