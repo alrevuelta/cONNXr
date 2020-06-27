@@ -37,8 +37,8 @@ note(f"onnx: {args.onnx}",3)
 note(f"verbose: {args.verbose}",3)
 note(f"header: {args.header}",3)
 note(f"no_header: {args.no_header}",3)
-note(f"check: {args.check}",3)
-note(f"no_check: {args.no_check}",3)
+note(f"info: {args.info}",3)
+note(f"no_info: {args.no_info}",3)
 note(f"resolve: {args.resolve}",3)
 note(f"no_resolve: {args.no_resolve}",3)
 note(f"sets: {args.sets}",3)
@@ -153,9 +153,9 @@ resolvers = [ OperatorTypeResolver.Source(s,path) for s in schemas ]
 note("generating onnx operator sets")
 path = f"{args.path[-1]}/{args.sets[-1]}/"
 sets = OperatorSets.Source(headers,path)
-note("generating onnx operator info sources")
-path = f"{args.path[-1]}/{args.info_src[-1]}/"
-info_srcs = [ OperatorInfo.Source(s, path) for s in schemas ]
+note("generating onnx operator info")
+path = f"{args.path[-1]}/{args.info[-1]}/"
+info = [ OperatorInfo.Source(s, path) for s in schemas ]
 
 files = []
 if not args.no_header:
@@ -164,8 +164,8 @@ if not args.no_resolve:
     files.extend(resolvers)
 if not args.no_sets:
     files.append(sets)
-if not args.no_info_src:
-    files.extend(info_srcs)
+if not args.no_info:
+    files.extend(info)
 
 writecount = 0
 note("Writing files",1)
