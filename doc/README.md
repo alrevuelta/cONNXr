@@ -1,8 +1,6 @@
 # Documentation Index
 
-* [Introduction](./01_Introduction.md)
-* [Code Overview](./02_CodeOverview.md)
-* [Testing](./03_Testing.md)
-* [How To Contribute](./04_Contributing.md)
-* [Requirements](./05_Requirements.md)
-* [Operator Status](./06_OperatorStatus.md)
+* [Documentation](./01_Documentation.md)
+* [Testing](./02_Testing.md)
+* [Contributing](./03_Contributing.md)
+* [Operator Status](./04_OperatorStatus.md)
