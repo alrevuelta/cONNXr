@@ -7,33 +7,33 @@
 <h2 align="center">📗 Documentation 📗</h2>
 
 <p align="center">
-  <a href="doc/01_Introduction.md">01 Introduction</a> •
-  <a href="doc/02_CodeOverview.md">02 Code Overview</a> •
-  <a href="doc/03_Testing.md">03 Testing</a> •
-  <a href="doc/04_Contributing.md">04 Contributing</a> •
-  <a href="doc/05_Requirements.md">05 Requirements</a> •
-  <a href="doc/06_OperatorStatus.md">06 Operator Status</a>
+  <a href="doc/01_Documentation.md">01 Documentation</a> •
+  <a href="doc/02_Testing.md">02 Testing</a> •
+  <a href="doc/03_Contributing.md">03 Contributing</a> •
+  <a href="doc/04_OperatorStatus.md">04 Operator Status</a>
 </p>
 
-This repo contains a pure C99 runtime to run inference on `onnx` models. You can train your model with you favorite framework (tensorflow, keras, sk-learn, you name it!) and once trained export it to a `.onnx` file, that will be used to run inference. This makes this library totally framework agnostic, no matter how you train your model, this repo will run it using the common interface that `onnx` provides. This runtime was thought for embedded devices, that have low resources and that might not be able to compile newer cpp versions, so the idea is to keep the dependencies as minimum as possible, or even zero. No GPUs or fancy processor architectures, just pure non multi-thread C99 code, compatible with almost any embedded device. Lets allow our IoT devices to run inference on the edge, but without sacrificing the tools that the big AI fishes in the industry provide. Dealing with old hardware? This might be also for you.
+This repo contains a pure C99 runtime to run inference on `onnx` models. You can train your model with you favourite framework (tensorflow, keras, sklearn) and once trained export it to a `.onnx` file, that will be used to run inference. This makes this library totally framework agnostic, no matter how you train your model, this repo will run it using the common interface that `onnx` provides. This runtime was thought for embedded devices, that might not be able to compile newer cpp versions. No GPUs nor HW accelerators, just pure non multi-thread C99 code, compatible with almost any embedded device. Dealing with old hardware? This might be also for you.
 
-Note that this project is in a very early stage so its not even close to be production ready. Developers are needed so feel free to contact or contribute with a pull request. See **Help Needed** and [doc](doc) for more information about how to contribute.
+This project can be also useful if you are working with some bare metal hardware with dedicated accelerators. If this is the case, you might find useful to reuse the architecture and replace the specific operators by your own ones.
+
+Note that this project is in a very early stage so its not even close to be production ready. Developers are needed so feel free to contact or contribute with a pull request. You can also have a look to the opened issues if you want to contribute, specially the ones labeled for beginners. See contributing section.
 
 # Out of the box examples
 
 Some very well known models are supported out of the box, just compile the command line as follows and call it with two parameters (first the `ONNX` model, and second the `input` to run inference on). Note that the input has to be a `.pb` file. If you have your own model and its not working, its probably because its using an operator that we haven't implemented yet, so feel free to open an issue and we will happy to help.
 ```
-make build_cli
+make all
 ```
 
 ## [MNIST](https://github.com/onnx/models/tree/master/vision/classification/mnist)
 ```
-./connxr test/mnist/model.onnx test/mnist/test_data_set_0/input_0.pb
+build/connxr test/mnist/model.onnx test/mnist/test_data_set_0/input_0.pb
 ```
 
 ## [tiny YOLO v2](https://github.com/onnx/models/tree/master/vision/object_detection_segmentation/tiny_yolov2)
 ```
-./connxr test/tiny_yolov2/Model.onnx test/tiny_yolov2/test_data_set_0/input_0.pb
+build/connxr test/tiny_yolov2/Model.onnx test/tiny_yolov2/test_data_set_0/input_0.pb
 ```
 
 ## [super resolution](https://github.com/onnx/models/tree/master/vision/super_resolution/sub_pixel_cnn_2016)
@@ -42,78 +42,54 @@ build/connxr test/super_resolution/super_resolution.onnx test/super_resolution/t
 ```
 
 TODO:
-* tiny YOLO v3: https://github.com/onnx/models/tree/master/vision/object_detection_segmentation/tiny_yolov3 TODO!
-* Quantized MNIST. TODO. Using ONNX MNIST as baseline and quantizing it. Work ongoing
+* [Fast Neural Style Transfer](https://github.com/onnx/models/tree/master/vision/style_transfer/fast_neural_style)
+* [TinyTOLOv3](https://github.com/onnx/models/tree/master/vision/object_detection_segmentation/tiny-yolov3)
+* [Interception_V1](https://github.com/onnx/models/tree/master/vision/classification/inception_and_googlenet/inception_v1)
+* [Quantized MNIST](https://github.com/alrevuelta/cONNXr/blob/master/scripts/quantized_model.onnx)
 
-# In your code
+# Example
 
-If you want to use `cONNXr` as part of your code, you can either include all the files in your project and compile them, or perhaps link it as a static library, but this second option is not supported yet. You can do something like this, but note that this example won't work as it is. Some more work is needed.
+If you want to use `cONNXr` as part of your code, you can either include all the files in your project and compile them, or perhaps link it as a static library, but this second option is not supported yet.
 
 ```c
 int main()
 {
-  /* Open the onnx model you want to use*/
+  /* Open your onnx model */
   Onnx__ModelProto *model = openOnnxFile("model.onnx");
 
-  /* Populate and alloc memory for your inputs array */
-  Onnx__TensorProto **inputs;
+  /* Create your input tensor or load a protocol buffer one */
+  Onnx__TensorProto *inp0 = openTensorProtoFile("input0.pb");
 
-  /* Define the number of inputs you have set*/
-  int numOfInputs = 1;
+  /* Set the input name */
+  inp0set0->name = model->graph->input[0]->name;
 
-  /* Run inference on the model with your inputs*/
-  Onnx__TensorProto **output = inference(model, inputs, numOfInputs);
+  /* Create the array of inputs to the model */
+  Onnx__TensorProto *inputs[] = { inp0set0 };
 
-  /* In output you will find an array of tensors with the outputs of each node */
+  /* Resolve all inputs and operators */
+  resolve(model, inputs, 1);
 
-  /* Free all resources */
+  /* Run inference on your input */
+  Onnx__TensorProto **output = inference(model, inputs, 1);
 
-  return 0;
+  /* Print the last output which is the model output */
+  for (int i = 0; i < all_context[_populatedIdx].outputs[0]->n_float_data; i++){
+      printf("n_float_data[%d] = %f\n", i, all_context[_populatedIdx].outputs[0]->float_data[i]);
+  }
 }
 ```
 
 # Related Projects
-Other C/C++ related projects
 
-| Project       | ModelFormat     | Language  | Size |
-| ------------- |:-------------:| -----:| ----:|
-| [onnxruntime](https://github.com/microsoft/onnxruntime)   | onnx | x | x |
-| [darknet](https://github.com/pjreddie/darknet)            | x    | x | x |
-| [uTensor](https://github.com/uTensor/uTensor)             | x    | x | x |
-| [nnom](https://github.com/majianjia/nnom)                 | x    | x | x |
-| [ELL](https://github.com/Microsoft/ELL)                   | x    | x | x |
-| [TF Lite](xx)                                             | x    | x | x |
-| [plaidML](https://github.com/plaidml/plaidml)             | x    | x | x |
-| [deepC](https://github.com/ai-techsystems/deepC)          | x    | x | x |
-| [onnc](https://github.com/ONNC/onnc)                      | x    | x | x |
+Other C/C++ related projects: [onnxruntime](https://github.com/microsoft/onnxruntime), [darknet](https://github.com/pjreddie/darknet), [uTensor](https://github.com/uTensor/uTensor), [nnom](https://github.com/majianjia/nnom), [ELL](https://github.com/Microsoft/ELL), [plaidML](https://github.com/plaidml/plaidml), [deepC](https://github.com/ai-techsystems/deepC), [onnc](https://github.com/ONNC/onnc)
 
 
 # Limitations
 
-* Very few basic operators are implemented, so a model that contains a not implemented operator will fail. See them inside `operators` folder
-* The only end to end tested model so far is the MNIST one, for handwritten recognition digits.
+* Few basic operators are implemented, so a model that contains a not implemented operator will fail.
 * Each operator works with many data types (double, float, int16, int32). Only few of them are implemented.
-* `has_raw_data` is not supported. A `TensorProto` is assumed to have the data inside any of the structs (int, float,...) and not in raw_data.
-* So far memory management is a mess, so you will find a memory leak for sure.
-* There are some hardcodings, here and there.
-
-# Help Needed
-
-- [x] Integrate onnx backend testing
-- [x] Implement all operators contained in MNIST model
-- [x] Run end to end tests for MNIST model
-- [ ] Implement a significant amount of onnx operators, most common ones
-- [ ] Compile and deploy a model (i.e. MNIST) into a real embedded device
-- [x] Set up a nice CI with Azure or GitHub Actions
-- [ ] Run profiling on the operators
-- [ ] Migrate to nanopb to reduce the size of the pb files
-- [ ] Run memory check and leak detection (Valgrind?)
-- [ ] Add more tests than the onnx backend, which is not sufficient
-- [ ] Create a nice Makefile, compile library as a static library to be linked
-- [ ] Try different compilers
-- [ ] Enable gcc extra options (pedantic, all W, etc,...)
-- [ ] Implement some "Int" operators and fixed point stuff.
-- [ ] Create and run a quantized variation of the MNIST model
+* The reference implementation is with `float`, so you might run into troubles with other types.
+* As a general note, this project is a proof of concept/prototype, so bear that in mind.
 
 # Disclaimer
 This project is not associated in any way with ONNX and it is not an official solution nor officially supported by ONNX, it is just an application build on top of the `.onnx` format that aims to help people that want to run inference in devices that are not supported by the official runtimes. Use at your own risk.
