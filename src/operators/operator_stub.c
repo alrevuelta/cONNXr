@@ -4,7 +4,6 @@
 
 operator_info operator_stub_info = {
     .name         = "stub",
-    .resolver     = &operator_stub_resolver,
     .range_input  = {0, SIZE_MAX},
     .range_output = {0, SIZE_MAX},
     .n_attribute  = 0,

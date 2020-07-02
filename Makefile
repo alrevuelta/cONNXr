@@ -95,7 +95,7 @@ INCDIR+=src/pb
 CPPFLAGS+=$(foreach DIR, $(INCDIR),-I $(DIR) )
 
 SRCDIR+=src/operators
-SRCDIR+=src/operators/check/onnx
+SRCDIR+=src/operators/info/onnx
 SRCDIR+=src/operators/resolve/onnx
 SRCDIR+=src/operators/implementation
 SRCDIR+=src/pb

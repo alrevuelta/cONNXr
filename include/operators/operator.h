@@ -5,8 +5,7 @@
 #include <errno.h>
 
 // TODO Remove unused code
-typedef struct operator_context operator_context;
-typedef enum operator_status    operator_status;
+typedef enum operator_status operator_status;
 typedef struct node_context  node_context;
 typedef operator_status (*operator_executer)(node_context *ctx);
 typedef operator_executer (*operator_resolver)(node_context *ctx);
@@ -14,7 +13,7 @@ typedef operator_executer (*operator_resolver)(node_context *ctx);
 
 
 // TODO Move this to a file named operator_interface
-struct node_context{
+struct node_context {
   Onnx__NodeProto     *onnx_node;
   Onnx__TensorProto  **inputs;
   Onnx__TensorProto  **outputs;
@@ -29,15 +28,6 @@ enum operator_status {
   OP_EINVAL = EINVAL, // Invalid argument
   OP_EDOM   = EDOM,   // Math argument out of domain of func
   OP_ERANGE = ERANGE  // Math result not representable
-};
-
-struct operator_context
-{
-    Onnx__NodeProto       *node;
-    Onnx__TensorProto    **input;
-    Onnx__TensorProto    **output;
-    Onnx__AttributeProto **attribute;
-    operator_executer      executor;
 };
 
 #endif

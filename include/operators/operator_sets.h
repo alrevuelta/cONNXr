@@ -25,7 +25,7 @@ struct operator_set
     size_t              version;
     char               *domain;
     size_t              length;
-    operator_set_entry *entries[];
+    operator_set_entry  entries[];
 };
 
 struct operator_sets
