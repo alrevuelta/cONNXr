@@ -1,15 +1,15 @@
-# 02 Documentation
+# 01 Documentation
 
 ## Introduction
 ### What is ONNX?
-If you don't know about `onnx` you might want to read about it before. They have a nice [website](https://onnx.ai/) and great repositories with a lot of documentation to read about. Everything is open source, and really big companies in the industry are behind it (AMD, ARM, AWS, Nvidia, IBM) just to name a few. Here you can find a mix of official and non official related repositories:
+If you don't know about `onnx` you might want to read about it before since its the building block of this project. They have a nice [website](https://onnx.ai/) and great repositories with a lot of documentation to read about. Everything is open source, and really big companies in the industry are behind it (AMD, ARM, AWS, Nvidia, IBM) just to name a few. Here you can find a mix of official and non official related repositories:
 * https://github.com/onnx/onnx
 * https://github.com/onnx/onnx-r
 * https://github.com/onnx/models
 * https://github.com/owulveryck/onnx-go
 * https://github.com/microsoft/onnxruntime
 
-In short, `onnx` provides a **O**pen **N**eural **N**etwork **E**xchange format. This format, describes a huge set of operators, that can be mixed to create every type of machine learning model that you ever heard of, from a simple neural network to complex deep convolutional networks. Some examples of operators are: matrix multiplications, convolutions, adding, maxpool, sin, cosine, you name it! They provide a standardised set of operators [here](https://github.com/onnx/onnx/blob/master/docs/Operators.md). So we can say that `onnx` provides a layer of abstraction to ML models, which makes all frameworks compatible between them. Exporters are provided for a huge variety of frameworks (PyTorch, TensorFlow, Keras, Scikit-Learn) so if you want to convert a model from Keras to TensorFlow, you just have to use Keras exporter to export `Keras->ONNX` and then use the importer to import `ONNX-TensorFlow`.
+In short, `onnx` provides a **O**pen **N**eural **N**etwork **E**xchange format. This format, describes a huge set of operators, that can be mixed to create every type of machine learning model that you ever heard of, from a simple neural network to complex deep convolutional networks. Some examples of operators are: matrix multiplications, convolutions, adding, maxpool, sin, cosine. They provide a standardised set of operators [here](https://github.com/onnx/onnx/blob/master/docs/Operators.md). So we can say that `onnx` provides a layer of abstraction to ML models, which makes all frameworks compatible between them. Exporters are provided for a huge variety of frameworks (PyTorch, TensorFlow, Keras, Scikit-Learn) so if you want to convert a model from Keras to TensorFlow, you just have to use Keras exporter to export `Keras->ONNX` and then use the importer to import `ONNX-TensorFlow`.
 
 In the following image, you can find an example on how a `onnx` model looks like. Its just a bunch of `nodes` that are connected between them to form a `graph`. Each node has an `operator` that takes some `inputs` with some specific `dimensions` and some `attributes` and calculates some `outputs`. This is how the inference is calculated, just forward propagating the input along every node until the last one is reached.
 
@@ -48,23 +48,63 @@ struct node_context{
   Onnx__TensorProto  **inputs;
   Onnx__TensorProto  **outputs;
   operator_executer resolved_op;
-  //int (*resolved_op)(node_context *ctx);
 };
 ```
 
 ## Types and Structures
 We can divide the types and structures that this repo uses into two:
-* ONNX structures: These structures are exactly (or almost) the same as the ones that ONNX defines in its [onnx.proto](https://github.com/onnx/onnx/blob/master/onnx/onnx.proto). See `onnx.pb-c.h`.
+* ONNX structures: These structures are exactly (or almost) the same as the ones that ONNX defines in its [onnx.proto](https://github.com/onnx/onnx/blob/master/onnx/onnx.proto). See `onnx.pb-c.h`. We list the most relevant ones below.
 * Custom structures: These structures are defined *ad hoc* for this project.
 
 
-### Onnx__GraphProto
+### ONNX structures
+#### Onnx__GraphProto
 Defines the graph of a model, made of different nodes `Onnx__NodeProto`. See `onnx.pb-c.h`.
 
-### Onnx__NodeProto
+```c
+struct  _Onnx__GraphProto
+{
+  ProtobufCMessage base;
+  size_t n_node;
+  Onnx__NodeProto **node;
+  char *name;
+  size_t n_initializer;
+  Onnx__TensorProto **initializer;
+  size_t n_sparse_initializer;
+  Onnx__SparseTensorProto **sparse_initializer;
+  char *doc_string;
+  size_t n_input;
+  Onnx__ValueInfoProto **input;
+  size_t n_output;
+  Onnx__ValueInfoProto **output;
+  size_t n_value_info;
+  Onnx__ValueInfoProto **value_info;
+  size_t n_quantization_annotation;
+  Onnx__TensorAnnotation **quantization_annotation;
+};
+```
+
+#### Onnx__NodeProto
 Information for a given node (a node has inputs and attributes and provides an output using a given operator). See `onnx.pb-c.h`.
 
-### Onnx__TensorProto
+```c
+struct  _Onnx__NodeProto
+{
+  ProtobufCMessage base;
+  size_t n_input;
+  char **input;
+  size_t n_output;
+  char **output;
+  char *name;
+  char *op_type;
+  char *domain;
+  size_t n_attribute;
+  Onnx__AttributeProto **attribute;
+  char *doc_string;
+};
+```
+
+#### Onnx__TensorProto
 One of the most important types that you will see, is the `Onnx__TensorProto`. It just defines a vector, an array, a matrix, or whatever you want to call it. It is quite convinient to use, because it is quite generic. You can store different types of values, with different sizes. As an example, lets say that we want to store a 3 dimension vector. In that case `n_dims=3` and `dims[0]`, `dims[1]`, `dims[2]` will store some values. Lets store some `float` values, so `data_type=ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT `. In this case `n_float_data=dims[0]*dims[1]*dims[2]` and `float_data` will contain all the values in a single dimension array. The tensor has also a `name`.
 
 ```c
@@ -110,6 +150,9 @@ struct  _Onnx__TensorProto
 };
 ```
 
+### Custom structures
+Since we are at a very early stage, structures are constantly evolving. Have a look to the code in order to know more. At some point we will also document them here.
+
 ## Protocol Buffers
 In order to convert from the ONNX interface defined in `onnx.proto`, the `protoc` library is used. `onnx` uses protocol buffers to serialize the models data. Note that `protobuf-c` is used to generate the `pb/onnx.pb-c.c` and `pb/onnx.pb-c.h`. Files are already provided, but you can generate it like this:
 
@@ -119,3 +162,44 @@ protoc --c_out=. onnx.proto
 
 ## Autogenerated code
 In order to avoid boilerplate code, some `.c` and `.h` files are autogenerated from Python. You can find these Python scripts and more information under `scrips/onnx_generator` folder. These Python scripts take into account a given ONNX version and generates all the "infrastructure" from it.
+
+## Versioning
+ONNX is constantly evolving and new operators and versions are regularly being released. This project aims to keep up with that using the autogenerated code mentioned above.
+
+## Operators
+
+All `onnx` operators are defined [in the official doc](https://github.com/onnx/onnx/blob/master/docs/Operators.md). Our goal is to implement as many as possible, but if you have a model with a custom operator, that also fine.
+
+All operators share a common interface. This structure is available as an input parameter to all operators, and it contains all the data you need, like the input tensors and attributes and a pointer to the output.
+```c
+struct node_context{
+  Onnx__NodeProto     *onnx_node;
+  Onnx__TensorProto  **inputs;
+  Onnx__TensorProto  **outputs;
+  operator_executer resolved_op;
+};
+```
+
+Lets say that you want to implement the `Add` operator, that just adds two numbers or tensors. You can access to its inputs with the following code. Once you have that, its pretty straightforward to access the data within the tensor (see `Onnx__TensorProto` struct)
+
+```c
+Onnx__TensorProto *A = searchInputByName(ctx, 0);
+Onnx__TensorProto *B = searchInputByName(ctx, 1);
+```
+
+On the other hand you will need to store the result in a variable, so that other nodes can reuse that output. Just use the following function and populate the content.
+
+```c
+Onnx__TensorProto *C = searchOutputByName(ctx, 0);
+```
+
+If the operator you are implementing has some attributes, you can also easily get them with. Just replace `auto_pad` by your attribute name.
+
+```c
+Onnx__AttributeProto *auto_pad = searchAttributeNyName(
+  ctx->onnx_node->n_attribute,
+  ctx->onnx_node->attribute,
+  "auto_pad");
+```
+
+Its also important to note that each operator is usually defined for more than one data type like float, double or uint8_t. In order to address this, we have decided to define one function per data type, trying of course to share as many code as possible between different data types implementations.

@@ -4,6 +4,39 @@ This project is in very early state so we are looking for contributors. Feel fre
 You can also contribute by improving an existing operator or fixing some bugs. Feel free to have a look to the opened issues, where we also have some simple issues for newcomers.
 
 ## Add new operator
+
+If you want to add a new operator, we provide a simple and generic interface that you can use, with all the information in place ready to be used. The interface is the following.
+```c
+struct node_context{
+  Onnx__NodeProto     *onnx_node;
+  Onnx__TensorProto  **inputs;
+  Onnx__TensorProto  **outputs;
+  operator_executer resolved_op;
+};
+```
+
+Lets say that you want to implement the `Add` operator, that just adds two numbers or tensors. You can access to its inputs with the following code. Once you have that, its pretty straightforward to access the data within the tensor (see `Onnx__TensorProto` struct)
+
+```c
+Onnx__TensorProto *A = searchInputByName(ctx, 0);
+Onnx__TensorProto *B = searchInputByName(ctx, 1);
+```
+
+On the other hand you will need to store the result in a variable, so that other nodes can reuse that output. Just use the following function and populate the content.
+
+```c
+Onnx__TensorProto *C = searchOutputByName(ctx, 0);
+```
+
+If the operator you are implementing has some attributes, you can also easily get them with. Just replace `auto_pad` by your attribute name.
+
+```c
+Onnx__AttributeProto *auto_pad = searchAttributeNyName(
+  ctx->onnx_node->n_attribute,
+  ctx->onnx_node->attribute,
+  "auto_pad");
+```
+
 If you want to implement an operator, we would suggest to follow the following steps:
 * 1. First of all decide the operator that you want to implement. You can see the [official onnx operators list](https://github.com/onnx/onnx/blob/master/docs/Operators.md). Lets say that you want to implement the `Conv` operator, fair enough.
 * 2. Second step is to decide which version you want to implement. We would recommend you to implement the latest one. The differences can be rather tiny, but its not the same [Abs-13](https://github.com/onnx/onnx/blob/master/docs/Changelog.md#Abs-13) operator than [Abs-6](https://github.com/onnx/onnx/blob/master/docs/Changelog.md#Abs-6). Note that the number is the onnx version that introduced that operator.
@@ -15,3 +48,6 @@ If you want to implement an operator, we would suggest to follow the following s
 
 
 TODO: A picture is worth more than a thousand words, so an example pull request would be for sure better than raw text.
+
+## Other contributions
+You can also contribute in other ways, like improving an existing operator, fixing bugs or writing documentation.

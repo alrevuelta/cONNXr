@@ -7,17 +7,17 @@
 <h2 align="center">📗 Documentation 📗</h2>
 
 <p align="center">
-  <a href="doc/01_Documentation.md">02 Code Overview</a> •
-  <a href="doc/02_Testing.md">03 Testing</a> •
-  <a href="doc/03_Contributing.md">04 Contributing</a> •
-  <a href="doc/04_OperatorStatus.md">05 Operator Status</a>
+  <a href="doc/01_Documentation.md">01 Documentation</a> •
+  <a href="doc/02_Testing.md">02 Testing</a> •
+  <a href="doc/03_Contributing.md">03 Contributing</a> •
+  <a href="doc/04_OperatorStatus.md">04 Operator Status</a>
 </p>
 
-This repo contains a pure C99 runtime to run inference on `onnx` models. You can train your model with you favourite framework (tensorflow, keras, sklearn, you name it!) and once trained export it to a `.onnx` file, that will be used to run inference. This makes this library totally framework agnostic, no matter how you train your model, this repo will run it using the common interface that `onnx` provides. This runtime was thought for embedded devices, that might not be able to compile newer cpp versions. No GPUs or fancy processor architectures, just pure non multi-thread C99 code, compatible with almost any embedded device. Dealing with old hardware? This might be also for you.
+This repo contains a pure C99 runtime to run inference on `onnx` models. You can train your model with you favourite framework (tensorflow, keras, sklearn) and once trained export it to a `.onnx` file, that will be used to run inference. This makes this library totally framework agnostic, no matter how you train your model, this repo will run it using the common interface that `onnx` provides. This runtime was thought for embedded devices, that might not be able to compile newer cpp versions. No GPUs nor HW accelerators, just pure non multi-thread C99 code, compatible with almost any embedded device. Dealing with old hardware? This might be also for you.
 
-This project can be also useful if you are working with some bare metal hardware with dedicated accelerators. If this is the case, you might find useful to reuse the architecture and replace the specific operators by your own one.
+This project can be also useful if you are working with some bare metal hardware with dedicated accelerators. If this is the case, you might find useful to reuse the architecture and replace the specific operators by your own ones.
 
-Note that this project is in a very early stage so its not even close to be production ready. Developers are needed so feel free to contact or contribute with a pull request. You can also have a look to the opened issues if you want to contribute, specially the ones labeled for beginners.
+Note that this project is in a very early stage so its not even close to be production ready. Developers are needed so feel free to contact or contribute with a pull request. You can also have a look to the opened issues if you want to contribute, specially the ones labeled for beginners. See contributing section.
 
 # Out of the box examples
 
@@ -44,6 +44,7 @@ build/connxr test/super_resolution/super_resolution.onnx test/super_resolution/t
 TODO:
 * [Fast Neural Style Transfer](https://github.com/onnx/models/tree/master/vision/style_transfer/fast_neural_style)
 * [TinyTOLOv3](https://github.com/onnx/models/tree/master/vision/object_detection_segmentation/tiny-yolov3)
+* [Interception_V1](https://github.com/onnx/models/tree/master/vision/classification/inception_and_googlenet/inception_v1)
 * [Quantized MNIST](https://github.com/alrevuelta/cONNXr/blob/master/scripts/quantized_model.onnx)
 
 # Example
@@ -88,6 +89,7 @@ Other C/C++ related projects: [onnxruntime](https://github.com/microsoft/onnxrun
 * Few basic operators are implemented, so a model that contains a not implemented operator will fail.
 * Each operator works with many data types (double, float, int16, int32). Only few of them are implemented.
 * The reference implementation is with `float`, so you might run into troubles with other types.
+* As a general note, this project is a proof of concept/prototype, so bear that in mind.
 
 # Disclaimer
 This project is not associated in any way with ONNX and it is not an official solution nor officially supported by ONNX, it is just an application build on top of the `.onnx` format that aims to help people that want to run inference in devices that are not supported by the official runtimes. Use at your own risk.
