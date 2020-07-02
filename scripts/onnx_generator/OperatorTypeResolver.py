@@ -43,7 +43,7 @@ switch ( {constraint} ) {{
     case 0: //constrained tensor is not set (maybe optional?), just take next case
     {cases}
     default: {{
-        fprintf(stderr, "no matching type for {operatorName} and constraint '{constraint}' found!\\n");
+        fprintf(stderr, "no matching type for {schema.operator_name} and constraint '{constraint}' found!\\n");
         break;
     }}
 }}
@@ -118,7 +118,7 @@ class Source(Template):
 #include <inttypes.h>
 #include <stdio.h>
 
-operator_executer resolve_{operator_name}(
+operator_executer resolve_{schema.operator_name}(
     node_context *ctx
 ){{
     operator_executer executer = NULL;

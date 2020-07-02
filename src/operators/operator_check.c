@@ -1,4 +1,5 @@
 #include "operators/operator_check.h"
+#include "operators/operator_info.h"
 #include <inttypes.h>
 #include <stdio.h>
 #include <string.h>
@@ -33,35 +34,35 @@ operator_check_range_(char                *operator,
 }
 
 bool
-operator_check_range(operator_context *ctx)
+operator_check_range(node_context *ctx, operator_info *info)
 {
-  char *name = (ctx->node->name) ? ctx->node->name : "";
+  char *name = (ctx->onnx_node->name) ? ctx->onnx_node->name : "";
   bool valid = true;
-  valid &= operator_check_range_(ctx->info->name,
+  valid &= operator_check_range_(info->name,
                                  name,
-                                 &ctx->info->range_input,
-                                 ctx->node->n_input);
-  valid &= operator_check_range_(ctx->info->name,
+                                 &info->range_input,
+                                 ctx->onnx_node->n_input);
+  valid &= operator_check_range_(info->name,
                                  name,
-                                 &ctx->info->range_output,
-                                 ctx->node->n_output);
+                                 &info->range_output,
+                                 ctx->onnx_node->n_output);
   return valid;
 }
 
 bool
-operator_check_attributes(operator_context *ctx)
+operator_check_attributes(node_context *ctx, operator_info *info)
 {
-  char *name = (ctx->node->name) ? ctx->node->name : "";
-  for (size_t i_attr = 0; i_attr < ctx->info->n_attribute; i_attr++) {
-    operator_info_attribute* cond = &ctx->info->attribute[i_attr];
-    Onnx__AttributeProto* cattr = ctx->attribute[i_attr];
+  char *name = (ctx->onnx_node->name) ? ctx->onnx_node->name : "";
+  for (size_t i_attr = 0; i_attr < info->n_attribute; i_attr++) {
+    operator_info_attribute* cond = &info->attribute[i_attr];
+    Onnx__AttributeProto* cattr = ctx->onnx_node->attribute[i_attr];
     if (!cattr) {
       if (cond->optional) {
         continue;
       }
       fprintf(stderr,
               "%s:%s missing non-optional attribute '%s' at pos %zu!\n",
-              ctx->info->name,
+              info->name,
               name,
               cond->name,
               i_attr);
@@ -70,7 +71,7 @@ operator_check_attributes(operator_context *ctx)
     if (strcmp(cond->name, cattr->name) != 0) {
       fprintf(stderr,
               "%s:%s attribute '%s' at pos %zu has wrong name '%s'\n",
-              ctx->info->name,
+              info->name,
               name,
               cond->name,
               i_attr,
@@ -81,7 +82,7 @@ operator_check_attributes(operator_context *ctx)
       fprintf(stderr,
               "%s:%s attribute '%s' at pos %zu has wrong type! "
               "got '%s', but expected '%s'\n",
-              ctx->info->name,
+              info->name,
               name,
               cond->name,
               i_attr,
@@ -202,38 +203,38 @@ operator_check_tensors_(char                  *operator,
 }
 
 bool
-operator_check_tensors(operator_context *ctx)
+operator_check_tensors(node_context *ctx, operator_info *info)
 {
-  char *name = (ctx->node->name) ? ctx->node->name : "";
+  char *name = (ctx->onnx_node->name) ? ctx->onnx_node->name : "";
   bool valid = true;
-  valid &= operator_check_tensors_(ctx->info->name,
+  valid &= operator_check_tensors_(info->name,
                                    name,
-                                   ctx->node->n_input,
-                                   ctx->input,
-                                   ctx->info->n_input,
-                                   ctx->info->input);
-  valid &= operator_check_tensors_(ctx->info->name,
+                                   ctx->onnx_node->n_input,
+                                   ctx->inputs,
+                                   info->n_input,
+                                   info->input);
+  valid &= operator_check_tensors_(info->name,
                                    name,
-                                   ctx->node->n_output,
-                                   ctx->output,
-                                   ctx->info->n_output,
-                                   ctx->info->output);
+                                   ctx->onnx_node->n_output,
+                                   ctx->outputs,
+                                   info->n_output,
+                                   info->output);
   return valid;
 }
 
 bool
-operator_check_constraint(operator_context *ctx)
+operator_check_constraint(node_context *ctx, operator_info *info)
 {
-  char *name = (ctx->node->name) ? ctx->node->name : "";
+  char *name = (ctx->onnx_node->name) ? ctx->onnx_node->name : "";
 
-  for (size_t i_cons = 0; i_cons < ctx->info->n_constraint; i_cons++) {
-    operator_info_constraint *constraint = &ctx->info->constraint[i_cons];
+  for (size_t i_cons = 0; i_cons < info->n_constraint; i_cons++) {
+    operator_info_constraint *constraint = &info->constraint[i_cons];
     Onnx__TensorProto    *ref      = NULL;
     char                 *ref_type = NULL;
     operator_info_tensor *ref_cond = NULL;
-    for (size_t i_tensor = 0; i_tensor < ctx->info->n_input; i_tensor++) {
-      Onnx__TensorProto    *tensor = ctx->input[i_tensor];
-      operator_info_tensor *cond   = &ctx->info->input[i_tensor];
+    for (size_t i_tensor = 0; i_tensor < info->n_input; i_tensor++) {
+      Onnx__TensorProto    *tensor = ctx->inputs[i_tensor];
+      operator_info_tensor *cond   = &info->input[i_tensor];
       if (!tensor) {
         continue;
       }
@@ -249,7 +250,7 @@ operator_check_constraint(operator_context *ctx)
                   "%s:%s shared constraint violation! "
                   "%s '%s' ('%s') has type '%s' and "
                   "%s '%s' ('%s') has type '%s'\n",
-                  ctx->info->name,
+                  info->name,
                   name,
                   ref_type,
                   ref_cond->name,
@@ -263,9 +264,9 @@ operator_check_constraint(operator_context *ctx)
         }
       }
     }
-    for (size_t i_tensor = 0; i_tensor < ctx->info->n_output; i_tensor++) {
-      Onnx__TensorProto    *tensor = ctx->output[i_tensor];
-      operator_info_tensor *cond = &ctx->info->output[i_tensor];
+    for (size_t i_tensor = 0; i_tensor < info->n_output; i_tensor++) {
+      Onnx__TensorProto    *tensor = ctx->outputs[i_tensor];
+      operator_info_tensor *cond = &info->output[i_tensor];
       if (!tensor) {
         continue;
       }
@@ -281,7 +282,7 @@ operator_check_constraint(operator_context *ctx)
                   "%s:%s shared constraint violation! "
                   "%s '%s' ('%s') has type '%s' and "
                   "%s '%s' ('%s') has type '%s'\n",
-                  ctx->info->name,
+                  info->name,
                   name,
                   ref_type,
                   ref_cond->name,
@@ -300,12 +301,12 @@ operator_check_constraint(operator_context *ctx)
 }
 
 bool
-operator_check(operator_context *ctx)
+operator_check(node_context *ctx, operator_info *info)
 {
   bool valid = true;
-  valid &= operator_check_range(ctx);
-  valid &= operator_check_attributes(ctx);
-  valid &= operator_check_tensors(ctx);
-  valid &= operator_check_constraint(ctx);
+  valid &= operator_check_range(ctx, info);
+  valid &= operator_check_attributes(ctx, info);
+  valid &= operator_check_tensors(ctx, info);
+  valid &= operator_check_constraint(ctx, info);
   return valid;
 }

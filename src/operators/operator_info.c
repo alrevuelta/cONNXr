@@ -86,8 +86,8 @@ operator_info_find(size_t  version,
                    char   *domain,
                    char   *name)
 {
-    for( size_t i_set = 0; i_set < onnx_operator_sets.length; i_set++ ) {
-        operator_set *set = onnx_operator_sets.sets[i_set];
+    for( size_t i_set = 0; i_set < all_operator_sets.length; i_set++ ) {
+        operator_set *set = all_operator_sets.sets[i_set];
         if (set->version != version) {
             continue;
         }
@@ -95,7 +95,7 @@ operator_info_find(size_t  version,
             continue;
         }
         for (size_t i_entry = 0; i_entry < set->length; i_entry++) {
-            operator_info *entry = set->entries[i_entry];
+            operator_info *entry = set->entries[i_entry].info;
             if (strcmp(entry->name,name) == 0) {
                 return entry;
             }
