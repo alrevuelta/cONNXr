@@ -26,7 +26,7 @@ attributes[] = {
 /* input tensors */
 static
 uint32_t
-tensor_type_data[] = {
+input_tensor_type_data[] = {
 ONNX__TENSOR_PROTO__DATA_TYPE__DOUBLE,
 ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT,
 ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT16,
@@ -50,14 +50,14 @@ inputs[] = {
     .homogeneous = true,
     .constraint  = "T",
     .n_types     = 11,
-    .types       = tensor_type_data
+    .types       = input_tensor_type_data
 }
 };
 
 /* output tensors */
 static
 uint32_t
-tensor_type_reduced[] = {
+output_tensor_type_reduced[] = {
 ONNX__TENSOR_PROTO__DATA_TYPE__INT64
 };
 
@@ -71,7 +71,7 @@ outputs[] = {
     .homogeneous = true,
     .constraint  = "tensor(int64)",
     .n_types     = 1,
-    .types       = tensor_type_reduced
+    .types       = output_tensor_type_reduced
 }
 };
 

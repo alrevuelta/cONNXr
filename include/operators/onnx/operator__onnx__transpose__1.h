@@ -40,7 +40,7 @@
  *
  * @since version 1
  *
- * @see home/drechsler/git/cONNXr/third_party/onnx/onnx/onnx/defs/tensor/defs.cc:905
+ * @see io/onnx/onnx/defs/tensor/defs.cc:794
  * @see https://github.com/onnx/onnx/blob/master/docs/Operators.md#Transpose
  */
 extern __attribute__((weak))

@@ -12,7 +12,7 @@ attributes[] = {
 /* input tensors */
 static
 uint32_t
-tensor_type_data[] = {
+input_tensor_type_data[] = {
 ONNX__TENSOR_PROTO__DATA_TYPE__BOOL,
 ONNX__TENSOR_PROTO__DATA_TYPE__COMPLEX128,
 ONNX__TENSOR_PROTO__DATA_TYPE__COMPLEX64,
@@ -32,7 +32,7 @@ ONNX__TENSOR_PROTO__DATA_TYPE__UINT8
 
 static
 uint32_t
-tensor_type_shape[] = {
+input_tensor_type_shape[] = {
 ONNX__TENSOR_PROTO__DATA_TYPE__INT64
 };
 
@@ -46,7 +46,7 @@ inputs[] = {
     .homogeneous = true,
     .constraint  = "T",
     .n_types     = 15,
-    .types       = tensor_type_data
+    .types       = input_tensor_type_data
 },
 {
     .name        = "shape",
@@ -55,14 +55,14 @@ inputs[] = {
     .homogeneous = true,
     .constraint  = "tensor(int64)",
     .n_types     = 1,
-    .types       = tensor_type_shape
+    .types       = input_tensor_type_shape
 }
 };
 
 /* output tensors */
 static
 uint32_t
-tensor_type_reshaped[] = {
+output_tensor_type_reshaped[] = {
 ONNX__TENSOR_PROTO__DATA_TYPE__BOOL,
 ONNX__TENSOR_PROTO__DATA_TYPE__COMPLEX128,
 ONNX__TENSOR_PROTO__DATA_TYPE__COMPLEX64,
@@ -90,7 +90,7 @@ outputs[] = {
     .homogeneous = true,
     .constraint  = "T",
     .n_types     = 15,
-    .types       = tensor_type_reshaped
+    .types       = output_tensor_type_reshaped
 }
 };
 

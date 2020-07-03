@@ -55,7 +55,7 @@
  *
  * @since version 12
  *
- * @see home/drechsler/git/cONNXr/third_party/onnx/onnx/onnx/defs/generator/defs.cc:15
+ * @see io/onnx/onnx/defs/generator/defs.cc:171
  * @see https://github.com/onnx/onnx/blob/master/docs/Operators.md#Constant
  */
 extern __attribute__((weak))

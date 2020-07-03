@@ -35,7 +35,7 @@
  *
  * @since version 9
  *
- * @see home/drechsler/git/cONNXr/third_party/onnx/onnx/onnx/defs/math/defs.cc:993
+ * @see io/onnx/onnx/defs/math/defs.cc:1035
  * @see https://github.com/onnx/onnx/blob/master/docs/Operators.md#MatMul
  */
 extern __attribute__((weak))
