@@ -77,11 +77,11 @@ class Resolve(Template):
 
         resolveTypes = []
 
-        for constraint in self.schema.constraints.keys():
+        for constraint in filter(lambda x: x.input, self.schema.constraints.values()):
             inOrOutput = None
             name = None
             for idx, input in enumerate(self.schema.inputs):
-                if constraint != input.constraint:
+                if constraint.name != input.constraint:
                     continue
                 inOrOutput = "inputs"
                 name = idx
@@ -90,20 +90,22 @@ class Resolve(Template):
                 break
             else:
                 for idx, output in enumerate(self.schema.outputs):
-                    if constraint != output.constraint:
+                    if constraint.name != output.constraint:
                         continue
                     inOrOutput = "outputs"
                     name = idx
                     if output.optional:
                         continue
                     break
-            resolveTypes.append(Type(constraint,inOrOutput,name))
-        permutationsMap = schema.constraints.typePermutationsMap()
+            resolveTypes.append(Type(constraint.name,inOrOutput,name))
+        permutationsMap = schema.constraints.typePermutationsMap(filterInput=True)
         self.types = "\n".join([ str(t) for t in resolveTypes ])
         if permutationsMap:
             self.switch = Switch(schema, permutationsMap)
         else:
-            self.switch = "/* skipping constraint check, because no constraint exist */"
+            self.types = "/* skipping constraint check, because no constraint exist */"
+            self.switch = f"executer = &{schema.operator_name};"
+
 
 
 class Source(Template):
