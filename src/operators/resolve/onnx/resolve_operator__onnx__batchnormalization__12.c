@@ -23,7 +23,7 @@ if (ctx->inputs[5]) {
     case 0: //constrained tensor is not set (maybe optional?), just take next case
     case ONNX__TENSOR_PROTO__DATA_TYPE__BOOL: { executer = (operator_executer) &operator__onnx__batchnormalization__12__T_tensor_double__T1_tensor_bool; break; }
     default: {
-        fprintf(stderr, "no matching type for operator__onnx__batchnormalization__12 and constraint 'T1' found!\n");
+        fprintf(stderr, "no matching type for operator__onnx__batchnormalization__12 and constraint 'T1' with type '%s' found!\n",operator_info_tensorType2str(T1));
         break;
     }
 } break; }
@@ -31,7 +31,7 @@ case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT: { switch ( T1 ) {
     case 0: //constrained tensor is not set (maybe optional?), just take next case
     case ONNX__TENSOR_PROTO__DATA_TYPE__BOOL: { executer = (operator_executer) &operator__onnx__batchnormalization__12__T_tensor_float__T1_tensor_bool; break; }
     default: {
-        fprintf(stderr, "no matching type for operator__onnx__batchnormalization__12 and constraint 'T1' found!\n");
+        fprintf(stderr, "no matching type for operator__onnx__batchnormalization__12 and constraint 'T1' with type '%s' found!\n",operator_info_tensorType2str(T1));
         break;
     }
 } break; }
@@ -39,12 +39,12 @@ case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT16: { switch ( T1 ) {
     case 0: //constrained tensor is not set (maybe optional?), just take next case
     case ONNX__TENSOR_PROTO__DATA_TYPE__BOOL: { executer = (operator_executer) &operator__onnx__batchnormalization__12__T_tensor_float16__T1_tensor_bool; break; }
     default: {
-        fprintf(stderr, "no matching type for operator__onnx__batchnormalization__12 and constraint 'T1' found!\n");
+        fprintf(stderr, "no matching type for operator__onnx__batchnormalization__12 and constraint 'T1' with type '%s' found!\n",operator_info_tensorType2str(T1));
         break;
     }
 } break; }
     default: {
-        fprintf(stderr, "no matching type for operator__onnx__batchnormalization__12 and constraint 'T' found!\n");
+        fprintf(stderr, "no matching type for operator__onnx__batchnormalization__12 and constraint 'T' with type '%s' found!\n",operator_info_tensorType2str(T));
         break;
     }
 }

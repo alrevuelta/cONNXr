@@ -19,7 +19,7 @@ if (ctx->inputs[0]) {
 case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT: { executer = (operator_executer) &operator__onnx__relu__6__T_tensor_float; break; }
 case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT16: { executer = (operator_executer) &operator__onnx__relu__6__T_tensor_float16; break; }
     default: {
-        fprintf(stderr, "no matching type for operator__onnx__relu__6 and constraint 'T' found!\n");
+        fprintf(stderr, "no matching type for operator__onnx__relu__6 and constraint 'T' with type '%s' found!\n",operator_info_tensorType2str(T));
         break;
     }
 }
