@@ -45,7 +45,7 @@
  *
  * @since version 5
  *
- * @see home/drechsler/git/cONNXr/third_party/onnx/onnx/onnx/defs/tensor/defs.cc:264
+ * @see io/onnx/onnx/defs/tensor/defs.cc:227
  * @see https://github.com/onnx/onnx/blob/master/docs/Operators.md#Reshape
  */
 extern __attribute__((weak))

@@ -5,7 +5,7 @@
 #include "trace.h"
 #include "utils.h"
 
-operator_status operator__onnx__maxpool__12__T_tensor_float__I_tensor_int64(
+operator_status operator__onnx__maxpool__12__T_tensor_float(
     node_context *ctx
 )
 {

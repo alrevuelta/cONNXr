@@ -78,9 +78,10 @@
  *
  * @since version 9
  *
- * @see home/drechsler/git/cONNXr/third_party/onnx/onnx/onnx/defs/nn/old.cc:1672
+ * @see io/onnx/onnx/defs/nn/defs.cc:1580
  * @see https://github.com/onnx/onnx/blob/master/docs/Operators.md#BatchNormalization
  */
+extern __attribute__((weak))
 operator_status operator__onnx__batchnormalization__9(
     node_context *ctx
 );

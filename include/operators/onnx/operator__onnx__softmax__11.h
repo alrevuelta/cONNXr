@@ -46,7 +46,7 @@
  *
  * @since version 11
  *
- * @see home/drechsler/git/cONNXr/third_party/onnx/onnx/onnx/defs/math/defs.cc:758
+ * @see io/onnx/onnx/defs/math/defs.cc:783
  * @see https://github.com/onnx/onnx/blob/master/docs/Operators.md#Softmax
  */
 extern __attribute__((weak))

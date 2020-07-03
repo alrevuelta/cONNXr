@@ -46,7 +46,7 @@
  *
  * @since version 12
  *
- * @see home/drechsler/git/cONNXr/third_party/onnx/onnx/onnx/defs/reduction/defs.cc:235
+ * @see io/onnx/onnx/defs/reduction/defs.cc:238
  * @see https://github.com/onnx/onnx/blob/master/docs/Operators.md#ArgMax
  */
 extern __attribute__((weak))

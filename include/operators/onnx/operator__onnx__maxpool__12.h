@@ -111,7 +111,7 @@
  *
  * @since version 12
  *
- * @see home/drechsler/git/cONNXr/third_party/onnx/onnx/onnx/defs/nn/defs.cc:329
+ * @see io/onnx/onnx/defs/nn/defs.cc:363
  * @see https://github.com/onnx/onnx/blob/master/docs/Operators.md#MaxPool
  */
 extern __attribute__((weak))

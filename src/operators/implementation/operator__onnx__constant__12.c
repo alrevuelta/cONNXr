@@ -7,7 +7,7 @@
 
 /* TODO We don't really need one function per type. So this function
 is not for float, it covers everything */
-operator_status operator__onnx__constant__12__T_tensor_float(
+operator_status operator__onnx__constant__12(
     node_context *ctx
 )
 {

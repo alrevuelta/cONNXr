@@ -58,7 +58,7 @@ inputs[] = {
 /* output tensors */
 static
 uint32_t
-tensor_type_output[] = {
+output_tensor_type_output[] = {
 ONNX__TENSOR_PROTO__DATA_TYPE__BOOL,
 ONNX__TENSOR_PROTO__DATA_TYPE__COMPLEX128,
 ONNX__TENSOR_PROTO__DATA_TYPE__COMPLEX64,
@@ -86,7 +86,7 @@ outputs[] = {
     .homogeneous = true,
     .constraint  = "T",
     .n_types     = 15,
-    .types       = tensor_type_output
+    .types       = output_tensor_type_output
 }
 };
 

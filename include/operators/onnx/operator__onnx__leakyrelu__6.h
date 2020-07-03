@@ -30,7 +30,7 @@
  *
  * @since version 6
  *
- * @see home/drechsler/git/cONNXr/third_party/onnx/onnx/onnx/defs/math/defs.cc:328
+ * @see io/onnx/onnx/defs/math/defs.cc:340
  * @see https://github.com/onnx/onnx/blob/master/docs/Operators.md#LeakyRelu
  */
 extern __attribute__((weak))
