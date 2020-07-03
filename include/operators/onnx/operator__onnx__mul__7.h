@@ -40,6 +40,7 @@
  * @see home/drechsler/git/cONNXr/third_party/onnx/onnx/onnx/defs/math/defs.cc:173
  * @see https://github.com/onnx/onnx/blob/master/docs/Operators.md#Mul
  */
+extern __attribute__((weak))
 operator_status operator__onnx__mul__7(
     node_context *ctx
 );

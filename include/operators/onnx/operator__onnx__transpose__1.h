@@ -43,6 +43,7 @@
  * @see home/drechsler/git/cONNXr/third_party/onnx/onnx/onnx/defs/tensor/defs.cc:905
  * @see https://github.com/onnx/onnx/blob/master/docs/Operators.md#Transpose
  */
+extern __attribute__((weak))
 operator_status operator__onnx__transpose__1(
     node_context *ctx
 );

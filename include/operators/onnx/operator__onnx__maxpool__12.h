@@ -114,6 +114,7 @@
  * @see home/drechsler/git/cONNXr/third_party/onnx/onnx/onnx/defs/nn/defs.cc:329
  * @see https://github.com/onnx/onnx/blob/master/docs/Operators.md#MaxPool
  */
+extern __attribute__((weak))
 operator_status operator__onnx__maxpool__12(
     node_context *ctx
 );

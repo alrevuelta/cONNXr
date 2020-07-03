@@ -49,6 +49,7 @@
  * @see home/drechsler/git/cONNXr/third_party/onnx/onnx/onnx/defs/reduction/defs.cc:235
  * @see https://github.com/onnx/onnx/blob/master/docs/Operators.md#ArgMax
  */
+extern __attribute__((weak))
 operator_status operator__onnx__argmax__12(
     node_context *ctx
 );

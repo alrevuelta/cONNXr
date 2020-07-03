@@ -40,6 +40,7 @@
  * @see home/drechsler/git/cONNXr/third_party/onnx/onnx/onnx/defs/math/defs.cc:121
  * @see https://github.com/onnx/onnx/blob/master/docs/Operators.md#Add
  */
+extern __attribute__((weak))
 operator_status operator__onnx__add__7(
     node_context *ctx
 );

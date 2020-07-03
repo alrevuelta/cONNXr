@@ -48,6 +48,7 @@
  * @see home/drechsler/git/cONNXr/third_party/onnx/onnx/onnx/defs/tensor/defs.cc:264
  * @see https://github.com/onnx/onnx/blob/master/docs/Operators.md#Reshape
  */
+extern __attribute__((weak))
 operator_status operator__onnx__reshape__5(
     node_context *ctx
 );
