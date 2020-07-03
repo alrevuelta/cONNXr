@@ -57,16 +57,16 @@ uint32_t
 {types}
 }};
 '''
-    def __init__(self, tensor):
+    def __init__(self, tensor, prefix=""):
         self.tensor = tensor
-        self.cname = "tensor_type_" + tensor.name
+        self.cname = prefix + "tensor_type_" + tensor.name
         self._types = [t.onnxTensorDataTypes() for t in tensor.types]
         self.types = ",\n".join(itertools.chain(*self._types))
 
     def __len__(self):
         return len(self._types)
 
-class Tensor(Template):
+class _Tensor(Template):
     _template = '''
 {{
     .name        = "{name}",
@@ -85,7 +85,22 @@ class Tensor(Template):
         self.variadic = "true" if tensor.optional else "false"
         self.homogeneous = "true" if tensor.isHomogeneous else "false"
         self.constraint   = tensor.constraint
-        self._types = TypeList(tensor)
+        # See TensorInput / TensorOutput
+        # self._types = TypeList(tensor)
+        # self.cname_types = self._types.cname
+        # self.n_types = len(self._types._types)
+
+class TensorInput(_Tensor):
+    def __init__(self, tensor):
+        super().__init__(tensor)
+        self._types = TypeList(tensor,"input_")
+        self.cname_types = self._types.cname
+        self.n_types = len(self._types._types)
+
+class TensorOutput(_Tensor):
+    def __init__(self, tensor):
+        super().__init__(tensor)
+        self._types = TypeList(tensor,"output_")
         self.cname_types = self._types.cname
         self.n_types = len(self._types._types)
 
@@ -104,7 +119,7 @@ operator_info_tensor
         self.cname = "inputs"
         self.domain = schema.domain
         self.operator_name = schema.operator_name
-        self._inputs = [Tensor(t) for t in schema.inputs]
+        self._inputs = [TensorInput(t) for t in schema.inputs]
         self.inputs  = ",\n".join((str(i) for i in self._inputs))
         self.types   = "\n\n".join((str(i._types) for i in self._inputs))
 
@@ -126,7 +141,7 @@ operator_info_tensor
         self.cname = "outputs"
         self.domain = schema.domain
         self.operator_name = schema.operator_name
-        self._outputs = [Tensor(t) for t in schema.outputs]
+        self._outputs = [TensorOutput(t) for t in schema.outputs]
         self.outputs  = ",\n".join((str(i) for i in self._outputs))
         self.types   = "\n\n".join((str(i._types) for i in self._outputs))
 
