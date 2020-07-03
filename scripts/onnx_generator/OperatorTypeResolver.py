@@ -43,7 +43,7 @@ switch ( {constraint} ) {{
     case 0: //constrained tensor is not set (maybe optional?), just take next case
     {cases}
     default: {{
-        fprintf(stderr, "no matching type for {schema.operator_name} and constraint '{constraint}' found!\\n");
+        fprintf(stderr, "no matching type for {schema.operator_name} and constraint '{constraint}' with type '%s' found!\\n",operator_info_tensorType2str({constraint}));
         break;
     }}
 }}
