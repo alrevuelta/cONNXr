@@ -13,54 +13,15 @@ operator_executer resolve_operator__onnx__maxpool__12(
 if (ctx->inputs[0]) {
     T = ctx->inputs[0]->data_type;
 }
-uint32_t I = 0;
-if (ctx->outputs[1]) {
-    I = ctx->outputs[1]->data_type;
-}
     switch ( T ) {
     case 0: //constrained tensor is not set (maybe optional?), just take next case
-    case ONNX__TENSOR_PROTO__DATA_TYPE__DOUBLE: { switch ( I ) {
-    case 0: //constrained tensor is not set (maybe optional?), just take next case
-    case ONNX__TENSOR_PROTO__DATA_TYPE__INT64: { executer = (operator_executer) &operator__onnx__maxpool__12__T_tensor_double__I_tensor_int64; break; }
+    case ONNX__TENSOR_PROTO__DATA_TYPE__DOUBLE: { executer = (operator_executer) &operator__onnx__maxpool__12__T_tensor_double; break; }
+case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT: { executer = (operator_executer) &operator__onnx__maxpool__12__T_tensor_float; break; }
+case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT16: { executer = (operator_executer) &operator__onnx__maxpool__12__T_tensor_float16; break; }
+case ONNX__TENSOR_PROTO__DATA_TYPE__INT8: { executer = (operator_executer) &operator__onnx__maxpool__12__T_tensor_int8; break; }
+case ONNX__TENSOR_PROTO__DATA_TYPE__UINT8: { executer = (operator_executer) &operator__onnx__maxpool__12__T_tensor_uint8; break; }
     default: {
-        fprintf(stderr, "no matching type for operator__onnx__maxpool__12 and constraint 'I' found!\n");
-        break;
-    }
-} break; }
-case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT: { switch ( I ) {
-    case 0: //constrained tensor is not set (maybe optional?), just take next case
-    case ONNX__TENSOR_PROTO__DATA_TYPE__INT64: { executer = (operator_executer) &operator__onnx__maxpool__12__T_tensor_float__I_tensor_int64; break; }
-    default: {
-        fprintf(stderr, "no matching type for operator__onnx__maxpool__12 and constraint 'I' found!\n");
-        break;
-    }
-} break; }
-case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT16: { switch ( I ) {
-    case 0: //constrained tensor is not set (maybe optional?), just take next case
-    case ONNX__TENSOR_PROTO__DATA_TYPE__INT64: { executer = (operator_executer) &operator__onnx__maxpool__12__T_tensor_float16__I_tensor_int64; break; }
-    default: {
-        fprintf(stderr, "no matching type for operator__onnx__maxpool__12 and constraint 'I' found!\n");
-        break;
-    }
-} break; }
-case ONNX__TENSOR_PROTO__DATA_TYPE__INT8: { switch ( I ) {
-    case 0: //constrained tensor is not set (maybe optional?), just take next case
-    case ONNX__TENSOR_PROTO__DATA_TYPE__INT64: { executer = (operator_executer) &operator__onnx__maxpool__12__T_tensor_int8__I_tensor_int64; break; }
-    default: {
-        fprintf(stderr, "no matching type for operator__onnx__maxpool__12 and constraint 'I' found!\n");
-        break;
-    }
-} break; }
-case ONNX__TENSOR_PROTO__DATA_TYPE__UINT8: { switch ( I ) {
-    case 0: //constrained tensor is not set (maybe optional?), just take next case
-    case ONNX__TENSOR_PROTO__DATA_TYPE__INT64: { executer = (operator_executer) &operator__onnx__maxpool__12__T_tensor_uint8__I_tensor_int64; break; }
-    default: {
-        fprintf(stderr, "no matching type for operator__onnx__maxpool__12 and constraint 'I' found!\n");
-        break;
-    }
-} break; }
-    default: {
-        fprintf(stderr, "no matching type for operator__onnx__maxpool__12 and constraint 'T' found!\n");
+        fprintf(stderr, "no matching type for operator__onnx__maxpool__12 and constraint 'T' with type '%s' found!\n",operator_info_tensorType2str(T));
         break;
     }
 }

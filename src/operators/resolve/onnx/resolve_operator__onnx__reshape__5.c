@@ -31,7 +31,7 @@ case ONNX__TENSOR_PROTO__DATA_TYPE__UINT32: { executer = (operator_executer) &op
 case ONNX__TENSOR_PROTO__DATA_TYPE__UINT64: { executer = (operator_executer) &operator__onnx__reshape__5__T_tensor_uint64; break; }
 case ONNX__TENSOR_PROTO__DATA_TYPE__UINT8: { executer = (operator_executer) &operator__onnx__reshape__5__T_tensor_uint8; break; }
     default: {
-        fprintf(stderr, "no matching type for operator__onnx__reshape__5 and constraint 'T' found!\n");
+        fprintf(stderr, "no matching type for operator__onnx__reshape__5 and constraint 'T' with type '%s' found!\n",operator_info_tensorType2str(T));
         break;
     }
 }

@@ -125,23 +125,23 @@ operator_executer resolve_operator__onnx__maxpool__12(
 extern __attribute__((weak)) operator_info info_operator__onnx__maxpool__12;
 
 extern __attribute__((weak))
-operator_status operator__onnx__maxpool__12__T_tensor_double__I_tensor_int64(
+operator_status operator__onnx__maxpool__12__T_tensor_double(
     node_context *ctx
 );
 extern __attribute__((weak))
-operator_status operator__onnx__maxpool__12__T_tensor_float__I_tensor_int64(
+operator_status operator__onnx__maxpool__12__T_tensor_float(
     node_context *ctx
 );
 extern __attribute__((weak))
-operator_status operator__onnx__maxpool__12__T_tensor_float16__I_tensor_int64(
+operator_status operator__onnx__maxpool__12__T_tensor_float16(
     node_context *ctx
 );
 extern __attribute__((weak))
-operator_status operator__onnx__maxpool__12__T_tensor_int8__I_tensor_int64(
+operator_status operator__onnx__maxpool__12__T_tensor_int8(
     node_context *ctx
 );
 extern __attribute__((weak))
-operator_status operator__onnx__maxpool__12__T_tensor_uint8__I_tensor_int64(
+operator_status operator__onnx__maxpool__12__T_tensor_uint8(
     node_context *ctx
 );
 # endif
