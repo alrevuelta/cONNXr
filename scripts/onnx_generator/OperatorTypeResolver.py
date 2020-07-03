@@ -76,12 +76,10 @@ class Resolve(Template):
         self.schema = schema
 
         resolveTypes = []
-        cases = []
 
         for constraint in self.schema.constraints.keys():
             inOrOutput = None
             name = None
-            optional = False
             for idx, input in enumerate(self.schema.inputs):
                 if constraint != input.constraint:
                     continue
