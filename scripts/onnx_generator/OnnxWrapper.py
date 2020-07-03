@@ -285,15 +285,19 @@ class OnnxTypeList(list):
         return f"OnnxTypeList([{types}])"
 
 class OnnxConstraint():
-    def __init__(self, constraint):
+    def __init__(self, constraint, input=False, output=False):
         if isinstance(constraint, dict):
             self.types = constraint['types']
             self.description = constraint['description']
             self.name = constraint['name']
+            self.input = constraint['input']
+            self.output = constraint['output']
         else:
             self.types = OnnxTypeList(constraint.allowed_type_strs)
             self.description = constraint.description
             self.name = constraint.type_param_str
+            self.input = input
+            self.output = output
 
     def text(self, prefix=""):
         lines = []
@@ -308,23 +312,27 @@ class OnnxConstraint():
 class OnnxConstraints(dict):
     def __init__(self, schema):
         super()
+        constraints = {c.type_param_str for c in schema.type_constraints}
+        inputs = {i.typeStr for i in schema.inputs if i.typeStr in constraints}
+        outputs = {o.typeStr for o in schema.outputs if o.typeStr in constraints}
         for constraint in schema.type_constraints:
-            self[constraint.type_param_str] = OnnxConstraint(constraint)
+            self[constraint.type_param_str] = OnnxConstraint(constraint, input=constraint.type_param_str in inputs, output=constraint.type_param_str in outputs)
 
-    def typePermutations(self, permutations = None ):
-        return [ self.typePermutationText(p) for p in self.typePermutationsTuple() ]
+    def typePermutations(self, filterInput=False, filterOutput=False):
+        return list(filter(None,(self.typePermutationText(p) for p in self.typePermutationsTuple(filterInput,filterOutput))))
 
     def typePermutationText(self, permutation):
         return "__".join([ f"{x[0]}_{x[1]}" for x in permutation ])
 
-    def typePermutationsTuple(self):
-        return itertools.product(*[
-            list(map(lambda x: (c.name,x), c.types)) for c in self.values()
-        ])
+    def typePermutationsTuple(self, filterInput=False, filterOutput=False):
+        # a implies b is the same as bool(a) ** bool(b)
+        values = filter(lambda x: (x.input ** filterInput) and (x.output ** filterOutput), self.values())
+        tuples = [list(map(lambda x: (c.name,x), c.types)) for c in values]
+        return itertools.product(*tuples)
 
-    def typePermutationsMap(self):
+    def typePermutationsMap(self, filterInput=False, filterOutput=False):
         result = {}
-        for permutation in self.typePermutationsTuple():
+        for permutation in self.typePermutationsTuple(filterInput, filterOutput):
             tmp = result
             constraints = []
             for constraint in permutation:

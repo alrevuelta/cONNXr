@@ -73,7 +73,7 @@ class PrototypeAliases(Template):
                             self.schema.operator_name,
                             t
                           ))
-                          for t in self.schema.constraints.typePermutations() ])
+                          for t in self.schema.constraints.typePermutations(filterInput=True) ])
 
 class PrototypeAlias(Prototype):
     def __init__(self, name, type):
