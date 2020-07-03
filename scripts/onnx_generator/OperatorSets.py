@@ -29,7 +29,7 @@ operator_set {name} = {{
 
     def __init__(self, domain, version, schemas):
         self.domain = domain
-        domain_sane = re.sub("\W","_",domain)
+        domain_sane = re.sub(r"\W","_",domain)
         self.version = version
         self.schemas = schemas
         self.name = f"operator_set__{domain_sane}__{version}"
@@ -71,11 +71,11 @@ operator_sets all_operator_sets = {{
         for version in versions:
             for domain, name2version2schema in domain2name2version2schema.items():
                 tmp = []
-                for name, version2schema in name2version2schema.items():
+                for _name, version2schema in name2version2schema.items():
                     for v in range(version, 0, -1):
                         if v in version2schema:
                             tmp.append(version2schema[v])
-                            break;
+                            break
                 # print(sets, domain, version, tmp)
                 sets.append(OperatorSet(domain, version, tmp))
 

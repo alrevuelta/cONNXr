@@ -13,7 +13,7 @@ def format_text(prefix, start, texts):
         if start:
             length += + len(start)
         # split text into words by splitting on space and remove empty splits ("")
-        # then split on newline boundaries, but keep emtpy splits ("\n\n")
+        # then split on newline boundaries, but keep empty splits ("\n\n")
         words = [w.split("\n") for w in text.strip().split(" ") if w != ""]
         words = list(itertools.chain(*words))
         for w in words:
@@ -79,29 +79,29 @@ class OnnxType(dict):
 
     class _Scanner:
         _tokens = {
-            re.compile("tensor")     : "tensor"    ,
-            re.compile("map")        : "map"       ,
-            re.compile("seq")        : "seq"       ,
-            re.compile("\(")         : "("         ,
-            re.compile("\)")         : ")"         ,
-            re.compile("float")      : "float"     ,
-            re.compile("uint8")      : "uint8"     ,
-            re.compile("int8")       : "int8"      ,
-            re.compile("uint16")     : "uint16"    ,
-            re.compile("int16")      : "int16"     ,
-            re.compile("int32")      : "int32"     ,
-            re.compile("int64")      : "int64"     ,
-            re.compile("string")     : "string"    ,
-            re.compile("bool")       : "bool"      ,
-            re.compile("float16")    : "float16"   ,
-            re.compile("double")     : "double"    ,
-            re.compile("uint32")     : "uint32"    ,
-            re.compile("uint64")     : "uint64"    ,
-            re.compile("complex64")  : "complex64" ,
-            re.compile("complex128") : "complex128",
-            re.compile("bfloat16")   : "bfloat16"  ,
-            re.compile(",")          :  ","        ,
-            re.compile("\s+")        :  None       ,
+            re.compile(r"tensor")     : "tensor"    ,
+            re.compile(r"map")        : "map"       ,
+            re.compile(r"seq")        : "seq"       ,
+            re.compile(r"\(")         : "("         ,
+            re.compile(r"\)")         : ")"         ,
+            re.compile(r"float")      : "float"     ,
+            re.compile(r"uint8")      : "uint8"     ,
+            re.compile(r"int8")       : "int8"      ,
+            re.compile(r"uint16")     : "uint16"    ,
+            re.compile(r"int16")      : "int16"     ,
+            re.compile(r"int32")      : "int32"     ,
+            re.compile(r"int64")      : "int64"     ,
+            re.compile(r"string")     : "string"    ,
+            re.compile(r"bool")       : "bool"      ,
+            re.compile(r"float16")    : "float16"   ,
+            re.compile(r"double")     : "double"    ,
+            re.compile(r"uint32")     : "uint32"    ,
+            re.compile(r"uint64")     : "uint64"    ,
+            re.compile(r"complex64")  : "complex64" ,
+            re.compile(r"complex128") : "complex128",
+            re.compile(r"bfloat16")   : "bfloat16"  ,
+            re.compile(r",")          :  ","        ,
+            re.compile(r"\s+")        :  None       ,
         }
 
         def __init__(self, string):
@@ -546,7 +546,7 @@ class OnnxSchema():
 
     def _operator_name(self, schema):
         name = f"operator__{self._domain(schema)}__{schema.name}__{schema.since_version}"
-        return re.sub("\W", "_", name).lower()
+        return re.sub(r"\W", "_", name).lower()
 
     def _domain(self, schema):
         domain = "onnx"
