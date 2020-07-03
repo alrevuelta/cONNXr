@@ -167,7 +167,7 @@ class Header(Template):
         self.path = path
         self.header_name=schema.operator_name.upper()
         self.doxygen = Doxygen(schema, path)
-        self.prototype = Prototype(schema.operator_name)
+        self.prototype = Prototype(schema.operator_name,attribute='extern __attribute__((weak))')
         self.resolver = PrototypeResolver(schema.operator_name)
         self.info = Info(schema)
         self.aliases = PrototypeAliases(schema)
