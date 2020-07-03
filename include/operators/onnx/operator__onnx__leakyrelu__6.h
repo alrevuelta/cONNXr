@@ -33,6 +33,7 @@
  * @see home/drechsler/git/cONNXr/third_party/onnx/onnx/onnx/defs/math/defs.cc:328
  * @see https://github.com/onnx/onnx/blob/master/docs/Operators.md#LeakyRelu
  */
+extern __attribute__((weak))
 operator_status operator__onnx__leakyrelu__6(
     node_context *ctx
 );
