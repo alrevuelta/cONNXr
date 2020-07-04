@@ -77,7 +77,7 @@ class PrototypeAliases(Template):
 
 class PrototypeAlias(Prototype):
     def __init__(self, name, type):
-        super().__init__(f"{name}", suffix=f"__{type}", attribute='extern __attribute__((weak))')
+        super().__init__(name, suffix=f"__{type}", attribute='')
 
 class PrototypeResolver(Prototype):
     def __init__(self, name):
@@ -134,7 +134,7 @@ class Doxygen(Template):
 
 class Info(Template):
     _template = '''
-extern __attribute__((weak)) operator_info info_{schema.operator_name};
+extern operator_info info_{schema.operator_name};
 '''
     def __init__(self, schema):
         self.schema = schema
@@ -153,12 +153,11 @@ class Header(Template):
 
 {doxygen}
 {prototype}
+{aliases}
 
 {resolver}
 
 {info}
-
-{aliases}
 # endif
 '''
 
@@ -167,7 +166,7 @@ class Header(Template):
         self.path = path
         self.header_name=schema.operator_name.upper()
         self.doxygen = Doxygen(schema, path)
-        self.prototype = Prototype(schema.operator_name,attribute='extern __attribute__((weak))')
+        self.prototype = Prototype(schema.operator_name)
         self.resolver = PrototypeResolver(schema.operator_name)
         self.info = Info(schema)
         self.aliases = PrototypeAliases(schema)

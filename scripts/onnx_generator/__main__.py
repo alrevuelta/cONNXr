@@ -67,6 +67,19 @@ parser.add_argument(
     help=f"where to put sets src in main path (default: {args.sets[0]})"
 )
 parser.add_argument(
+    "--no-stubs",
+    action='count',
+    default=args.no_stubs,
+    help="don't write stubs src"
+)
+parser.add_argument(
+    "--stubs",
+    nargs=1,
+    metavar="<path>",
+    default=args.stubs,
+    help=f"where to put stubs src in main path (default: {args.stubs[0]})"
+)
+parser.add_argument(
     "--no-info",
     action='count',
     default=args.no_info,

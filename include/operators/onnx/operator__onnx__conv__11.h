@@ -87,7 +87,7 @@
  * @see io/onnx/onnx/defs/nn/defs.cc:793
  * @see https://github.com/onnx/onnx/blob/master/docs/Operators.md#Conv
  */
-extern __attribute__((weak))
+__attribute__((weak))
 operator_status operator__onnx__conv__11(
     node_context *ctx
 );
@@ -98,15 +98,15 @@ operator_executer resolve_operator__onnx__conv__11(
 
 extern __attribute__((weak)) operator_info info_operator__onnx__conv__11;
 
-extern __attribute__((weak))
+__attribute__((weak))
 operator_status operator__onnx__conv__11__T_tensor_double(
     node_context *ctx
 );
-extern __attribute__((weak))
+__attribute__((weak))
 operator_status operator__onnx__conv__11__T_tensor_float(
     node_context *ctx
 );
-extern __attribute__((weak))
+__attribute__((weak))
 operator_status operator__onnx__conv__11__T_tensor_float16(
     node_context *ctx
 );

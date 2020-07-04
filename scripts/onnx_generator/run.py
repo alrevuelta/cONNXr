@@ -5,9 +5,11 @@ import pathlib
 from . import OperatorHeader
 from . import OperatorTypeResolver
 from . import OperatorSets
+from . import OperatorStubs
 from .OnnxWrapper import OnnxSchema
 from . import OperatorInfo
 from . import args
+import itertools
 
 def note(text, verbosity=0 ):
     if verbosity <= args.verbose:
@@ -153,6 +155,9 @@ resolvers = [ OperatorTypeResolver.Source(s,path) for s in schemas ]
 note("generating onnx operator sets")
 path = f"{args.path[-1]}/{args.sets[-1]}/"
 sets = OperatorSets.Source(headers,path)
+note("generating onnx operator stubs")
+path = f"{args.path[-1]}/{args.stubs[-1]}/"
+stubs = itertools.chain(*[ OperatorStubs.Sources(h,path) for h in headers ])
 note("generating onnx operator info")
 path = f"{args.path[-1]}/{args.info[-1]}/"
 info = [ OperatorInfo.Source(s, path) for s in schemas ]
@@ -164,6 +169,8 @@ if not args.no_resolve:
     files.extend(resolvers)
 if not args.no_sets:
     files.append(sets)
+if not args.no_stubs:
+    files.extend(stubs)
 if not args.no_info:
     files.extend(info)
 

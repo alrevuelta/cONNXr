@@ -81,7 +81,7 @@
  * @see io/onnx/onnx/defs/nn/defs.cc:1580
  * @see https://github.com/onnx/onnx/blob/master/docs/Operators.md#BatchNormalization
  */
-extern __attribute__((weak))
+__attribute__((weak))
 operator_status operator__onnx__batchnormalization__9(
     node_context *ctx
 );
@@ -92,15 +92,15 @@ operator_executer resolve_operator__onnx__batchnormalization__9(
 
 extern __attribute__((weak)) operator_info info_operator__onnx__batchnormalization__9;
 
-extern __attribute__((weak))
+__attribute__((weak))
 operator_status operator__onnx__batchnormalization__9__T_tensor_double(
     node_context *ctx
 );
-extern __attribute__((weak))
+__attribute__((weak))
 operator_status operator__onnx__batchnormalization__9__T_tensor_float(
     node_context *ctx
 );
-extern __attribute__((weak))
+__attribute__((weak))
 operator_status operator__onnx__batchnormalization__9__T_tensor_float16(
     node_context *ctx
 );
