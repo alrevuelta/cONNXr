@@ -114,7 +114,7 @@
  * @see io/onnx/onnx/defs/nn/defs.cc:363
  * @see https://github.com/onnx/onnx/blob/master/docs/Operators.md#MaxPool
  */
-extern __attribute__((weak))
+__attribute__((weak))
 operator_status operator__onnx__maxpool__12(
     node_context *ctx
 );
@@ -125,23 +125,23 @@ operator_executer resolve_operator__onnx__maxpool__12(
 
 extern __attribute__((weak)) operator_info info_operator__onnx__maxpool__12;
 
-extern __attribute__((weak))
+__attribute__((weak))
 operator_status operator__onnx__maxpool__12__T_tensor_double(
     node_context *ctx
 );
-extern __attribute__((weak))
+__attribute__((weak))
 operator_status operator__onnx__maxpool__12__T_tensor_float(
     node_context *ctx
 );
-extern __attribute__((weak))
+__attribute__((weak))
 operator_status operator__onnx__maxpool__12__T_tensor_float16(
     node_context *ctx
 );
-extern __attribute__((weak))
+__attribute__((weak))
 operator_status operator__onnx__maxpool__12__T_tensor_int8(
     node_context *ctx
 );
-extern __attribute__((weak))
+__attribute__((weak))
 operator_status operator__onnx__maxpool__12__T_tensor_uint8(
     node_context *ctx
 );

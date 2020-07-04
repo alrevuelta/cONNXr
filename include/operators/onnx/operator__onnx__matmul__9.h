@@ -38,7 +38,7 @@
  * @see io/onnx/onnx/defs/math/defs.cc:1035
  * @see https://github.com/onnx/onnx/blob/master/docs/Operators.md#MatMul
  */
-extern __attribute__((weak))
+__attribute__((weak))
 operator_status operator__onnx__matmul__9(
     node_context *ctx
 );
@@ -49,31 +49,31 @@ operator_executer resolve_operator__onnx__matmul__9(
 
 extern __attribute__((weak)) operator_info info_operator__onnx__matmul__9;
 
-extern __attribute__((weak))
+__attribute__((weak))
 operator_status operator__onnx__matmul__9__T_tensor_double(
     node_context *ctx
 );
-extern __attribute__((weak))
+__attribute__((weak))
 operator_status operator__onnx__matmul__9__T_tensor_float(
     node_context *ctx
 );
-extern __attribute__((weak))
+__attribute__((weak))
 operator_status operator__onnx__matmul__9__T_tensor_float16(
     node_context *ctx
 );
-extern __attribute__((weak))
+__attribute__((weak))
 operator_status operator__onnx__matmul__9__T_tensor_int32(
     node_context *ctx
 );
-extern __attribute__((weak))
+__attribute__((weak))
 operator_status operator__onnx__matmul__9__T_tensor_int64(
     node_context *ctx
 );
-extern __attribute__((weak))
+__attribute__((weak))
 operator_status operator__onnx__matmul__9__T_tensor_uint32(
     node_context *ctx
 );
-extern __attribute__((weak))
+__attribute__((weak))
 operator_status operator__onnx__matmul__9__T_tensor_uint64(
     node_context *ctx
 );
