@@ -63,8 +63,16 @@ Onnx__TensorProto* searchInputByName(node_context *ctx,
     return NULL;
   }
 
+  // Just return null if input name is empty (marked as skipped)
+  if (!*ctx->onnx_node->input[index]) {
+    return NULL;
+  }
+
   for (int i = 0; i < ctx->onnx_node->n_input; i++)
   {
+    if (!ctx->inputs[i]) {
+      continue;
+    }
     printf("Searching inputs %s, %s\n", ctx->inputs[i]->name, ctx->onnx_node->input[index]);
     if (!strcmp(ctx->inputs[i]->name, ctx->onnx_node->input[index]))
     {
