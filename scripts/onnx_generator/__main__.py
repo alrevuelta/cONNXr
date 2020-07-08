@@ -22,6 +22,36 @@ parser.add_argument(
     help="overwrite existing files"
 )
 parser.add_argument(
+    "--force-header",
+    action='count',
+    default=args.force_header,
+    help="overwrite headers"
+)
+parser.add_argument(
+    "--force-resolve",
+    action='count',
+    default=args.force_resolve,
+    help="overwrite resolver src"
+)
+parser.add_argument(
+    "--force-sets",
+    action='count',
+    default=args.force_sets,
+    help="overwrite sets src"
+)
+parser.add_argument(
+    "--force-stubs",
+    action='count',
+    default=args.force_stubs,
+    help="overwrite stubs src"
+)
+parser.add_argument(
+    "--force-info",
+    action='count',
+    default=args.force_info,
+    help="overwrite info src"
+)
+parser.add_argument(
     "-n", "--dryrun",
     action='count',
     default=args.dryrun,
