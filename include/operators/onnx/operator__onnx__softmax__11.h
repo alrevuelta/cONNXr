@@ -49,8 +49,16 @@
  * @see io/onnx/onnx/defs/math/defs.cc:783
  * @see https://github.com/onnx/onnx/blob/master/docs/Operators.md#Softmax
  */
-__attribute__((weak))
 operator_status operator__onnx__softmax__11(
+    node_context *ctx
+);
+operator_status operator__onnx__softmax__11__T_tensor_double(
+    node_context *ctx
+);
+operator_status operator__onnx__softmax__11__T_tensor_float(
+    node_context *ctx
+);
+operator_status operator__onnx__softmax__11__T_tensor_float16(
     node_context *ctx
 );
 
@@ -58,18 +66,5 @@ operator_executer resolve_operator__onnx__softmax__11(
     node_context *ctx
 );
 
-extern __attribute__((weak)) operator_info info_operator__onnx__softmax__11;
-
-__attribute__((weak))
-operator_status operator__onnx__softmax__11__T_tensor_double(
-    node_context *ctx
-);
-__attribute__((weak))
-operator_status operator__onnx__softmax__11__T_tensor_float(
-    node_context *ctx
-);
-__attribute__((weak))
-operator_status operator__onnx__softmax__11__T_tensor_float16(
-    node_context *ctx
-);
+extern operator_info info_operator__onnx__softmax__11;
 # endif

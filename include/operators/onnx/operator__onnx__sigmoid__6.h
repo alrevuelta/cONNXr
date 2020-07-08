@@ -32,8 +32,16 @@
  * @see io/onnx/onnx/defs/math/defs.cc:640
  * @see https://github.com/onnx/onnx/blob/master/docs/Operators.md#Sigmoid
  */
-__attribute__((weak))
 operator_status operator__onnx__sigmoid__6(
+    node_context *ctx
+);
+operator_status operator__onnx__sigmoid__6__T_tensor_double(
+    node_context *ctx
+);
+operator_status operator__onnx__sigmoid__6__T_tensor_float(
+    node_context *ctx
+);
+operator_status operator__onnx__sigmoid__6__T_tensor_float16(
     node_context *ctx
 );
 
@@ -41,18 +49,5 @@ operator_executer resolve_operator__onnx__sigmoid__6(
     node_context *ctx
 );
 
-extern __attribute__((weak)) operator_info info_operator__onnx__sigmoid__6;
-
-__attribute__((weak))
-operator_status operator__onnx__sigmoid__6__T_tensor_double(
-    node_context *ctx
-);
-__attribute__((weak))
-operator_status operator__onnx__sigmoid__6__T_tensor_float(
-    node_context *ctx
-);
-__attribute__((weak))
-operator_status operator__onnx__sigmoid__6__T_tensor_float16(
-    node_context *ctx
-);
+extern operator_info info_operator__onnx__sigmoid__6;
 # endif
