@@ -58,16 +58,14 @@
  * @see io/onnx/onnx/defs/generator/defs.cc:171
  * @see https://github.com/onnx/onnx/blob/master/docs/Operators.md#Constant
  */
-__attribute__((weak))
 operator_status operator__onnx__constant__12(
     node_context *ctx
 );
+
 
 operator_executer resolve_operator__onnx__constant__12(
     node_context *ctx
 );
 
-extern __attribute__((weak)) operator_info info_operator__onnx__constant__12;
-
-
+extern operator_info info_operator__onnx__constant__12;
 # endif

@@ -82,10 +82,11 @@ REPEAT_mnist=5
 CC=gcc
 CFLAGS+=-std=c99
 CFLAGS+=-Wall
+CFLAGS+=-g
 # CFLAGS+=-Werror # CI jobs run with flag enabled
 CPPFLAGS+=-D TRACE_LEVEL=$(TRACE_LEVEL)
 
-#LDFLAGS+=
+LDFLAGS+=-g
 LDLIBS+=-lcunit
 LDLIBS+=-lm
 
@@ -97,7 +98,7 @@ CPPFLAGS+=$(foreach DIR, $(INCDIR),-I $(DIR) )
 SRCDIR+=src/operators
 SRCDIR+=src/operators/info/onnx
 SRCDIR+=src/operators/resolve/onnx
-SRCDIR+=src/operators/implementation
+SRCDIR+=src/operators/implementation/onnx
 SRCDIR+=src/pb
 SRCS+=$(foreach DIR, $(SRCDIR), $(wildcard $(DIR)/*.c))
 SRCS+=src/inference.c
