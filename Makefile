@@ -248,6 +248,10 @@ onnx_generator:
 	$(if $(ONNX_VERSION), --version $(ONNX_VERSION)) \
 	$(if $(ONNX_DOMAINS), --domains $(ONNX_DOMAINS)) \
 	-vv \
+	--force-header \
+	--force-resolve \
+	--force-sets \
+	--force-info \
 	$(shell git rev-parse --show-toplevel)
 
 include .Makefile.template

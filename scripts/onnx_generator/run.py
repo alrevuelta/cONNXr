@@ -154,7 +154,7 @@ path = f"{args.path[-1]}/{args.resolve[-1]}/"
 resolvers = [ OperatorTypeResolver.Source(s,path) for s in schemas ]
 note("generating onnx operator sets")
 path = f"{args.path[-1]}/{args.sets[-1]}/"
-sets = OperatorSets.Source(headers,path)
+sets = [OperatorSets.Source(headers,path)]
 note("generating onnx operator stubs")
 path = f"{args.path[-1]}/{args.stubs[-1]}/"
 stubs = itertools.chain(*[ OperatorStubs.Sources(h,path) for h in headers ])
@@ -164,24 +164,24 @@ info = [ OperatorInfo.Source(s, path) for s in schemas ]
 
 files = []
 if not args.no_header:
-    files.extend(headers)
+    files.extend(map(lambda x: (bool(args.force_header),x),headers))
 if not args.no_resolve:
-    files.extend(resolvers)
+    files.extend(map(lambda x: (bool(args.force_resolve),x),resolvers))
 if not args.no_sets:
-    files.append(sets)
+    files.extend(map(lambda x: (bool(args.force_sets),x),sets))
 if not args.no_stubs:
-    files.extend(stubs)
+    files.extend(map(lambda x: (bool(args.force_stubs),x),stubs))
 if not args.no_info:
-    files.extend(info)
+    files.extend(map(lambda x: (bool(args.force_info),x),info))
 
 writecount = 0
 note("Writing files",1)
 if not args.path[-1]:
     warning("skipping write because args.path is not set")
 else:
-    for obj in files:
+    for force,obj in files:
         path = obj.filepath()
-        if path.exists() and not args.force:
+        if path.exists() and not (args.force or force):
             warning(f"skipping existing file '{path}'",1)
             continue
         note(f"writing file {path}",3)
