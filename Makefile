@@ -46,19 +46,19 @@ ONNX_CUSTOM=third_party/onnx/onnx.build
 VARIABLE+=ONNX_INCLUDE
 HELP_ONNX_INCLUDE=which schemas to include
 ifndef ONNX_INCLUDE
-ONNX_INCLUDE+="^Conv$$"
 ONNX_INCLUDE+="^Add$$"
-ONNX_INCLUDE+="^Relu$$"
-ONNX_INCLUDE+="^MaxPool$$"
-ONNX_INCLUDE+="^Reshape$$"
-ONNX_INCLUDE+="^MatMul$$"
 ONNX_INCLUDE+="^ArgMax$$"
 ONNX_INCLUDE+="^BatchNormalization$$"
+ONNX_INCLUDE+="^Constant$$"
+ONNX_INCLUDE+="^Conv$$"
+ONNX_INCLUDE+="^LeakyRelu$$"
+ONNX_INCLUDE+="^MatMul$$"
+ONNX_INCLUDE+="^MaxPool$$"
+ONNX_INCLUDE+="^Mul$$"
+ONNX_INCLUDE+="^Relu$$"
+ONNX_INCLUDE+="^Reshape$$"
 ONNX_INCLUDE+="^Sigmoid$$"
 ONNX_INCLUDE+="^Softmax$$"
-ONNX_INCLUDE+="^Mul$$"
-ONNX_INCLUDE+="^LeakyRelu$$"
-ONNX_INCLUDE+="^Constant$$"
 ONNX_INCLUDE+="^Transpose$$"
 endif
 
