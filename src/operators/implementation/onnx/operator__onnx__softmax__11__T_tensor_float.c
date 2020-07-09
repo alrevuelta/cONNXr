@@ -1,31 +1,73 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
+#include "operators/onnx/operator__onnx__softmax__11.h"
+
 #include "trace.h"
 #include "utils.h"
+#include <math.h>
+#include <stdlib.h>
 
-/* TODO
-// Works with 1 dimension.
-void xx(void *x, int dimx, int dimy)
-{
-  // TODO Use dimy to work with 2 dimensions.
-  float sumExp = 0;
-  float *xf = (float*) x;
-  for (int i = 0; i < dimx; i++) {
-    sumExp += exp(xf[i]);
-  }
+static inline
+void
+softmax(float *in, float *out, int num) {
 
-  for (int i = 0; i < dimx; i++) {
-    xf[i] = exp(xf[i])/sumExp;
-  }
-}*/
+    float max = 0;
+    for (int i = 0; i < num; i++) {
+        if (in[i] > max) {
+            max = in[i];
+        }
+    }
 
+    float sum = 0;
+    for (int i = 0; i < num; i++) {
+        //reducing all arguments by fixed value (max) keeps ratio,
+        //but expf will never return inf for large arguments
+        float e = expf(in[i] - max);
+        sum += e;
+        out[i] = e;
+    }
+    for (int i = 0; i < num; i++) {
+        out[i] /= sum;
+    }
+}
 
-operator_status operator__onnx__softmax__11__T_tensor_float(
+operator_status
+operator__onnx__softmax__11__T_tensor_float(
     node_context *ctx
 )
 {
-  printf("Operator softmax not implemented\n");
-  return 1;
+    TRACE_LEVEL0("Calling operator_softmax\n");
+
+    Onnx__TensorProto *t_input  = searchInputByName(ctx, 0);
+    Onnx__TensorProto *t_output = searchOutputByName(ctx, 0);
+    Onnx__AttributeProto *a_axis = searchAttributeNyName(ctx->onnx_node->n_attribute, ctx->onnx_node->attribute, "axis");
+
+    //wrap axis if negative
+    int axis = a_axis?a_axis->i:1;
+    if (axis < 0) {
+        axis += t_input->n_dims;
+    }
+
+    t_output->has_raw_data = 0;
+    t_output->data_type = t_input->data_type;
+    t_output->n_dims = t_input->n_dims;
+    t_output->dims = malloc(t_output->n_dims * sizeof(int64_t));
+    t_output->n_float_data = t_input->n_float_data;
+    t_output->float_data = malloc(t_output->n_float_data * sizeof(float));
+
+    int N = 1;
+    int D = 1;
+    for (int i = 0; i < t_input->n_dims; i++) {
+        if (i < axis) {
+            N *= t_input->dims[i];
+        } else {
+            D *= t_input->dims[i];
+        }
+        t_output->dims[i] = t_input->dims[i];
+    }
+
+    for (int n = 0; n < N; n++) {
+        int offset = D*n;
+        softmax(&t_input->float_data[offset], &t_output->float_data[offset], D);
+    }
+
+    return OP_OK;
 }
