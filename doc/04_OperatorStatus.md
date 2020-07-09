@@ -137,7 +137,7 @@
   - ![not_implemented] [Sinh](https://github.com/onnx/onnx/blob/master/docs/Operators.md#Sinh)
   - ![not_implemented] [Size](https://github.com/onnx/onnx/blob/master/docs/Operators.md#Size)
   - ![not_implemented] [Slice](https://github.com/onnx/onnx/blob/master/docs/Operators.md#Slice)
-  - ![stubbed] [Softmax](https://github.com/onnx/onnx/blob/master/docs/Operators.md#Softmax)
+  - ![implemented] [Softmax](https://github.com/onnx/onnx/blob/master/docs/Operators.md#Softmax)
   - ![not_implemented] [Softplus](https://github.com/onnx/onnx/blob/master/docs/Operators.md#Softplus)
   - ![not_implemented] [Softsign](https://github.com/onnx/onnx/blob/master/docs/Operators.md#Softsign)
   - ![not_implemented] [SpaceToDepth](https://github.com/onnx/onnx/blob/master/docs/Operators.md#SpaceToDepth)
