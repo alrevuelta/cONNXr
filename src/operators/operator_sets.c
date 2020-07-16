@@ -2,9 +2,11 @@
 #include "operators/operator_sets.h"
 
 #include "operators/onnx/operator__onnx__matmul__9.h"
+#include "operators/onnx/operator__onnx__identity__1.h"
 #include "operators/onnx/operator__onnx__maxpool__12.h"
 #include "operators/onnx/operator__onnx__transpose__1.h"
 #include "operators/onnx/operator__onnx__clip__12.h"
+#include "operators/onnx/operator__onnx__elu__6.h"
 #include "operators/onnx/operator__onnx__relu__6.h"
 #include "operators/onnx/operator__onnx__conv__11.h"
 #include "operators/onnx/operator__onnx__argmax__12.h"
@@ -21,9 +23,13 @@
 operator_set operator_set__onnx__1 = {
   .version = 1,
   .domain  = "onnx",
-  .length  = 2,
+  .length  = 3,
   .entries = {
     {
+  .name = "Identity",
+  .resolver = (operator_resolver) resolve_operator__onnx__identity__1,
+  .info = &info_operator__onnx__identity__1
+},{
   .name = "Transpose",
   .resolver = (operator_resolver) resolve_operator__onnx__transpose__1,
   .info = &info_operator__onnx__transpose__1
@@ -38,9 +44,13 @@ operator_set operator_set__onnx__1 = {
 operator_set operator_set__onnx__5 = {
   .version = 5,
   .domain  = "onnx",
-  .length  = 3,
+  .length  = 4,
   .entries = {
     {
+  .name = "Identity",
+  .resolver = (operator_resolver) resolve_operator__onnx__identity__1,
+  .info = &info_operator__onnx__identity__1
+},{
   .name = "Transpose",
   .resolver = (operator_resolver) resolve_operator__onnx__transpose__1,
   .info = &info_operator__onnx__transpose__1
@@ -59,12 +69,20 @@ operator_set operator_set__onnx__5 = {
 operator_set operator_set__onnx__6 = {
   .version = 6,
   .domain  = "onnx",
-  .length  = 6,
+  .length  = 8,
   .entries = {
     {
+  .name = "Identity",
+  .resolver = (operator_resolver) resolve_operator__onnx__identity__1,
+  .info = &info_operator__onnx__identity__1
+},{
   .name = "Transpose",
   .resolver = (operator_resolver) resolve_operator__onnx__transpose__1,
   .info = &info_operator__onnx__transpose__1
+},{
+  .name = "Elu",
+  .resolver = (operator_resolver) resolve_operator__onnx__elu__6,
+  .info = &info_operator__onnx__elu__6
 },{
   .name = "Relu",
   .resolver = (operator_resolver) resolve_operator__onnx__relu__6,
@@ -92,12 +110,20 @@ operator_set operator_set__onnx__6 = {
 operator_set operator_set__onnx__7 = {
   .version = 7,
   .domain  = "onnx",
-  .length  = 8,
+  .length  = 10,
   .entries = {
     {
+  .name = "Identity",
+  .resolver = (operator_resolver) resolve_operator__onnx__identity__1,
+  .info = &info_operator__onnx__identity__1
+},{
   .name = "Transpose",
   .resolver = (operator_resolver) resolve_operator__onnx__transpose__1,
   .info = &info_operator__onnx__transpose__1
+},{
+  .name = "Elu",
+  .resolver = (operator_resolver) resolve_operator__onnx__elu__6,
+  .info = &info_operator__onnx__elu__6
 },{
   .name = "Relu",
   .resolver = (operator_resolver) resolve_operator__onnx__relu__6,
@@ -133,16 +159,24 @@ operator_set operator_set__onnx__7 = {
 operator_set operator_set__onnx__9 = {
   .version = 9,
   .domain  = "onnx",
-  .length  = 10,
+  .length  = 12,
   .entries = {
     {
   .name = "MatMul",
   .resolver = (operator_resolver) resolve_operator__onnx__matmul__9,
   .info = &info_operator__onnx__matmul__9
 },{
+  .name = "Identity",
+  .resolver = (operator_resolver) resolve_operator__onnx__identity__1,
+  .info = &info_operator__onnx__identity__1
+},{
   .name = "Transpose",
   .resolver = (operator_resolver) resolve_operator__onnx__transpose__1,
   .info = &info_operator__onnx__transpose__1
+},{
+  .name = "Elu",
+  .resolver = (operator_resolver) resolve_operator__onnx__elu__6,
+  .info = &info_operator__onnx__elu__6
 },{
   .name = "Relu",
   .resolver = (operator_resolver) resolve_operator__onnx__relu__6,
@@ -182,16 +216,24 @@ operator_set operator_set__onnx__9 = {
 operator_set operator_set__onnx__11 = {
   .version = 11,
   .domain  = "onnx",
-  .length  = 12,
+  .length  = 14,
   .entries = {
     {
   .name = "MatMul",
   .resolver = (operator_resolver) resolve_operator__onnx__matmul__9,
   .info = &info_operator__onnx__matmul__9
 },{
+  .name = "Identity",
+  .resolver = (operator_resolver) resolve_operator__onnx__identity__1,
+  .info = &info_operator__onnx__identity__1
+},{
   .name = "Transpose",
   .resolver = (operator_resolver) resolve_operator__onnx__transpose__1,
   .info = &info_operator__onnx__transpose__1
+},{
+  .name = "Elu",
+  .resolver = (operator_resolver) resolve_operator__onnx__elu__6,
+  .info = &info_operator__onnx__elu__6
 },{
   .name = "Relu",
   .resolver = (operator_resolver) resolve_operator__onnx__relu__6,
@@ -239,12 +281,16 @@ operator_set operator_set__onnx__11 = {
 operator_set operator_set__onnx__12 = {
   .version = 12,
   .domain  = "onnx",
-  .length  = 16,
+  .length  = 18,
   .entries = {
     {
   .name = "MatMul",
   .resolver = (operator_resolver) resolve_operator__onnx__matmul__9,
   .info = &info_operator__onnx__matmul__9
+},{
+  .name = "Identity",
+  .resolver = (operator_resolver) resolve_operator__onnx__identity__1,
+  .info = &info_operator__onnx__identity__1
 },{
   .name = "MaxPool",
   .resolver = (operator_resolver) resolve_operator__onnx__maxpool__12,
@@ -257,6 +303,10 @@ operator_set operator_set__onnx__12 = {
   .name = "Clip",
   .resolver = (operator_resolver) resolve_operator__onnx__clip__12,
   .info = &info_operator__onnx__clip__12
+},{
+  .name = "Elu",
+  .resolver = (operator_resolver) resolve_operator__onnx__elu__6,
+  .info = &info_operator__onnx__elu__6
 },{
   .name = "Relu",
   .resolver = (operator_resolver) resolve_operator__onnx__relu__6,
