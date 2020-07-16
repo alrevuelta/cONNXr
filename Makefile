@@ -63,6 +63,8 @@ ONNX_INCLUDE+="^Reshape$$"
 ONNX_INCLUDE+="^Sigmoid$$"
 ONNX_INCLUDE+="^Softmax$$"
 ONNX_INCLUDE+="^Transpose$$"
+ONNX_INCLUDE+="^Elu$$"
+ONNX_INCLUDE+="^Identity$$"
 endif
 
 VARIABLE+=ONNX_VERSION
