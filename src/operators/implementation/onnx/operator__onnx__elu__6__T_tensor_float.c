@@ -24,7 +24,6 @@
 
    debug_print_dims(X->n_dims, X->dims);
 
-   /* TODO Alpha is not always float */
    /* Default value */
    float alpha = 1.0;
 
