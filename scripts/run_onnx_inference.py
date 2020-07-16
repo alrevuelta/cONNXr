@@ -21,9 +21,9 @@ from skl2onnx.helpers.onnx_helper import load_onnx_model
     provided to inspect the intermediate outputs of a model.
 """
 
-test_data_dir = 'test/super_resolution/test_data_set_0'
-model_path = 'test/super_resolution/super_resolution.onnx'
-input_name = "input"
+test_data_dir = 'test/mobilenetv2-1.0/test_data_set_0'
+model_path = 'test/mobilenetv2-1.0/mobilenetv2-1.0.onnx'
+input_name = "data"
 
 inputs = []
 inputs_num = len(glob.glob(os.path.join(test_data_dir, 'input_*.pb')))
@@ -65,13 +65,14 @@ def print_specific_output(model_path, input_tensor, output_name, print_tensor=Fa
         print(out_tensor[0])
 
 
-print_model_outputs(model_path, inputDict, print_tensor=False)
-#print_specific_output(model_path, inputDict, '9', print_tensor=True)
-sess = rt.InferenceSession(model_path)
-out = sess.run(None, inputDict)
+#print_model_outputs(model_path, inputDict, print_tensor=False)
+inputDict['data'] = inputDict['data'].reshape((1, 3, 224, 224))
+print_specific_output(model_path, inputDict, 'mobilenetv20_features_relu0_fwd', print_tensor=True)
+#sess = rt.InferenceSession(model_path)
+#out = sess.run(None, inputDict)
 
-print(out[0].shape)
-print(out[0])
-print(out[0][:,:,0:5,0:5])
+#print(out[0].shape)
+#print(out[0])
+#print(out[0][:,:,0:5,0:5])
 
-print("input", inputs[0])
+#print("input", inputs[0])

@@ -12,7 +12,8 @@ void resolve(Onnx__ModelProto *model,
              int nInputs);
 
 /* TODO Shouldn't be global */
-extern node_context all_context[50];
+#define MAX_NUM_OF_NODES 200
+extern node_context all_context[MAX_NUM_OF_NODES];
 extern int _populatedIdx;
 
 #endif

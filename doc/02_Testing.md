@@ -27,3 +27,35 @@ You can also run a single model with `MODELS=`. In this case we run the `mnist` 
 ```
 make test_models MODELS=mnist
 ```
+
+
+## Debugging tools
+If you are implementing a new model but you can get the end to end test cases to pass, you might want to use some of the tools that we have. Using the CLI, you can provide the option `--dump-file`. This will dump all the intermediate outputs to a file, that you can use later on to compare against the expected values.
+
+The `dump.txt` file will look something like this.
+
+```
+name=output_name
+shape=shape1,shape2,...
+tensor=value1,value2,value3,...
+name=output_name
+shape=shape1,shape2,...
+tensor=value1,value2,value3,...
+...
+```
+
+So in this file you have all the data that cONNXr has calculated for every node. Now you can compare this against the expected outputs of that model. For this purpose, we have `scripts/assert_nodes.py`. This script gets the output tensor that cONNXr calculated, and compares it against the one calculated by the official ONNX backend. This is a great tool if you want to find the node that is causing problems. This script will point to the node that is not matching the expected values.
+
+Note that this feature is under development.
+
+Example how to dump data
+```c
+build/connxr test/mobilenetv2-1.0/mobilenetv2-1.0.onnx test/mobilenetv2-1.0/test_data_set_0/input_0.pb --dump-file
+```
+
+Example how to use the Python script:
+
+TODO
+```c
+python3 scripts/assert_nodes.py
+```

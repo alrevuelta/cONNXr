@@ -8,7 +8,7 @@
 #include "operators/operator_sets.h"
 
 // Won't be global in the future
-node_context all_context[50];
+node_context all_context[MAX_NUM_OF_NODES];
 int _populatedIdx = 0;
 
 void resolve(Onnx__ModelProto *model,
@@ -18,6 +18,12 @@ void resolve(Onnx__ModelProto *model,
   /* Resolving operators and input/outputs. Has to be moved outside of infeference */
   TRACE_LEVEL0("Resolving\n");
   _populatedIdx = -1;
+
+  if (model->graph->n_node > MAX_NUM_OF_NODES){
+    printf("The number of nodes of the model is greater than the hardcoded one\n");
+    exit(-1);
+  }
+
   for (int nodeIdx = 0; nodeIdx < model->graph->n_node; nodeIdx++)
   {
     all_context[nodeIdx].onnx_node = model->graph->node[nodeIdx];
@@ -72,7 +78,7 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
   /* Run inference */
   for (int nodeIdx = 0; nodeIdx < model->graph->n_node; nodeIdx++)
   {
-    printf("Running node %d\n", nodeIdx);
+    printf("Running node %d, operator=%s\n", nodeIdx, model->graph->node[nodeIdx]->op_type);
     all_context[nodeIdx].resolved_op(&all_context[nodeIdx]);
     Debug_PrintTensorProto(all_context[nodeIdx].outputs[0]);
   }

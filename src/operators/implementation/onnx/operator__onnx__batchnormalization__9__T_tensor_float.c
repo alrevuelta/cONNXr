@@ -47,15 +47,11 @@ operator_status operator__onnx__batchnormalization__9__T_tensor_float(
   for(int i = 0; i < Y->n_dims; i++){
     Y->dims[i] = X->dims[i];
   }
-
   Y->has_raw_data = 0;
-
-  // TODO
-  Y->data_type = X->data_type;
-
-  Y->data_type = ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT;
+  Y->data_type    = ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT;
   Y->n_float_data = X->n_float_data;
-  Y->float_data = malloc(Y->n_float_data * sizeof(float));
+  Y->float_data   = malloc(Y->n_float_data * sizeof(float));
+
   for (int i = 0; i < Y->n_float_data; i++) {
     int index = (i/(X->dims[2] * X->dims[3])) % X->dims[1];
     //TRACE_LEVEL0("input=%f\n", X->float_data[i]);

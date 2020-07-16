@@ -16,7 +16,7 @@ int main(int argc, char **argv){
     - .pb input to feed (This has to be modified to support an arbitrary number)
   Example: connxr model.onnx input.pb
   */
-  if (argc == 3){
+  if (argc >= 3){
     printf("Loading model %s...", argv[1]);
     Onnx__ModelProto *model = openOnnxFile(argv[1]);
     if (model != NULL){printf("ok!\n");}
@@ -44,7 +44,7 @@ int main(int argc, char **argv){
     start = clock();
     Onnx__TensorProto **output = inference(model, inputs, 1);
     end = clock();
-    printf("ok!\n"); // TODO Print nok if it fails
+    printf("finished!\n");
 
     // TODO Is CLOCKS_PER_SEC ok to use?
     cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
@@ -54,6 +54,29 @@ int main(int argc, char **argv){
     for (int i = 0; i < all_context[_populatedIdx].outputs[0]->n_float_data; i++){
       //printf("n_float_data[%d] = %f\n", i, all_context[_populatedIdx].outputs[0]->float_data[i]);
     }
+
+    if ((argc == 4) && !strcmp(argv[3], "--dump-file")){
+      printf("Writing dump file with intermediate outputs\n");
+      //int max_print = 10;
+      FILE *fp = fopen("dump.txt", "w+");
+      for (int i = 0; i < _populatedIdx + 1; i++){
+        fprintf(fp, "name=%s\n", all_context[i].outputs[0]->name);
+        fprintf(fp, "shape=");
+        for (int dim_index = 0; dim_index < all_context[i].outputs[0]->n_dims; dim_index++){
+          fprintf(fp, "%lld,", all_context[i].outputs[0]->dims[dim_index]);
+        }
+        fprintf(fp, "\n");
+        //int float_to_print = all_context[i].outputs[0]->n_float_data > max_print ? max_print : all_context[i].outputs[0]->n_float_data;
+        fprintf(fp, "tensor=");
+        /* TODO: Just implemented for float */
+        for (int data_index = 0; data_index < all_context[i].outputs[0]->n_float_data; data_index++){
+          fprintf(fp, "%f,", all_context[i].outputs[0]->float_data[data_index]);
+        }
+        fprintf(fp, "\n");
+      }
+      fclose(fp);
+    }
+
   }else{
     printf("Wrong inputs\n");
   }

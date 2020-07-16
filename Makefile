@@ -21,6 +21,7 @@ ifndef MODELS
 MODELS+=mnist
 MODELS+=tinyyolov2
 MODELS+=super_resolution
+MODELS+=mobilenetv2
 endif
 
 VARIABLE+=OPERATORS
@@ -80,6 +81,7 @@ $(foreach MODEL, $(MODELS), $(eval REPEAT_$(MODEL)=$(REPEAT)))
 REPEAT_tinyyolov2=1
 REPEAT_super_resolution=1
 REPEAT_mnist=5
+REPEAT_mobilenetv2=1
 
 CC=gcc
 CFLAGS+=-std=c99

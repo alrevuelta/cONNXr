@@ -12,6 +12,7 @@
 #include "test/models/test_model_mnist.h"
 #include "test/models/test_model_tinyyolov2.h"
 #include "test/models/test_model_super_resolution.h"
+#include "test/models/test_model_mobilenetv2.h"
 #include "test/models/common_models.h"
 
 int main(int argc, char **argv)
@@ -638,6 +639,7 @@ int main(int argc, char **argv)
   CU_add_test(modelsTestSuite, "test_model_mnist", test_model_mnist);
   CU_add_test(modelsTestSuite, "test_model_tinyyolov2", test_model_tinyyolov2);
   CU_add_test(modelsTestSuite, "test_model_super_resolution", test_model_super_resolution);
+  CU_add_test(modelsTestSuite, "test_model_mobilenetv2", test_model_mobilenetv2);
 
   CU_basic_set_mode(CU_BRM_VERBOSE);
 
