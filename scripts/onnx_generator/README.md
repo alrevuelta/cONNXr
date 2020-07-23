@@ -12,7 +12,7 @@
 
 ```
 $ python -m onnx_generator -h
-usage: onnx_generator [-h] [--onnx <path>] [-v] [--header <path>] [--src <path>] [-i <regex> [<regex> ...]]
+usage: onnx_generator [-h] [-v] [--header <path>] [--src <path>] [-i <regex> [<regex> ...]]
                       [-e <regex> [<regex> ...]]
                       [--] <path>
 
@@ -21,7 +21,6 @@ positional arguments:
 
 optional arguments:
   -h, --help            show this help message and exit
-  --onnx <path>         use custom onnx_cpp2py_export.so located in <path> dir
   -v, --verbose         verbose output
   --header <path>       where to put headers in main path (default: include/operators)
   --src <path>          where to put sources in main path (default: src/operators)
@@ -37,8 +36,6 @@ optional arguments:
 import onnx_generator
 import onnx_generator.args as args
 print(args.path)
-### []
-print(args.onnx)
 ### []
 print(args.include)
 ### ['.*']

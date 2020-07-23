@@ -246,6 +246,7 @@ format-check:
 HELP_onnx_generator=generate various onnx sources and headers
 TARGET+=onnx_generator
 onnx_generator:
+	pip install -r requirements.txt
 	cd scripts; python -m onnx_generator \
 	$(if $(ONNX_INCLUDE), --include $(ONNX_INCLUDE)) \
 	$(if $(ONNX_EXCLUDE), --exclude $(ONNX_EXCLUDE)) \
