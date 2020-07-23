@@ -1,7 +1,7 @@
 
 VARIABLE+=TRACE_LEVEL
 HELP_TRACE_LEVEL=trace verbosity
-TRACE_LEVEL?=0
+# TRACE_LEVEL?=0
 
 VARIABLE+=BUILDDIR
 HELP_BUILDDIR=build directory
@@ -88,9 +88,11 @@ REPEAT_mobilenetv2=1
 CC=gcc
 CFLAGS+=-std=c99
 CFLAGS+=-Wall
-CFLAGS+=-g
+CFLAGS+=-g3 -gdwarf -O2
 # CFLAGS+=-Werror # CI jobs run with flag enabled
-CPPFLAGS+=-D TRACE_LEVEL=$(TRACE_LEVEL)
+ifdef TRACE_LEVEL
+CPPFLAGS+=-D "TRACE_LEVEL=$(TRACE_LEVEL)"
+endif
 
 LDFLAGS+=-g
 LDLIBS+=-lcunit
@@ -167,7 +169,7 @@ HELP_benchmark_$(1)=run $(1) benchmark
 TARGET_benchmark+=benchmark_$(1)
 benchmark_$(1): $(BENCHMARKDIR)/$(1).txt
 #Dont trace to run faster
-TRACE_LEVEL=-1
+# TRACE_LEVEL=-1
 $(BENCHMARKDIR)/$(1).txt: runtest
 	rm -f $(BENCHMARKDIR)/$(1).txt
 	mkdir -p $(BENCHMARKDIR)
