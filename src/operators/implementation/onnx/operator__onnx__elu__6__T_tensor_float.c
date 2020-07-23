@@ -27,9 +27,9 @@
    /* Default value */
    float alpha = 1.0;
 
-   /* If there is an attribute, its alpha */
-   if (ctx->onnx_node->n_attribute == 1){
-     alpha = ctx->onnx_node->attribute[0]->f;
+   Onnx__AttributeProto *a_alpha = searchAttributeNyName(ctx->onnx_node->n_attribute,ctx->onnx_node->attribute, "alpha");
+   if (a_alpha) {
+     alpha = a_alpha->f;
    }
 
    Y->dims = malloc(X->n_dims * sizeof(int64_t));
