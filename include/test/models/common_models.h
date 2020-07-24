@@ -62,14 +62,14 @@ void test_model(
 
   resolve(model, inputs, 1);
   start = clock();
-  Onnx__TensorProto **output = inference(model, inputs, 1);
+  inference(model, inputs, 1);
   end = clock();
 
   cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
 
   printf("[benchmark][%s] cycles: %f\n", model_id, (double) (end - start));
   printf("[benchmark][%s] cpu_time_used: %f\n", model_id, cpu_time_used);
-  printf("[benchmark][%s] CLOCKS_PER_SEC: %d\n", model_id, CLOCKS_PER_SEC);
+  printf("[benchmark][%s] CLOCKS_PER_SEC: %lld\n", model_id, (long long int)CLOCKS_PER_SEC);
 
   //Asserts the result using the last calculated output.
   printf("Will compare output %d = %s", _populatedIdx, all_context[_populatedIdx].outputs[0]->name);

@@ -165,7 +165,7 @@ void testOperator(char *outputName)
 
   resolve(model, inputs, nInputs);
   printf("Running inference\n");
-  Onnx__TensorProto **output = inference(model, inputs, nInputs);
+  inference(model, inputs, nInputs);
 
   /* Some operators have more than two outputs to assert */
   printf("Will compare output %d = %s", _populatedIdx, all_context[_populatedIdx].outputs[0]->name);

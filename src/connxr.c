@@ -1,3 +1,4 @@
+#include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -42,7 +43,7 @@ int main(int argc, char **argv){
     resolve(model, inputs, 1);
     printf("Running inference on %s model...\n", model->graph->name);
     start = clock();
-    Onnx__TensorProto **output = inference(model, inputs, 1);
+    inference(model, inputs, 1);
     end = clock();
     printf("finished!\n");
 
@@ -63,7 +64,7 @@ int main(int argc, char **argv){
         fprintf(fp, "name=%s\n", all_context[i].outputs[0]->name);
         fprintf(fp, "shape=");
         for (int dim_index = 0; dim_index < all_context[i].outputs[0]->n_dims; dim_index++){
-          fprintf(fp, "%lld,", all_context[i].outputs[0]->dims[dim_index]);
+          fprintf(fp, "%" PRId64 ",", all_context[i].outputs[0]->dims[dim_index]);
         }
         fprintf(fp, "\n");
         //int float_to_print = all_context[i].outputs[0]->n_float_data > max_print ? max_print : all_context[i].outputs[0]->n_float_data;
