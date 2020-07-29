@@ -131,7 +131,7 @@ Onnx__ModelProto* openOnnxFile(char *fname){
   long len = ftell(fl);
   uint8_t *ret = malloc(len);
   fseek(fl, 0, SEEK_SET);
-  fread(ret, 1, len, fl);
+  for(long read = 0; read < len; read += fread(ret, 1, len-read, fl));
   fclose(fl);
 
   TRACE_LEVEL0("length of file is %ld\n", len);
@@ -155,7 +155,7 @@ Onnx__TensorProto *openTensorProtoFile(char *fname){
   long len = ftell(fl);
   uint8_t *ret = malloc(len);
   fseek(fl, 0, SEEK_SET);
-  fread(ret, 1, len, fl);
+  for(long read = 0; read < len; read += fread(ret, 1, len-read, fl));
   fclose(fl);
 
   TRACE_LEVEL0("length of file %ld\n", len);

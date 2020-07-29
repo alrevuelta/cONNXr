@@ -1,6 +1,7 @@
 #ifndef TRACE_H
 #define TRACE_H
 #include "onnx.pb-c.h"
+#include <stdio.h>
 
 /* How to trace?
  * Use different macros for different tracing levels 0-2. When compiling, set
