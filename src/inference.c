@@ -45,8 +45,7 @@ void resolve(Onnx__ModelProto *model,
     {
       all_context[nodeIdx].outputs[i] = malloc(sizeof(Onnx__TensorProto));
       init_tensor_proto(all_context[nodeIdx].outputs[i]);
-      all_context[nodeIdx].outputs[i]->name = malloc(sizeof(char) * 50);
-      strcpy(all_context[nodeIdx].outputs[i]->name, model->graph->node[nodeIdx]->output[i]);
+      all_context[nodeIdx].outputs[i]->name = strdup(model->graph->node[nodeIdx]->output[i]);
 
       // TODO This is unset at this point but set afterward inside each
       // function. However there is a problem because some node output
