@@ -2,21 +2,27 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include "trace.h"
+#include "tracing.h"
 #include "utils.h"
 
 operator_status operator__onnx__batchnormalization__9__T_tensor_float(
     node_context *ctx
 )
 {
-  TRACE_LEVEL0("Calling operator_batchnormalization\n");
-
+  TRACE_ENTRY(1);
+  TRACE_NODE(2, true, ctx->onnx_node);
 
   Onnx__TensorProto *X = searchInputByName(ctx, 0);
   Onnx__TensorProto *scale = searchInputByName(ctx, 1);
   Onnx__TensorProto *B = searchInputByName(ctx, 2);
   Onnx__TensorProto *mean = searchInputByName(ctx, 3);
   Onnx__TensorProto *var = searchInputByName(ctx, 4);
+
+  TRACE_TENSOR(2, true, X);
+  TRACE_TENSOR(2, true, scale);
+  TRACE_TENSOR(2, true, B);
+  TRACE_TENSOR(2, true, mean);
+  TRACE_TENSOR(2, true, var);
 
   Onnx__TensorProto *Y = searchOutputByName(ctx, 0);
 
@@ -33,7 +39,6 @@ operator_status operator__onnx__batchnormalization__9__T_tensor_float(
   }
 
   //Onnx__AttributeProto *momentumAttr = searchAttributeNyName(n_attribute, attribute, "momentum");
-  debug_print_attributes(ctx->onnx_node->n_attribute,ctx->onnx_node->attribute);
   /* Epsilon is hardcoded to float */
   float eps = 0.00001; /* Default value */
 
@@ -53,12 +58,21 @@ operator_status operator__onnx__batchnormalization__9__T_tensor_float(
   Y->float_data   = malloc(Y->n_float_data * sizeof(float));
 
   for (int i = 0; i < Y->n_float_data; i++) {
+    TRACE_BOUND(3, true, i, 0, (int)Y->n_float_data, "%d");
     int index = (i/(X->dims[2] * X->dims[3])) % X->dims[1];
-    //TRACE_LEVEL0("input=%f\n", X->float_data[i]);
-    //TRACE_LEVEL0("index=%dmean=%f, var=%f, scale=%f, B=%f\n", index, mean, var, scale, B);
+    TRACE_VAR(3, true, X->float_data[i], "%f");
+    TRACE_VAR(3, true, index, "%d");
+    TRACE_VAR(3, true, mean->float_data[index], "%f");
+    TRACE_VAR(3, true, var->float_data[index], "%f");
+    TRACE_VAR(3, true, scale->float_data[index], "%f");
+    TRACE_VAR(3, true, B->float_data[index], "%f");
     Y->float_data[i] = (X->float_data[i] - mean->float_data[index]) / sqrtf(var->float_data[index] + eps);
     Y->float_data[i] = scale->float_data[index] * Y->float_data[i] + B->float_data[index];
+    TRACE_VAR(3, true, Y->float_data[i], "%f");
   }
+
+  TRACE_TENSOR(2, true, Y);
+  TRACE_EXIT(1);
 
   return 0;
 }

@@ -2,20 +2,23 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include "trace.h"
+#include "tracing.h"
 #include "utils.h"
 
 operator_status operator__onnx__add__7__T_tensor_float(
     node_context *ctx
 )
 {
-  TRACE_LEVEL0("Calling operator_add\n");
+  TRACE_ENTRY(1);
+  TRACE_NODE(2, true, ctx->onnx_node);
 
   Onnx__TensorProto *A = searchInputByName(ctx, 0);
   Onnx__TensorProto *B = searchInputByName(ctx, 1);
-  Onnx__TensorProto *C = searchOutputByName(ctx, 0);
 
-  debug_print_dims(A->n_dims, A->dims);
+  TRACE_TENSOR(2, true, A);
+  TRACE_TENSOR(2, true, B);
+
+  Onnx__TensorProto *C = searchOutputByName(ctx, 0);
 
   if (0){
     /* TODO: Check some conditions. For example if a specific
@@ -68,6 +71,8 @@ operator_status operator__onnx__add__7__T_tensor_float(
     }
   }
 
-  debug_print_dims(C->n_dims, C->dims);
+  TRACE_TENSOR(2, true, C);
+  TRACE_EXIT(1);
+
   return 0;
 }

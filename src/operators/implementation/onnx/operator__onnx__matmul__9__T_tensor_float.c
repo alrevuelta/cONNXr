@@ -2,22 +2,22 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include "trace.h"
+#include "tracing.h"
 #include "utils.h"
 
 operator_status operator__onnx__matmul__9__T_tensor_float(
     node_context *ctx
 )
 {
-  TRACE_LEVEL0("Calling operator_matmul\n");
+  TRACE_ENTRY(1);
 
   Onnx__TensorProto *A = searchInputByName(ctx, 0);
   Onnx__TensorProto *B = searchInputByName(ctx, 1);
 
-  Onnx__TensorProto *Y = searchOutputByName(ctx, 0);
+  TRACE_TENSOR(2, true, A);
+  TRACE_TENSOR(2, true, B);
 
-  debug_print_dims(A->n_dims, A->dims);
-  debug_print_dims(B->n_dims, B->dims);
+  Onnx__TensorProto *Y = searchOutputByName(ctx, 0);
 
   if (0){
     /* TODO: Check some conditions. For example if a specific
@@ -71,6 +71,8 @@ operator_status operator__onnx__matmul__9__T_tensor_float(
     }
   }*/
 
-  debug_print_dims(Y->n_dims, Y->dims);
+  TRACE_TENSOR(2, true, Y);
+  TRACE_EXIT(1);
+
   return 0;
 }

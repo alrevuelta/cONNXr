@@ -3,28 +3,27 @@
 #include <string.h>
 #include <math.h>
 #include <inttypes.h>
-#include "trace.h"
+#include "tracing.h"
 #include "utils.h"
 
  operator_status operator__onnx__reshape__5__T_tensor_float(
      node_context *ctx
  )
 {
-  TRACE_LEVEL0("Calling operator_reshape\n");
+  TRACE_ENTRY(1);
 
   Onnx__TensorProto *data = searchInputByName(ctx, 0);
   Onnx__TensorProto *shape = searchInputByName(ctx, 1);
   Onnx__TensorProto *reshaped = searchOutputByName(ctx, 0);
 
-  Debug_PrintTensorProto(shape);
+  TRACE_TENSOR(2,true,data);
+  TRACE_TENSOR(2,true,shape);
 
   if (0){
     /* TODO: Check some conditions. For example if a specific
      * functionality is not supported */
     return 1;
   }
-
-  debug_print_dims(data->n_dims, data->dims);
 
   // Not sure about this implementation. It just swaps the dimensions
   // and does not change the data.
@@ -73,7 +72,6 @@
     {
       reshaped->dims[i] = shape->int64_data[i];
     }
-    TRACE_LEVEL0("reshaped->dims[%d] = %" PRId64 "\n", i, reshaped->dims[i]);
   }
 
   // Populate some parameters
@@ -88,6 +86,7 @@
     reshaped->float_data[i] = data->float_data[i];
   }
 
-  debug_print_dims(reshaped->n_dims, reshaped->dims);
+  TRACE_TENSOR(2, true, reshaped);
+  TRACE_EXIT(1);
   return 0;
 }

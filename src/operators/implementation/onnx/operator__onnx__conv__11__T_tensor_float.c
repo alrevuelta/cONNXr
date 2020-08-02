@@ -2,18 +2,22 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include "trace.h"
+#include "tracing.h"
 #include "utils.h"
 
 operator_status operator__onnx__conv__11__T_tensor_float(
     node_context *ctx
 )
 {
-  TRACE_LEVEL0("Calling operator_conv\n");
+  TRACE_ENTRY(1);
 
   Onnx__TensorProto *X = searchInputByName(ctx, 0);
   Onnx__TensorProto *W = searchInputByName(ctx, 1);
   Onnx__TensorProto *B = searchInputByName(ctx, 2);
+
+  TRACE_TENSOR(2, true, X);
+  TRACE_TENSOR(2, true, W);
+  TRACE_TENSOR(2, B, B);
 
   Onnx__TensorProto *Y = searchOutputByName(ctx, 0);
 
@@ -28,8 +32,6 @@ operator_status operator__onnx__conv__11__T_tensor_float(
     exit(-1);
   }
 
-  debug_print_dims(X->n_dims, X->dims);
-
   // Borrowed form https://github.com/pjreddie/darknet/blob/61c9d02ec461e30d55762ec7669d6a1d3c356fb2/src/convolutional_layer.c#L445
   Onnx__AttributeProto *auto_pad     = searchAttributeNyName(ctx->onnx_node->n_attribute,ctx->onnx_node->attribute, "auto_pad");
   //Onnx__AttributeProto *dilations    = searchAttributeNyName(ctx->onnx_node->n_attribute,ctx->onnx_node->attribute, "dilations");
@@ -37,6 +39,13 @@ operator_status operator__onnx__conv__11__T_tensor_float(
   Onnx__AttributeProto *kernel_shape = searchAttributeNyName(ctx->onnx_node->n_attribute,ctx->onnx_node->attribute, "kernel_shape");
   Onnx__AttributeProto *pads         = searchAttributeNyName(ctx->onnx_node->n_attribute,ctx->onnx_node->attribute, "pads");
   Onnx__AttributeProto *strides      = searchAttributeNyName(ctx->onnx_node->n_attribute,ctx->onnx_node->attribute, "strides");
+
+  TRACE_ATTRIBUTE(2, auto_pad, auto_pad);
+  // TRACE_ATTRIBUTE(2, dilations, dilations);
+  // TRACE_ATTRIBUTE(2, group, group);
+  TRACE_ATTRIBUTE(2, kernel_shape, kernel_shape);
+  TRACE_ATTRIBUTE(2, pads, pads);
+  TRACE_ATTRIBUTE(2, strides, strides);
 
   int64_t h_kernel, w_kernel, d_kernel, h_stride, w_stride;
   h_kernel = w_kernel = d_kernel = h_stride = w_stride = 1;
@@ -111,14 +120,18 @@ operator_status operator__onnx__conv__11__T_tensor_float(
                   /* This is hardcoded to make it work with mnist model, where
                   the input is 1x1x28x28 */
                   int index = cur_w + X->dims[3]*(cur_h + X->dims[2]*(d + 0*X->dims[1]));
-                  //TRACE_LEVEL0("%d,%d,%d index=%d\n", d, cur_h, cur_w, index);
+                  // TRACE_VAR(3, true, d, "%d");
+                  // TRACE_VAR(3, true, cur_h, "%d");
+                  // TRACE_VAR(3, true, cur_w, "%d");
+                  // TRACE_VAR(3, true, index, "%d");
 
                   int valid = (cur_h >= 0 && cur_h < X->dims[2] &&
                                cur_w >= 0 && cur_w < X->dims[3]);
                   float val = (valid != 0) ? X->float_data[index] : 0;
                   int index_kernel = k*W->dims[3]*W->dims[2]*W->dims[1] + d*W->dims[3]*W->dims[2] + n*h_kernel + m; // change h_kernel by W->dims[x]
                   value += val * W->float_data[index_kernel];
-                  //TRACE_LEVEL0("%fx%f+\n", val, W->float_data[index_kernel]);
+                  // TRACE_VAR(3, true, val, "%f");
+                  // TRACE_VAR(3, true, W->float_data[index_kernel], "%f");
                 }
               }
             }
@@ -135,7 +148,8 @@ operator_status operator__onnx__conv__11__T_tensor_float(
                 float val = (valid != 0) ? X->float_data[index] : 0;
                 int index_kernel = k*W->dims[3]*W->dims[2]*W->dims[1] + n*h_kernel + m;
                 value += val * W->float_data[index_kernel];
-                //TRACE_LEVEL0("%fx%f+\n", val, input[1]->float_data[index_kernel]);
+                // TRACE_VAR(3, true, val, "%f");
+                // TRACE_VAR(3, true, input[1]->float_data[index_kernel], "%f");
               }
             }
           }else{
@@ -158,6 +172,8 @@ operator_status operator__onnx__conv__11__T_tensor_float(
     }
   }
 
-  debug_print_dims(Y->n_dims, Y->dims);
+  TRACE_TENSOR(2, true, Y);
+  TRACE_EXIT(1);
+
   return 0;
 }

@@ -2,22 +2,21 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include "trace.h"
+#include "tracing.h"
 #include "utils.h"
 
 operator_status operator__onnx__maxpool__12__T_tensor_float(
     node_context *ctx
 )
 {
-  TRACE_LEVEL0("Calling operator_maxpool\n");
+  TRACE_ENTRY(1);
 
   Onnx__TensorProto *X = searchInputByName(ctx, 0);
 
+  TRACE_TENSOR(2, true, X);
+
   Onnx__TensorProto *Y = searchOutputByName(ctx, 0);
   //Onnx__TensorProto *Indices = searchOutputByName(ctx, 1);
-
-  debug_print_dims(X->n_dims, X->dims);
-  //debug_print_attributes(n_attribute, attribute);
 
   if (0){
     /* TODO: Check some conditions. For example if a specific
@@ -40,6 +39,14 @@ operator_status operator__onnx__maxpool__12__T_tensor_float(
   Onnx__AttributeProto *pads = searchAttributeNyName(ctx->onnx_node->n_attribute,ctx->onnx_node->attribute, "pads");
   //Onnx__AttributeProto *storage_order = searchAttributeNyName(ctx->onnx_node->n_attribute,ctx->onnx_node->attribute, "storage_order");
   Onnx__AttributeProto *strides = searchAttributeNyName(ctx->onnx_node->n_attribute, ctx->onnx_node->attribute, "strides");
+
+  TRACE_ATTRIBUTE(2, true, kernel_shape);
+  TRACE_ATTRIBUTE(2, auto_pad, auto_pad);
+  // TRACE_ATTRIBUTE(2, ceil_mode, ceil_mode);
+  // TRACE_ATTRIBUTE(2, dilations, dilations);
+  TRACE_ATTRIBUTE(2, pads, pads);
+  // TRACE_ATTRIBUTE(2, storage_order, storage_order);
+  TRACE_ATTRIBUTE(2, strides, strides);
 
   int64_t h_kernel, w_kernel, h_stride, w_stride;
   h_kernel = w_kernel = h_stride = w_stride = 1;
@@ -85,11 +92,6 @@ operator_status operator__onnx__maxpool__12__T_tensor_float(
     w_pad_aux = pads->ints[1] + pads->ints[3];
     h_pad = h_pad_aux/2;
     w_pad = w_pad_aux/2;
-
-    /*
-    for (int i = 0; i < pads->n_ints; i++){
-      TRACE_LEVEL0("\n\n pad=%d\n", pads->ints[i]);
-    }*/
   }
 
   Y->dims[0] = X->dims[0];
@@ -125,7 +127,8 @@ operator_status operator__onnx__maxpool__12__T_tensor_float(
       }
     }
 
-  debug_print_dims(Y->n_dims, Y->dims);
+  TRACE_TENSOR(2, true, Y);
+  TRACE_EXIT(1);
   return 0;
 
 }
