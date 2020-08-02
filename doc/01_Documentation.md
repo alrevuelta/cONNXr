@@ -203,3 +203,50 @@ Onnx__AttributeProto *auto_pad = searchAttributeNyName(
 ```
 
 Its also important to note that each operator is usually defined for more than one data type like float, double or uint8_t. In order to address this, we have decided to define one function per data type, trying of course to share as many code as possible between different data types implementations.
+
+## Tracing
+We utilize macros to enable fine tracing of components.
+Trace macros can act as asserts and therefore may abort execution if an erroneous state is detected.
+
+**If not explicitly enabled, all tracing components are stripped before compilation!**
+
+Trace prints look like this:
+```
+[MACRO LEVEL] FILE:LINE SCOPE MSG
+```
+- MACRO describes which macro produced the print
+- LEVEL describes the minimum `TRACE_LEVEL` needed to generate this print
+- FILE is the file in which the macro was called
+- LINE is the line number in which the macro was called
+- SCOPE is an optional block description
+- MSG is the actual logged message
+
+To enable tracing you need to specify a default `TRACE_LEVEL` starting from 0.
+```bash
+make clean all TRACE_LEVEL=0
+```
+
+|`TRACE_LEVEL`|Meaning
+|------------:|:------
+|    undefined|disable tracing
+|            0|no prints, except for errors
+|            1|execution flow related prints (function entry/exists, decisions)
+|            2|data flow related prints (input/output meta data)
+|           3+|internal state of algorithms
+
+The `TRACING_LEVEL` can be overwritten at file and function granularity without recompilation.
+When tracing is enabled, each macro checks the `CONNXR_TRACE_FILE` and `CONNXR_TRACE_FUNCTION` env variable for overrides.
+
+Overrides are specified in following format:
+
+```
+CONNXR_TRACE_FILE=<filename>:<trace_level>{;<filename>:<trace_level>}
+CONNXR_TRACE_FUNCTION=<function>:<trace_level>{;<function>:<trace_level>}
+```
+
+So you may execute
+```bash
+make clean all TRACE_LEVEL=0
+CONNXR_TRACE_FUNCTION=operator__onnx__maxpool__12__T_tensor_float:3 make test_operators
+```
+to only generate a detailed trace for a specific operator (maxpool in this case).
