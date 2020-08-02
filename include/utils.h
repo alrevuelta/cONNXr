@@ -31,4 +31,8 @@ void mallocTensorProto(Onnx__TensorProto *tp,
 
 void init_tensor_proto(Onnx__TensorProto *tp);
 
+size_t strnlen(const char *src, size_t length);
+char*  strndup(const char *src, size_t length);
+char*  strdup(const char *src);
+
 #endif

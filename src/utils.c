@@ -444,3 +444,29 @@ size_t exportTensorProtoFile(const Onnx__TensorProto *tensor, char *fname) {
   TRACE_EXIT(1);
   return size;
 }
+
+
+size_t
+strnlen(const char *str, size_t length) {
+  size_t count;
+  for(count = 0; count < length && str[count]; count++);
+  return count;
+}
+
+char*
+strdup( const char *src ) {
+  size_t len = strlen(src);
+  char *buffer = malloc(sizeof(char)*(len+1));
+  if(!buffer) return NULL;
+  strcpy(buffer,src);
+  return buffer;
+}
+
+char*
+strndup( const char *src, size_t num) {
+  size_t len = strnlen(src, num);
+  char *buffer = malloc(sizeof(char)*(len+1));
+  if(!buffer) return NULL;
+  strcpy(buffer,src);
+  return buffer;
+}
