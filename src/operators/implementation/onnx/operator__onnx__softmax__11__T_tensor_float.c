@@ -1,6 +1,6 @@
 #include "operators/onnx/operator__onnx__softmax__11.h"
 
-#include "trace.h"
+#include "tracing.h"
 #include "utils.h"
 #include <math.h>
 #include <stdlib.h>
@@ -34,11 +34,14 @@ operator__onnx__softmax__11__T_tensor_float(
     node_context *ctx
 )
 {
-    TRACE_LEVEL0("Calling operator_softmax\n");
+    TRACE_ENTRY(1);
 
     Onnx__TensorProto *t_input  = searchInputByName(ctx, 0);
     Onnx__TensorProto *t_output = searchOutputByName(ctx, 0);
     Onnx__AttributeProto *a_axis = searchAttributeNyName(ctx->onnx_node->n_attribute, ctx->onnx_node->attribute, "axis");
+
+    TRACE_TENSOR(2,true,t_input);
+    TRACE_ATTRIBUTE(2, a_axis, a_axis);
 
     //wrap axis if negative
     int axis = a_axis?a_axis->i:1;
@@ -69,5 +72,7 @@ operator__onnx__softmax__11__T_tensor_float(
         softmax(&t_input->float_data[offset], &t_output->float_data[offset], D);
     }
 
+    TRACE_TENSOR(2,true,t_output);
+    TRACE_EXIT(1);
     return OP_OK;
 }

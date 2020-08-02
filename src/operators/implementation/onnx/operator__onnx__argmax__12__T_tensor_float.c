@@ -2,18 +2,21 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include "trace.h"
+#include "tracing.h"
 #include "utils.h"
 
 operator_status operator__onnx__argmax__12__T_tensor_float(
     node_context *ctx
 )
 {
-  TRACE_LEVEL0("Calling operator_argmax\n");
+  TRACE_ENTRY(1);
+  TRACE_NODE(2, true, ctx->onnx_node);
 
   Onnx__TensorProto *axis = searchInputByName(ctx, 0);
   //Onnx__TensorProto *keepdims = searchInputByName(ctx, 1);
   //Onnx__TensorProto *select_last_index = searchInputByName(ctx, 2);
+
+  TRACE_TENSOR(2, true, axis);
 
   Onnx__TensorProto *data = searchOutputByName(ctx, 0);
 
@@ -29,8 +32,6 @@ operator_status operator__onnx__argmax__12__T_tensor_float(
     // i.e. if the tensor is int64, init n_float_data to 0
     return 1;
   }
-
-  debug_print_dims(axis->n_dims, axis->dims);
 
   // Allocte memory
   data->dims = malloc(axis->dims[1] * sizeof(int64_t));
@@ -60,6 +61,9 @@ operator_status operator__onnx__argmax__12__T_tensor_float(
     }
     data->int64_data[i] = maxind;
   }
-  debug_print_dims(data->n_dims, data->dims);
+
+  TRACE_EXIT(1);
+  TRACE_TENSOR(2, true, data);
+
   return 0;
 }

@@ -2,20 +2,23 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include "trace.h"
+#include "tracing.h"
 #include "utils.h"
 
 operator_status operator__onnx__transpose__1__T_tensor_float(
     node_context *ctx
 )
 {
-  TRACE_LEVEL0("Calling operator_transpose\n");
+  TRACE_ENTRY(1);
 
   Onnx__TensorProto *data = searchInputByName(ctx, 0);
   Onnx__TensorProto *transposed = searchOutputByName(ctx, 0);
   Onnx__AttributeProto *perm = searchAttributeNyName(ctx->onnx_node->n_attribute,
                                                      ctx->onnx_node->attribute,
                                                      "perm");
+
+  TRACE_TENSOR(2,true,data);
+  TRACE_ATTRIBUTE(2, perm, perm);
 
   transposed->n_dims       = perm->n_ints;
   transposed->dims         = malloc(transposed->n_dims * sizeof(int64_t));
@@ -60,6 +63,7 @@ operator_status operator__onnx__transpose__1__T_tensor_float(
     index[n_dims-1]++;
   }
 
-  debug_print_dims(transposed->n_dims, transposed->dims);
+  TRACE_TENSOR(2,true,transposed);
+  TRACE_EXIT(1);
   return 0;
 }

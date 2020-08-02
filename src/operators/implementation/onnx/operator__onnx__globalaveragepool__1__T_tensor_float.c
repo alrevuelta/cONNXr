@@ -1,6 +1,6 @@
 #include "operators/onnx/operator__onnx__globalaveragepool__1.h"
 
-#include "trace.h"
+#include "tracing.h"
 #include "utils.h"
 #include <stdlib.h>
 
@@ -9,12 +9,13 @@ operator__onnx__globalaveragepool__1__T_tensor_float(
     node_context *ctx
 )
 {
-    TRACE_LEVEL0("Calling operator_globalaveragepool\n");
+    TRACE_ENTRY(1);
 
     Onnx__TensorProto *t_input  = searchInputByName(ctx, 0);
-    Onnx__TensorProto *t_output = searchOutputByName(ctx, 0);
 
-    debug_print_dims(t_input->n_dims, t_input->dims);
+    TRACE_TENSOR(2, true, t_input);
+
+    Onnx__TensorProto *t_output = searchOutputByName(ctx, 0);
 
     t_output->has_raw_data = 0;
     t_output->data_type = t_input->data_type;
@@ -47,6 +48,9 @@ operator__onnx__globalaveragepool__1__T_tensor_float(
             t_output->float_data[n*t_input->dims[1] + c] = sum / cardinality;
         }
     }
+
+    TRACE_TENSOR(2, true, t_output);
+    TRACE_EXIT(1);
 
     return OP_OK;
 }

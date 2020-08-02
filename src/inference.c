@@ -3,7 +3,7 @@
 #include <string.h>
 #include "onnx.pb-c.h"
 #include "utils.h"
-#include "trace.h"
+#include "tracing.h"
 #include "inference.h"
 #include "operators/operator_sets.h"
 
@@ -15,14 +15,11 @@ void resolve(Onnx__ModelProto *model,
              Onnx__TensorProto **inputs,
              int nInputs)
 {
+  TRACE_ENTRY(1);
   /* Resolving operators and input/outputs. Has to be moved outside of infeference */
-  TRACE_LEVEL0("Resolving\n");
   _populatedIdx = -1;
 
-  if (model->graph->n_node > MAX_NUM_OF_NODES){
-    printf("The number of nodes of the model is greater than the hardcoded one\n");
-    exit(-1);
-  }
+  TRACE_FATAL(0, model->graph->n_node > MAX_NUM_OF_NODES, "The number of nodes of the model is greater than the hardcoded one");
 
   for (int nodeIdx = 0; nodeIdx < model->graph->n_node; nodeIdx++)
   {
@@ -36,7 +33,7 @@ void resolve(Onnx__ModelProto *model,
       all_context[nodeIdx].inputs[i] = searchTensorProtoByName(model, inputs, nInputs, model->graph->node[nodeIdx]->input[i]);
       if (all_context[nodeIdx].inputs[i] && all_context[nodeIdx].inputs[i]->has_raw_data){
         /* If the tensor has raw data, deserialize it */
-        printf("input %s has raw data\n", all_context[nodeIdx].inputs[i]->name);
+        TRACE(1, true, "input %s has raw data", all_context[nodeIdx].inputs[i]->name);
         // TODO: Not tested. Crashing but currently not needed
         convertRawDataOfTensorProto(all_context[nodeIdx].inputs[i]);
       }
@@ -68,21 +65,23 @@ void resolve(Onnx__ModelProto *model,
     all_context[nodeIdx].resolved_op = executer;
     _populatedIdx++;
   }
+  TRACE_EXIT(1);
 }
 
 Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **inputs, int nInputs)
 {
-  TRACE_LEVEL0("\n\nCalling inference\n");
-  TRACE_LEVEL0("The graph has nodes=%zu\n", model->graph->n_node);
+  TRACE_ENTRY(1);
+  TRACE(1, true, "The graph has nodes=%zu", model->graph->n_node);
 
   /* Run inference */
   for (int nodeIdx = 0; nodeIdx < model->graph->n_node; nodeIdx++)
   {
-    printf("Running node %d, operator=%s\n", nodeIdx, model->graph->node[nodeIdx]->op_type);
+    TRACE(1, true, "Running node %d, operator=%s", nodeIdx, model->graph->node[nodeIdx]->op_type);
     all_context[nodeIdx].resolved_op(&all_context[nodeIdx]);
-    Debug_PrintTensorProto(all_context[nodeIdx].outputs[0]);
+    TRACE_TENSOR(2, true, all_context[nodeIdx].outputs[0])
   }
 
   // TODO
+  TRACE_EXIT(1);
   return 0;
 }
