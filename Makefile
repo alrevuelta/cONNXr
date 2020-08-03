@@ -73,7 +73,7 @@ ONNX_VERSION=latest
 
 VARIABLE+=ONNX_DOMAINS
 HELP_ONNX_DOMAINS=which onnx domains to use
-ONNX_DOMAINS=onnx
+ONNX_DOMAINS=ai.onnx
 
 VARIABLE+=ONNX_EXCLUDE
 HELP_ONNX_EXCLUDE=which schemas to exclude
@@ -104,11 +104,8 @@ INCDIR+=src/pb
 CPPFLAGS+=$(foreach DIR, $(INCDIR),-I $(DIR) )
 
 SRCDIR+=src/operators
-SRCDIR+=src/operators/info/onnx
-SRCDIR+=src/operators/resolve/onnx
-SRCDIR+=src/operators/implementation/onnx
 SRCDIR+=src/pb
-SRCS+=$(foreach DIR, $(SRCDIR), $(wildcard $(DIR)/*.c))
+SRCS+=$(foreach DIR, $(SRCDIR), $(shell find $(DIR) -type f -name '*.c'))
 SRCS+=src/inference.c
 SRCS+=src/trace.c
 SRCS+=src/utils.c
