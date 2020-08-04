@@ -363,6 +363,20 @@ class OnnxAttribute():
         "GRAPHS"         : "ONNX__ATTRIBUTE_PROTO__ATTRIBUTE_TYPE__GRAPHS",
         "SPARSE_TENSORS" : "ONNX__ATTRIBUTE_PROTO__ATTRIBUTE_TYPE__SPARSE_TENSORS",
     }
+    _onnxAttributeDataTypeCDecl = {
+        "FLOAT"          : [("f","float","{name}")],
+        "INT"            : [("i","int64_t","{name}")],
+        "STRING"         : [("s","char*","{name}")],
+        "TENSOR"         : [("t","Onnx__TensorProto*","{name}")],
+        "GRAPH"          : [("g","Onnx__GraphProto*","{name}")],
+        "SPARSE_TENSOR"  : [("sparse_tensor","Onnx__SparseTensorProto*","{name}")],
+        "FLOATS"         : [("n_floats","size_t","n_{name}"),("floats","float*","{name}")],
+        "INTS"           : [("n_ints","size_t","n_{name}"),("ints","int64_t*","{name}")],
+        "STRINGS"        : [("n_strings","size_t","n_{name}"),("strings","char**","{name}")],
+        "TENSORS"        : [("n_tensors","size_t","n_{name}"),("tensors","Onnx__TensorProto**","{name}")],
+        "GRAPHS"         : [("n_graphs","size_t","n_{name}"),("graphs","Onnx__GraphProto**","{name}")],
+        "SPARSE_TENSORS" : [("n_sparse_tensors","size_t","n_{name}"),("sparse_tensors","Onnx__SparseTensorProto**","{name}")],
+    }
 
     def __init__(self, name, attribute):
         self.name = name
@@ -383,6 +397,12 @@ class OnnxAttribute():
 
     def onnxAttributeDataType(self):
         return self._onnxAttributeDataType[self.type]
+
+    def onnxAttributeDataTypeCDecl(self):
+        result = []
+        for decls in self._onnxAttributeDataTypeCDecl[self.type]:
+            result.append((s.format(name = self.name) for s in decls ))
+        return result
 
     def __repr__(self):
         attribute = self.__dict__.copy()

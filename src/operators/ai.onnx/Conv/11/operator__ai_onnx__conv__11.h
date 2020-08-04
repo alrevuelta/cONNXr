@@ -14,7 +14,7 @@
  *
  * The convolution operator consumes an input tensor and a filter, and
  * computes the output.
- * 
+ *
  * Constraint T:
  *   Constrain input and output types to float tensors.
  *   Allowed Types: tensor_double, tensor_float, tensor_float16
@@ -26,7 +26,7 @@
  *   the operation expects input data tensor to arrive with the dimension
  *   denotation of [DATA_BATCH, DATA_CHANNEL, DATA_FEATURE, DATA_FEATURE ...].
  *   Allowed Types: tensor_double, tensor_float, tensor_float16
- * 
+ *
  * Input T W:
  *   The weight tensor that will be used in the convolutions; has size (M x
  *   C/group x kH x kW), where C is the number of channels, and kH and kW are
@@ -40,7 +40,7 @@
  *   for the shape array). Or in other words FILTER_IN_CHANNEL should be equal
  *   to DATA_CHANNEL.
  *   Allowed Types: tensor_double, tensor_float, tensor_float16
- * 
+ *
  * Input T B:
  *   Optional 1D bias to be added to the convolution, has size of M.
  *   Allowed Types: tensor_double, tensor_float, tensor_float16
@@ -49,25 +49,25 @@
  *   output dimensions are functions of the kernel size, stride size, and pad
  *   lengths.
  *   Allowed Types: tensor_double, tensor_float, tensor_float16
- * Attribute STRING auto_pad :
+ * Attribute STRING auto_pad (optional):
  *   auto_pad must be either NOTSET, SAME_UPPER, SAME_LOWER or VALID. Where
  *   default value is NOTSET, which means explicit padding is used. SAME_UPPER
  *   or SAME_LOWER mean pad the input so that the output spatial size match the
  *   input.In case of odd number add the extra padding at the end for
  *   SAME_UPPER and at the beginning for SAME_LOWER. VALID mean no padding.
- * 
- * Attribute INTS dilations :
+ *
+ * Attribute INTS dilations (optional):
  *   dilation value along each spatial axis of the filter. If not present, the
  *   dilation defaults is 1 along each spatial axis.
- * 
- * Attribute INT group :
+ *
+ * Attribute INT group (optional):
  *   number of groups input channels and output channels are divided into.
- * 
- * Attribute INTS kernel_shape :
+ *
+ * Attribute INTS kernel_shape (optional):
  *   The shape of the convolution kernel. If not present, should be inferred
  *   from input W.
- * 
- * Attribute INTS pads :
+ *
+ * Attribute INTS pads (optional):
  *   Padding for the beginning and ending along each spatial axis, it can take
  *   any value greater than or equal to 0. The value represent the number of
  *   pixels added to the beginning and end part of the corresponding axis.
@@ -77,8 +77,8 @@
  *   This attribute cannot be used simultaneously with auto_pad attribute. If
  *   not present, the padding defaults to 0 along start and end of each spatial
  *   axis.
- * 
- * Attribute INTS strides :
+ *
+ * Attribute INTS strides (optional):
  *   Stride along each spatial axis. If not present, the stride defaults is 1
  *   along each spatial axis.
  *
@@ -87,22 +87,47 @@
  * @see io/onnx/onnx/defs/nn/defs.cc:793
  * @see https://github.com/onnx/onnx/blob/master/docs/Operators.md#Conv
  */
-operator_status operator__ai_onnx__conv__11(
-    node_context *ctx
-);
-operator_status operator__ai_onnx__conv__11__T_tensor_double(
-    node_context *ctx
-);
-operator_status operator__ai_onnx__conv__11__T_tensor_float(
-    node_context *ctx
-);
-operator_status operator__ai_onnx__conv__11__T_tensor_float16(
-    node_context *ctx
-);
 
-operator_executer resolve_operator__ai_onnx__conv__11(
+operator_status
+prepare_operator__ai_onnx__conv__11(
     node_context *ctx
 );
 
 extern operator_info info_operator__ai_onnx__conv__11;
+
+typedef struct {
+    char* auto_pad;
+    size_t n_dilations;
+    int64_t* dilations;
+    int64_t group;
+    size_t n_kernel_shape;
+    int64_t* kernel_shape;
+    size_t n_pads;
+    int64_t* pads_begin;
+    int64_t* pads_end;
+    size_t n_strides;
+    int64_t* strides;
+
+} context_operator__ai_onnx__conv__11;
+
+operator_executer
+resolve_operator__ai_onnx__conv__11(
+    node_context *ctx
+);
+
+operator_status
+execute_operator__ai_onnx__conv__11__T_tensor_double(
+    node_context *ctx
+);
+
+operator_status
+execute_operator__ai_onnx__conv__11__T_tensor_float(
+    node_context *ctx
+);
+
+operator_status
+execute_operator__ai_onnx__conv__11__T_tensor_float16(
+    node_context *ctx
+);
+
 # endif

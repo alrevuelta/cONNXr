@@ -15,7 +15,7 @@
  * Clip operator limits the given input within an interval. The interval is
  * specified by the inputs 'min' and 'max'. They default to
  * numeric_limits::lowest() and numeric_limits::max(), respectively.
- * 
+ *
  * Constraint T:
  *   Constrain input and output types to all numeric tensors.
  *   Allowed Types: tensor_double, tensor_float, tensor_float16, tensor_int16,
@@ -26,14 +26,14 @@
  *   Allowed Types: tensor_double, tensor_float, tensor_float16, tensor_int16,
  *                  tensor_int32, tensor_int64, tensor_int8, tensor_uint16,
  *                  tensor_uint32, tensor_uint64, tensor_uint8
- * 
+ *
  * Input T min:
  *   Minimum value, under which element is replaced by min. It must be a
  *   scalar(tensor of empty shape).
  *   Allowed Types: tensor_double, tensor_float, tensor_float16, tensor_int16,
  *                  tensor_int32, tensor_int64, tensor_int8, tensor_uint16,
  *                  tensor_uint32, tensor_uint64, tensor_uint8
- * 
+ *
  * Input T max:
  *   Maximum value, above which element is replaced by max. It must be a
  *   scalar(tensor of empty shape).
@@ -52,46 +52,76 @@
  * @see io/onnx/onnx/defs/math/defs.cc:777
  * @see https://github.com/onnx/onnx/blob/master/docs/Operators.md#Clip
  */
-operator_status operator__ai_onnx__clip__12(
-    node_context *ctx
-);
-operator_status operator__ai_onnx__clip__12__T_tensor_double(
-    node_context *ctx
-);
-operator_status operator__ai_onnx__clip__12__T_tensor_float(
-    node_context *ctx
-);
-operator_status operator__ai_onnx__clip__12__T_tensor_float16(
-    node_context *ctx
-);
-operator_status operator__ai_onnx__clip__12__T_tensor_int16(
-    node_context *ctx
-);
-operator_status operator__ai_onnx__clip__12__T_tensor_int32(
-    node_context *ctx
-);
-operator_status operator__ai_onnx__clip__12__T_tensor_int64(
-    node_context *ctx
-);
-operator_status operator__ai_onnx__clip__12__T_tensor_int8(
-    node_context *ctx
-);
-operator_status operator__ai_onnx__clip__12__T_tensor_uint16(
-    node_context *ctx
-);
-operator_status operator__ai_onnx__clip__12__T_tensor_uint32(
-    node_context *ctx
-);
-operator_status operator__ai_onnx__clip__12__T_tensor_uint64(
-    node_context *ctx
-);
-operator_status operator__ai_onnx__clip__12__T_tensor_uint8(
-    node_context *ctx
-);
 
-operator_executer resolve_operator__ai_onnx__clip__12(
+operator_status
+prepare_operator__ai_onnx__clip__12(
     node_context *ctx
 );
 
 extern operator_info info_operator__ai_onnx__clip__12;
+
+typedef struct {
+// no attributes
+} context_operator__ai_onnx__clip__12;
+
+operator_executer
+resolve_operator__ai_onnx__clip__12(
+    node_context *ctx
+);
+
+operator_status
+execute_operator__ai_onnx__clip__12__T_tensor_double(
+    node_context *ctx
+);
+
+operator_status
+execute_operator__ai_onnx__clip__12__T_tensor_float(
+    node_context *ctx
+);
+
+operator_status
+execute_operator__ai_onnx__clip__12__T_tensor_float16(
+    node_context *ctx
+);
+
+operator_status
+execute_operator__ai_onnx__clip__12__T_tensor_int16(
+    node_context *ctx
+);
+
+operator_status
+execute_operator__ai_onnx__clip__12__T_tensor_int32(
+    node_context *ctx
+);
+
+operator_status
+execute_operator__ai_onnx__clip__12__T_tensor_int64(
+    node_context *ctx
+);
+
+operator_status
+execute_operator__ai_onnx__clip__12__T_tensor_int8(
+    node_context *ctx
+);
+
+operator_status
+execute_operator__ai_onnx__clip__12__T_tensor_uint16(
+    node_context *ctx
+);
+
+operator_status
+execute_operator__ai_onnx__clip__12__T_tensor_uint32(
+    node_context *ctx
+);
+
+operator_status
+execute_operator__ai_onnx__clip__12__T_tensor_uint64(
+    node_context *ctx
+);
+
+operator_status
+execute_operator__ai_onnx__clip__12__T_tensor_uint8(
+    node_context *ctx
+);
+
 # endif

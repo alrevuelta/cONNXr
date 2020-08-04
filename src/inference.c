@@ -59,9 +59,10 @@ void resolve(Onnx__ModelProto *model,
     // More than 1 opset can be imported. Iterate n_opset_import
     // model->opset_import[0]->version
     // TODO Hackish temporal solution. Use opset 12.
-    operator_resolver resolver = find_operator_resolver(model->graph->node[nodeIdx]->op_type, 12);
-    operator_executer executer = resolver(&all_context[nodeIdx]);
-    all_context[nodeIdx].resolved_op = executer;
+    size_t version = 12;
+    operator_preparer prepare = find_operator_preparer(model->graph->node[nodeIdx]->op_type, version);
+    TRACE_FATAL(0, !prepare, "No prepare function could be found for operator '%s' version '%zu'",model->graph->node[nodeIdx]->op_type, version);
+    prepare(&all_context[nodeIdx]);
     _populatedIdx++;
   }
   TRACE_EXIT(1);
@@ -76,8 +77,7 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
   for (int nodeIdx = 0; nodeIdx < model->graph->n_node; nodeIdx++)
   {
     TRACE(1, true, "Running node %d, operator=%s", nodeIdx, model->graph->node[nodeIdx]->op_type);
-    all_context[nodeIdx].resolved_op(&all_context[nodeIdx]);
-    TRACE_TENSOR(2, true, all_context[nodeIdx].outputs[0])
+    all_context[nodeIdx].executer(&all_context[nodeIdx]);
   }
 
   // TODO

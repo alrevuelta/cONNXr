@@ -4,9 +4,9 @@ import re
 class OperatorSetEntry(Template):
     _template = '''
 {{
-  .name = "{name}",
-  .resolver = (operator_resolver) resolve_{operator_name},
-  .info = &info_{operator_name}
+  .name     = "{name}",
+  .preparer = prepare_{operator_name},
+  .info     = &info_{operator_name}
 }}
 '''
     def __init__(self, schema):

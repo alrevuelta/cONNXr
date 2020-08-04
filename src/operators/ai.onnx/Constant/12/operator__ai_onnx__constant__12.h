@@ -28,29 +28,29 @@
  *                  tensor_double, tensor_float, tensor_float16, tensor_int16,
  *                  tensor_int32, tensor_int64, tensor_int8, tensor_string,
  *                  tensor_uint16, tensor_uint32, tensor_uint64, tensor_uint8
- * Attribute SPARSE_TENSOR sparse_value :
+ * Attribute SPARSE_TENSOR sparse_value (optional):
  *   The value for the elements of the output tensor in sparse format.
  * 
- * Attribute TENSOR value :
+ * Attribute TENSOR value (optional):
  *   The value for the elements of the output tensor.
  * 
- * Attribute FLOAT value_float :
+ * Attribute FLOAT value_float (optional):
  *   The value for the sole element for the scalar, float32, output tensor.
  * 
- * Attribute FLOATS value_floats :
+ * Attribute FLOATS value_floats (optional):
  *   The values for the elements for the 1D, float32, output tensor.
  * 
- * Attribute INT value_int :
+ * Attribute INT value_int (optional):
  *   The value for the sole element for the scalar, int64, output tensor.
  * 
- * Attribute INTS value_ints :
+ * Attribute INTS value_ints (optional):
  *   The values for the elements for the 1D, int64, output tensor.
  * 
- * Attribute STRING value_string :
+ * Attribute STRING value_string (optional):
  *   The value for the sole element for the scalar, UTF-8 string, output
  *   tensor.
  * 
- * Attribute STRINGS value_strings :
+ * Attribute STRINGS value_strings (optional):
  *   The values for the elements for the 1D, UTF-8 string, output tensor.
  *
  * @since version 12
@@ -58,14 +58,37 @@
  * @see io/onnx/onnx/defs/generator/defs.cc:171
  * @see https://github.com/onnx/onnx/blob/master/docs/Operators.md#Constant
  */
-operator_status operator__ai_onnx__constant__12(
-    node_context *ctx
-);
 
-
-operator_executer resolve_operator__ai_onnx__constant__12(
+operator_status
+prepare_operator__ai_onnx__constant__12(
     node_context *ctx
 );
 
 extern operator_info info_operator__ai_onnx__constant__12;
+
+typedef struct {
+    Onnx__SparseTensorProto* sparse_value;
+    Onnx__TensorProto* value;
+    float value_float;
+    size_t n_value_floats;
+    float* value_floats;
+    int64_t value_int;
+    size_t n_value_ints;
+    int64_t* value_ints;
+    char* value_string;
+    size_t n_value_strings;
+    char** value_strings;
+
+} context_operator__ai_onnx__constant__12;
+
+operator_executer
+resolve_operator__ai_onnx__constant__12(
+    node_context *ctx
+);
+
+operator_status
+execute_operator__ai_onnx__constant__12(
+    node_context *ctx
+);
+
 # endif

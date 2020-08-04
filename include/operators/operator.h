@@ -7,6 +7,7 @@
 // TODO Remove unused code
 typedef enum operator_status operator_status;
 typedef struct node_context  node_context;
+typedef operator_status (*operator_preparer)(node_context *ctx);
 typedef operator_status (*operator_executer)(node_context *ctx);
 typedef operator_executer (*operator_resolver)(node_context *ctx);
 
@@ -17,8 +18,8 @@ struct node_context {
   Onnx__NodeProto     *onnx_node;
   Onnx__TensorProto  **inputs;
   Onnx__TensorProto  **outputs;
-  operator_executer resolved_op;
-  //int (*resolved_op)(node_context *ctx);
+  operator_executer    executer;
+  void                *executer_context;
 };
 
 enum operator_status {

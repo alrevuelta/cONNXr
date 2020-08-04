@@ -26,17 +26,17 @@ operator_set operator_set__ai_onnx__1 = {
   .length  = 3,
   .entries = {
     {
-  .name = "Identity",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__identity__1,
-  .info = &info_operator__ai_onnx__identity__1
+  .name     = "Identity",
+  .preparer = prepare_operator__ai_onnx__identity__1,
+  .info     = &info_operator__ai_onnx__identity__1
 },{
-  .name = "Transpose",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__transpose__1,
-  .info = &info_operator__ai_onnx__transpose__1
+  .name     = "Transpose",
+  .preparer = prepare_operator__ai_onnx__transpose__1,
+  .info     = &info_operator__ai_onnx__transpose__1
 },{
-  .name = "GlobalAveragePool",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__globalaveragepool__1,
-  .info = &info_operator__ai_onnx__globalaveragepool__1
+  .name     = "GlobalAveragePool",
+  .preparer = prepare_operator__ai_onnx__globalaveragepool__1,
+  .info     = &info_operator__ai_onnx__globalaveragepool__1
 }
   }
 };
@@ -47,21 +47,21 @@ operator_set operator_set__ai_onnx__5 = {
   .length  = 4,
   .entries = {
     {
-  .name = "Identity",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__identity__1,
-  .info = &info_operator__ai_onnx__identity__1
+  .name     = "Identity",
+  .preparer = prepare_operator__ai_onnx__identity__1,
+  .info     = &info_operator__ai_onnx__identity__1
 },{
-  .name = "Transpose",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__transpose__1,
-  .info = &info_operator__ai_onnx__transpose__1
+  .name     = "Transpose",
+  .preparer = prepare_operator__ai_onnx__transpose__1,
+  .info     = &info_operator__ai_onnx__transpose__1
 },{
-  .name = "Reshape",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__reshape__5,
-  .info = &info_operator__ai_onnx__reshape__5
+  .name     = "Reshape",
+  .preparer = prepare_operator__ai_onnx__reshape__5,
+  .info     = &info_operator__ai_onnx__reshape__5
 },{
-  .name = "GlobalAveragePool",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__globalaveragepool__1,
-  .info = &info_operator__ai_onnx__globalaveragepool__1
+  .name     = "GlobalAveragePool",
+  .preparer = prepare_operator__ai_onnx__globalaveragepool__1,
+  .info     = &info_operator__ai_onnx__globalaveragepool__1
 }
   }
 };
@@ -72,37 +72,37 @@ operator_set operator_set__ai_onnx__6 = {
   .length  = 8,
   .entries = {
     {
-  .name = "Identity",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__identity__1,
-  .info = &info_operator__ai_onnx__identity__1
+  .name     = "Identity",
+  .preparer = prepare_operator__ai_onnx__identity__1,
+  .info     = &info_operator__ai_onnx__identity__1
 },{
-  .name = "Transpose",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__transpose__1,
-  .info = &info_operator__ai_onnx__transpose__1
+  .name     = "Transpose",
+  .preparer = prepare_operator__ai_onnx__transpose__1,
+  .info     = &info_operator__ai_onnx__transpose__1
 },{
-  .name = "Elu",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__elu__6,
-  .info = &info_operator__ai_onnx__elu__6
+  .name     = "Elu",
+  .preparer = prepare_operator__ai_onnx__elu__6,
+  .info     = &info_operator__ai_onnx__elu__6
 },{
-  .name = "Relu",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__relu__6,
-  .info = &info_operator__ai_onnx__relu__6
+  .name     = "Relu",
+  .preparer = prepare_operator__ai_onnx__relu__6,
+  .info     = &info_operator__ai_onnx__relu__6
 },{
-  .name = "LeakyRelu",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__leakyrelu__6,
-  .info = &info_operator__ai_onnx__leakyrelu__6
+  .name     = "LeakyRelu",
+  .preparer = prepare_operator__ai_onnx__leakyrelu__6,
+  .info     = &info_operator__ai_onnx__leakyrelu__6
 },{
-  .name = "Reshape",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__reshape__5,
-  .info = &info_operator__ai_onnx__reshape__5
+  .name     = "Reshape",
+  .preparer = prepare_operator__ai_onnx__reshape__5,
+  .info     = &info_operator__ai_onnx__reshape__5
 },{
-  .name = "GlobalAveragePool",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__globalaveragepool__1,
-  .info = &info_operator__ai_onnx__globalaveragepool__1
+  .name     = "GlobalAveragePool",
+  .preparer = prepare_operator__ai_onnx__globalaveragepool__1,
+  .info     = &info_operator__ai_onnx__globalaveragepool__1
 },{
-  .name = "Sigmoid",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__sigmoid__6,
-  .info = &info_operator__ai_onnx__sigmoid__6
+  .name     = "Sigmoid",
+  .preparer = prepare_operator__ai_onnx__sigmoid__6,
+  .info     = &info_operator__ai_onnx__sigmoid__6
 }
   }
 };
@@ -113,45 +113,45 @@ operator_set operator_set__ai_onnx__7 = {
   .length  = 10,
   .entries = {
     {
-  .name = "Identity",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__identity__1,
-  .info = &info_operator__ai_onnx__identity__1
+  .name     = "Identity",
+  .preparer = prepare_operator__ai_onnx__identity__1,
+  .info     = &info_operator__ai_onnx__identity__1
 },{
-  .name = "Transpose",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__transpose__1,
-  .info = &info_operator__ai_onnx__transpose__1
+  .name     = "Transpose",
+  .preparer = prepare_operator__ai_onnx__transpose__1,
+  .info     = &info_operator__ai_onnx__transpose__1
 },{
-  .name = "Elu",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__elu__6,
-  .info = &info_operator__ai_onnx__elu__6
+  .name     = "Elu",
+  .preparer = prepare_operator__ai_onnx__elu__6,
+  .info     = &info_operator__ai_onnx__elu__6
 },{
-  .name = "Relu",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__relu__6,
-  .info = &info_operator__ai_onnx__relu__6
+  .name     = "Relu",
+  .preparer = prepare_operator__ai_onnx__relu__6,
+  .info     = &info_operator__ai_onnx__relu__6
 },{
-  .name = "Add",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__add__7,
-  .info = &info_operator__ai_onnx__add__7
+  .name     = "Add",
+  .preparer = prepare_operator__ai_onnx__add__7,
+  .info     = &info_operator__ai_onnx__add__7
 },{
-  .name = "LeakyRelu",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__leakyrelu__6,
-  .info = &info_operator__ai_onnx__leakyrelu__6
+  .name     = "LeakyRelu",
+  .preparer = prepare_operator__ai_onnx__leakyrelu__6,
+  .info     = &info_operator__ai_onnx__leakyrelu__6
 },{
-  .name = "Reshape",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__reshape__5,
-  .info = &info_operator__ai_onnx__reshape__5
+  .name     = "Reshape",
+  .preparer = prepare_operator__ai_onnx__reshape__5,
+  .info     = &info_operator__ai_onnx__reshape__5
 },{
-  .name = "GlobalAveragePool",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__globalaveragepool__1,
-  .info = &info_operator__ai_onnx__globalaveragepool__1
+  .name     = "GlobalAveragePool",
+  .preparer = prepare_operator__ai_onnx__globalaveragepool__1,
+  .info     = &info_operator__ai_onnx__globalaveragepool__1
 },{
-  .name = "Mul",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__mul__7,
-  .info = &info_operator__ai_onnx__mul__7
+  .name     = "Mul",
+  .preparer = prepare_operator__ai_onnx__mul__7,
+  .info     = &info_operator__ai_onnx__mul__7
 },{
-  .name = "Sigmoid",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__sigmoid__6,
-  .info = &info_operator__ai_onnx__sigmoid__6
+  .name     = "Sigmoid",
+  .preparer = prepare_operator__ai_onnx__sigmoid__6,
+  .info     = &info_operator__ai_onnx__sigmoid__6
 }
   }
 };
@@ -162,53 +162,53 @@ operator_set operator_set__ai_onnx__9 = {
   .length  = 12,
   .entries = {
     {
-  .name = "MatMul",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__matmul__9,
-  .info = &info_operator__ai_onnx__matmul__9
+  .name     = "MatMul",
+  .preparer = prepare_operator__ai_onnx__matmul__9,
+  .info     = &info_operator__ai_onnx__matmul__9
 },{
-  .name = "Identity",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__identity__1,
-  .info = &info_operator__ai_onnx__identity__1
+  .name     = "Identity",
+  .preparer = prepare_operator__ai_onnx__identity__1,
+  .info     = &info_operator__ai_onnx__identity__1
 },{
-  .name = "Transpose",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__transpose__1,
-  .info = &info_operator__ai_onnx__transpose__1
+  .name     = "Transpose",
+  .preparer = prepare_operator__ai_onnx__transpose__1,
+  .info     = &info_operator__ai_onnx__transpose__1
 },{
-  .name = "Elu",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__elu__6,
-  .info = &info_operator__ai_onnx__elu__6
+  .name     = "Elu",
+  .preparer = prepare_operator__ai_onnx__elu__6,
+  .info     = &info_operator__ai_onnx__elu__6
 },{
-  .name = "Relu",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__relu__6,
-  .info = &info_operator__ai_onnx__relu__6
+  .name     = "Relu",
+  .preparer = prepare_operator__ai_onnx__relu__6,
+  .info     = &info_operator__ai_onnx__relu__6
 },{
-  .name = "Add",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__add__7,
-  .info = &info_operator__ai_onnx__add__7
+  .name     = "Add",
+  .preparer = prepare_operator__ai_onnx__add__7,
+  .info     = &info_operator__ai_onnx__add__7
 },{
-  .name = "LeakyRelu",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__leakyrelu__6,
-  .info = &info_operator__ai_onnx__leakyrelu__6
+  .name     = "LeakyRelu",
+  .preparer = prepare_operator__ai_onnx__leakyrelu__6,
+  .info     = &info_operator__ai_onnx__leakyrelu__6
 },{
-  .name = "Reshape",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__reshape__5,
-  .info = &info_operator__ai_onnx__reshape__5
+  .name     = "Reshape",
+  .preparer = prepare_operator__ai_onnx__reshape__5,
+  .info     = &info_operator__ai_onnx__reshape__5
 },{
-  .name = "GlobalAveragePool",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__globalaveragepool__1,
-  .info = &info_operator__ai_onnx__globalaveragepool__1
+  .name     = "GlobalAveragePool",
+  .preparer = prepare_operator__ai_onnx__globalaveragepool__1,
+  .info     = &info_operator__ai_onnx__globalaveragepool__1
 },{
-  .name = "Mul",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__mul__7,
-  .info = &info_operator__ai_onnx__mul__7
+  .name     = "Mul",
+  .preparer = prepare_operator__ai_onnx__mul__7,
+  .info     = &info_operator__ai_onnx__mul__7
 },{
-  .name = "BatchNormalization",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__batchnormalization__9,
-  .info = &info_operator__ai_onnx__batchnormalization__9
+  .name     = "BatchNormalization",
+  .preparer = prepare_operator__ai_onnx__batchnormalization__9,
+  .info     = &info_operator__ai_onnx__batchnormalization__9
 },{
-  .name = "Sigmoid",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__sigmoid__6,
-  .info = &info_operator__ai_onnx__sigmoid__6
+  .name     = "Sigmoid",
+  .preparer = prepare_operator__ai_onnx__sigmoid__6,
+  .info     = &info_operator__ai_onnx__sigmoid__6
 }
   }
 };
@@ -219,61 +219,61 @@ operator_set operator_set__ai_onnx__11 = {
   .length  = 14,
   .entries = {
     {
-  .name = "MatMul",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__matmul__9,
-  .info = &info_operator__ai_onnx__matmul__9
+  .name     = "MatMul",
+  .preparer = prepare_operator__ai_onnx__matmul__9,
+  .info     = &info_operator__ai_onnx__matmul__9
 },{
-  .name = "Identity",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__identity__1,
-  .info = &info_operator__ai_onnx__identity__1
+  .name     = "Identity",
+  .preparer = prepare_operator__ai_onnx__identity__1,
+  .info     = &info_operator__ai_onnx__identity__1
 },{
-  .name = "Transpose",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__transpose__1,
-  .info = &info_operator__ai_onnx__transpose__1
+  .name     = "Transpose",
+  .preparer = prepare_operator__ai_onnx__transpose__1,
+  .info     = &info_operator__ai_onnx__transpose__1
 },{
-  .name = "Elu",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__elu__6,
-  .info = &info_operator__ai_onnx__elu__6
+  .name     = "Elu",
+  .preparer = prepare_operator__ai_onnx__elu__6,
+  .info     = &info_operator__ai_onnx__elu__6
 },{
-  .name = "Relu",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__relu__6,
-  .info = &info_operator__ai_onnx__relu__6
+  .name     = "Relu",
+  .preparer = prepare_operator__ai_onnx__relu__6,
+  .info     = &info_operator__ai_onnx__relu__6
 },{
-  .name = "Conv",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__conv__11,
-  .info = &info_operator__ai_onnx__conv__11
+  .name     = "Conv",
+  .preparer = prepare_operator__ai_onnx__conv__11,
+  .info     = &info_operator__ai_onnx__conv__11
 },{
-  .name = "Add",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__add__7,
-  .info = &info_operator__ai_onnx__add__7
+  .name     = "Add",
+  .preparer = prepare_operator__ai_onnx__add__7,
+  .info     = &info_operator__ai_onnx__add__7
 },{
-  .name = "LeakyRelu",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__leakyrelu__6,
-  .info = &info_operator__ai_onnx__leakyrelu__6
+  .name     = "LeakyRelu",
+  .preparer = prepare_operator__ai_onnx__leakyrelu__6,
+  .info     = &info_operator__ai_onnx__leakyrelu__6
 },{
-  .name = "Reshape",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__reshape__5,
-  .info = &info_operator__ai_onnx__reshape__5
+  .name     = "Reshape",
+  .preparer = prepare_operator__ai_onnx__reshape__5,
+  .info     = &info_operator__ai_onnx__reshape__5
 },{
-  .name = "GlobalAveragePool",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__globalaveragepool__1,
-  .info = &info_operator__ai_onnx__globalaveragepool__1
+  .name     = "GlobalAveragePool",
+  .preparer = prepare_operator__ai_onnx__globalaveragepool__1,
+  .info     = &info_operator__ai_onnx__globalaveragepool__1
 },{
-  .name = "Mul",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__mul__7,
-  .info = &info_operator__ai_onnx__mul__7
+  .name     = "Mul",
+  .preparer = prepare_operator__ai_onnx__mul__7,
+  .info     = &info_operator__ai_onnx__mul__7
 },{
-  .name = "BatchNormalization",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__batchnormalization__9,
-  .info = &info_operator__ai_onnx__batchnormalization__9
+  .name     = "BatchNormalization",
+  .preparer = prepare_operator__ai_onnx__batchnormalization__9,
+  .info     = &info_operator__ai_onnx__batchnormalization__9
 },{
-  .name = "Sigmoid",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__sigmoid__6,
-  .info = &info_operator__ai_onnx__sigmoid__6
+  .name     = "Sigmoid",
+  .preparer = prepare_operator__ai_onnx__sigmoid__6,
+  .info     = &info_operator__ai_onnx__sigmoid__6
 },{
-  .name = "Softmax",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__softmax__11,
-  .info = &info_operator__ai_onnx__softmax__11
+  .name     = "Softmax",
+  .preparer = prepare_operator__ai_onnx__softmax__11,
+  .info     = &info_operator__ai_onnx__softmax__11
 }
   }
 };
@@ -284,77 +284,77 @@ operator_set operator_set__ai_onnx__12 = {
   .length  = 18,
   .entries = {
     {
-  .name = "MatMul",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__matmul__9,
-  .info = &info_operator__ai_onnx__matmul__9
+  .name     = "MatMul",
+  .preparer = prepare_operator__ai_onnx__matmul__9,
+  .info     = &info_operator__ai_onnx__matmul__9
 },{
-  .name = "Identity",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__identity__1,
-  .info = &info_operator__ai_onnx__identity__1
+  .name     = "Identity",
+  .preparer = prepare_operator__ai_onnx__identity__1,
+  .info     = &info_operator__ai_onnx__identity__1
 },{
-  .name = "MaxPool",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__maxpool__12,
-  .info = &info_operator__ai_onnx__maxpool__12
+  .name     = "MaxPool",
+  .preparer = prepare_operator__ai_onnx__maxpool__12,
+  .info     = &info_operator__ai_onnx__maxpool__12
 },{
-  .name = "Transpose",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__transpose__1,
-  .info = &info_operator__ai_onnx__transpose__1
+  .name     = "Transpose",
+  .preparer = prepare_operator__ai_onnx__transpose__1,
+  .info     = &info_operator__ai_onnx__transpose__1
 },{
-  .name = "Clip",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__clip__12,
-  .info = &info_operator__ai_onnx__clip__12
+  .name     = "Clip",
+  .preparer = prepare_operator__ai_onnx__clip__12,
+  .info     = &info_operator__ai_onnx__clip__12
 },{
-  .name = "Elu",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__elu__6,
-  .info = &info_operator__ai_onnx__elu__6
+  .name     = "Elu",
+  .preparer = prepare_operator__ai_onnx__elu__6,
+  .info     = &info_operator__ai_onnx__elu__6
 },{
-  .name = "Relu",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__relu__6,
-  .info = &info_operator__ai_onnx__relu__6
+  .name     = "Relu",
+  .preparer = prepare_operator__ai_onnx__relu__6,
+  .info     = &info_operator__ai_onnx__relu__6
 },{
-  .name = "Conv",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__conv__11,
-  .info = &info_operator__ai_onnx__conv__11
+  .name     = "Conv",
+  .preparer = prepare_operator__ai_onnx__conv__11,
+  .info     = &info_operator__ai_onnx__conv__11
 },{
-  .name = "ArgMax",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__argmax__12,
-  .info = &info_operator__ai_onnx__argmax__12
+  .name     = "ArgMax",
+  .preparer = prepare_operator__ai_onnx__argmax__12,
+  .info     = &info_operator__ai_onnx__argmax__12
 },{
-  .name = "Add",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__add__7,
-  .info = &info_operator__ai_onnx__add__7
+  .name     = "Add",
+  .preparer = prepare_operator__ai_onnx__add__7,
+  .info     = &info_operator__ai_onnx__add__7
 },{
-  .name = "LeakyRelu",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__leakyrelu__6,
-  .info = &info_operator__ai_onnx__leakyrelu__6
+  .name     = "LeakyRelu",
+  .preparer = prepare_operator__ai_onnx__leakyrelu__6,
+  .info     = &info_operator__ai_onnx__leakyrelu__6
 },{
-  .name = "Reshape",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__reshape__5,
-  .info = &info_operator__ai_onnx__reshape__5
+  .name     = "Reshape",
+  .preparer = prepare_operator__ai_onnx__reshape__5,
+  .info     = &info_operator__ai_onnx__reshape__5
 },{
-  .name = "GlobalAveragePool",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__globalaveragepool__1,
-  .info = &info_operator__ai_onnx__globalaveragepool__1
+  .name     = "GlobalAveragePool",
+  .preparer = prepare_operator__ai_onnx__globalaveragepool__1,
+  .info     = &info_operator__ai_onnx__globalaveragepool__1
 },{
-  .name = "Mul",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__mul__7,
-  .info = &info_operator__ai_onnx__mul__7
+  .name     = "Mul",
+  .preparer = prepare_operator__ai_onnx__mul__7,
+  .info     = &info_operator__ai_onnx__mul__7
 },{
-  .name = "Constant",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__constant__12,
-  .info = &info_operator__ai_onnx__constant__12
+  .name     = "Constant",
+  .preparer = prepare_operator__ai_onnx__constant__12,
+  .info     = &info_operator__ai_onnx__constant__12
 },{
-  .name = "BatchNormalization",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__batchnormalization__9,
-  .info = &info_operator__ai_onnx__batchnormalization__9
+  .name     = "BatchNormalization",
+  .preparer = prepare_operator__ai_onnx__batchnormalization__9,
+  .info     = &info_operator__ai_onnx__batchnormalization__9
 },{
-  .name = "Sigmoid",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__sigmoid__6,
-  .info = &info_operator__ai_onnx__sigmoid__6
+  .name     = "Sigmoid",
+  .preparer = prepare_operator__ai_onnx__sigmoid__6,
+  .info     = &info_operator__ai_onnx__sigmoid__6
 },{
-  .name = "Softmax",
-  .resolver = (operator_resolver) resolve_operator__ai_onnx__softmax__11,
-  .info = &info_operator__ai_onnx__softmax__11
+  .name     = "Softmax",
+  .preparer = prepare_operator__ai_onnx__softmax__11,
+  .info     = &info_operator__ai_onnx__softmax__11
 }
   }
 };

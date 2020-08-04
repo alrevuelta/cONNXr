@@ -32,22 +32,41 @@
  * @see io/onnx/onnx/defs/math/defs.cc:640
  * @see https://github.com/onnx/onnx/blob/master/docs/Operators.md#Sigmoid
  */
-operator_status operator__ai_onnx__sigmoid__6(
-    node_context *ctx
-);
-operator_status operator__ai_onnx__sigmoid__6__T_tensor_double(
-    node_context *ctx
-);
-operator_status operator__ai_onnx__sigmoid__6__T_tensor_float(
-    node_context *ctx
-);
-operator_status operator__ai_onnx__sigmoid__6__T_tensor_float16(
-    node_context *ctx
-);
 
-operator_executer resolve_operator__ai_onnx__sigmoid__6(
+operator_status
+prepare_operator__ai_onnx__sigmoid__6(
     node_context *ctx
 );
 
 extern operator_info info_operator__ai_onnx__sigmoid__6;
+
+typedef struct {
+// no attributes
+} context_operator__ai_onnx__sigmoid__6;
+
+operator_executer
+resolve_operator__ai_onnx__sigmoid__6(
+    node_context *ctx
+);
+
+operator_status
+execute_operator__ai_onnx__sigmoid__6(
+    node_context *ctx
+);
+
+operator_status
+execute_operator__ai_onnx__sigmoid__6__T_tensor_double(
+    node_context *ctx
+);
+
+operator_status
+execute_operator__ai_onnx__sigmoid__6__T_tensor_float(
+    node_context *ctx
+);
+
+operator_status
+execute_operator__ai_onnx__sigmoid__6__T_tensor_float16(
+    node_context *ctx
+);
+
 # endif

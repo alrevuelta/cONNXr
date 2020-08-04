@@ -15,7 +15,7 @@
  * Relu takes one input data (Tensor<T>) and produces one output data
  * (Tensor<T>) where the rectified linear function, y = max(0, x), is applied to
  * the tensor elementwise.
- * 
+ *
  * Constraint T:
  *   Constrain input and output types to float tensors.
  *   Allowed Types: tensor_double, tensor_float, tensor_float16
@@ -32,22 +32,36 @@
  * @see io/onnx/onnx/defs/math/defs.cc:320
  * @see https://github.com/onnx/onnx/blob/master/docs/Operators.md#Relu
  */
-operator_status operator__ai_onnx__relu__6(
-    node_context *ctx
-);
-operator_status operator__ai_onnx__relu__6__T_tensor_double(
-    node_context *ctx
-);
-operator_status operator__ai_onnx__relu__6__T_tensor_float(
-    node_context *ctx
-);
-operator_status operator__ai_onnx__relu__6__T_tensor_float16(
-    node_context *ctx
-);
 
-operator_executer resolve_operator__ai_onnx__relu__6(
+operator_status
+prepare_operator__ai_onnx__relu__6(
     node_context *ctx
 );
 
 extern operator_info info_operator__ai_onnx__relu__6;
+
+typedef struct {
+// no attributes
+} context_operator__ai_onnx__relu__6;
+
+operator_executer
+resolve_operator__ai_onnx__relu__6(
+    node_context *ctx
+);
+
+operator_status
+execute_operator__ai_onnx__relu__6__T_tensor_double(
+    node_context *ctx
+);
+
+operator_status
+execute_operator__ai_onnx__relu__6__T_tensor_float(
+    node_context *ctx
+);
+
+operator_status
+execute_operator__ai_onnx__relu__6__T_tensor_float16(
+    node_context *ctx
+);
+
 # endif

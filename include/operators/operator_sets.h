@@ -15,9 +15,9 @@ typedef struct operator_set_entry operator_set_entry;
 #include "operators/operator.h"
 
 struct operator_set_entry {
-    char             *name;
-    operator_resolver resolver;
-    operator_info    *info;
+    char              *name;
+    operator_preparer  preparer;
+    operator_info     *info;
 };
 
 struct operator_set
@@ -37,7 +37,7 @@ struct operator_sets
 extern operator_sets all_operator_sets;
 
 static __attribute__((unused))
-operator_resolver find_operator_resolver(
+operator_preparer find_operator_preparer(
     char *name,
     size_t version
 ) {
@@ -49,10 +49,12 @@ operator_resolver find_operator_resolver(
         for (size_t i_entry = 0; i_entry < set->length; i_entry++) {
             operator_set_entry *entry = &set->entries[i_entry];
             if (strcmp(entry->name,name) == 0) {
-                return entry->resolver;
+                printf("Found opname:%s version:%zu\n", name, version);
+                return entry->preparer;
             }
         }
     }
+    printf("Preparer not found opname:%s version:%zu\n", name, version);
     // TODO Break here? Doesn't make sense to continue if the resolver is
     // not found
     return NULL;
