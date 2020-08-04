@@ -25,11 +25,11 @@
  *  output_spatial_shape[i] = ceil((input_spatial_shape[i] + pad_shape[i] - ((kernel_spatial_shape[i] - 1) * dilations[i] + 1)) / strides_spatial_shape[i] + 1)
  *  ```
  *  if ceil_mode is enabled
- * 
+ *
  *  ```
  *  * pad_shape[i] is sum of pads along axis i
  *  ```
- * 
+ *
  *  `auto_pad` is a DEPRECATED attribute. If you are using them currently, the output spatial shape will be following:
  *  ```
  *  VALID: output_spatial_shape[i] = ceil((input_spatial_shape[i] - ((kernel_spatial_shape[i] - 1) * dilations[i] + 1) + 1) / strides_spatial_shape[i])
@@ -40,12 +40,12 @@
  *  pad_shape[i] = (output_spatial_shape[i] - 1) * strides_spatial_shape[i] + ((kernel_spatial_shape[i] - 1) * dilations[i] + 1) - input_spatial_shape[i]
  *  ```
  *  The output of each pooling window is maximum number of elements exclude pad.
- * 
+ *
  * Constraint T:
  *   Constrain input and output types to float and 8 bit tensors.
  *   Allowed Types: tensor_double, tensor_float, tensor_float16, tensor_int8,
  *                  tensor_uint8
- * 
+ *
  * Constraint I:
  *   Constrain index tensor to int64
  *   Allowed Types: tensor_int64
@@ -66,7 +66,7 @@
  *   value of the dimension is used
  *   Allowed Types: tensor_double, tensor_float, tensor_float16, tensor_int8,
  *                  tensor_uint8
- * 
+ *
  * Output I Indices:
  *   Indices tensor from max pooling across the input tensor. The dimensions
  *   of indices are the same as output tensor. The values in indices of are the
@@ -74,24 +74,24 @@
  *   flatten 1-D tensor, and the indices do not consider padding. So the values
  *   in indices are in [0, N x C x D1 x ... x Dn).
  *   Allowed Types: tensor_int64
- * Attribute STRING auto_pad :
+ * Attribute STRING auto_pad (optional):
  *   auto_pad must be either NOTSET, SAME_UPPER, SAME_LOWER or VALID. Where
  *   default value is NOTSET, which means explicit padding is used. SAME_UPPER
  *   or SAME_LOWER mean pad the input so that the output spatial size match the
  *   input.In case of odd number add the extra padding at the end for
  *   SAME_UPPER and at the beginning for SAME_LOWER. VALID mean no padding.
- * 
- * Attribute INT ceil_mode :
+ *
+ * Attribute INT ceil_mode (optional):
  *   Whether to use ceil or floor (default) to compute the output shape.
- * 
- * Attribute INTS dilations :
+ *
+ * Attribute INTS dilations (optional):
  *   Dilation value along each spatial axis of filter. If not present, the
  *   dilation defaults to 1 along each spatial axis.
- * 
- * Attribute INTS kernel_shape (optional):
+ *
+ * Attribute INTS kernel_shape :
  *   The size of the kernel along each axis.
- * 
- * Attribute INTS pads :
+ *
+ * Attribute INTS pads (optional):
  *   Padding for the beginning and ending along each spatial axis, it can take
  *   any value greater than or equal to 0. The value represent the number of
  *   pixels added to the beginning and end part of the corresponding axis.
@@ -101,11 +101,11 @@
  *   This attribute cannot be used simultaneously with auto_pad attribute. If
  *   not present, the padding defaults to 0 along start and end of each spatial
  *   axis.
- * 
- * Attribute INT storage_order :
+ *
+ * Attribute INT storage_order (optional):
  *   The storage order of the tensor. 0 is row major, and 1 is column major.
- * 
- * Attribute INTS strides :
+ *
+ * Attribute INTS strides (optional):
  *   Stride along each spatial axis. If not present, the stride defaults to 1
  *   along each spatial axis.
  *
@@ -114,28 +114,58 @@
  * @see io/onnx/onnx/defs/nn/defs.cc:363
  * @see https://github.com/onnx/onnx/blob/master/docs/Operators.md#MaxPool
  */
-operator_status operator__ai_onnx__maxpool__12(
-    node_context *ctx
-);
-operator_status operator__ai_onnx__maxpool__12__T_tensor_double(
-    node_context *ctx
-);
-operator_status operator__ai_onnx__maxpool__12__T_tensor_float(
-    node_context *ctx
-);
-operator_status operator__ai_onnx__maxpool__12__T_tensor_float16(
-    node_context *ctx
-);
-operator_status operator__ai_onnx__maxpool__12__T_tensor_int8(
-    node_context *ctx
-);
-operator_status operator__ai_onnx__maxpool__12__T_tensor_uint8(
-    node_context *ctx
-);
 
-operator_executer resolve_operator__ai_onnx__maxpool__12(
+operator_status
+prepare_operator__ai_onnx__maxpool__12(
     node_context *ctx
 );
 
 extern operator_info info_operator__ai_onnx__maxpool__12;
+
+typedef struct {
+    char* auto_pad;
+    int64_t ceil_mode;
+    size_t n_dilations;
+    int64_t* dilations;
+    size_t n_kernel_shape;
+    int64_t* kernel_shape;
+    size_t n_pads;
+    int64_t* pads_begin;
+    int64_t* pads_end;
+    int64_t storage_order;
+    size_t n_strides;
+    int64_t* strides;
+
+} context_operator__ai_onnx__maxpool__12;
+
+operator_executer
+resolve_operator__ai_onnx__maxpool__12(
+    node_context *ctx
+);
+
+operator_status
+execute_operator__ai_onnx__maxpool__12__T_tensor_double(
+    node_context *ctx
+);
+
+operator_status
+execute_operator__ai_onnx__maxpool__12__T_tensor_float(
+    node_context *ctx
+);
+
+operator_status
+execute_operator__ai_onnx__maxpool__12__T_tensor_float16(
+    node_context *ctx
+);
+
+operator_status
+execute_operator__ai_onnx__maxpool__12__T_tensor_int8(
+    node_context *ctx
+);
+
+operator_status
+execute_operator__ai_onnx__maxpool__12__T_tensor_uint8(
+    node_context *ctx
+);
+
 # endif

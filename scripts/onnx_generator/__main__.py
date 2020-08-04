@@ -33,10 +33,10 @@ parser.add_argument(
     help="overwrite sets src"
 )
 parser.add_argument(
-    "--force-stubs",
+    "--force-template",
     action='count',
-    default=args.force_stubs,
-    help="overwrite stubs src"
+    default=args.force_template,
+    help="overwrite template src"
 )
 parser.add_argument(
     "--force-info",
@@ -90,17 +90,17 @@ parser.add_argument(
     help=f"where to put sets src in main path (default: {args.sets[0]})"
 )
 parser.add_argument(
-    "--no-stubs",
+    "--no-template",
     action='count',
-    default=args.no_stubs,
-    help="don't write stubs src"
+    default=args.no_template,
+    help="don't write template src"
 )
 parser.add_argument(
-    "--stubs",
+    "--template",
     nargs=1,
     metavar="<path>",
-    default=args.stubs,
-    help=f"where to put stubs src in main path (default: {args.stubs[0]})"
+    default=args.template,
+    help=f"where to put template src in main path (default: {args.template[0]})"
 )
 parser.add_argument(
     "--no-info",

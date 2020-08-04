@@ -5,7 +5,7 @@ import pathlib
 from . import OperatorHeader
 from . import OperatorTypeResolver
 from . import OperatorSets
-from . import OperatorStubs
+from . import OperatorTemplate
 from .OnnxWrapper import OnnxSchema
 from . import OperatorInfo
 from . import args
@@ -143,9 +143,9 @@ resolvers = [ OperatorTypeResolver.Source(h,path) for h in headers ]
 note("generating onnx operator sets")
 path = f"{args.path[-1]}/{args.sets[-1]}/"
 sets = [OperatorSets.Source(headers,path)]
-note("generating onnx operator stubs")
-path = f"{args.path[-1]}/{args.stubs[-1]}/"
-stubs = itertools.chain(*[ OperatorStubs.Sources(h,path) for h in headers ])
+note("generating onnx operator template")
+path = f"{args.path[-1]}/{args.template[-1]}/"
+templates = itertools.chain(*[ OperatorTemplate.Templates(h,path) for h in headers ])
 note("generating onnx operator info")
 path = f"{args.path[-1]}/{args.info[-1]}/"
 info = [ OperatorInfo.Source(h, path) for h in headers ]
@@ -157,8 +157,8 @@ if not args.no_resolve:
     files.extend(map(lambda x: (bool(args.force_resolve),x),resolvers))
 if not args.no_sets:
     files.extend(map(lambda x: (bool(args.force_sets),x),sets))
-if not args.no_stubs:
-    files.extend(map(lambda x: (bool(args.force_stubs),x),stubs))
+if not args.no_template:
+    files.extend(map(lambda x: (bool(args.force_template),x),templates))
 if not args.no_info:
     files.extend(map(lambda x: (bool(args.force_info),x),info))
 

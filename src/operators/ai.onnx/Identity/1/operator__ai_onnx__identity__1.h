@@ -13,7 +13,7 @@
  * @return          Status code
  *
  * Identity operator
- * 
+ *
  * Constraint T:
  *   Constrain input and output types to all tensor types.
  *   Allowed Types: tensor_bool, tensor_complex128, tensor_complex64,
@@ -39,58 +39,26 @@
  * @see io/onnx/onnx/defs/tensor/defs.cc:1825
  * @see https://github.com/onnx/onnx/blob/master/docs/Operators.md#Identity
  */
-operator_status operator__ai_onnx__identity__1(
-    node_context *ctx
-);
-operator_status operator__ai_onnx__identity__1__T_tensor_bool(
-    node_context *ctx
-);
-operator_status operator__ai_onnx__identity__1__T_tensor_complex128(
-    node_context *ctx
-);
-operator_status operator__ai_onnx__identity__1__T_tensor_complex64(
-    node_context *ctx
-);
-operator_status operator__ai_onnx__identity__1__T_tensor_double(
-    node_context *ctx
-);
-operator_status operator__ai_onnx__identity__1__T_tensor_float(
-    node_context *ctx
-);
-operator_status operator__ai_onnx__identity__1__T_tensor_float16(
-    node_context *ctx
-);
-operator_status operator__ai_onnx__identity__1__T_tensor_int16(
-    node_context *ctx
-);
-operator_status operator__ai_onnx__identity__1__T_tensor_int32(
-    node_context *ctx
-);
-operator_status operator__ai_onnx__identity__1__T_tensor_int64(
-    node_context *ctx
-);
-operator_status operator__ai_onnx__identity__1__T_tensor_int8(
-    node_context *ctx
-);
-operator_status operator__ai_onnx__identity__1__T_tensor_string(
-    node_context *ctx
-);
-operator_status operator__ai_onnx__identity__1__T_tensor_uint16(
-    node_context *ctx
-);
-operator_status operator__ai_onnx__identity__1__T_tensor_uint32(
-    node_context *ctx
-);
-operator_status operator__ai_onnx__identity__1__T_tensor_uint64(
-    node_context *ctx
-);
-operator_status operator__ai_onnx__identity__1__T_tensor_uint8(
-    node_context *ctx
-);
 
-operator_executer resolve_operator__ai_onnx__identity__1(
+operator_status
+prepare_operator__ai_onnx__identity__1(
     node_context *ctx
 );
 
 extern operator_info info_operator__ai_onnx__identity__1;
+
+typedef struct {
+// no attributes
+} context_operator__ai_onnx__identity__1;
+
+operator_executer
+resolve_operator__ai_onnx__identity__1(
+    node_context *ctx
+);
+
+operator_status
+execute_operator__ai_onnx__identity__1(
+    node_context *ctx
+);
+
 # endif

@@ -15,14 +15,14 @@
  * Carries out batch normalization as described in the paper
  * https://arxiv.org/abs/1502.03167. Depending on the mode it is being run,
  * there are multiple cases for the number of outputs, which we list below:
- * 
+ *
  * Output case #1: Y, mean, var, saved_mean, saved_var (training mode)
  * Output case #2: Y (test mode)
- * 
+ *
  * For previous (depreciated) non-spatial cases, implementors are suggested
  * to flatten the input shape to (N x C*D1*D2 ..*Dn) before a BatchNormalization Op.
  * This operator has **optional** inputs/outputs. See [the doc](IR.md) for more details about the representation of optional arguments. An empty string may be used in the place of an actual argument's name to indicate a missing argument. Trailing optional arguments (those not followed by an argument that is present) may also be simply omitted.
- * 
+ *
  * Constraint T:
  *   Constrain input and output types to float tensors.
  *   Allowed Types: tensor_double, tensor_float, tensor_float16
@@ -34,45 +34,45 @@
  *   The op also accepts single dimension input of size N in which case C is
  *   assumed to be 1
  *   Allowed Types: tensor_double, tensor_float, tensor_float16
- * 
+ *
  * Input T scale:
  *   Scale tensor of shape (C).
  *   Allowed Types: tensor_double, tensor_float, tensor_float16
- * 
+ *
  * Input T B:
  *   Bias tensor of shape (C).
  *   Allowed Types: tensor_double, tensor_float, tensor_float16
- * 
+ *
  * Input T mean:
  *   running (training) or estimated (testing) mean tensor of shape (C).
  *   Allowed Types: tensor_double, tensor_float, tensor_float16
- * 
+ *
  * Input T var:
  *   running (training) or estimated (testing) variance tensor of shape (C).
  *   Allowed Types: tensor_double, tensor_float, tensor_float16
  * Output T Y:
  *   The output tensor of the same shape as X
  *   Allowed Types: tensor_double, tensor_float, tensor_float16
- * 
+ *
  * Output T mean:
  *   The running mean after the BatchNormalization operator.
  *   Allowed Types: tensor_double, tensor_float, tensor_float16
- * 
+ *
  * Output T var:
  *   The running variance after the BatchNormalization operator.
  *   Allowed Types: tensor_double, tensor_float, tensor_float16
- * 
+ *
  * Output T saved_mean:
  *   Saved mean used during training to speed up gradient computation.
  *   Allowed Types: tensor_double, tensor_float, tensor_float16
- * 
+ *
  * Output T saved_var:
  *   Saved variance used during training to speed up gradient computation.
  *   Allowed Types: tensor_double, tensor_float, tensor_float16
- * Attribute FLOAT epsilon :
+ * Attribute FLOAT epsilon (optional):
  *   The epsilon value to use to avoid division by zero.
- * 
- * Attribute FLOAT momentum :
+ *
+ * Attribute FLOAT momentum (optional):
  *   Factor used in computing the running mean and variance.e.g., running_mean
  *   = running_mean * momentum + mean * (1 - momentum).
  *
@@ -81,22 +81,38 @@
  * @see io/onnx/onnx/defs/nn/defs.cc:1580
  * @see https://github.com/onnx/onnx/blob/master/docs/Operators.md#BatchNormalization
  */
-operator_status operator__ai_onnx__batchnormalization__9(
-    node_context *ctx
-);
-operator_status operator__ai_onnx__batchnormalization__9__T_tensor_double(
-    node_context *ctx
-);
-operator_status operator__ai_onnx__batchnormalization__9__T_tensor_float(
-    node_context *ctx
-);
-operator_status operator__ai_onnx__batchnormalization__9__T_tensor_float16(
-    node_context *ctx
-);
 
-operator_executer resolve_operator__ai_onnx__batchnormalization__9(
+operator_status
+prepare_operator__ai_onnx__batchnormalization__9(
     node_context *ctx
 );
 
 extern operator_info info_operator__ai_onnx__batchnormalization__9;
+
+typedef struct {
+    float epsilon;
+    float momentum;
+
+} context_operator__ai_onnx__batchnormalization__9;
+
+operator_executer
+resolve_operator__ai_onnx__batchnormalization__9(
+    node_context *ctx
+);
+
+operator_status
+execute_operator__ai_onnx__batchnormalization__9__T_tensor_double(
+    node_context *ctx
+);
+
+operator_status
+execute_operator__ai_onnx__batchnormalization__9__T_tensor_float(
+    node_context *ctx
+);
+
+operator_status
+execute_operator__ai_onnx__batchnormalization__9__T_tensor_float16(
+    node_context *ctx
+);
+
 # endif

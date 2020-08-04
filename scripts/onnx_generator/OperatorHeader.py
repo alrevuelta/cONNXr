@@ -1,4 +1,5 @@
 from .Template import Template
+import itertools
 
 class ContextArray(Template):
     _template = '''
@@ -54,7 +55,8 @@ typedef struct operator_context__{name} {{
 class Prototype(Template):
     _template = '''
 {attribute}
-{return_type} {prefix}{name}{suffix}(
+{return_type}
+{prefix}{name}{suffix}(
     node_context *ctx
 );
 '''
@@ -65,19 +67,21 @@ class Prototype(Template):
         self.attribute = attribute
         self.return_type = return_type
 
-class PrototypeAliases(Template):
-    _template = "{aliases}"
+class PrototypeExecuters(Template):
+    _template = "{executers}"
     def __init__(self, schema):
         self.schema = schema
-        self.aliases = "\n".join([str(PrototypeAlias(
+        self.executers  = str(Prototype(self.schema.operator_name,prefix="execute_")) + "\n\n"
+        self.executers += "\n\n".join([str(Prototype(
                             self.schema.operator_name,
-                            t
+                            prefix="execute_",
+                            suffix=f"__{t}"
                           ))
                           for t in self.schema.constraints.typePermutations(filterInput=True) ])
 
-class PrototypeAlias(Prototype):
+class PrototypeExecuter(Prototype):
     def __init__(self, name, type):
-        super().__init__(name, suffix=f"__{type}", attribute='')
+        super().__init__(name, prefix="executer_", suffix=f"__{type}", attribute='')
 
 class PrototypeResolver(Prototype):
     def __init__(self, name):
@@ -139,6 +143,18 @@ extern operator_info info_{schema.operator_name};
     def __init__(self, schema):
         self.schema = schema
 
+class ExecuterContext(Template):
+    _template = '''
+typedef struct {{
+{declarations}
+}} context_{schema.operator_name};
+'''
+    def __init__(self, schema):
+        self.schema = schema
+        declarations = itertools.chain(*[a.onnxAttributeDataTypeCDecl() for a in self.schema.attributes])
+        self.declarations = "".join(f"    {t} {n};\n" for s,t,n in declarations)
+        if not self.declarations:
+            self.declarations = "// no attributes"
 class Header(Template):
     _basepath = "{path}"
     _filepath = "{schema.domain}/{schema.name}/{schema.version}/{schema.operator_name}.h"
@@ -152,12 +168,17 @@ class Header(Template):
 # include "operators/operator_info.h"
 
 {doxygen}
-{prototype}
-{aliases}
+
+{preparer}
+
+{info}
+
+{context}
 
 {resolver}
 
-{info}
+{executers}
+
 # endif
 '''
 
@@ -166,7 +187,8 @@ class Header(Template):
         self.path = path
         self.header_name=schema.operator_name.upper()
         self.doxygen = Doxygen(schema, path)
-        self.prototype = Prototype(schema.operator_name)
+        self.preparer = Prototype(schema.operator_name,prefix="prepare_")
+        self.context = ExecuterContext(schema)
         self.resolver = PrototypeResolver(schema.operator_name)
         self.info = Info(schema)
-        self.aliases = PrototypeAliases(schema)
+        self.executers = PrototypeExecuters(schema)
