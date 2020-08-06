@@ -1,7 +1,7 @@
 
 onnx = []
 verbose = 0
-header = ["include/operators"]
+header = ["src/operators"]
 no_header = 0
 force_header = 0
 resolve = ["src/operators/"]
