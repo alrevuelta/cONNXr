@@ -46,7 +46,7 @@ def printData(cycles, times, modelName):
 if __name__ == '__main__':
     print("Parsing benchmarking output")
 
-    models_to_benchmark = ['mnist', 'tinyyolov2', 'super_resolution']
+    models_to_benchmark = ['mnist', 'tinyyolov2', 'super_resolution', 'mobilenetv2']
     for model in models_to_benchmark:
         with open('benchmarks/'+model+'.txt') as file:
             lines = file.readlines()
