@@ -6,6 +6,7 @@ from . import OperatorHeader
 from . import OperatorTypeResolver
 from . import OperatorSets
 from . import OperatorTemplate
+from . import Kconfig
 from .OnnxWrapper import OnnxSchema
 from . import OperatorInfo
 from . import args
@@ -148,6 +149,10 @@ path = f"{args.path[-1]}/{args.template[-1]}/"
 templates = itertools.chain(*[ OperatorTemplate.Templates(h,path) for h in headers ])
 path = f"{args.path[-1]}/{args.info[-1]}/"
 info = [ OperatorInfo.Source(h, path) for h in headers ]
+note("generating Kconfigs")
+path = f"{args.path[-1]}/{args.kconfig[-1]}/"
+kconfig = Kconfig.Kconfigs(schemas,path)
+
 
 files = []
 if not args.no_header:
@@ -160,6 +165,8 @@ if not args.no_template:
     files.extend(map(lambda x: (bool(args.force_template),x),templates))
 if not args.no_info:
     files.extend(map(lambda x: (bool(args.force_info),x),info))
+if not args.no_kconfig:
+    files.extend(map(lambda x: (bool(args.force_kconfig),x),kconfig))
 
 writecount = 0
 note("Writing files",1)

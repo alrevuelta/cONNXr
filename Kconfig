@@ -1,0 +1,9 @@
+mainmenu "cONNXr configuration"
+
+menu "Operators"
+source "src/operators/Kconfig"
+endmenu
+
+menu "Build options"
+source "build.Kconfig"
+endmenu
