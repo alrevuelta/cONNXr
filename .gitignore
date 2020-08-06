@@ -2,4 +2,4 @@ build
 profiling
 benchmarks
 dump.txt
-.DS_Store
+**/.DS_Store
