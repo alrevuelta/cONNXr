@@ -34,5 +34,6 @@ void init_tensor_proto(Onnx__TensorProto *tp);
 size_t strnlen(const char *src, size_t length);
 char*  strndup(const char *src, size_t length);
 char*  strdup(const char *src);
-
+void*  memdup(const void *src, size_t size);
+#define ARRAYDUP(SRC, LENGTH) memdup(SRC, sizeof((SRC)[0])*(LENGTH))
 #endif

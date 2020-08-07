@@ -470,3 +470,11 @@ strndup( const char *src, size_t num) {
   strcpy(buffer,src);
   return buffer;
 }
+
+void*
+memdup( const void *src, size_t size) {
+  void *dst = malloc(size);
+  if (!dst) return NULL;
+  memcpy(dst,src,size);
+  return dst;
+}
