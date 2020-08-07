@@ -371,7 +371,7 @@ class OnnxAttribute():
             self.type = attribute['type']
             self.description = attribute['description']
         else:
-            self.optional = attribute.required
+            self.optional = not attribute.required
             self.type = attribute.type.name
             self.description = attribute.description
 
