@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 #include "onnx.pb-c.h"
 #include "utils.h"
 #include "tracing.h"
@@ -477,4 +478,120 @@ memdup( const void *src, size_t size) {
   if (!dst) return NULL;
   memcpy(dst,src,size);
   return dst;
+}
+
+void*
+mallocTensorData(Onnx__TensorProto *dst) {
+  //TODO check how the datatypes are packed inside the protobuf
+  //current assumption: data is densely packed
+  size_t  *n_data;
+  void   **data;
+  size_t   size_element;
+  size_t   size_container;
+  switch (dst->data_type) {
+    case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:
+      n_data         = &dst->n_float_data;
+      data           = (void*) &dst->float_data;
+      size_element   = sizeof(float);
+      size_container = sizeof(float);
+      break;
+    case ONNX__TENSOR_PROTO__DATA_TYPE__UINT8:
+      n_data         = &dst->n_int32_data;
+      data           = (void*) &dst->int32_data;
+      size_element   = sizeof(uint8_t);
+      size_container = sizeof(int32_t);
+      break;
+    case ONNX__TENSOR_PROTO__DATA_TYPE__INT8:
+      n_data         = &dst->n_int32_data;
+      data           = (void*) &dst->int32_data;
+      size_element   = sizeof(int8_t);
+      size_container = sizeof(int32_t);
+      break;
+    case ONNX__TENSOR_PROTO__DATA_TYPE__UINT16:
+      n_data         = &dst->n_int32_data;
+      data           = (void*) &dst->int32_data;
+      size_element   = sizeof(uint16_t);
+      size_container = sizeof(int32_t);
+      break;
+    case ONNX__TENSOR_PROTO__DATA_TYPE__INT16:
+      n_data         = &dst->n_int32_data;
+      data           = (void*) &dst->int32_data;
+      size_element   = sizeof(int16_t);
+      size_container = sizeof(int32_t);
+      break;
+    case ONNX__TENSOR_PROTO__DATA_TYPE__INT32:
+      n_data         = &dst->n_int32_data;
+      data           = (void*) &dst->int32_data;
+      size_element   = sizeof(int32_t);
+      size_container = sizeof(int32_t);
+      break;
+    case ONNX__TENSOR_PROTO__DATA_TYPE__INT64:
+      n_data         = &dst->n_int64_data;
+      data           = (void*) &dst->int64_data;
+      size_element   = sizeof(int64_t);
+      size_container = sizeof(int64_t);
+      break;
+    case ONNX__TENSOR_PROTO__DATA_TYPE__STRING:
+      n_data         = &dst->n_string_data;
+      data           = (void*) &dst->string_data;
+      size_element   = sizeof(ProtobufCBinaryData);
+      size_container = sizeof(ProtobufCBinaryData);
+      break;
+    case ONNX__TENSOR_PROTO__DATA_TYPE__BOOL:
+      n_data         = &dst->n_int32_data;
+      data           = (void*) &dst->int32_data;
+      size_element   = sizeof(bool);
+      size_container = sizeof(int32_t);
+      break;
+    case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT16:
+      n_data         = &dst->n_int32_data;
+      data           = (void*) &dst->int32_data;
+      size_element   = sizeof(float)/2;
+      size_container = sizeof(int32_t);
+      break;
+    case ONNX__TENSOR_PROTO__DATA_TYPE__DOUBLE:
+      n_data         = &dst->n_double_data;
+      data           = (void*) &dst->double_data;
+      size_element   = sizeof(double);
+      size_container = sizeof(double);
+      break;
+    case ONNX__TENSOR_PROTO__DATA_TYPE__UINT32:
+      n_data         = &dst->n_uint64_data;
+      data           = (void*) &dst->uint64_data;
+      size_element   = sizeof(uint32_t);
+      size_container = sizeof(uint64_t);
+      break;
+    case ONNX__TENSOR_PROTO__DATA_TYPE__UINT64:
+      n_data         = &dst->n_uint64_data;
+      data           = (void*) &dst->uint64_data;
+      size_element   = sizeof(uint64_t);
+      size_container = sizeof(uint64_t);
+      break;
+    case ONNX__TENSOR_PROTO__DATA_TYPE__COMPLEX64:
+      n_data         = &dst->n_float_data;
+      data           = (void*) &dst->float_data;
+      size_element   = sizeof(float)*2;
+      size_container = sizeof(float);
+      break;
+    case ONNX__TENSOR_PROTO__DATA_TYPE__COMPLEX128:
+      n_data         = &dst->n_double_data;
+      data           = (void*) &dst->double_data;
+      size_element   = sizeof(double)*2;
+      size_container = sizeof(double);
+      break;
+    case ONNX__TENSOR_PROTO__DATA_TYPE__BFLOAT16:
+      //is not documented
+    default:
+      //unknown datatype
+      TRACE_FATAL(0, true, "no case for datatype %d", dst->data_type);
+      return NULL;
+  }
+  size_t num = dst->dims[0];
+  for (int i = 1; i < dst->n_dims; i++) {
+    num *= dst->dims[i];
+  }
+  *n_data = (num*size_element+size_container-1)/size_container;
+  *data   = malloc( (*n_data) * size_container);
+
+  return *data;
 }
