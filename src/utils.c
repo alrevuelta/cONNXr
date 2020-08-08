@@ -468,7 +468,8 @@ strndup( const char *src, size_t num) {
   size_t len = strnlen(src, num);
   char *buffer = malloc(sizeof(char)*(len+1));
   if(!buffer) return NULL;
-  strcpy(buffer,src);
+  strncpy(buffer,src, len);
+  buffer[len] = '\0';
   return buffer;
 }
 
