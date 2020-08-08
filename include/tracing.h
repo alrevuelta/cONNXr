@@ -710,8 +710,8 @@ if (COND) { \
         __VAR(LEVEL, "ATTRIBUTE", ATTR->i, "               % " PRId64 "\n") \
         __VAR(LEVEL, "ATTRIBUTE", ATTR->has_s, "           %d\n") \
         __VAR(LEVEL, "ATTRIBUTE", ATTR->s.len, "           %zu\n") \
-        __VAR(LEVEL, "ATTRIBUTE", ATTR->s.data, "          %p\n") \
-        __VAR(LEVEL, "ATTRIBUTE", ATTR->s.data, "          \"%s\"\n") \
+        __VAR(LEVEL, "ATTRIBUTE", ATTR->s.data, "          %p ") \
+        __PRINT(TRACE_SYMBOL_STDOUT, "\"%.*s\"\n", (int)ATTR->s.len, ATTR->s.data) \
         __VAR(LEVEL, "ATTRIBUTE", ATTR->t, "               %p\n") \
         __VAR(LEVEL, "ATTRIBUTE", ATTR->g, "               %p\n") \
         __VAR(LEVEL, "ATTRIBUTE", ATTR->sparse_tensor, "   %p\n") \
@@ -733,11 +733,17 @@ if (COND) { \
         __PRINT(TRACE_SYMBOL_STDOUT, "\n") \
         __VAR(LEVEL, "ATTRIBUTE", ATTR->n_strings, "       %zu\n") \
         __VAR(LEVEL, "ATTRIBUTE", ATTR->strings, "         %p ") \
-        __PRINT_ARRAY(TRACE_SYMBOL_STDOUT, \
-                      ATTR->strings, \
-                      .data, \
-                      ATTR->n_strings, \
-                      "\"%s\"") \
+        { \
+            __PRINT(TRACE_SYMBOL_STDOUT, "[") \
+            for (int i = 0; i < (ATTR)->n_strings; i++) { \
+                __PRINT(TRACE_SYMBOL_STDOUT, "\"%.*s\"", \
+                        (int)ATTR->strings[i].len, ATTR->strings[i].data) \
+                if (i < (ATTR)->n_strings-1) { \
+                    __PRINT(TRACE_SYMBOL_STDOUT, ",") \
+                } \
+            } \
+            __PRINT(TRACE_SYMBOL_STDOUT, "]") \
+        } \
         __PRINT(TRACE_SYMBOL_STDOUT, "\n") \
         __VAR(LEVEL, "ATTRIBUTE", ATTR->n_tensors, "       %zu\n") \
         __VAR(LEVEL, "ATTRIBUTE", ATTR->tensors, "         %p ") \
