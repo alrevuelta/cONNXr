@@ -219,9 +219,9 @@ int main(int argc, char **argv)
   //CU_add_test(onnxBackendSuite,"test_dynamicquantizelinear_min_adjusted",test_dynamicquantizelinear_min_adjusted),
   //CU_add_test(onnxBackendSuite,"test_dynamicquantizelinear_min_adjusted_expanded",test_dynamicquantizelinear_min_adjusted_expanded),
   //CU_add_test(onnxBackendSuite,"test_edge_pad",test_edge_pad),
-  //CU_add_test(onnxBackendSuite,"test_elu",test_elu),
-  //CU_add_test(onnxBackendSuite,"test_elu_default",test_elu_default),
-  //CU_add_test(onnxBackendSuite,"test_elu_example",test_elu_example),
+  CU_add_test(onnxBackendSuite,"test_elu",test_elu),
+  CU_add_test(onnxBackendSuite,"test_elu_default",test_elu_default),
+  CU_add_test(onnxBackendSuite,"test_elu_example",test_elu_example),
   //CU_add_test(onnxBackendSuite,"test_equal",test_equal),
   //CU_add_test(onnxBackendSuite,"test_equal_bcast",test_equal_bcast),
   //CU_add_test(onnxBackendSuite,"test_erf",test_erf),
@@ -281,7 +281,7 @@ int main(int argc, char **argv)
   //CU_add_test(onnxBackendSuite,"test_hardsigmoid",test_hardsigmoid),
   //CU_add_test(onnxBackendSuite,"test_hardsigmoid_default",test_hardsigmoid_default),
   //CU_add_test(onnxBackendSuite,"test_hardsigmoid_example",test_hardsigmoid_example),
-  //CU_add_test(onnxBackendSuite,"test_identity",test_identity),
+  CU_add_test(onnxBackendSuite,"test_identity",test_identity),
   //CU_add_test(onnxBackendSuite,"test_instancenorm_epsilon",test_instancenorm_epsilon),
   //CU_add_test(onnxBackendSuite,"test_instancenorm_example",test_instancenorm_example),
   //CU_add_test(onnxBackendSuite,"test_isinf",test_isinf),
@@ -639,7 +639,7 @@ int main(int argc, char **argv)
   CU_add_test(modelsTestSuite, "test_model_mnist", test_model_mnist);
   CU_add_test(modelsTestSuite, "test_model_tinyyolov2", test_model_tinyyolov2);
   CU_add_test(modelsTestSuite, "test_model_super_resolution", test_model_super_resolution);
-  //CU_add_test(modelsTestSuite, "test_model_mobilenetv2", test_model_mobilenetv2);
+  CU_add_test(modelsTestSuite, "test_model_mobilenetv2", test_model_mobilenetv2);
 
   CU_basic_set_mode(CU_BRM_VERBOSE);
 

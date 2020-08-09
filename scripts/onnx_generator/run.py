@@ -139,7 +139,7 @@ path = f"{args.path[-1]}/{args.header[-1]}/"
 headers = [ OperatorHeader.Header(s,path) for s in schemas ]
 note("generating onnx operator type resolvers")
 path = f"{args.path[-1]}/{args.resolve[-1]}/"
-resolvers = [ OperatorTypeResolver.Source(s,path) for s in schemas ]
+resolvers = [ OperatorTypeResolver.Source(h,path) for h in headers ]
 note("generating onnx operator sets")
 path = f"{args.path[-1]}/{args.sets[-1]}/"
 sets = [OperatorSets.Source(headers,path)]
@@ -148,7 +148,7 @@ path = f"{args.path[-1]}/{args.stubs[-1]}/"
 stubs = itertools.chain(*[ OperatorStubs.Sources(h,path) for h in headers ])
 note("generating onnx operator info")
 path = f"{args.path[-1]}/{args.info[-1]}/"
-info = [ OperatorInfo.Source(s, path) for s in schemas ]
+info = [ OperatorInfo.Source(h, path) for h in headers ]
 
 files = []
 if not args.no_header:

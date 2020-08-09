@@ -1,19 +1,19 @@
 
 onnx = []
 verbose = 0
-header = ["include/operators"]
+header = ["src/operators"]
 no_header = 0
 force_header = 0
-resolve = ["src/operators/resolve"]
+resolve = ["src/operators/"]
 no_resolve = 0
 force_resolve = 0
 sets = ["src/operators/"]
 no_sets = 0
-stubs = ["src/operators/implementation"]
+stubs = ["src/operators/"]
 force_sets = 0
 no_stubs = 0
 force_stubs = 0
-info = ["src/operators/info"]
+info = ["src/operators/"]
 no_info = 0
 force_info = 0
 force = 0

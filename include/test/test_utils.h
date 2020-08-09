@@ -4,11 +4,11 @@
 #include <CUnit/CUnit.h>
 #include <CUnit/Basic.h>
 #include <glob.h>
+#include <inttypes.h>
 
 #include "trace.h"
 #include "inference.h"
 #include "utils.h"
-#include <glob.h>
 
 #define FLOAT_TOLERANCE 0.001f
 
@@ -76,7 +76,7 @@ void compareAlmostEqualTensorProto(Onnx__TensorProto *a, Onnx__TensorProto *b)
       CU_ASSERT_EQUAL(a->n_int64_data, b->n_int64_data);
       for(int i = 0; i < a->n_int64_data; i++)
       {
-        TRACE_LEVEL0("ASSERTING EQUAL: %lld, %lld\n", a->int64_data[i], b->int64_data[i]);
+        TRACE_LEVEL0("ASSERTING EQUAL: %" PRId64 ", %" PRId64 "\n", a->int64_data[i], b->int64_data[i]);
         CU_ASSERT_EQUAL(a->int64_data[i], b->int64_data[i]);
       }
       break;
@@ -165,7 +165,7 @@ void testOperator(char *outputName)
 
   resolve(model, inputs, nInputs);
   printf("Running inference\n");
-  Onnx__TensorProto **output = inference(model, inputs, nInputs);
+  inference(model, inputs, nInputs);
 
   /* Some operators have more than two outputs to assert */
   printf("Will compare output %d = %s", _populatedIdx, all_context[_populatedIdx].outputs[0]->name);

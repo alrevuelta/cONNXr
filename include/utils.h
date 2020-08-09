@@ -20,6 +20,8 @@ Onnx__TensorProto* searchOutputByName(node_context *ctx,
 Onnx__ModelProto* openOnnxFile(char *fname);
 Onnx__TensorProto* openTensorProtoFile(char *fname);
 
+size_t exportTensorProtoFile(const Onnx__TensorProto *tensor, char *fname);
+
 int convertRawDataOfTensorProto(Onnx__TensorProto *tensor);
 
 void mallocTensorProto(Onnx__TensorProto *tp,
@@ -28,5 +30,9 @@ void mallocTensorProto(Onnx__TensorProto *tp,
                        size_t n_data);
 
 void init_tensor_proto(Onnx__TensorProto *tp);
+
+size_t strnlen(const char *src, size_t length);
+char*  strndup(const char *src, size_t length);
+char*  strdup(const char *src);
 
 #endif

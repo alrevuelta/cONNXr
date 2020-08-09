@@ -41,6 +41,11 @@ build/connxr test/tiny_yolov2/Model.onnx test/tiny_yolov2/test_data_set_0/input_
 build/connxr test/super_resolution/super_resolution.onnx test/super_resolution/test_data_set_0/input_0.pb
 ```
 
+## [mobilenet v2](https://github.com/onnx/models/tree/master/vision/classification/mobilenet)
+```
+build/connxr test/mobilenetv2-1.0/mobilenetv2-1.0.onnx test/mobilenetv2-1.0/test_data_set_0/input_0.pb
+```
+
 TODO:
 * [Fast Neural Style Transfer](https://github.com/onnx/models/tree/master/vision/style_transfer/fast_neural_style)
 * [TinyTOLOv3](https://github.com/onnx/models/tree/master/vision/object_detection_segmentation/tiny-yolov3)

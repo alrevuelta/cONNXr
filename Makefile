@@ -1,7 +1,7 @@
 
 VARIABLE+=TRACE_LEVEL
 HELP_TRACE_LEVEL=trace verbosity
-TRACE_LEVEL?=0
+# TRACE_LEVEL?=0
 
 VARIABLE+=BUILDDIR
 HELP_BUILDDIR=build directory
@@ -63,6 +63,8 @@ ONNX_INCLUDE+="^Reshape$$"
 ONNX_INCLUDE+="^Sigmoid$$"
 ONNX_INCLUDE+="^Softmax$$"
 ONNX_INCLUDE+="^Transpose$$"
+ONNX_INCLUDE+="^Elu$$"
+ONNX_INCLUDE+="^Identity$$"
 endif
 
 VARIABLE+=ONNX_VERSION
@@ -71,7 +73,7 @@ ONNX_VERSION=latest
 
 VARIABLE+=ONNX_DOMAINS
 HELP_ONNX_DOMAINS=which onnx domains to use
-ONNX_DOMAINS=onnx
+ONNX_DOMAINS=ai.onnx
 
 VARIABLE+=ONNX_EXCLUDE
 HELP_ONNX_EXCLUDE=which schemas to exclude
@@ -86,9 +88,11 @@ REPEAT_mobilenetv2=1
 CC=gcc
 CFLAGS+=-std=c99
 CFLAGS+=-Wall
-CFLAGS+=-g
+CFLAGS+=-g3 -gdwarf -O2
 # CFLAGS+=-Werror # CI jobs run with flag enabled
-CPPFLAGS+=-D TRACE_LEVEL=$(TRACE_LEVEL)
+ifdef TRACE_LEVEL
+CPPFLAGS+=-D "TRACE_LEVEL=$(TRACE_LEVEL)"
+endif
 
 LDFLAGS+=-g
 LDLIBS+=-lcunit
@@ -100,11 +104,8 @@ INCDIR+=src/pb
 CPPFLAGS+=$(foreach DIR, $(INCDIR),-I $(DIR) )
 
 SRCDIR+=src/operators
-SRCDIR+=src/operators/info/onnx
-SRCDIR+=src/operators/resolve/onnx
-SRCDIR+=src/operators/implementation/onnx
 SRCDIR+=src/pb
-SRCS+=$(foreach DIR, $(SRCDIR), $(wildcard $(DIR)/*.c))
+SRCS+=$(foreach DIR, $(SRCDIR), $(shell find $(DIR) -type f -name '*.c'))
 SRCS+=src/inference.c
 SRCS+=src/trace.c
 SRCS+=src/utils.c
@@ -124,7 +125,7 @@ ALL+=runtest
 TARGET+=runtest
 runtest: $(BUILDDIR)/runtest
 $(BUILDDIR)/runtest: $(OBJS)
-	$(CC) -o $@ src/test/tests.c $^ $(CPPFLAGS) $(LDFLAGS) $(LDLIBS)
+	$(CC) -o $@ src/test/tests.c $^ $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $(LDLIBS)
 
 .phony: clean_build
 CLEAN+=clean_build
@@ -165,7 +166,7 @@ HELP_benchmark_$(1)=run $(1) benchmark
 TARGET_benchmark+=benchmark_$(1)
 benchmark_$(1): $(BENCHMARKDIR)/$(1).txt
 #Dont trace to run faster
-TRACE_LEVEL=-1
+# TRACE_LEVEL=-1
 $(BENCHMARKDIR)/$(1).txt: runtest
 	rm -f $(BENCHMARKDIR)/$(1).txt
 	mkdir -p $(BENCHMARKDIR)
@@ -197,7 +198,7 @@ TARGET+=connxr
 ALL+=connxr
 connxr: $(BUILDDIR)/connxr
 $(BUILDDIR)/connxr: $(OBJS)
-	$(CC) -o $@ src/connxr.c $^ $(CPPFLAGS) $(LDFLAGS) $(LDLIBS)
+	$(CC) -o $@ src/connxr.c $^ $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $(LDLIBS)
 
 define PROFILING_MODEL
 HELP_profiling_$(1)=run $(1) profiling
@@ -254,7 +255,6 @@ onnx_generator:
 	$(if $(ONNX_VERSION), --version $(ONNX_VERSION)) \
 	$(if $(ONNX_DOMAINS), --domains $(ONNX_DOMAINS)) \
 	-vv \
-	--force-header \
 	--force-resolve \
 	--force-sets \
 	--force-info \

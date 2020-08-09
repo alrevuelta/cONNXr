@@ -557,14 +557,14 @@ class OnnxSchema():
         return re.sub(r"\W", "_", name).lower()
 
     def _domain(self, schema):
-        domain = "onnx"
+        domain = "ai.onnx"
         if schema.domain:
             domain = schema.domain
         return domain.strip()
 
     def _ref_doc(self, schema):
         domain = self._domain(schema)
-        if domain == 'onnx':
+        if domain == 'ai.onnx':
             return f"https://github.com/onnx/onnx/blob/master/docs/Operators.md#{schema.name}"
         elif domain == 'ai.onnx.ml':
             return f"https://github.com/onnx/onnx/blob/master/docs/Operators-ml.md#{schema.name}"
