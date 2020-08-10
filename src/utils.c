@@ -595,3 +595,64 @@ mallocTensorData(Onnx__TensorProto *dst) {
 
   return *data;
 }
+
+void*
+freeTensorData(Onnx__TensorProto *dst) {
+  void   **data;
+  switch (dst->data_type) {
+    case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:
+      data           = (void*) &dst->float_data;
+      break;
+    case ONNX__TENSOR_PROTO__DATA_TYPE__UINT8:
+      data           = (void*) &dst->int32_data;
+      break;
+    case ONNX__TENSOR_PROTO__DATA_TYPE__INT8:
+      data           = (void*) &dst->int32_data;
+      break;
+    case ONNX__TENSOR_PROTO__DATA_TYPE__UINT16:
+      data           = (void*) &dst->int32_data;
+      break;
+    case ONNX__TENSOR_PROTO__DATA_TYPE__INT16:
+      data           = (void*) &dst->int32_data;
+      break;
+    case ONNX__TENSOR_PROTO__DATA_TYPE__INT32:
+      data           = (void*) &dst->int32_data;
+      break;
+    case ONNX__TENSOR_PROTO__DATA_TYPE__INT64:
+      data           = (void*) &dst->int64_data;
+      break;
+    case ONNX__TENSOR_PROTO__DATA_TYPE__STRING:
+      data           = (void*) &dst->string_data;
+      break;
+    case ONNX__TENSOR_PROTO__DATA_TYPE__BOOL:
+      data           = (void*) &dst->int32_data;
+      break;
+    case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT16:
+      data           = (void*) &dst->int32_data;
+      break;
+    case ONNX__TENSOR_PROTO__DATA_TYPE__DOUBLE:
+      data           = (void*) &dst->double_data;
+      break;
+    case ONNX__TENSOR_PROTO__DATA_TYPE__UINT32:
+      data           = (void*) &dst->uint64_data;
+      break;
+    case ONNX__TENSOR_PROTO__DATA_TYPE__UINT64:
+      data           = (void*) &dst->uint64_data;
+      break;
+    case ONNX__TENSOR_PROTO__DATA_TYPE__COMPLEX64:
+      data           = (void*) &dst->float_data;
+      break;
+    case ONNX__TENSOR_PROTO__DATA_TYPE__COMPLEX128:
+      data           = (void*) &dst->double_data;
+      break;
+    case ONNX__TENSOR_PROTO__DATA_TYPE__BFLOAT16:
+      //is not documented
+    default:
+      //unknown datatype
+      TRACE_FATAL(0, true, "no case for datatype %d", dst->data_type);
+      return NULL;
+  }
+  free(*data);
+
+  return *data;
+}
