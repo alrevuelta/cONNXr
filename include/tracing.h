@@ -472,16 +472,25 @@ __PRINT_VAR(TRACE_SYMBOL_STDOUT, VAR, FMT)
 
 #define __PRINT_ARRAY2D(FD, LEVEL, PREFIX, VAR, ELEMENT, NUM_Y, NUM_X, FMT) \
 { \
-    __VAR(LEVEL, PREFIX, VAR, "%p [\n") \
+    __PREAMBLE(FD, LEVEL, PREFIX) \
+    __PRINT(FD, STR(VAR) ": %p [\n", VAR) \
     for (int y = 0; y < (NUM_Y); y++) { \
-        __VAR( LEVEL, PREFIX, &(VAR)[y*(NUM_X)], "%p  ") \
-        __PRINT_ARRAY(FD, (&(VAR)[y*(NUM_X)]), ELEMENT, NUM_X, FMT) \
+        __PREAMBLE(FD, LEVEL, PREFIX) \
+        __PRINT(FD, STR(VAR) ": %p  [", &(VAR)[y*(NUM_X)]) \
+        for (int x = 0; x < (NUM_X); x++) { \
+            __PRINT(FD, FMT, VAR[y*(NUM_X)+x]ELEMENT) \
+            if (x < (NUM_X)-1) { \
+                __PRINT(FD, ",") \
+            } \
+        } \
+        __PRINT(FD, "]") \
         if (y < (NUM_Y)-1) { \
             __PRINT(FD, ",\n") \
         } \
     } \
     __PRINT(FD, "\n") \
-    __VAR(LEVEL, PREFIX, (&(VAR)[(NUM_Y)*(NUM_X)]), "%p ]\n") \
+    __PREAMBLE(FD, LEVEL, PREFIX) \
+    __PRINT(FD, STR(VAR) ": %p ]\n", &(VAR)[(NUM_Y)*(NUM_X)]) \
 }
 
 #define __PRINT_BOUND(FD, VAR, MIN, MAX, FMT) \
