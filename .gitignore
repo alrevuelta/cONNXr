@@ -2,4 +2,5 @@ build
 profiling
 benchmarks
 dump.txt
+venv
 **/.DS_Store

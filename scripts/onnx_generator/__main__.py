@@ -3,13 +3,6 @@ from . import args
 
 parser = argparse.ArgumentParser("onnx_generator")
 parser.add_argument(
-    "--onnx",
-    nargs=1,
-    metavar="<path>",
-    default = args.onnx,
-    help="use custom onnx_cpp2py_export.so located in <path> dir"
-)
-parser.add_argument(
     "-v", "--verbose",
     action='count',
     default=args.verbose,

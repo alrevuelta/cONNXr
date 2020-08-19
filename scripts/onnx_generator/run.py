@@ -9,6 +9,7 @@ from . import OperatorStubs
 from .OnnxWrapper import OnnxSchema
 from . import OperatorInfo
 from . import args
+from onnx import onnx_cpp2py_export
 import itertools
 
 def note(text, verbosity=0 ):
@@ -23,19 +24,6 @@ def fatal(text, error=1):
     print(text, file=sys.stderr)
     sys.exit(error)
 
-if args.onnx:
-    sys.path.insert(0, os.path.realpath(args.onnx[0]))
-    try:
-        import onnx_cpp2py_export
-    except:
-        fatal("could not import onnx_cpp2py_export!")
-else:
-    try:
-        from onnx import onnx_cpp2py_export
-    except:
-        fatal("could not import onnx_cpp2py_export from onnx!")
-
-note(f"onnx: {args.onnx}",3)
 note(f"verbose: {args.verbose}",3)
 note(f"header: {args.header}",3)
 note(f"no_header: {args.no_header}",3)
