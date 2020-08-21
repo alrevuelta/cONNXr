@@ -1,14 +1,14 @@
-# cONNXr C ONNX Runtime
+# 🤖 cONNXr C ONNX Runtime
 ![macos-latest](https://github.com/alrevuelta/cONNXr/workflows/macos-latest/badge.svg) ![ubuntu-latest](https://github.com/alrevuelta/cONNXr/workflows/ubuntu-latest/badge.svg) ![windows-latest](https://github.com/alrevuelta/cONNXr/workflows/windows-latest/badge.svg)
 
 
 > A `onnx` runtime written in pure `C99` with zero dependencies focused on embedded devices. Run inference on your machine learning models no matter which framework you train it with and no matter the device that you use. This is the perfect way to go in old hardware that doesn't support fancy modern C or C++.
 
-<h2 align="center">📗 Documentation 📗</h2>
+# 📗 Documentation
 
-<p align="center">
-  • Available <a href="https://connxr.readthedocs.io/">here</a> •
-</p>
+Documentation about the project, how to collaborate, architecture and much more. Available [here](https://connxr.readthedocs.io/)
+
+# 🎓 Introduction
 
 This repo contains a pure C99 runtime to run inference on `onnx` models. You can train your model with you favourite framework (tensorflow, keras, sklearn) and once trained export it to a `.onnx` file, that will be used to run inference. This makes this library totally framework agnostic, no matter how you train your model, this repo will run it using the common interface that `onnx` provides. This runtime was thought for embedded devices, that might not be able to compile newer cpp versions. No GPUs nor HW accelerators, just pure non multi-thread C99 code, compatible with almost any embedded device. Dealing with old hardware? This might be also for you.
 
@@ -16,7 +16,7 @@ This project can be also useful if you are working with some bare metal hardware
 
 Note that this project is in a very early stage so its not even close to be production ready. Developers are needed so feel free to contact or contribute with a pull request. You can also have a look to the opened issues if you want to contribute, specially the ones labeled for beginners. See contributing section.
 
-# Out of the box examples
+# 🖥 Out of the box examples
 
 Some very well known models are supported out of the box, just compile the command line as follows and call it with two parameters (first the `ONNX` model, and second the `input` to run inference on). Note that the input has to be a `.pb` file. If you have your own model and its not working, its probably because its using an operator that we haven't implemented yet, so feel free to open an issue and we will happy to help.
 ```
@@ -49,7 +49,7 @@ TODO:
 * [Interception_V1](https://github.com/onnx/models/tree/master/vision/classification/inception_and_googlenet/inception_v1)
 * [Quantized MNIST](https://github.com/alrevuelta/cONNXr/blob/master/scripts/quantized_model.onnx)
 
-# Example
+# ⚙ Example
 
 If you want to use `cONNXr` as part of your code, you can either include all the files in your project and compile them, or perhaps link it as a static library, but this second option is not supported yet.
 
@@ -81,20 +81,20 @@ int main()
 }
 ```
 
-# Related Projects
+# 🏷 Related Projects
 
 Other C/C++ related projects: [onnxruntime](https://github.com/microsoft/onnxruntime), [darknet](https://github.com/pjreddie/darknet), [uTensor](https://github.com/uTensor/uTensor), [nnom](https://github.com/majianjia/nnom), [ELL](https://github.com/Microsoft/ELL), [plaidML](https://github.com/plaidml/plaidml), [deepC](https://github.com/ai-techsystems/deepC), [onnc](https://github.com/ONNC/onnc)
 
 
-# Limitations
+# ⛓ Limitations
 
 * Few basic operators are implemented, so a model that contains a not implemented operator will fail.
 * Each operator works with many data types (double, float, int16, int32). Only few of them are implemented.
 * The reference implementation is with `float`, so you might run into troubles with other types.
 * As a general note, this project is a proof of concept/prototype, so bear that in mind.
 
-# Disclaimer
+# 📌 Disclaimer
 This project is not associated in any way with ONNX and it is not an official solution nor officially supported by ONNX, it is just an application build on top of the `.onnx` format that aims to help people that want to run inference in devices that are not supported by the official runtimes. Use at your own risk.
 
-# License
+# 📗 License
 [MIT License](https://github.com/alrevuelta/cONNXr/blob/master/LICENSE)
