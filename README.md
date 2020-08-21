@@ -7,10 +7,7 @@
 <h2 align="center">📗 Documentation 📗</h2>
 
 <p align="center">
-  <a href="doc/01_Documentation.md">01 Documentation</a> •
-  <a href="doc/02_Testing.md">02 Testing</a> •
-  <a href="doc/03_Contributing.md">03 Contributing</a> •
-  <a href="doc/04_OperatorStatus.md">04 Operator Status</a>
+  • Available <a href="https://connxr.readthedocs.io/">here</a> •
 </p>
 
 This repo contains a pure C99 runtime to run inference on `onnx` models. You can train your model with you favourite framework (tensorflow, keras, sklearn) and once trained export it to a `.onnx` file, that will be used to run inference. This makes this library totally framework agnostic, no matter how you train your model, this repo will run it using the common interface that `onnx` provides. This runtime was thought for embedded devices, that might not be able to compile newer cpp versions. No GPUs nor HW accelerators, just pure non multi-thread C99 code, compatible with almost any embedded device. Dealing with old hardware? This might be also for you.
