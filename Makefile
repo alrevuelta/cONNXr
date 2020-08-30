@@ -259,10 +259,10 @@ onnx_generator:
 	--force-info \
 	$(shell git rev-parse --show-toplevel)
 
-.phony:onnx_crawl_tests
-HELP_onnx_crawl_tests=call when a new onnx version is released, in order to get the new opset tests
-TARGET+=onnx_crawl_tests
-onnx_crawl_tests:
-	python scripts/crawl_onnx_tests.py
+.phony:get_official_tests
+HELP_crawl_official_tests=gets the official tests from onnx, and organizes them by verson and domain
+TARGET+=get_official_tests
+get_official_tests:
+	python test_data/get_official_tests.py
 
 include .Makefile.template
