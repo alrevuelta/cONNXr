@@ -22,6 +22,7 @@ def parse_args():  # type: () -> argparse.Namespace
     parser.add_argument('--modelpath', default='test_data/node_official_data', help='Output folder to place the models')
     parser.add_argument('--casepath', default='test_data/node_official_case', help='Output folder to place the scripts')
     parser.add_argument('--getcase', default=False, const=True, nargs='?', help='Downloads also the Python scripts that generates the model')
+    # TODO Add --getdata
     return parser.parse_args()
 
 """
