@@ -1,4 +1,4 @@
-# 01 Documentation
+# Documentation
 
 ## Introduction
 ### What is ONNX?
@@ -13,7 +13,7 @@ In short, `onnx` provides a **O**pen **N**eural **N**etwork **E**xchange format.
 
 In the following image, you can find an example on how a `onnx` model looks like. Its just a bunch of `nodes` that are connected between them to form a `graph`. Each node has an `operator` that takes some `inputs` with some specific `dimensions` and some `attributes` and calculates some `outputs`. This is how the inference is calculated, just forward propagating the input along every node until the last one is reached.
 
-![mnist](/doc/img/mnist_example.png)
+![mnist](img/mnist_example.png)
 
 So this `.onnx` format can describe machine learning models through a set of nodes that contain specific operators connected among them. On top of that, they also offer a set of the so called "runtimes" [see link](https://onnx.ai/supported-tools.html). A runtime allows to run inference on a model, and they offer different ones in a wide variety of languages and hardware. Unfortunately, all the runtimes rely on modern versions of C/C++ with many abstractions and dependancies, which might be a no go for some specific projects. Here is where we come in.
 
