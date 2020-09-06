@@ -10,9 +10,9 @@ import onnx
 #from ..base import Base
 from onnx.backend.test.case.base import Base
 
-from . import expect
+from node_custom_case import expect
 
-class Abs(Base):
+class Dummy(Base):
 
     @staticmethod
     def export():  # type: () -> None
@@ -30,5 +30,6 @@ class Abs(Base):
         # using onnx runtime.
         y = abs(x)
 
+        # opset_import should match the folder number
         expect(node, inputs=[x], outputs=[y],
-               name='test_abs_opsetXX')
+               name='test_dummy_training', opset_import=6, domain="ai.onnx.preview.training")
