@@ -111,4 +111,3 @@ def main():  # type: () -> None
 
 if __name__ == '__main__':
     main()
-    # python3 test_data/generate_custom_tests.py generate-data -o test_data

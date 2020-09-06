@@ -107,7 +107,7 @@ def get_data(tests_path, domain, out_path):
             if len(file_names) != 1:
                 raise Exception("Model file not found")
 
-            #  Open the onnx file
+            # Open the onnx file
             onnx_path = os.path.join(tests_path, test_folder, file_names[0])
             onnx_model = onnx.load(onnx_path)
 
@@ -190,7 +190,7 @@ def main():  # type: () -> None
         release = version[0]
         
         # Download the Python release
-        #download(release)
+        download(release)
 
         # Untar the files
         tar_file_path = glob.glob(f'{TEMP_DIR}/onnx-{release}*.tar.gz')[0]
@@ -210,8 +210,8 @@ def main():  # type: () -> None
         if args.getcase:
             get_node(node_path, args.domain, args.casepath, version)
             print("Done processing scripts for release", release)
-    # Commented for testing
-    # os.system(f"rm -r {TEMP_DIR}")
+    
+    os.system(f"rm -r {TEMP_DIR}")
 
 
 if __name__ == '__main__':

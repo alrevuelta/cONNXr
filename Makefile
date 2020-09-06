@@ -263,6 +263,12 @@ onnx_generator:
 HELP_crawl_official_tests=gets the official tests from onnx, and organizes them by verson and domain
 TARGET+=get_official_tests
 get_official_tests:
-	python test_data/get_official_tests.py
+	python test_data/get_official_tests.py --getdata
+
+.phony:generate_custom_tests
+HELP_generate_custom_tests=generate the custom test models using the py scripts
+TARGET+=generate_custom_tests
+generate_custom_tests:
+	python test_data/generate_custom_tests.py generate-data -o test_data
 
 include .Makefile.template
