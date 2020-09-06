@@ -1,4 +1,4 @@
-# 03 Contributing
+# Contributing
 This project is in very early state so we are looking for contributors. Feel free to open a PR or an issue with questions or suggestions. We would be also happy to guide you if you have an idea. You can contribute in many ways, but the most common is to implement a new operator. The `onnx` specification defines more than 150 operators, that are supported for different types (float, int, double,...) and for some of them there are different versions. Some common ones are implemented with limited functionality like convolutions, matrix multiplications and so on, but there are lots of them remaining.
 
 You can also contribute by improving an existing operator or fixing some bugs. Feel free to have a look to the opened issues, where we also have some simple issues for newcomers.

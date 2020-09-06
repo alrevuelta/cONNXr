@@ -247,13 +247,14 @@ format-check:
 HELP_onnx_generator=generate various onnx sources and headers
 TARGET+=onnx_generator
 onnx_generator:
+	python -m venv venv
+	. venv/bin/activate; pip install -r requirements.txt
 	cd scripts; python -m onnx_generator \
 	$(if $(ONNX_INCLUDE), --include $(ONNX_INCLUDE)) \
 	$(if $(ONNX_EXCLUDE), --exclude $(ONNX_EXCLUDE)) \
 	$(if $(ONNX_VERSION), --version $(ONNX_VERSION)) \
 	$(if $(ONNX_DOMAINS), --domains $(ONNX_DOMAINS)) \
 	-vv \
-	--force-header \
 	--force-resolve \
 	--force-sets \
 	--force-info \
@@ -270,5 +271,10 @@ HELP_generate_custom_tests=generate the custom test models using the py scripts
 TARGET+=generate_custom_tests
 generate_custom_tests:
 	python test_data/generate_custom_tests.py generate-data -o test_data
+
+.phony: distclean_venv
+DISTCLEAN+=distclean_venv
+distclean_venv:
+	rm -rf venv
 
 include .Makefile.template
