@@ -10,9 +10,12 @@ import re
 from onnx import onnx_cpp2py_export
 
 """
-This script walks through a set of onnx releases fetching the test cases for each, which
-contains the model and a set of inputs and expected outputs. Once the data is fetched, it
-organizes in folders the test cases according to its domain and opset version.
+file: get_official_tests.py
+
+description: This script walks through a set of onnx releases fetching the test cases
+for each, which contains the model and a set of inputs and expected outputs.
+Once the data is fetched, it organizes in folders the test cases according to its domain
+and opset version.
 """
 
 

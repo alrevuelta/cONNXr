@@ -17,17 +17,14 @@ import numpy as np  # type: ignore
 import onnx
 import onnx.mapping
 
-#from ..utils import import_recursive
 from onnx.backend.test.case.utils import import_recursive
-
-#from ..test_case import TestCase
 from onnx.backend.test.case.test_case import TestCase
 
 _NodeTestCases = []
 
 from onnx.onnx_pb import NodeProto, AttributeProto
 from onnx.onnx_operators_pb import FunctionProto
-
+from onnx import TensorProto
 
 # FIXME(TMVector): Any reason we can't get rid of this and use the C++ helper directly?
 def function_expand_helper(node,  # type: NodeProto
@@ -125,31 +122,46 @@ def _extract_value_info(input, name, ele_type=None):  # type: (Union[List[Any], 
 
 def expect(node,  # type: onnx.NodeProto
            inputs,  # type: Sequence[np.ndarray]
-           outputs,  # type: Sequence[np.ndarray]
+           #outputs,  # type: Sequence[np.ndarray]
            name,  # type: Text
            opset_import, # type: Int
            domain, # type: String
            **kwargs  # type: Any
            ):  # type: (...) -> None
+    if domain not in ["ai.onnx", "ai.onnx.ml", "ai.onnx.preview.training"]:
+        raise Exception("The domain should be: ai.onnx, ai.onnx.ml or ai.onnx.preview.training")
+
     present_inputs = [x for x in node.input if (x != '')]
-    present_outputs = [x for x in node.output if (x != '')]
+    #present_outputs = [x for x in node.output if (x != '')]
     input_types = [None] * len(inputs)
     if 'input_types' in kwargs:
         input_types = kwargs[str('input_types')]
         del kwargs[str('input_types')]
-    output_types = [None] * len(outputs)
-    if 'output_types' in kwargs:
-        output_types = kwargs[str('output_types')]
-        del kwargs[str('output_types')]
+    #output_types = [None] * len(outputs)
+    #if 'output_types' in kwargs:
+    #    output_types = kwargs[str('output_types')]
+    #    del kwargs[str('output_types')]
     inputs_vi = [_extract_value_info(arr, arr_name, input_type)
                  for arr, arr_name, input_type in zip(inputs, present_inputs, input_types)]
-    outputs_vi = [_extract_value_info(arr, arr_name, output_type)
-                  for arr, arr_name, output_type in zip(outputs, present_outputs, output_types)]
+    #outputs_vi = [_extract_value_info(arr, arr_name, output_type)
+    #              for arr, arr_name, output_type in zip(outputs, present_outputs, output_types)]
+
+
+    # We don't know how the input looks like, we just know
+    # the input. So create a dummy output with the name
+    outputs_vi = [onnx.helper.make_tensor_value_info(
+                                    name=i,
+                                    # Not sore about using always float
+                                    elem_type=TensorProto.FLOAT,
+                                    shape=None)
+                 for i in node.output]
+
     graph = onnx.helper.make_graph(
         nodes=[node],
         name=name,
         inputs=inputs_vi,
         outputs=outputs_vi)
+
     kwargs[str('producer_name')] = 'backend-test'
     model = onnx.helper.make_model(graph, **kwargs)
     model.opset_import[0].version = opset_import
@@ -160,7 +172,7 @@ def expect(node,  # type: onnx.NodeProto
         url=None,
         model_dir=None,
         model=model,
-        data_sets=[(inputs, outputs)],
+        data_sets=[(inputs)],
         # Hackish solution to organize the outputs
         kind=f'node_custom_data/{domain}/{opset_import}',
         rtol=1e-3,
@@ -170,11 +182,20 @@ def expect(node,  # type: onnx.NodeProto
     expanded_function_nodes = function_testcase_helper(node, name)
     if expanded_function_nodes:
         function_test_name = name + '_expanded'
+        # We don't know how the input looks like, we just know
+        # the input. So create a dummy output with the name
+        outputs_vi = [onnx.helper.make_tensor_value_info(
+                                        name=i,
+                                        # Not sore about using always float
+                                        elem_type=TensorProto.FLOAT,
+                                        shape=None)
+                     for i in node.output]
         graph = onnx.helper.make_graph(
             nodes=expanded_function_nodes,
             name=function_test_name,
             inputs=inputs_vi,
-            outputs=outputs_vi)
+            outputs=outputs_vi
+            )
         kwargs[str('producer_name')] = 'backend-test'
         model = onnx.helper.make_model(graph, **kwargs)
         model.opset_import[0].version = opset_import
@@ -184,7 +205,7 @@ def expect(node,  # type: onnx.NodeProto
             url=None,
             model_dir=None,
             model=model,
-            data_sets=[(inputs, outputs)],
+            data_sets=[(inputs)],
             # Hackish solution to organize the outputs
             kind=f'node_custom_data/{domain}/{opset_import}',
             rtol=1e-3,

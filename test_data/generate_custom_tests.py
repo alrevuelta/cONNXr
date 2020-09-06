@@ -8,15 +8,21 @@ import json
 import os
 import shutil
 
-#import onnx.backend.test.case.node as node_test
-#import onnx.backend.test.case.model as model_test
-
 import node_custom_case as custom_test
 
 from onnx import numpy_helper
 from typing import Text
+import onnxruntime as nxrun
 
-# Based on "cmd_tools.py" form onnx
+"""
+file: generate_custom_tests.py
+
+description: This file is based on the cmd_tool.py script form
+onnx official repo. Given a set of .py with test operators test
+cases, this script crawls them all generating the .onnx model
+and input and outputs .pb test vectors. Note that the expected
+output is calculated running inference using the onnx runtime.
+"""
 
 TOP_DIR = os.path.realpath(os.path.dirname(__file__))
 DATA_DIR = os.path.join(TOP_DIR, 'data')
@@ -46,7 +52,7 @@ def generate_data(args):  # type: (argparse.Namespace) -> None
         else:
             with open(os.path.join(output_dir, 'model.onnx'), 'wb') as f:
                 f.write(case.model.SerializeToString())
-            for i, (inputs, outputs) in enumerate(case.data_sets):
+            for i, (inputs) in enumerate(case.data_sets):
                 data_set_dir = os.path.join(
                     output_dir, 'test_data_set_{}'.format(i))
                 prepare_dir(data_set_dir)
@@ -62,6 +68,15 @@ def generate_data(args):  # type: (argparse.Namespace) -> None
                         else:
                             f.write(numpy_helper.from_array(
                                 input, case.model.graph.input[j].name).SerializeToString())
+
+                # Open model and run inference with the input
+                sess = nxrun.InferenceSession(os.path.join(output_dir, 'model.onnx'))
+                inputs_dict = {}
+                for j, input in enumerate(inputs):
+                    inputs_dict[case.model.graph.input[j].name] = input
+
+                # Save the output
+                outputs = sess.run(None, inputs_dict)
                 for j, output in enumerate(outputs):
                     with open(os.path.join(
                             data_set_dir, 'output_{}.pb'.format(j)), 'wb') as f:
@@ -74,6 +89,7 @@ def generate_data(args):  # type: (argparse.Namespace) -> None
                         else:
                             f.write(numpy_helper.from_array(
                                 output, case.model.graph.output[j].name).SerializeToString())
+                
 
 
 def parse_args():  # type: () -> argparse.Namespace

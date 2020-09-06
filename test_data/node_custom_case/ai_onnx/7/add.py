@@ -3,18 +3,20 @@ import onnx
 from onnx.backend.test.case.base import Base
 from node_custom_case import expect
 
-class Abs(Base):
+class Add(Base):
 
     @staticmethod
     def export():  # type: () -> None
         node = onnx.helper.make_node(
-            'Abs',
-            inputs=['x'],
-            outputs=['y'],
+            'Add',
+            inputs=['x', 'y'],
+            outputs=['sum'],
         )
-        x = np.array([-0.5, 0, 0.5]).astype(np.float32)
+
+        x = np.random.randn(3, 4, 5).astype(np.float32)
+        y = np.random.randn(3, 4, 5).astype(np.float32)
         expect(node,
-               inputs=[x],
-               name='test_abs_custom',
+               inputs=[x, y],
+               name='test_add_custom',
                opset_import=7,
                domain="ai.onnx")
