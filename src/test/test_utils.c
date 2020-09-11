@@ -201,7 +201,7 @@ double test_model(
 
   // So far only 1 input/output is supported
   if (n_inputs > 1 || (n_outputs > 2)){
-    printf(stderr, "Only models with one input/output are supported\n");
+    fprintf(stderr, "Only models with one input/output are supported\n");
   }
 
   Onnx__ModelProto *model = openOnnxFile(model_path);
