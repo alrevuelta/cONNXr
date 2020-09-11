@@ -7,10 +7,6 @@ VARIABLE+=BUILDDIR
 HELP_BUILDDIR=build directory
 BUILDDIR?=build
 
-VARIABLE+=BENCHMARKDIR
-HELP_BENCHMARKDIR=benchmark directory
-BENCHMARKDIR?=benchmarks
-
 VARIABLE+=PROFILINGDIR
 HELP_PROFILINGDIR=profiling directory
 PROFILINGDIR?=profiling
@@ -23,9 +19,6 @@ MODELS+=tinyyolov2
 MODELS+=super_resolution
 MODELS+=mobilenetv2
 endif
-
-VARIABLE+=OPERATORS
-HELP_OPERATORS=operators to test (all if empty)
 
 VARIABLE+=REPEAT
 HELP_REPEAT=default repetition count if not otherwise specified by REPEAT_<modelname>
@@ -79,12 +72,6 @@ VARIABLE+=ONNX_EXCLUDE
 HELP_ONNX_EXCLUDE=which schemas to exclude
 ONNX_EXCLUDE=
 
-$(foreach MODEL, $(MODELS), $(eval REPEAT_$(MODEL)=$(REPEAT)))
-REPEAT_tinyyolov2=1
-REPEAT_super_resolution=1
-REPEAT_mnist=5
-REPEAT_mobilenetv2=1
-
 CC=gcc
 CFLAGS+=-std=c99
 CFLAGS+=-Wall
@@ -109,6 +96,7 @@ SRCS+=$(foreach DIR, $(SRCDIR), $(shell find $(DIR) -type f -name '*.c'))
 SRCS+=src/inference.c
 SRCS+=src/trace.c
 SRCS+=src/utils.c
+SRCS+=src/test/test_utils.c
 OBJS=$(SRCS:%.c=$(BUILDDIR)/%.o)
 
 $(BUILDDIR)/%.o:%.c
@@ -125,7 +113,7 @@ ALL+=runtest
 TARGET+=runtest
 runtest: $(BUILDDIR)/runtest
 $(BUILDDIR)/runtest: $(OBJS)
-	$(CC) -o $@ src/test/tests.c $^ $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $(LDLIBS)
+	$(CC) -shared -o $(BUILDDIR)/connxr.so $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $(LDLIBS) `find build/src/ -type f`
 
 .phony: clean_build
 CLEAN+=clean_build
@@ -133,64 +121,28 @@ clean_build:
 	rm -rf $(BUILDDIR)
 
 .phony:test_operators
-HELP_test_operators=run onnx backend test for each operator in OPERATORS (all if empty)
+HELP_test_operators=run onnx backend operator tests
 TARGET_test+=test_operators
 test_operators: runtest
-ifeq (,$(OPERATORS))
-	$(BUILDDIR)/runtest onnxBackendSuite
-else
-	for OPERATOR in $(OPERATORS); do \
-		$(BUILDDIR)/runtest onnxBackendSuite test_$$OPERATOR; \
-	done
-endif
+	python tests/test_operators.py
 
 .phony:test_models
-HELP_test_models=run model test for each model in MODELS (all if empty)
+HELP_test_models=run model tests
 TARGET_test+=test_models
 test_models: runtest
-ifeq (,$(MODELS))
-	$(BUILDDIR)/runtest modelsTestSuite
-else
-	for MODEL in $(MODELS); do \
-		$(BUILDDIR)/runtest modelsTestSuite test_model_$$MODEL; \
-	done
-endif
+	python tests/test_models.py
 
 .phony: test
 HELP_test=run tests
 TARGET+=test
 test: $(TARGET_test)
 
-define BENCHMARK_MODEL
-HELP_benchmark_$(1)=run $(1) benchmark
-TARGET_benchmark+=benchmark_$(1)
-benchmark_$(1): $(BENCHMARKDIR)/$(1).txt
-#Dont trace to run faster
-# TRACE_LEVEL=-1
-$(BENCHMARKDIR)/$(1).txt: runtest
-	rm -f $(BENCHMARKDIR)/$(1).txt
-	mkdir -p $(BENCHMARKDIR)
-	for number in $$$$(seq $(REPEAT_$(1))) ; do \
-		echo "Benchmarking iteration "$$$$number ; \
-		$(BUILDDIR)/runtest modelsTestSuite test_model_$(1) >> $(BENCHMARKDIR)/$(1).txt ; \
-  done
-endef
-
-$(foreach MODEL, $(MODELS), $(eval $(call BENCHMARK_MODEL,$(MODEL))))
-
 .phony:benchmark
 HELP_benchmark=run benchmarks of all MODELS
 TARGET+=benchmark
-benchmark: $(TARGET_benchmark)
-	rm -f $@
-	mkdir -p $(dir $@)
-	# Run some postprocessing on the benchmarking results
-	python scripts/parse_output_benchmarking.py
-
-.phony:clean_benchmark
-CLEAN+=clean_benchmark
-clean_benchmark:
-	rm -rf $(BENCHMARKDIR)
+TRACE_LEVEL=-1
+benchmark: runtest
+	python tests/benchmarking.py
 
 .phony:connxr
 HELP_connxr=build connxr binary
