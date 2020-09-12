@@ -7,6 +7,7 @@
 
 #include "test/test_utils.h"
 #include "trace.h"
+#include "tracing.h"
 #include "inference.h"
 #include "utils.h"
 #include "onnx.pb-c.h"
@@ -14,18 +15,18 @@
 
 int compareAlmostEqualTensorProto(Onnx__TensorProto *a, Onnx__TensorProto *b)
 {
-  printf("Asserting tensors with name: %s, %s\n", a->name, b->name);
+  TRACE_LEVEL1("Asserting tensors with name: %s, %s\n", a->name, b->name);
 
   ASSERT_TRUE(a->data_type == b->data_type);
-  printf("data_type: %d,%d ok\n", a->data_type, b->data_type);
+  TRACE_LEVEL1("data_type: %d,%d ok\n", a->data_type, b->data_type);
 
   ASSERT_TRUE(a->n_dims == b->n_dims);
-  printf("n_dims: %zu,%zu ok\n", a->n_dims, b->n_dims);
+  TRACE_LEVEL1("n_dims: %zu,%zu ok\n", a->n_dims, b->n_dims);
    
   for (int d = 0; d < a->n_dims; d++)
   {
     ASSERT_TRUE(a->dims[d] == b->dims[d]);
-    printf("dims[%d]: %ld,%ld ok\n", d, a->dims[d], b->dims[d]);
+    TRACE_LEVEL1("dims[%d] %" PRId64 ",%" PRId64 "\n", d, a->dims[d], b->dims[d]);
   }
 
   // TODO Not all types are implemented
@@ -36,23 +37,23 @@ int compareAlmostEqualTensorProto(Onnx__TensorProto *a, Onnx__TensorProto *b)
       break;
     case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:
       ASSERT_TRUE(a->n_float_data == b->n_float_data);
-      printf("n_float_data %zu,%zu ok\n", a->n_float_data, b->n_float_data);
+      TRACE_LEVEL1("n_float_data %zu,%zu ok\n", a->n_float_data, b->n_float_data);
       for(int i = 0; i < a->n_float_data; i++)
       {
         if (fabs(a->float_data[i] - b->float_data[i]) > FLOAT_TOLERANCE){
-          printf("Does not match %i, %f, %f\n", i, a->float_data[i], b->float_data[i]);
+          TRACE_LEVEL1("Does not match %i, %f, %f\n", i, a->float_data[i], b->float_data[i]);
         }
         ASSERT_TRUE(fabs(a->float_data[i] - b->float_data[i]) < FLOAT_TOLERANCE);
       }
-      printf("float_data ok\n");
+      TRACE_LEVEL1("float_data ok\n");
       break;
     /* TODO Merge uint8 with 16 and 32 since the type is the same */
     case ONNX__TENSOR_PROTO__DATA_TYPE__UINT8:
-      printf("ASSERTING EQUAL: %zu, %zu\n", a->n_int32_data, b->n_int32_data);
+      TRACE_LEVEL1("ASSERTING EQUAL: %zu, %zu\n", a->n_int32_data, b->n_int32_data);
       ASSERT_TRUE(a->n_int32_data == b->n_int32_data);
       for(int i = 0; i < a->n_int32_data; i++)
       {
-        printf("ASSERTING EQUAL: %d, %d\n", a->int32_data[i], b->int32_data[i]);
+        TRACE_LEVEL1("ASSERTING EQUAL: %d, %d\n", a->int32_data[i], b->int32_data[i]);
         ASSERT_TRUE(a->int32_data[i] == b->int32_data[i]);
       }
       break;
@@ -66,11 +67,11 @@ int compareAlmostEqualTensorProto(Onnx__TensorProto *a, Onnx__TensorProto *b)
       //CU_FAIL("int16 data_type is not implemented");
       break;
     case ONNX__TENSOR_PROTO__DATA_TYPE__INT32:
-      printf("ASSERTING EQUAL: %zu, %zu\n", a->n_int32_data, b->n_int32_data);
+      TRACE_LEVEL1("ASSERTING EQUAL: %zu, %zu\n", a->n_int32_data, b->n_int32_data);
       ASSERT_TRUE(a->n_int32_data == b->n_int32_data);
       for(int i = 0; i < a->n_int32_data; i++)
       {
-        TRACE_LEVEL0("ASSERTING EQUAL: %d, %d\n", a->int32_data[i], b->int32_data[i]);
+        TRACE_LEVEL1("ASSERTING EQUAL: %d, %d\n", a->int32_data[i], b->int32_data[i]);
         ASSERT_TRUE(a->int32_data[i] == b->int32_data[i]);
       }
       break;
@@ -78,7 +79,7 @@ int compareAlmostEqualTensorProto(Onnx__TensorProto *a, Onnx__TensorProto *b)
       ASSERT_TRUE(a->n_int64_data == b->n_int64_data);
       for(int i = 0; i < a->n_int64_data; i++)
       {
-        printf("ASSERTING EQUAL: %" PRId64 ", %" PRId64 "\n", a->int64_data[i], b->int64_data[i]);
+        TRACE_LEVEL1("ASSERTING EQUAL: %" PRId64 ", %" PRId64 "\n", a->int64_data[i], b->int64_data[i]);
         ASSERT_TRUE(a->int64_data[i] == b->int64_data[i]);
       }
       break;
@@ -95,7 +96,7 @@ int compareAlmostEqualTensorProto(Onnx__TensorProto *a, Onnx__TensorProto *b)
       ASSERT_TRUE(a->n_double_data == b->n_double_data);
       for(int i = 0; i < a->n_double_data; i++)
       {
-        printf("ASSERTING EQUAL: %lf, %lf", a->double_data[i], b->double_data[i]);
+        TRACE_LEVEL1("ASSERTING EQUAL: %lf, %lf", a->double_data[i], b->double_data[i]);
         ASSERT_TRUE(a->double_data[i] == b->double_data[i]);
       }
       break;
@@ -128,7 +129,7 @@ int test_operator(char *outputName)
    * - Run across all data_set_xx (only 0 is used)
    * - Only output_0 is assumed. Read N outputs
    */
-  printf("\n\nTest %s:\n", outputName);
+  TRACE_LEVEL1("\n\nTest %s:\n", outputName);
 
   char modelPath[200];
   strcpy(modelPath, "test/node/");
@@ -136,9 +137,9 @@ int test_operator(char *outputName)
   strcat(modelPath, "/");
   strcat(modelPath, "model.onnx");
 
-  printf("Reading model %s ...", modelPath);
+  TRACE_LEVEL1("Reading model %s ...", modelPath);
   Onnx__ModelProto *model = openOnnxFile(modelPath);
-  printf("ok\n");
+  TRACE_LEVEL1("ok\n");
 
   char inputPath[200];
   strcpy(inputPath, "test/node/");
@@ -152,12 +153,12 @@ int test_operator(char *outputName)
   if (0==glob(inputPath, 0, NULL, &globbuf)){
     char **inputPbs=globbuf.gl_pathv;
     for(;*inputPbs;inputPbs++){
-      printf("Reading input %s ...", *inputPbs);
+      TRACE_LEVEL1("Reading input %s ...", *inputPbs);
       Onnx__TensorProto *inputN = openTensorProtoFile(*inputPbs);
       convertRawDataOfTensorProto(inputN);
       inputs[nInputs] = inputN;
       nInputs++;
-      printf("ok\n");
+      TRACE_LEVEL1("ok\n");
     }
   }
   globfree(&globbuf);
@@ -167,17 +168,17 @@ int test_operator(char *outputName)
   strcat(outputPath, outputName);
   strcat(outputPath, "/test_data_set_0/output_0.pb");
 
-  printf("Reading output %s ...", outputPath);
+  TRACE_LEVEL1("Reading output %s ...", outputPath);
   Onnx__TensorProto *out0set0 = openTensorProtoFile(outputPath);
   convertRawDataOfTensorProto(out0set0);
-  printf("ok\n");
+  TRACE_LEVEL1("ok\n");
 
   resolve(model, inputs, nInputs);
-  printf("Running inference\n");
+  TRACE_LEVEL1("Running inference\n");
   inference(model, inputs, nInputs);
 
   /* Some operators have more than two outputs to assert */
-  printf("Will compare output %d = %s\n", _populatedIdx, all_context[_populatedIdx].outputs[0]->name);
+  TRACE_LEVEL1("Will compare output %d = %s\n", _populatedIdx, all_context[_populatedIdx].outputs[0]->name);
   int result = compareAlmostEqualTensorProto(all_context[_populatedIdx].outputs[0], out0set0);
 
   return result;
@@ -197,11 +198,11 @@ double test_model(
   int n_inputs,
   int n_outputs
 ){
-  TRACE_LEVEL0("\n\nStart testing model: %s\n", model_id);
+  TRACE_LEVEL1("\n\nStart testing model: %s\n", model_id);
 
   // So far only 1 input/output is supported
   if (n_inputs > 1 || (n_outputs > 2)){
-    fprintf(stderr, "Only models with one input/output are supported\n");
+    TRACE_ERROR(1, true, "Only models with one input/output are supported\n");
   }
 
   Onnx__ModelProto *model = openOnnxFile(model_path);
@@ -223,7 +224,7 @@ double test_model(
   convertRawDataOfTensorProto(out0);
 
   inp0->name = model->graph->input[0]->name;
-  printf("%s\n", inp0->name);
+  TRACE_LEVEL1("%s\n", inp0->name);
 
   Onnx__TensorProto *inputs[] = { inp0 };
   clock_t start, end;
@@ -236,15 +237,15 @@ double test_model(
 
   cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
 
-  printf("[benchmark][%s] cycles: %f\n", model_id, (double) (end - start));
-  printf("[benchmark][%s] cpu_time_used: %f\n", model_id, cpu_time_used);
-  printf("[benchmark][%s] CLOCKS_PER_SEC: %lld\n", model_id, (long long int)CLOCKS_PER_SEC);
+  TRACE_LEVEL1("[benchmark][%s] cycles: %f\n", model_id, (double) (end - start));
+  TRACE_LEVEL1("[benchmark][%s] cpu_time_used: %f\n", model_id, cpu_time_used);
+  TRACE_LEVEL1("[benchmark][%s] CLOCKS_PER_SEC: %lld\n", model_id, (long long int)CLOCKS_PER_SEC);
 
   //Asserts the result using the last calculated output.
-  printf("Will compare output %d = %s", _populatedIdx, all_context[_populatedIdx].outputs[0]->name);
+  TRACE_LEVEL1("Will compare output %d = %s", _populatedIdx, all_context[_populatedIdx].outputs[0]->name);
   int exit_status = compareAlmostEqualTensorProto(all_context[_populatedIdx].outputs[0], out0);
 
-  TRACE_LEVEL0("Finished testing model: %s\n", model_id);
+  TRACE_LEVEL1("Finished testing model: %s\n", model_id);
 
   return exit_status == 0 ? cpu_time_used: -1;
 }
