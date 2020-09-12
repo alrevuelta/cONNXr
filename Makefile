@@ -140,7 +140,6 @@ test: $(TARGET_test)
 .phony:benchmark
 HELP_benchmark=run benchmarks of all MODELS
 TARGET+=benchmark
-TRACE_LEVEL=-1
 benchmark: runtest
 	python tests/benchmarking.py
 

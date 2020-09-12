@@ -25,7 +25,7 @@ int compareAlmostEqualTensorProto(Onnx__TensorProto *a, Onnx__TensorProto *b)
   for (int d = 0; d < a->n_dims; d++)
   {
     ASSERT_TRUE(a->dims[d] == b->dims[d]);
-    printf("dims[%d]: %lld,%lld ok\n", d, a->dims[d], b->dims[d]);
+    printf("dims[%d]: %ld,%ld ok\n", d, a->dims[d], b->dims[d]);
   }
 
   // TODO Not all types are implemented
