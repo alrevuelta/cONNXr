@@ -601,8 +601,4 @@ if __name__ == "__main__":
     load_operator_tests()
     unittest.main(verbosity=3, exit=False)
 
-    # List all tests
-    #print('\n'.join([f for f in dir(TestOperators) if f.startswith('test_')]))
-
-    
-    
+    #print("\n".join([f for f in dir(TestOperators) if f.startswith("test_")]))
