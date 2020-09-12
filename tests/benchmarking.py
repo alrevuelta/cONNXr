@@ -3,6 +3,7 @@ from ctypes import *
 connxr = CDLL('build/connxr.so')
 
 SAVED_TIMES = {}
+
 # TODO Run benchmarking without any tracing active.
 # See makefile
 def benchmark_model(model_id, model_path, io_path, n_inputs, n_outputs, n_runs=1):
@@ -49,4 +50,5 @@ if __name__ == "__main__":
     # Print report at the end
     print("-------------------------------")
     for model, times in SAVED_TIMES.items():
-        print(model, times)
+        avg = sum(times)/len(times)
+        print("Model:", str(model), "| Average Time:", avg, "s", "| All runs:", times)
