@@ -1,7 +1,7 @@
 from ctypes import *
 import unittest
 
-connxr = CDLL('build/connxr.so')
+connxr = CDLL('build/libconnxr.so')
 
 def test_operator(test_folder):
     def do_test_expected(self):

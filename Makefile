@@ -113,7 +113,7 @@ ALL+=runtest
 TARGET+=runtest
 runtest: $(BUILDDIR)/runtest
 $(BUILDDIR)/runtest: $(OBJS)
-	$(CC) -shared -o $(BUILDDIR)/connxr.so $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $(LDLIBS) `find build/src/ -type f`
+	$(CC) -shared -o $(BUILDDIR)/libconnxr.so -fpic $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $(LDLIBS) `find build/src/ -type f`
 
 .phony: clean_build
 CLEAN+=clean_build
