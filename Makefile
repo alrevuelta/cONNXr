@@ -107,12 +107,14 @@ $(BINARY): $(OBJS)
 
 DEFAULT=help
 
-.phony: runtest
-HELP_runtest=build runtest binary
-ALL+=runtest
-TARGET+=runtest
-runtest: $(BUILDDIR)/runtest
-$(BUILDDIR)/runtest: $(OBJS)
+# TODO: Define new objects that are compiled with -fic?
+.phony: sharedlib
+HELP_sharedlib=build sharedlib binary
+ALL+=sharedlib
+TARGET+=sharedlib
+sharedlib: CFLAGS += -fpic
+sharedlib: $(BUILDDIR)/sharedlib
+$(BUILDDIR)/sharedlib: $(OBJS)
 	$(CC) -shared -o $(BUILDDIR)/libconnxr.so -fpic $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $(LDLIBS) `find build/src/ -type f`
 
 .phony: clean_build
@@ -123,13 +125,13 @@ clean_build:
 .phony:test_operators
 HELP_test_operators=run onnx backend operator tests
 TARGET_test+=test_operators
-test_operators: runtest
+test_operators: sharedlib
 	python tests/test_operators.py
 
 .phony:test_models
 HELP_test_models=run model tests
 TARGET_test+=test_models
-test_models: runtest
+test_models: sharedlib
 	python tests/test_models.py
 
 .phony: test
@@ -140,7 +142,7 @@ test: $(TARGET_test)
 .phony:benchmark
 HELP_benchmark=run benchmarks of all MODELS
 TARGET+=benchmark
-benchmark: runtest
+benchmark: sharedlib
 	python tests/benchmarking.py
 
 .phony:connxr
@@ -155,9 +157,9 @@ define PROFILING_MODEL
 HELP_profiling_$(1)=run $(1) profiling
 TARGET_profiling+=profiling_$(1)
 profiling_$(1): $(PROFILINGDIR)/$(1).txt
-$(PROFILINGDIR)/$(1).txt: runtest
+$(PROFILINGDIR)/$(1).txt: sharedlib
 	mkdir -p $(PROFILINGDIR)
-	valgrind --tool=callgrind --callgrind-out-file=$(PROFILINGDIR)/$(1).txt ./$(BUILDDIR)/runtest modelsTestSuite test_model_$(1)
+	valgrind --tool=callgrind --callgrind-out-file=$(PROFILINGDIR)/$(1).txt ./$(BUILDDIR)/sharedlib modelsTestSuite test_model_$(1)
 endef
 
 $(foreach MODEL, $(MODELS), $(eval $(call PROFILING_MODEL,$(MODEL))))
