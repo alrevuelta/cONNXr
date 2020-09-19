@@ -240,9 +240,10 @@ double test_model(
   TRACE_LEVEL0("[benchmark][%s] CLOCKS_PER_SEC: %lld\n", model_id, (long long int)CLOCKS_PER_SEC);
 
   //Asserts the result using the last calculated output.
-  TRACE_LEVEL0("Will compare output %d = %s", _populatedIdx, all_context[_populatedIdx].outputs[0]->name);
+  TRACE_LEVEL0("Will compare output %d = %s\n", _populatedIdx, all_context[_populatedIdx].outputs[0]->name);
   int exit_status = compareAlmostEqualTensorProto(all_context[_populatedIdx].outputs[0], out0);
 
+  TRACE_LEVEL0("Exit status: %d\n", exit_status);
   TRACE_LEVEL0("Finished testing model: %s\n", model_id);
 
   return exit_status == 0 ? cpu_time_used: -1;
