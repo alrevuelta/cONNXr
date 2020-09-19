@@ -22,14 +22,14 @@ int compareAlmostEqualTensorProto(Onnx__TensorProto *a, Onnx__TensorProto *b)
 
   ASSERT_TRUE(a->n_dims == b->n_dims);
   TRACE_LEVEL1("n_dims: %zu,%zu ok\n", a->n_dims, b->n_dims);
-   
+
   for (int d = 0; d < a->n_dims; d++)
   {
     ASSERT_TRUE(a->dims[d] == b->dims[d]);
     TRACE_LEVEL1("dims[%d] %" PRId64 ",%" PRId64 "\n", d, a->dims[d], b->dims[d]);
   }
 
-  // TODO Not all types are implemented
+  // TODO Refactor
   switch(a->data_type)
   {
     case ONNX__TENSOR_PROTO__DATA_TYPE__UNDEFINED:
@@ -37,15 +37,12 @@ int compareAlmostEqualTensorProto(Onnx__TensorProto *a, Onnx__TensorProto *b)
       break;
     case ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT:
       ASSERT_TRUE(a->n_float_data == b->n_float_data);
-      TRACE_LEVEL1("n_float_data %zu,%zu ok\n", a->n_float_data, b->n_float_data);
+      TRACE_LEVEL0("n_float_data %zu,%zu ok\n", a->n_float_data, b->n_float_data);
       for(int i = 0; i < a->n_float_data; i++)
       {
-        if (fabs(a->float_data[i] - b->float_data[i]) > FLOAT_TOLERANCE){
-          TRACE_LEVEL1("Does not match %i, %f, %f\n", i, a->float_data[i], b->float_data[i]);
-        }
         ASSERT_TRUE(fabs(a->float_data[i] - b->float_data[i]) < FLOAT_TOLERANCE);
       }
-      TRACE_LEVEL1("float_data ok\n");
+      TRACE_LEVEL0("float_data ok\n");
       break;
     /* TODO Merge uint8 with 16 and 32 since the type is the same */
     case ONNX__TENSOR_PROTO__DATA_TYPE__UINT8:
