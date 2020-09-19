@@ -175,8 +175,9 @@ int test_operator(char *outputName)
   inference(model, inputs, nInputs);
 
   /* Some operators have more than two outputs to assert */
-  TRACE_LEVEL1("Will compare output %d = %s\n", _populatedIdx, all_context[_populatedIdx].outputs[0]->name);
+  TRACE_LEVEL0("Will compare output %d = %s\n", _populatedIdx, all_context[_populatedIdx].outputs[0]->name);
   int result = compareAlmostEqualTensorProto(all_context[_populatedIdx].outputs[0], out0set0);
+  TRACE_LEVEL0("Result %d\n", result);
 
   return result;
 }
@@ -234,15 +235,15 @@ double test_model(
 
   cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
 
-  TRACE_LEVEL1("[benchmark][%s] cycles: %f\n", model_id, (double) (end - start));
-  TRACE_LEVEL1("[benchmark][%s] cpu_time_used: %f\n", model_id, cpu_time_used);
-  TRACE_LEVEL1("[benchmark][%s] CLOCKS_PER_SEC: %lld\n", model_id, (long long int)CLOCKS_PER_SEC);
+  TRACE_LEVEL0("[benchmark][%s] cycles: %f\n", model_id, (double) (end - start));
+  TRACE_LEVEL0("[benchmark][%s] cpu_time_used: %f\n", model_id, cpu_time_used);
+  TRACE_LEVEL0("[benchmark][%s] CLOCKS_PER_SEC: %lld\n", model_id, (long long int)CLOCKS_PER_SEC);
 
   //Asserts the result using the last calculated output.
-  TRACE_LEVEL1("Will compare output %d = %s", _populatedIdx, all_context[_populatedIdx].outputs[0]->name);
+  TRACE_LEVEL0("Will compare output %d = %s", _populatedIdx, all_context[_populatedIdx].outputs[0]->name);
   int exit_status = compareAlmostEqualTensorProto(all_context[_populatedIdx].outputs[0], out0);
 
-  TRACE_LEVEL1("Finished testing model: %s\n", model_id);
+  TRACE_LEVEL0("Finished testing model: %s\n", model_id);
 
   return exit_status == 0 ? cpu_time_used: -1;
 }
