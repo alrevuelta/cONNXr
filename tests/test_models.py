@@ -10,6 +10,8 @@ def test_model(model_id, model_path, io_path, n_inputs, n_outputs):
     result = test_model_function(model_id, model_path, io_path, n_inputs, n_outputs)
     if result > 0:
         print("Inference time", result)
+    else:
+        print("Error, inference time is <0", result)
     return result
 
 
