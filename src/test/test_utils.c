@@ -235,6 +235,10 @@ double test_model(
 
   cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
 
+  //remove
+  printf("%jd start\n", (intmax_t)start);
+  printf("%jd end\n", (intmax_t)end);
+
   TRACE_LEVEL0("[benchmark][%s] cycles: %f\n", model_id, (double) (end - start));
   TRACE_LEVEL0("[benchmark][%s] cpu_time_used: %f\n", model_id, cpu_time_used);
   TRACE_LEVEL0("[benchmark][%s] CLOCKS_PER_SEC: %lld\n", model_id, (long long int)CLOCKS_PER_SEC);
