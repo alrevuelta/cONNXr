@@ -115,7 +115,7 @@ TARGET+=sharedlib
 sharedlib: CFLAGS += -fpic
 sharedlib: $(BUILDDIR)/sharedlib
 $(BUILDDIR)/sharedlib: $(OBJS)
-	$(CC) -shared -o $(BUILDDIR)/libconnxr.dll -fpic $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $(LDLIBS) `find build/src/ -type f`
+	$(CC) -shared -o $(BUILDDIR)/libconnxr.so -fpic $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $(LDLIBS) `find build/src/ -type f`
 
 .phony: clean_build
 CLEAN+=clean_build
