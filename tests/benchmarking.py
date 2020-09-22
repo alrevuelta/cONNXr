@@ -1,6 +1,6 @@
 from ctypes import *
 
-connxr = CDLL('build/libconnxr.dll')
+connxr = CDLL('build/libconnxr.so')
 
 SAVED_TIMES = {}
 
