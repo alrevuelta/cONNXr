@@ -13,8 +13,6 @@
 #include "onnx.pb-c.h"
 #include "math.h"
 
-#include <unistd.h>
-
 int compareAlmostEqualTensorProto(Onnx__TensorProto *a, Onnx__TensorProto *b)
 {
   TRACE_LEVEL1("Asserting tensors with name: %s, %s\n", a->name, b->name);
@@ -232,7 +230,6 @@ double test_model(
 
   resolve(model, inputs, 1);
   start = clock();
-  sleep(10);
   inference(model, inputs, 1);
   end = clock();
 
