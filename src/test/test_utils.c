@@ -196,7 +196,7 @@ double test_model(
   int n_inputs,
   int n_outputs
 ){
-  TRACE_LEVEL1("\n\nStart testing model: %s\n", model_id);
+  TRACE_LEVEL0("\n\nStart testing model: %s\n", model_id);
 
   // So far only 1 input/output is supported
   if (n_inputs > 1 || (n_outputs > 2)){
@@ -234,10 +234,6 @@ double test_model(
   end = clock();
 
   cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-
-  //remove
-  printf("%jd start\n", (intmax_t)start);
-  printf("%jd end\n", (intmax_t)end);
 
   TRACE_LEVEL0("[benchmark][%s] cycles: %f\n", model_id, (double) (end - start));
   TRACE_LEVEL0("[benchmark][%s] cpu_time_used: %f\n", model_id, cpu_time_used);

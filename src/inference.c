@@ -23,9 +23,6 @@ void resolve(Onnx__ModelProto *model,
 
   for (int nodeIdx = 0; nodeIdx < model->graph->n_node; nodeIdx++)
   {
-    //todo remove
-    printf("running inference on node %d\n", nodeIdx);
-
     all_context[nodeIdx].onnx_node = model->graph->node[nodeIdx];
 
     // Search the inputs for a node
