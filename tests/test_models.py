@@ -18,9 +18,7 @@ class TestModel():
 class TestMnist(TestModel, unittest.TestCase):
     id = "mnist"
     path = "test/mnist/model.onnx"
-    io = ["test/mnist/test_data_set_0",
-          "test/mnist/test_data_set_1",
-          "test/mnist/test_data_set_2"]
+    io = ["test/mnist/test_data_set_0"]
     n_inputs = 1
     n_outputs = 1
 
