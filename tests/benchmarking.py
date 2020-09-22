@@ -1,6 +1,6 @@
 from ctypes import *
 
-connxr = CDLL('build/libconnxr.so')
+connxr = CDLL('build/libconnxr.dll')
 
 SAVED_TIMES = {}
 
@@ -18,7 +18,6 @@ def benchmark_model(model_id, model_path, io_path, n_inputs, n_outputs, n_runs=1
         result = test_model_function(model_id, model_path, io_path, n_inputs, n_outputs)
         if result > 0:
             model_times.append(result)
-
         else:
             raise Exception("The output of the model doesn't match the expected")
 
