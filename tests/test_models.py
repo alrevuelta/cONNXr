@@ -1,7 +1,9 @@
 from ctypes import *
 import unittest
 
-connxr = CDLL('build/libconnxr.so')
+#connxr = CDLL('build/libconnxr.so')
+connxr = cdll.LoadLibrary('build/libconnxr.dll')
+
 test_model_function = connxr.test_model
 test_model_function.restype = c_double
 
@@ -12,8 +14,11 @@ class TestModel():
                                          self.path.encode('UTF-8'),
                                          testvector.encode('UTF-8'),
                                          self.n_inputs, self.n_outputs)
-        self.assertTrue(result)
-        print("Inference time", result)
+            self.assertTrue(result)
+            if result > 0:
+                print("Inference time", result)
+            else:
+                print("Error, inference time < 0")
 
 class TestMnist(TestModel, unittest.TestCase):
     id = "mnist"
