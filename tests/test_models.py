@@ -14,11 +14,14 @@ class TestModel():
                                          self.path.encode('UTF-8'),
                                          testvector.encode('UTF-8'),
                                          self.n_inputs, self.n_outputs)
-            if result > 0:
+            if result >= 0:
                 print("Inference time", result)
             else:
                 print("Error, inference time < 0")
-            self.assertTrue(result)
+            # TODO Workaround for windows ci. Looks like time measurement
+            # doesnt work well, and in some time mnist model execution time
+            # is measured as 0 sec
+            self.assertTrue(result >= 0)
 
 class TestMnist(TestModel, unittest.TestCase):
     id = "mnist"
