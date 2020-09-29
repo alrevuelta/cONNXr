@@ -40,10 +40,7 @@ jobs:
         shell: cmd
       
   # Run some profiling/benchmarking on some models
-      - uses: actions/setup-python@v2
-        with:
-          python-version: '3.5'
-      - name: run_benchmark # Get the time/cycles taken by each model
+      - name: run_benchmark
         run: make benchmark
         shell: cmd
     # - name: run_profiling  # Get % taken by each function
