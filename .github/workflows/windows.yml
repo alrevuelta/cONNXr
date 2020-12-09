@@ -13,9 +13,6 @@ jobs:
         run: |
           C:\tools\cygwin\cygwinsetup.exe -qgnNdO -R C:/tools/cygwin -l C:/tools/cygwin/package -s http://mirrors.kernel.org/sourceware/cygwin/ -P CUnit,make,gcc-core,python
         shell: cmd
-      - name: Set ENV
-        run: |
-          echo '::set-env name=PATH::C:\tools\cygwin\bin;C:\tools\cygwin\usr\bin'
         
   # Clean and Build
       - name: clean
@@ -24,7 +21,9 @@ jobs:
       - name: build
         env:
           CFLAGS: -Werror
-        run: make all
+        run: |
+          $env:PATH="$env:PATH;C:\tools\cygwin\bin;C:\tools\cygwin\usr\bin"
+          make all
         shell: cmd
 
   # Run onnx backend unit tests (operators)
