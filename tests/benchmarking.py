@@ -15,7 +15,7 @@ def benchmark_model(id, path, io, n_inputs, n_outputs, n_runs=1):
     # Run n_runs iterations of inference to average
     for i in range(n_runs):
         # Reusing the test function.
-        print("Running", model_id)
+        print("Running", id)
         result = test_model_function(id.encode('UTF-8'),
                                      path.encode('UTF-8'),
                                      io.encode('UTF-8'),
@@ -25,7 +25,7 @@ def benchmark_model(id, path, io, n_inputs, n_outputs, n_runs=1):
         else:
             raise Exception("The output of the model doesn't match the expected")
 
-    SAVED_TIMES[model_id] = model_times
+    SAVED_TIMES[id] = model_times
 
 if __name__ == "__main__":
     print("Benchmarking models:")
