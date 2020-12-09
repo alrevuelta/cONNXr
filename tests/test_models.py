@@ -1,7 +1,6 @@
 from ctypes import *
 import unittest
 
-#connxr = CDLL('build/libconnxr.so')
 connxr = cdll.LoadLibrary('build/libconnxr.so')
 
 test_model_function = connxr.test_model
