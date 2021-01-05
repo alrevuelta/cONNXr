@@ -20,7 +20,7 @@ jobs:
         shell: cmd
       - name: build
         env:
-          CFLAGS: -Werror
+          CFLAGS: -Werror -D__USE_MINGW_ANSI_STDIO
         run: |
           $env:PATH="$env:PATH;C:\tools\cygwin\bin;C:\tools\cygwin\usr\bin"
           make all
