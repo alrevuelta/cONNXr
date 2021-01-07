@@ -10,6 +10,7 @@ jobs:
         run: |
           choco install --no-progress cygwin
           choco install cyg-get
+          cyg-get CUnit
       - name: Install cygwin additional packages
         run: |
           cyg-get CUnit
