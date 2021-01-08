@@ -49,12 +49,10 @@ operator_resolver find_operator_resolver(
         for (size_t i_entry = 0; i_entry < set->length; i_entry++) {
             operator_set_entry *entry = &set->entries[i_entry];
             if (strcmp(entry->name,name) == 0) {
-                printf("Found opname:%s version:%zu\n", name, version);
                 return entry->resolver;
             }
         }
     }
-    printf("Resolver not found opname:%s version:%zu\n", name, version);
     // TODO Break here? Doesn't make sense to continue if the resolver is
     // not found
     return NULL;

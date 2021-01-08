@@ -4,6 +4,8 @@ on: [push, pull_request]
 jobs:
   build:
     runs-on: windows-latest
+    env:
+      ACTIONS_ALLOW_UNSECURE_COMMANDS: true
     steps:
       - uses: actions/checkout@v1
       - name: Install cygwin base packages with chocolatey
