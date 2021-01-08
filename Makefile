@@ -11,19 +11,6 @@ VARIABLE+=PROFILINGDIR
 HELP_PROFILINGDIR=profiling directory
 PROFILINGDIR?=profiling
 
-VARIABLE+=MODELS
-HELP_MODELS=existing models
-ifndef MODELS
-MODELS+=mnist
-MODELS+=tinyyolov2
-MODELS+=super_resolution
-MODELS+=mobilenetv2
-endif
-
-VARIABLE+=REPEAT
-HELP_REPEAT=default repetition count if not otherwise specified by REPEAT_<modelname>
-REPEAT=1
-
 VARIABLE+=FORMAT
 HELP_FORMAT=which files to format (git wildcards)
 ifndef FORMAT
@@ -122,12 +109,24 @@ CLEAN+=clean_build
 clean_build:
 	rm -rf $(BUILDDIR)
 
+# C unit tests, not related to models and operators
+.phony: unittests
+HELP_unittests=Build and run unit tests that are not related to models or operators
+ALL+=unittests
+TARGET+=unittests
+unittests: $(BUILDDIR)/unittests
+$(BUILDDIR)/unittests: $(OBJS)
+	$(CC) -o $@ src/test/tests.c $^ $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $(LDLIBS)
+	$(BUILDDIR)/unittests 
+
+# Operator tests
 .phony:test_operators
 HELP_test_operators=run onnx backend operator tests
 TARGET_test+=test_operators
 test_operators: sharedlib
 	python tests/test_operators.py
 
+# Model tests
 .phony:test_models
 HELP_test_models=run model tests
 TARGET_test+=test_models
@@ -152,34 +151,6 @@ ALL+=connxr
 connxr: $(BUILDDIR)/connxr
 $(BUILDDIR)/connxr: $(OBJS)
 	$(CC) -o $@ src/connxr.c $^ $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $(LDLIBS)
-
-define PROFILING_MODEL
-HELP_profiling_$(1)=run $(1) profiling
-TARGET_profiling+=profiling_$(1)
-profiling_$(1): $(PROFILINGDIR)/$(1).txt
-$(PROFILINGDIR)/$(1).txt: sharedlib
-	mkdir -p $(PROFILINGDIR)
-	valgrind --tool=callgrind --callgrind-out-file=$(PROFILINGDIR)/$(1).txt ./$(BUILDDIR)/sharedlib modelsTestSuite test_model_$(1)
-endef
-
-$(foreach MODEL, $(MODELS), $(eval $(call PROFILING_MODEL,$(MODEL))))
-
-.phony:profiling
-HELP_profiling=run profiling of all MODELS
-TARGET+=profiling
-profiling: $(TARGET_profiling)
-
-.phony:clean_profiling
-CLEAN+=clean_profiling
-clean_profiling:
-	rm -rf $(PROFILINGDIR)
-
-#memory leak stuff TODO:
-
-#gprof:
-#	rm -f gprof
-#	gcc -std=c99 -D xxx -pg ../src/operators/*.c ../src/trace.c ../src/utils.c ../src/inference.c ../src/pb/onnx.pb-c.c -o gprof tests.c -I/usr/local/include -L/usr/local/lib -lcunit -lprotobuf-c
-#	./gprof $(ts) $(tc)
 
 .phony:format
 HELP_format=run uncrustify to format code
