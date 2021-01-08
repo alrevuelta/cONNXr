@@ -11,11 +11,6 @@ jobs:
           choco install --no-progress cygwin
           choco install cyg-get
           cyg-get CUnit
-      - name: Install cygwin additional packages
-        run: |
-          cyg-get CUnit
-          C:\tools\cygwin\cygwinsetup.exe -qgnNdO -R C:/tools/cygwin -l C:/tools/cygwin/package -s http://mirrors.kernel.org/sourceware/cygwin/ -P CUnit,make,gcc-core,python
-        shell: cmd
 
 # debug the action. Remove
       - name: Setup tmate session
