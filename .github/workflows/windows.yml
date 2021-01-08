@@ -9,24 +9,23 @@ jobs:
       - name: Install cygwin base packages with chocolatey
         run: |
           choco install --no-progress cygwin
-          choco install cyg-get
-          cyg-get CUnit
-
-# debug the action. Remove
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
+      - name: Install cygwin additional packages
+        run: |
+          C:\tools\cygwin\cygwinsetup.exe -qgnNdO -R C:/tools/cygwin -l C:/tools/cygwin/package -s http://mirrors.kernel.org/sourceware/cygwin/ -P CUnit,make,gcc-core,python
+        shell: cmd
+      - name: Set ENV
+        run: |
+          echo "C:\tools\cygwin\bin" >> $GITHUB_PATH
+          echo "C:\tools\cygwin\usr\bin" >> $GITHUB_PATH
         
   # Clean and Build
       - name: clean
         run: make clean
         shell: cmd
       - name: build
-        # TODO Testing. D__USE_MINGW_ANSI_STDIO fixes %zu
         env:
-          CFLAGS: -Werror -D__USE_MINGW_ANSI_STDIO -I/lib/include -L/lib/CUnit/lib
-        run: |
-          $env:PATH="$env:PATH;C:\tools\cygwin\bin;C:\tools\cygwin\usr\bin"
-          make all
+          CFLAGS: -Werror
+        run: make all
         shell: cmd
 
   # Run onnx backend unit tests (operators)
