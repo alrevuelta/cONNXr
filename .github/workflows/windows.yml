@@ -24,7 +24,8 @@ jobs:
         shell: cmd
       - name: build
         env:
-          CFLAGS: -Werror
+        # D__USE_MINGW_ANSI_STDIO fixes %zu
+          CFLAGS: -Werror -D__USE_MINGW_ANSI_STDIO
         run: make all
         shell: cmd
 
