@@ -7,29 +7,9 @@ VARIABLE+=BUILDDIR
 HELP_BUILDDIR=build directory
 BUILDDIR?=build
 
-VARIABLE+=BENCHMARKDIR
-HELP_BENCHMARKDIR=benchmark directory
-BENCHMARKDIR?=benchmarks
-
 VARIABLE+=PROFILINGDIR
 HELP_PROFILINGDIR=profiling directory
 PROFILINGDIR?=profiling
-
-VARIABLE+=MODELS
-HELP_MODELS=existing models
-ifndef MODELS
-MODELS+=mnist
-MODELS+=tinyyolov2
-MODELS+=super_resolution
-MODELS+=mobilenetv2
-endif
-
-VARIABLE+=OPERATORS
-HELP_OPERATORS=operators to test (all if empty)
-
-VARIABLE+=REPEAT
-HELP_REPEAT=default repetition count if not otherwise specified by REPEAT_<modelname>
-REPEAT=1
 
 VARIABLE+=FORMAT
 HELP_FORMAT=which files to format (git wildcards)
@@ -79,12 +59,6 @@ VARIABLE+=ONNX_EXCLUDE
 HELP_ONNX_EXCLUDE=which schemas to exclude
 ONNX_EXCLUDE=
 
-$(foreach MODEL, $(MODELS), $(eval REPEAT_$(MODEL)=$(REPEAT)))
-REPEAT_tinyyolov2=1
-REPEAT_super_resolution=1
-REPEAT_mnist=5
-REPEAT_mobilenetv2=1
-
 CC=gcc
 CFLAGS+=-std=c99
 CFLAGS+=-Wall
@@ -109,6 +83,7 @@ SRCS+=$(foreach DIR, $(SRCDIR), $(shell find $(DIR) -type f -name '*.c'))
 SRCS+=src/inference.c
 SRCS+=src/trace.c
 SRCS+=src/utils.c
+SRCS+=src/test/test_utils.c
 OBJS=$(SRCS:%.c=$(BUILDDIR)/%.o)
 
 $(BUILDDIR)/%.o:%.c
@@ -119,78 +94,55 @@ $(BINARY): $(OBJS)
 
 DEFAULT=help
 
-.phony: runtest
-HELP_runtest=build runtest binary
-ALL+=runtest
-TARGET+=runtest
-runtest: $(BUILDDIR)/runtest
-$(BUILDDIR)/runtest: $(OBJS)
-	$(CC) -o $@ src/test/tests.c $^ $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $(LDLIBS)
+# TODO: Define new objects that are compiled with -fic?
+.phony: sharedlib
+HELP_sharedlib=build sharedlib binary
+ALL+=sharedlib
+TARGET+=sharedlib
+sharedlib: CFLAGS += -fpic
+sharedlib: $(BUILDDIR)/sharedlib
+$(BUILDDIR)/sharedlib: $(OBJS)
+	$(CC) -shared -o $(BUILDDIR)/libconnxr.so -fpic $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $(LDLIBS) `find build/src/ -type f`
 
 .phony: clean_build
 CLEAN+=clean_build
 clean_build:
 	rm -rf $(BUILDDIR)
 
-.phony:test_operators
-HELP_test_operators=run onnx backend test for each operator in OPERATORS (all if empty)
-TARGET_test+=test_operators
-test_operators: runtest
-ifeq (,$(OPERATORS))
-	$(BUILDDIR)/runtest onnxBackendSuite
-else
-	for OPERATOR in $(OPERATORS); do \
-		$(BUILDDIR)/runtest onnxBackendSuite test_$$OPERATOR; \
-	done
-endif
+# C unit tests, not related to models and operators
+.phony: unittests
+HELP_unittests=Build and run unit tests that are not related to models or operators
+ALL+=unittests
+TARGET+=unittests
+unittests: $(BUILDDIR)/unittests
+$(BUILDDIR)/unittests: $(OBJS)
+	$(CC) -o $@ src/test/tests.c $^ $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $(LDLIBS)
+	$(BUILDDIR)/unittests 
 
+# Operator tests
+.phony:test_operators
+HELP_test_operators=run onnx backend operator tests
+TARGET_test+=test_operators
+test_operators: sharedlib
+	python tests/test_operators.py
+
+# Model tests
 .phony:test_models
-HELP_test_models=run model test for each model in MODELS (all if empty)
+HELP_test_models=run model tests
 TARGET_test+=test_models
-test_models: runtest
-ifeq (,$(MODELS))
-	$(BUILDDIR)/runtest modelsTestSuite
-else
-	for MODEL in $(MODELS); do \
-		$(BUILDDIR)/runtest modelsTestSuite test_model_$$MODEL; \
-	done
-endif
+test_models: sharedlib
+	python tests/test_models.py
 
 .phony: test
 HELP_test=run tests
 TARGET+=test
 test: $(TARGET_test)
 
-define BENCHMARK_MODEL
-HELP_benchmark_$(1)=run $(1) benchmark
-TARGET_benchmark+=benchmark_$(1)
-benchmark_$(1): $(BENCHMARKDIR)/$(1).txt
-#Dont trace to run faster
-# TRACE_LEVEL=-1
-$(BENCHMARKDIR)/$(1).txt: runtest
-	rm -f $(BENCHMARKDIR)/$(1).txt
-	mkdir -p $(BENCHMARKDIR)
-	for number in $$$$(seq $(REPEAT_$(1))) ; do \
-		echo "Benchmarking iteration "$$$$number ; \
-		$(BUILDDIR)/runtest modelsTestSuite test_model_$(1) >> $(BENCHMARKDIR)/$(1).txt ; \
-  done
-endef
-
-$(foreach MODEL, $(MODELS), $(eval $(call BENCHMARK_MODEL,$(MODEL))))
-
 .phony:benchmark
 HELP_benchmark=run benchmarks of all MODELS
 TARGET+=benchmark
-benchmark: $(TARGET_benchmark)
-	rm -f $@
-	mkdir -p $(dir $@)
-	# Run some postprocessing on the benchmarking results
-	python scripts/parse_output_benchmarking.py
-
-.phony:clean_benchmark
-CLEAN+=clean_benchmark
-clean_benchmark:
-	rm -rf $(BENCHMARKDIR)
+benchmark: sharedlib
+	python tests/benchmarking.py
 
 .phony:connxr
 HELP_connxr=build connxr binary
@@ -199,34 +151,6 @@ ALL+=connxr
 connxr: $(BUILDDIR)/connxr
 $(BUILDDIR)/connxr: $(OBJS)
 	$(CC) -o $@ src/connxr.c $^ $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $(LDLIBS)
-
-define PROFILING_MODEL
-HELP_profiling_$(1)=run $(1) profiling
-TARGET_profiling+=profiling_$(1)
-profiling_$(1): $(PROFILINGDIR)/$(1).txt
-$(PROFILINGDIR)/$(1).txt: runtest
-	mkdir -p $(PROFILINGDIR)
-	valgrind --tool=callgrind --callgrind-out-file=$(PROFILINGDIR)/$(1).txt ./$(BUILDDIR)/runtest modelsTestSuite test_model_$(1)
-endef
-
-$(foreach MODEL, $(MODELS), $(eval $(call PROFILING_MODEL,$(MODEL))))
-
-.phony:profiling
-HELP_profiling=run profiling of all MODELS
-TARGET+=profiling
-profiling: $(TARGET_profiling)
-
-.phony:clean_profiling
-CLEAN+=clean_profiling
-clean_profiling:
-	rm -rf $(PROFILINGDIR)
-
-#memory leak stuff TODO:
-
-#gprof:
-#	rm -f gprof
-#	gcc -std=c99 -D xxx -pg ../src/operators/*.c ../src/trace.c ../src/utils.c ../src/inference.c ../src/pb/onnx.pb-c.c -o gprof tests.c -I/usr/local/include -L/usr/local/lib -lcunit -lprotobuf-c
-#	./gprof $(ts) $(tc)
 
 .phony:format
 HELP_format=run uncrustify to format code
