@@ -160,7 +160,7 @@ void Debug_PrintModelInformation( Onnx__ModelProto *model)
   for (int i = 0; i < model->graph->n_input; i++) {
     TRACE_LEVEL0("model->graph->input[%d]->name %s\n", i, model->graph->input[i]->name);
     TRACE_LEVEL0("model->graph->input[%d]->type->tensor_type->has_elem_type %d\n", i, model->graph->input[i]->type->tensor_type->has_elem_type);
-    TRACE_LEVEL0("model->graph->input[%d]->type->tensor_type->elem_type %d\n", i, model->graph->input[i]->type->tensor_type->elem_type);
+    TRACE_LEVEL0("model->graph->input[%d]->type->tensor_type->elem_type %" PRId32 "\n", i, model->graph->input[i]->type->tensor_type->elem_type);
     TRACE_LEVEL0("model->graph->input[%d]->type->tensor_type->shape->n_dim %zu\n", i, model->graph->input[i]->type->tensor_type->shape->n_dim);
 
     // TODO With some models this crashes
@@ -237,7 +237,7 @@ void Debug_PrintTensorProto(Onnx__TensorProto *tp)
     TRACE_LEVEL0("dims[%d]=%" PRId64 "\n", i, tp->dims[i]);
   }
   TRACE_LEVEL0("has_data_type = %d\n", tp->has_data_type);
-  TRACE_LEVEL0("data_type = %d\n", tp->data_type);
+  TRACE_LEVEL0("data_type = %" PRId32 "\n", tp->data_type);
 
   // TODO segment
 
