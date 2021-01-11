@@ -73,7 +73,7 @@ _TRACE_EXIT(LEVEL);
  *  ...:   optional variables
  **/
 #define TRACE(LEVEL, COND, FMT, ...) \
-_TRACE(LEVEL, COND, FMT, __VA_ARGS__);
+_TRACE(LEVEL, COND, FMT, ##__VA_ARGS__);
 
 /** macro TRACE_WARN(LEVEL, COND, FMT, ...)
  *  logs format string FMT with optional variables to TRACE_SYMBOL_STDERR
@@ -85,7 +85,7 @@ _TRACE(LEVEL, COND, FMT, __VA_ARGS__);
  *  ...:   optional variables
  **/
 #define TRACE_WARN(LEVEL, COND, FMT, ...) \
-_TRACE_WARN(LEVEL, COND, FMT, __VA_ARGS__);
+_TRACE_WARN(LEVEL, COND, FMT, ##__VA_ARGS__);
 
 /** macro TRACE_ERROR(LEVEL, COND, FMT, ...)
  *  logs format string FMT with optional variables to TRACE_SYMBOL_STDERR,
@@ -97,7 +97,7 @@ _TRACE_WARN(LEVEL, COND, FMT, __VA_ARGS__);
  *  ...:   optional variables
  **/
 #define TRACE_ERROR(LEVEL, COND, FMT, ...) \
-_TRACE_ERROR(LEVEL, COND, FMT, __VA_ARGS__);
+_TRACE_ERROR(LEVEL, COND, FMT, ##__VA_ARGS__);
 
 /** macro TRACE_FATAL(LEVEL, COND, FMT, ...)
  *  logs format string FMT with optional variables to TRACE_SYMBOL_STDERR,
@@ -109,7 +109,7 @@ _TRACE_ERROR(LEVEL, COND, FMT, __VA_ARGS__);
  *  ...:   optional variables
  **/
 #define TRACE_FATAL(LEVEL, COND, FMT, ...) \
-_TRACE_FATAL(LEVEL, COND, FMT, __VA_ARGS__);
+_TRACE_FATAL(LEVEL, COND, FMT, ##__VA_ARGS__);
 
 /** macro TRACE_BOUND(LEVEL, COND, VAR, MIN, MAX)
  *  logs variable VAR in its boundaries MIN <= VAR < MAX to TRACE_SYMBOL_STDOUT
@@ -407,7 +407,7 @@ _trace_severity(const char* overrides, const char *identifier) {
 
 
 #define __PRINT(FD, FMT, ...) \
-TRACE_SYMBOL_FPRINTF(FD, FMT __VA_OPT__(,) __VA_ARGS__);
+TRACE_SYMBOL_FPRINTF(FD, FMT, ##__VA_ARGS__);
 
 #define __FLUSH() \
 TRACE_SYMBOL_FFLUSH(TRACE_SYMBOL_STDOUT); \
@@ -423,7 +423,7 @@ __PREAMBLE(FD, LEVEL, "ABORT")
 
 #define __ABORT(LEVEL, FMT, ...) \
 __PREAMBLE_ABORT(TRACE_SYMBOL_STDERR, LEVEL) \
-__PRINT(TRACE_SYMBOL_STDERR, FMT, __VA_ARGS__) \
+__PRINT(TRACE_SYMBOL_STDERR, FMT, ##__VA_ARGS__) \
 TRACE_SYMBOL_ABORT();
 
 #define __PREAMBLE_WARN(FD, LEVEL) \
@@ -431,7 +431,7 @@ __PREAMBLE(FD, LEVEL, "WARNING")
 
 #define __WARN(LEVEL, FMT, ...) \
 __PREAMBLE_WARN(TRACE_SYMBOL_STDERR, LEVEL) \
-__PRINT(TRACE_SYMBOL_STDERR, FMT, __VA_ARGS__) \
+__PRINT(TRACE_SYMBOL_STDERR, FMT, ##__VA_ARGS__) \
 __FLUSH()
 
 #define __PREAMBLE_ERROR(FD, LEVEL) \
@@ -439,7 +439,7 @@ __PREAMBLE(FD, LEVEL, "ERROR")
 
 #define __ERROR(LEVEL, FMT, ...) \
 __PREAMBLE_ERROR(TRACE_SYMBOL_STDERR, LEVEL) \
-__PRINT(TRACE_SYMBOL_STDERR, FMT, __VA_ARGS__) \
+__PRINT(TRACE_SYMBOL_STDERR, FMT, ##__VA_ARGS__) \
 __FLUSH()
 
 #define __PREAMBLE_FATAL(FD, LEVEL) \
@@ -447,7 +447,7 @@ __PREAMBLE(FD, LEVEL, "FATAL")
 
 #define __FATAL(LEVEL, FMT, ...) \
 __PREAMBLE_FATAL(TRACE_SYMBOL_STDERR, LEVEL) \
-__PRINT(TRACE_SYMBOL_STDERR, FMT, __VA_ARGS__) \
+__PRINT(TRACE_SYMBOL_STDERR, FMT, ##__VA_ARGS__) \
 __FLUSH() \
 __ABORT(LEVEL, "aborting in function %s", __FUNCTION__)
 
@@ -493,7 +493,7 @@ __PRINT(FD, \
 #define _TRACE(LEVEL, COND, FMT, ...) \
 if (__TRACE_COND(LEVEL) && (COND)) { \
     __PREAMBLE(TRACE_SYMBOL_STDOUT, LEVEL, "TRACE") \
-    __PRINT(TRACE_SYMBOL_STDOUT, FMT "\n", __VA_ARGS__) \
+    __PRINT(TRACE_SYMBOL_STDOUT, FMT "\n", ##__VA_ARGS__) \
 }
 
 #define _TRACE_VAR(LEVEL, COND, VAR, FMT) \
@@ -560,17 +560,17 @@ if (__TRACE_COND(LEVEL)) { \
 
 #define _TRACE_WARN(LEVEL, COND, FMT, ...)  \
 if (__TRACE_COND(LEVEL) && (COND)) { \
-    __WARN(LEVEL, FMT "\n", __VA_ARGS__) \
+    __WARN(LEVEL, FMT "\n", ##__VA_ARGS__) \
 }
 
 #define _TRACE_ERROR(LEVEL, COND, FMT, ...) \
 if (__TRACE_COND(LEVEL) && (COND)) { \
-    __ERROR(LEVEL, FMT "\n", __VA_ARGS__) \
+    __ERROR(LEVEL, FMT "\n", ##__VA_ARGS__) \
 }
 
 #define _TRACE_FATAL(LEVEL, COND, FMT, ...) \
 if (__TRACE_COND(LEVEL) && (COND)) { \
-    __FATAL(LEVEL, FMT "\n", __VA_ARGS__) \
+    __FATAL(LEVEL, FMT "\n", ##__VA_ARGS__) \
 }
 
 #define __BOUND(LEVEL, PREFIX, VAR, MIN, MAX, FMT) \
