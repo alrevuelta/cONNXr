@@ -189,4 +189,10 @@ DISTCLEAN+=distclean_venv
 distclean_venv:
 	rm -rf venv
 
+.phony:generate_custom_tests
+HELP_generate_custom_tests=generate the custom test models using the py scripts
+TARGET+=generate_custom_tests
+generate_custom_tests:
+	python test_data/generate_custom_tests.py generate-data -o test_data
+
 include .Makefile.template
