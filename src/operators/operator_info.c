@@ -1,5 +1,4 @@
 #include "operators/operator_info.h"
-#include "operators/operator_sets.h"
 
 #include <string.h>
 
@@ -79,27 +78,4 @@ operator_info_tensorType2str(uint32_t type)
     default:
       return NULL;
   }
-}
-
-operator_info*
-operator_info_find(size_t  version,
-                   char   *domain,
-                   char   *name)
-{
-    for( size_t i_set = 0; i_set < all_operator_sets.length; i_set++ ) {
-        operator_set *set = all_operator_sets.sets[i_set];
-        if (set->version != version) {
-            continue;
-        }
-        if (strcmp(set->domain,domain) != 0) {
-            continue;
-        }
-        for (size_t i_entry = 0; i_entry < set->length; i_entry++) {
-            operator_info *entry = set->entries[i_entry].info;
-            if (strcmp(entry->name,name) == 0) {
-                return entry;
-            }
-        }
-    }
-    return NULL;
 }

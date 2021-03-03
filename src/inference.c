@@ -5,7 +5,7 @@
 #include "utils.h"
 #include "tracing.h"
 #include "inference.h"
-#include "operators/operator_sets.h"
+#include "operators/operator_set.h"
 
 // Won't be global in the future
 node_context all_context[MAX_NUM_OF_NODES];
@@ -60,8 +60,8 @@ void resolve(Onnx__ModelProto *model,
     // model->opset_import[0]->version
     // TODO Hackish temporal solution. Use opset 12.
     size_t version = 12;
-    operator_preparer prepare = find_operator_preparer(model->graph->node[nodeIdx]->op_type, version);
-    TRACE_FATAL(0, !prepare, "No prepare function could be found for operator '%s' version '%zu'",model->graph->node[nodeIdx]->op_type, version);
+    operator_preparer prepare = operator_set_find_preparer(model->graph->node[nodeIdx]->op_type, version);
+    TRACE_FATAL(0, !prepare, "No prepare function could be found for operator '%s' version '%zu'", model->graph->node[nodeIdx]->op_type, version);
     prepare(&all_context[nodeIdx]);
     _populatedIdx++;
   }
