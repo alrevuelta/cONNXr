@@ -142,11 +142,10 @@ path = f"{args.path[-1]}/{args.resolve[-1]}/"
 resolvers = [ OperatorTypeResolver.Source(h,path) for h in headers ]
 note("generating onnx operator sets")
 path = f"{args.path[-1]}/{args.sets[-1]}/"
-sets = [OperatorSets.Source(headers,path)]
+sets = OperatorSets.Sets(schemas,path)
 note("generating onnx operator template")
 path = f"{args.path[-1]}/{args.template[-1]}/"
 templates = itertools.chain(*[ OperatorTemplate.Templates(h,path) for h in headers ])
-note("generating onnx operator info")
 path = f"{args.path[-1]}/{args.info[-1]}/"
 info = [ OperatorInfo.Source(h, path) for h in headers ]
 

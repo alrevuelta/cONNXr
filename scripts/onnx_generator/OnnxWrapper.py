@@ -572,9 +572,13 @@ class OnnxSchema():
     def __repr__(self):
       return f"OnnxSchema({self.__dict__.__repr__()})"
 
-    def _operator_name(self, schema):
-        name = f"operator__{self._domain(schema)}__{schema.name}__{schema.since_version}"
-        return re.sub(r"\W", "_", name).lower()
+    def _operator_name(self, schema, name=True, version=True):
+        opname = f"operator__{self._domain(schema)}"
+        if name:
+            opname += f"__{schema.name}"
+        if version:
+            opname += f"__{schema.since_version}"
+        return re.sub(r"\W", "_", opname).lower()
 
     def _domain(self, schema):
         domain = "ai.onnx"
