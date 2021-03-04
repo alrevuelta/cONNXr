@@ -72,6 +72,7 @@ LDFLAGS+=-g
 LDLIBS+=-lcunit
 LDLIBS+=-lm
 
+INCDIR+=.
 INCDIR+=include
 INCDIR+=src
 INCDIR+=src/pb
@@ -93,6 +94,13 @@ $(BUILDDIR)/%.o:%.c
 $(BINARY): $(OBJS)
 
 DEFAULT=help
+
+.phony: menuconfig
+HELP_menuconfig=run menuconfig
+TARGET+=menuconfig
+menuconfig:
+	menuconfig
+	genconfig
 
 # TODO: Define new objects that are compiled with -fic?
 .phony: sharedlib

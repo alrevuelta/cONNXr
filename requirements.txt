@@ -1,1 +1,2 @@
 onnx==1.7.0
+kconfiglib==14.1.0
