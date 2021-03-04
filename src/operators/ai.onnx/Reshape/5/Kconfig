@@ -1,0 +1,8 @@
+menuconfig HAVE_OPERATOR__AI_ONNX__RESHAPE__5
+	bool "5"
+	help
+		Enable domain 'ai.onnx' operator 'Reshape' version '5'
+	default y
+	if HAVE_OPERATOR__AI_ONNX__RESHAPE__5
+		rsource "*.Kconfig"
+	endif

@@ -1,0 +1,8 @@
+menuconfig HAVE_OPERATOR__AI_ONNX__RELU
+	bool "Relu"
+	default y
+	help
+		Enable the domain 'ai.onnx' operator 'Relu'
+	if HAVE_OPERATOR__AI_ONNX__RELU
+		rsource "*/Kconfig"
+	endif

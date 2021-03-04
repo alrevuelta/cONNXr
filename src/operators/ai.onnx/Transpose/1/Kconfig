@@ -1,0 +1,8 @@
+menuconfig HAVE_OPERATOR__AI_ONNX__TRANSPOSE__1
+	bool "1"
+	help
+		Enable domain 'ai.onnx' operator 'Transpose' version '1'
+	default y
+	if HAVE_OPERATOR__AI_ONNX__TRANSPOSE__1
+		rsource "*.Kconfig"
+	endif

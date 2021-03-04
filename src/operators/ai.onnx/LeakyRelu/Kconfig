@@ -1,0 +1,8 @@
+menuconfig HAVE_OPERATOR__AI_ONNX__LEAKYRELU
+	bool "LeakyRelu"
+	default y
+	help
+		Enable the domain 'ai.onnx' operator 'LeakyRelu'
+	if HAVE_OPERATOR__AI_ONNX__LEAKYRELU
+		rsource "*/Kconfig"
+	endif

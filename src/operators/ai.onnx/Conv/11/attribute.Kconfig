@@ -1,0 +1,20 @@
+menu "attribute types"
+config HAVE_TYPE_ATTRIBUTE__AI_ONNX__CONV__11__INTS
+    bool "INTS"
+    depends on HAVE_TYPE_ATTRIBUTE__INTS
+	help
+		Enable attribute 'INTS' type for domain 'ai.onnx' operator 'Conv' version '11'.
+	default y
+config HAVE_TYPE_ATTRIBUTE__AI_ONNX__CONV__11__INT
+    bool "INT"
+    depends on HAVE_TYPE_ATTRIBUTE__INT
+	help
+		Enable attribute 'INT' type for domain 'ai.onnx' operator 'Conv' version '11'.
+	default y
+config HAVE_TYPE_ATTRIBUTE__AI_ONNX__CONV__11__STRING
+    bool "STRING"
+    depends on HAVE_TYPE_ATTRIBUTE__STRING
+	help
+		Enable attribute 'STRING' type for domain 'ai.onnx' operator 'Conv' version '11'.
+	default y
+endmenu

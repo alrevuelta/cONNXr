@@ -1,0 +1,8 @@
+menu "attribute types"
+config HAVE_TYPE_ATTRIBUTE__AI_ONNX__BATCHNORMALIZATION__9__FLOAT
+    bool "FLOAT"
+    depends on HAVE_TYPE_ATTRIBUTE__FLOAT
+	help
+		Enable attribute 'FLOAT' type for domain 'ai.onnx' operator 'BatchNormalization' version '9'.
+	default y
+endmenu

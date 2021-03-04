@@ -1,0 +1,8 @@
+menuconfig HAVE_OPERATOR__AI_ONNX__IDENTITY
+	bool "Identity"
+	default y
+	help
+		Enable the domain 'ai.onnx' operator 'Identity'
+	if HAVE_OPERATOR__AI_ONNX__IDENTITY
+		rsource "*/Kconfig"
+	endif

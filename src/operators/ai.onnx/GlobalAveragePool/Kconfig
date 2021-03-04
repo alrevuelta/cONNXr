@@ -1,0 +1,8 @@
+menuconfig HAVE_OPERATOR__AI_ONNX__GLOBALAVERAGEPOOL
+	bool "GlobalAveragePool"
+	default y
+	help
+		Enable the domain 'ai.onnx' operator 'GlobalAveragePool'
+	if HAVE_OPERATOR__AI_ONNX__GLOBALAVERAGEPOOL
+		rsource "*/Kconfig"
+	endif

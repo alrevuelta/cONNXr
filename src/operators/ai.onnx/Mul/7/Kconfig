@@ -1,0 +1,8 @@
+menuconfig HAVE_OPERATOR__AI_ONNX__MUL__7
+	bool "7"
+	help
+		Enable domain 'ai.onnx' operator 'Mul' version '7'
+	default y
+	if HAVE_OPERATOR__AI_ONNX__MUL__7
+		rsource "*.Kconfig"
+	endif

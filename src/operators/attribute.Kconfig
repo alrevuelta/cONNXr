@@ -1,0 +1,42 @@
+menu "global attribute types"
+config HAVE_TYPE_ATTRIBUTE__INT
+    bool "INT"
+	help
+		Enable attribute 'INT' globally.
+	default y
+config HAVE_TYPE_ATTRIBUTE__FLOAT
+    bool "FLOAT"
+	help
+		Enable attribute 'FLOAT' globally.
+	default y
+config HAVE_TYPE_ATTRIBUTE__INTS
+    bool "INTS"
+	help
+		Enable attribute 'INTS' globally.
+	default y
+config HAVE_TYPE_ATTRIBUTE__FLOATS
+    bool "FLOATS"
+	help
+		Enable attribute 'FLOATS' globally.
+	default y
+config HAVE_TYPE_ATTRIBUTE__STRINGS
+    bool "STRINGS"
+	help
+		Enable attribute 'STRINGS' globally.
+	default y
+config HAVE_TYPE_ATTRIBUTE__STRING
+    bool "STRING"
+	help
+		Enable attribute 'STRING' globally.
+	default y
+config HAVE_TYPE_ATTRIBUTE__SPARSE_TENSOR
+    bool "SPARSE_TENSOR"
+	help
+		Enable attribute 'SPARSE_TENSOR' globally.
+	default y
+config HAVE_TYPE_ATTRIBUTE__TENSOR
+    bool "TENSOR"
+	help
+		Enable attribute 'TENSOR' globally.
+	default y
+endmenu

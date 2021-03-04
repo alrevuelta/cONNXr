@@ -1,0 +1,8 @@
+menu "attribute types"
+config HAVE_TYPE_ATTRIBUTE__AI_ONNX__TRANSPOSE__1__INTS
+    bool "INTS"
+    depends on HAVE_TYPE_ATTRIBUTE__INTS
+	help
+		Enable attribute 'INTS' type for domain 'ai.onnx' operator 'Transpose' version '1'.
+	default y
+endmenu

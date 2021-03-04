@@ -1,0 +1,50 @@
+menu "attribute types"
+config HAVE_TYPE_ATTRIBUTE__AI_ONNX__CONSTANT__12__INT
+    bool "INT"
+    depends on HAVE_TYPE_ATTRIBUTE__INT
+	help
+		Enable attribute 'INT' type for domain 'ai.onnx' operator 'Constant' version '12'.
+	default y
+config HAVE_TYPE_ATTRIBUTE__AI_ONNX__CONSTANT__12__FLOAT
+    bool "FLOAT"
+    depends on HAVE_TYPE_ATTRIBUTE__FLOAT
+	help
+		Enable attribute 'FLOAT' type for domain 'ai.onnx' operator 'Constant' version '12'.
+	default y
+config HAVE_TYPE_ATTRIBUTE__AI_ONNX__CONSTANT__12__INTS
+    bool "INTS"
+    depends on HAVE_TYPE_ATTRIBUTE__INTS
+	help
+		Enable attribute 'INTS' type for domain 'ai.onnx' operator 'Constant' version '12'.
+	default y
+config HAVE_TYPE_ATTRIBUTE__AI_ONNX__CONSTANT__12__FLOATS
+    bool "FLOATS"
+    depends on HAVE_TYPE_ATTRIBUTE__FLOATS
+	help
+		Enable attribute 'FLOATS' type for domain 'ai.onnx' operator 'Constant' version '12'.
+	default y
+config HAVE_TYPE_ATTRIBUTE__AI_ONNX__CONSTANT__12__STRINGS
+    bool "STRINGS"
+    depends on HAVE_TYPE_ATTRIBUTE__STRINGS
+	help
+		Enable attribute 'STRINGS' type for domain 'ai.onnx' operator 'Constant' version '12'.
+	default y
+config HAVE_TYPE_ATTRIBUTE__AI_ONNX__CONSTANT__12__STRING
+    bool "STRING"
+    depends on HAVE_TYPE_ATTRIBUTE__STRING
+	help
+		Enable attribute 'STRING' type for domain 'ai.onnx' operator 'Constant' version '12'.
+	default y
+config HAVE_TYPE_ATTRIBUTE__AI_ONNX__CONSTANT__12__SPARSE_TENSOR
+    bool "SPARSE_TENSOR"
+    depends on HAVE_TYPE_ATTRIBUTE__SPARSE_TENSOR
+	help
+		Enable attribute 'SPARSE_TENSOR' type for domain 'ai.onnx' operator 'Constant' version '12'.
+	default y
+config HAVE_TYPE_ATTRIBUTE__AI_ONNX__CONSTANT__12__TENSOR
+    bool "TENSOR"
+    depends on HAVE_TYPE_ATTRIBUTE__TENSOR
+	help
+		Enable attribute 'TENSOR' type for domain 'ai.onnx' operator 'Constant' version '12'.
+	default y
+endmenu

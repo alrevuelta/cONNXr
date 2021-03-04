@@ -1,0 +1,8 @@
+menuconfig HAVE_OPERATOR__AI_ONNX__BATCHNORMALIZATION
+	bool "BatchNormalization"
+	default y
+	help
+		Enable the domain 'ai.onnx' operator 'BatchNormalization'
+	if HAVE_OPERATOR__AI_ONNX__BATCHNORMALIZATION
+		rsource "*/Kconfig"
+	endif

@@ -1,0 +1,20 @@
+menu "tensor types"
+config HAVE_TYPE_TENSOR__AI_ONNX__ELU__6__TENSOR_FLOAT
+    bool "tensor_float"
+    depends on HAVE_TYPE_TENSOR__TENSOR_FLOAT
+	help
+		Enable tensor 'tensor_float' type for domain 'ai.onnx' operator 'Elu' version '6'.
+	default y
+config HAVE_TYPE_TENSOR__AI_ONNX__ELU__6__TENSOR_FLOAT16
+    bool "tensor_float16"
+    depends on HAVE_TYPE_TENSOR__TENSOR_FLOAT16
+	help
+		Enable tensor 'tensor_float16' type for domain 'ai.onnx' operator 'Elu' version '6'.
+	default y
+config HAVE_TYPE_TENSOR__AI_ONNX__ELU__6__TENSOR_DOUBLE
+    bool "tensor_double"
+    depends on HAVE_TYPE_TENSOR__TENSOR_DOUBLE
+	help
+		Enable tensor 'tensor_double' type for domain 'ai.onnx' operator 'Elu' version '6'.
+	default y
+endmenu

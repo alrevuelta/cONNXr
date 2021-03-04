@@ -1,0 +1,8 @@
+menuconfig HAVE_OPERATOR__AI_ONNX__SIGMOID
+	bool "Sigmoid"
+	default y
+	help
+		Enable the domain 'ai.onnx' operator 'Sigmoid'
+	if HAVE_OPERATOR__AI_ONNX__SIGMOID
+		rsource "*/Kconfig"
+	endif

@@ -1,0 +1,8 @@
+menuconfig HAVE_OPERATOR__AI_ONNX__ELU__6
+	bool "6"
+	help
+		Enable domain 'ai.onnx' operator 'Elu' version '6'
+	default y
+	if HAVE_OPERATOR__AI_ONNX__ELU__6
+		rsource "*.Kconfig"
+	endif
