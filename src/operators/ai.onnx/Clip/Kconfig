@@ -1,0 +1,8 @@
+menuconfig HAVE_OPERATOR__AI_ONNX__CLIP
+	bool "Clip"
+	default y
+	help
+		Enable the domain 'ai.onnx' operator 'Clip'
+	if HAVE_OPERATOR__AI_ONNX__CLIP
+		rsource "*/Kconfig"
+	endif

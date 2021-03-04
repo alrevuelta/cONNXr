@@ -1,0 +1,8 @@
+menuconfig HAVE_DOMAIN__AI_ONNX
+	bool "ai.onnx"
+	help
+		Enable the operator domain 'ai.onnx'
+	default y
+	if HAVE_DOMAIN__AI_ONNX
+		rsource "*/Kconfig"
+	endif

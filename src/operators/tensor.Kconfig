@@ -1,0 +1,77 @@
+menu "global tensor types"
+config HAVE_TYPE_TENSOR__TENSOR_INT64
+    bool "tensor_int64"
+	help
+		Enable tensor 'tensor_int64' globally.
+	default y
+config HAVE_TYPE_TENSOR__TENSOR_UINT16
+    bool "tensor_uint16"
+	help
+		Enable tensor 'tensor_uint16' globally.
+	default y
+config HAVE_TYPE_TENSOR__TENSOR_UINT64
+    bool "tensor_uint64"
+	help
+		Enable tensor 'tensor_uint64' globally.
+	default y
+config HAVE_TYPE_TENSOR__TENSOR_BOOL
+    bool "tensor_bool"
+	help
+		Enable tensor 'tensor_bool' globally.
+	default y
+config HAVE_TYPE_TENSOR__TENSOR_INT8
+    bool "tensor_int8"
+	help
+		Enable tensor 'tensor_int8' globally.
+	default y
+config HAVE_TYPE_TENSOR__TENSOR_UINT32
+    bool "tensor_uint32"
+	help
+		Enable tensor 'tensor_uint32' globally.
+	default y
+config HAVE_TYPE_TENSOR__TENSOR_INT32
+    bool "tensor_int32"
+	help
+		Enable tensor 'tensor_int32' globally.
+	default y
+config HAVE_TYPE_TENSOR__TENSOR_FLOAT
+    bool "tensor_float"
+	help
+		Enable tensor 'tensor_float' globally.
+	default y
+config HAVE_TYPE_TENSOR__TENSOR_COMPLEX128
+    bool "tensor_complex128"
+	help
+		Enable tensor 'tensor_complex128' globally.
+	default y
+config HAVE_TYPE_TENSOR__TENSOR_INT16
+    bool "tensor_int16"
+	help
+		Enable tensor 'tensor_int16' globally.
+	default y
+config HAVE_TYPE_TENSOR__TENSOR_FLOAT16
+    bool "tensor_float16"
+	help
+		Enable tensor 'tensor_float16' globally.
+	default y
+config HAVE_TYPE_TENSOR__TENSOR_DOUBLE
+    bool "tensor_double"
+	help
+		Enable tensor 'tensor_double' globally.
+	default y
+config HAVE_TYPE_TENSOR__TENSOR_STRING
+    bool "tensor_string"
+	help
+		Enable tensor 'tensor_string' globally.
+	default y
+config HAVE_TYPE_TENSOR__TENSOR_UINT8
+    bool "tensor_uint8"
+	help
+		Enable tensor 'tensor_uint8' globally.
+	default y
+config HAVE_TYPE_TENSOR__TENSOR_COMPLEX64
+    bool "tensor_complex64"
+	help
+		Enable tensor 'tensor_complex64' globally.
+	default y
+endmenu

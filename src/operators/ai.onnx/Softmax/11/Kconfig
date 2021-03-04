@@ -1,0 +1,8 @@
+menuconfig HAVE_OPERATOR__AI_ONNX__SOFTMAX__11
+	bool "11"
+	help
+		Enable domain 'ai.onnx' operator 'Softmax' version '11'
+	default y
+	if HAVE_OPERATOR__AI_ONNX__SOFTMAX__11
+		rsource "*.Kconfig"
+	endif

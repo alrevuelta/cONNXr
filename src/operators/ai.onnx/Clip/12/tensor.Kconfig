@@ -1,0 +1,68 @@
+menu "tensor types"
+config HAVE_TYPE_TENSOR__AI_ONNX__CLIP__12__TENSOR_INT64
+    bool "tensor_int64"
+    depends on HAVE_TYPE_TENSOR__TENSOR_INT64
+	help
+		Enable tensor 'tensor_int64' type for domain 'ai.onnx' operator 'Clip' version '12'.
+	default y
+config HAVE_TYPE_TENSOR__AI_ONNX__CLIP__12__TENSOR_UINT16
+    bool "tensor_uint16"
+    depends on HAVE_TYPE_TENSOR__TENSOR_UINT16
+	help
+		Enable tensor 'tensor_uint16' type for domain 'ai.onnx' operator 'Clip' version '12'.
+	default y
+config HAVE_TYPE_TENSOR__AI_ONNX__CLIP__12__TENSOR_UINT64
+    bool "tensor_uint64"
+    depends on HAVE_TYPE_TENSOR__TENSOR_UINT64
+	help
+		Enable tensor 'tensor_uint64' type for domain 'ai.onnx' operator 'Clip' version '12'.
+	default y
+config HAVE_TYPE_TENSOR__AI_ONNX__CLIP__12__TENSOR_INT8
+    bool "tensor_int8"
+    depends on HAVE_TYPE_TENSOR__TENSOR_INT8
+	help
+		Enable tensor 'tensor_int8' type for domain 'ai.onnx' operator 'Clip' version '12'.
+	default y
+config HAVE_TYPE_TENSOR__AI_ONNX__CLIP__12__TENSOR_UINT32
+    bool "tensor_uint32"
+    depends on HAVE_TYPE_TENSOR__TENSOR_UINT32
+	help
+		Enable tensor 'tensor_uint32' type for domain 'ai.onnx' operator 'Clip' version '12'.
+	default y
+config HAVE_TYPE_TENSOR__AI_ONNX__CLIP__12__TENSOR_INT32
+    bool "tensor_int32"
+    depends on HAVE_TYPE_TENSOR__TENSOR_INT32
+	help
+		Enable tensor 'tensor_int32' type for domain 'ai.onnx' operator 'Clip' version '12'.
+	default y
+config HAVE_TYPE_TENSOR__AI_ONNX__CLIP__12__TENSOR_FLOAT
+    bool "tensor_float"
+    depends on HAVE_TYPE_TENSOR__TENSOR_FLOAT
+	help
+		Enable tensor 'tensor_float' type for domain 'ai.onnx' operator 'Clip' version '12'.
+	default y
+config HAVE_TYPE_TENSOR__AI_ONNX__CLIP__12__TENSOR_INT16
+    bool "tensor_int16"
+    depends on HAVE_TYPE_TENSOR__TENSOR_INT16
+	help
+		Enable tensor 'tensor_int16' type for domain 'ai.onnx' operator 'Clip' version '12'.
+	default y
+config HAVE_TYPE_TENSOR__AI_ONNX__CLIP__12__TENSOR_FLOAT16
+    bool "tensor_float16"
+    depends on HAVE_TYPE_TENSOR__TENSOR_FLOAT16
+	help
+		Enable tensor 'tensor_float16' type for domain 'ai.onnx' operator 'Clip' version '12'.
+	default y
+config HAVE_TYPE_TENSOR__AI_ONNX__CLIP__12__TENSOR_DOUBLE
+    bool "tensor_double"
+    depends on HAVE_TYPE_TENSOR__TENSOR_DOUBLE
+	help
+		Enable tensor 'tensor_double' type for domain 'ai.onnx' operator 'Clip' version '12'.
+	default y
+config HAVE_TYPE_TENSOR__AI_ONNX__CLIP__12__TENSOR_UINT8
+    bool "tensor_uint8"
+    depends on HAVE_TYPE_TENSOR__TENSOR_UINT8
+	help
+		Enable tensor 'tensor_uint8' type for domain 'ai.onnx' operator 'Clip' version '12'.
+	default y
+endmenu

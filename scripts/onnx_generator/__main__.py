@@ -45,6 +45,12 @@ parser.add_argument(
     help="overwrite info src"
 )
 parser.add_argument(
+    "--force-kconfig",
+    action='count',
+    default=args.force_kconfig,
+    help="overwrite kconfigs"
+)
+parser.add_argument(
     "-n", "--dryrun",
     action='count',
     default=args.dryrun,
@@ -114,6 +120,19 @@ parser.add_argument(
     metavar="<path>",
     default=args.info,
     help=f"where to put info src in main path (default: {args.info[0]})"
+)
+parser.add_argument(
+    "--no-kconfig",
+    action='count',
+    default=args.no_kconfig,
+    help="don't write kconfigs"
+)
+parser.add_argument(
+    "--kconfig",
+    nargs=1,
+    metavar="<path>",
+    default=args.kconfig,
+    help=f"where to put kconfig src in main path (default: {args.kconfig[0]})"
 )
 parser.add_argument(
     "--domains",

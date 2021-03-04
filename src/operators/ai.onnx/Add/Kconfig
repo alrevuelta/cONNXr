@@ -1,0 +1,8 @@
+menuconfig HAVE_OPERATOR__AI_ONNX__ADD
+	bool "Add"
+	default y
+	help
+		Enable the domain 'ai.onnx' operator 'Add'
+	if HAVE_OPERATOR__AI_ONNX__ADD
+		rsource "*/Kconfig"
+	endif

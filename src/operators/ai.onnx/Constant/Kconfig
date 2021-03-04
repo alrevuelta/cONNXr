@@ -1,0 +1,8 @@
+menuconfig HAVE_OPERATOR__AI_ONNX__CONSTANT
+	bool "Constant"
+	default y
+	help
+		Enable the domain 'ai.onnx' operator 'Constant'
+	if HAVE_OPERATOR__AI_ONNX__CONSTANT
+		rsource "*/Kconfig"
+	endif

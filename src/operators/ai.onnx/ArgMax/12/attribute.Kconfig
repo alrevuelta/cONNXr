@@ -1,0 +1,8 @@
+menu "attribute types"
+config HAVE_TYPE_ATTRIBUTE__AI_ONNX__ARGMAX__12__INT
+    bool "INT"
+    depends on HAVE_TYPE_ATTRIBUTE__INT
+	help
+		Enable attribute 'INT' type for domain 'ai.onnx' operator 'ArgMax' version '12'.
+	default y
+endmenu

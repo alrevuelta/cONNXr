@@ -1,0 +1,8 @@
+menuconfig HAVE_OPERATOR__AI_ONNX__CONV
+	bool "Conv"
+	default y
+	help
+		Enable the domain 'ai.onnx' operator 'Conv'
+	if HAVE_OPERATOR__AI_ONNX__CONV
+		rsource "*/Kconfig"
+	endif

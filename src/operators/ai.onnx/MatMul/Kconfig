@@ -1,0 +1,8 @@
+menuconfig HAVE_OPERATOR__AI_ONNX__MATMUL
+	bool "MatMul"
+	default y
+	help
+		Enable the domain 'ai.onnx' operator 'MatMul'
+	if HAVE_OPERATOR__AI_ONNX__MATMUL
+		rsource "*/Kconfig"
+	endif
