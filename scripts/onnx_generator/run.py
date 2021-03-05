@@ -49,7 +49,7 @@ for schema in all_schemas:
     version2schema = name2version2schema.setdefault(schema.name,{})
     version2schema[schema.version] = schema
 
-note("selecting domains")
+note("selecting domains",1)
 domains = domain2name2version2schema.keys()
 note(f"onnx operator schemas have {len(domains)} domains: {', '.join(domains)}",2)
 if "all" in args.domains:
@@ -101,7 +101,7 @@ for domain, names in delete_names.items():
     for name in names:
         del domain2name2version2schema[domain][name]
 
-note("selecting onnx operator schema versions")
+note("selecting onnx operator schema versions",1)
 delete_versions = {}
 for domain, name2version2schema in domain2name2version2schema.items():
     for name, version2schema in name2version2schema.items():
@@ -134,6 +134,25 @@ for name2version2schema in domain2name2version2schema.values():
         for schema in version2schema.values():
             schemas.append(schema)
 
+if args.list_domains or args.list_operators or args.list_versions:
+    empty = True
+    for domain, name2version2schema in domain2name2version2schema.items():
+        if args.list_domains:
+            empty = False
+            print(domain)
+        for name, version2schema in name2version2schema.items():
+            if args.list_operators:
+                empty = False
+                print(f"{domain} {name}")
+            for version in version2schema.keys():
+                if args.list_versions:
+                    empty = False
+                    print(f"{domain} {name} {version}")
+    if empty:
+        sys.exit(1)
+    else:
+        sys.exit(0)
+
 note("generating onnx operator headers")
 path = f"{args.path[-1]}/{args.header[-1]}/"
 headers = [ OperatorHeader.Header(s,path) for s in schemas ]
@@ -162,18 +181,39 @@ if not args.no_info:
     files.extend(map(lambda x: (bool(args.force_info),x),info))
 
 writecount = 0
+existcount = 0
+skipcount = 0
 note("Writing files",1)
 if not args.path[-1]:
     warning("skipping write because args.path is not set")
 else:
     for force,obj in files:
         path = obj.filepath()
-        if path.exists() and not (args.force or force):
-            warning(f"skipping existing file '{path}'",1)
-            continue
-        note(f"writing file {path}",3)
+        overwrite = args.force or force
+        if not overwrite:
+            for pattern in args.force_pattern:
+                if re.match(pattern,str(path)):
+                    overwrite=True
+                    break
+        skip = False
+        for pattern in args.skip_pattern:
+            if re.match(pattern,str(path)):
+                skip = True
+                break
+        if not overwrite:
+            if path.exists():
+                existcount += 1
+                warning(f"skipping existing file '{path}'",2)
+                continue
+            elif skip:
+                skipcount += 1
+                warning(f"skipping file '{path}'",2)
+                continue
+            note(f"writing file {path}",1)
+        else:
+            warning(f"overwriting file {path}",1)
         if not args.dryrun:
             os.makedirs(path.parent,exist_ok=True)
             path.open("w").write(str(obj))
         writecount += 1
-note(f"wrote {writecount} of {len(files)} files")
+note(f"wrote {writecount} of {len(files)} files ({existcount} already existed, {skipcount} skipped)")

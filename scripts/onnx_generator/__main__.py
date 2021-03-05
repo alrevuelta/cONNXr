@@ -15,6 +15,33 @@ parser.add_argument(
     help="overwrite existing files"
 )
 parser.add_argument(
+    "--list-domains",
+    action='count',
+    help="list all domains"
+)
+parser.add_argument(
+    "--list-operators",
+    action='count',
+    help="list all operators in selected domains"
+)
+parser.add_argument(
+    "--list-versions",
+    action='count',
+    help="list all versions of selected operators in selected domains"
+)
+parser.add_argument(
+    "--skip-pattern",
+    nargs="+",
+    default=args.skip_pattern,
+    help="skip path matching pattern"
+)
+parser.add_argument(
+    "--force-pattern",
+    nargs="+",
+    default=args.force_pattern,
+    help="for write of path matching pattern"
+)
+parser.add_argument(
     "--force-header",
     action='count',
     default=args.force_header,
