@@ -1,1 +1,2 @@
-See https://github.com/alrevuelta/cONNXr/blob/master/doc/03_Contributing.md and opened issues.
+* See [docs](https://connxr.readthedocs.io/en/latest/contributing.html) for further information.
+* See opened issues.
