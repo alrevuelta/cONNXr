@@ -651,10 +651,10 @@ if (COND) { \
     } \
     if (__TRACE_COND(LEVEL)) { \
         __VAR(LEVEL, "TENSOR", TENSOR->name, "             \"%s\"\n"); \
-        __VAR(LEVEL, "TENSOR", TENSOR->data_type, "        %d") \
+        __VAR(LEVEL, "TENSOR", TENSOR->data_type, "        %d" PRId32) \
         if ((TENSOR->data_type) >= _n_tensor_types) { \
             __PRINT(TRACE_SYMBOL_STDOUT, " (%s)\n", _tensor_types[0]) \
-            __BOUND_ERROR(0, TENSOR->data_type, 0, _n_tensor_types, "%d") \
+            __BOUND_ERROR(0, TENSOR->data_type, 0, _n_tensor_types, "%d" PRId32) \
             __ERROR(0, "unknown data type") \
         } else { \
             __PRINT(TRACE_SYMBOL_STDOUT, " (%s)\n", \
