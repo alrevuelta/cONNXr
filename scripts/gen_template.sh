@@ -78,7 +78,7 @@ do
         OPERATORS+=$(ls ../src/operators/$domain/ | awk '{print "^"$0"$"}')
     fi
 done
-python -m onnx_generator -v \
+python3 -m onnx_generator -v \
     -i $OPERATORS\
     --version latest \
     --force-pattern \
