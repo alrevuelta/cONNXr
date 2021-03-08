@@ -3,6 +3,7 @@
 
 #include "onnx.pb-c.h"
 #include <errno.h>
+#include <stdbool.h>
 
 // TODO Remove unused code
 typedef enum operator_status operator_status;
@@ -20,6 +21,8 @@ struct node_context {
   Onnx__TensorProto  **outputs;
   operator_executer    executer;
   void                *executer_context;
+  node_context        *next;
+  bool                 threadsafe;
 };
 
 enum operator_status {
