@@ -22,6 +22,13 @@ Some very well known models are supported out of the box, just compile the comma
 ```
 make all
 ```
+## CUnit
+You may need to install `cunit` to be able to build the test suite.
+
+I.e. for ubuntu you may execute
+```bash
+sudo apt-get install libcunit1 libcunit1-doc libcunit1-dev
+```
 
 ## [MNIST](https://github.com/onnx/models/tree/master/vision/classification/mnist)
 ```
