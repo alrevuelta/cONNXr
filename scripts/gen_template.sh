@@ -70,8 +70,16 @@ echo
 OPERATORS=
 echo "### GENERATING NEW OPERATOR SET ###"
 echo
+OPERATORS=
+for domain in $(python3 -m onnx_generator --list-domains -- ..)
+do
+    if [[ -d ../src/operators/$domain ]]
+    then
+        OPERATORS+=$(ls ../src/operators/$domain/ | awk '{print "^"$0"$"}')
+    fi
+done
 python -m onnx_generator -v \
-    -i $(find ../src/operators -maxdepth 2 -mindepth 2 -type d -printf "^%f$ " )\
+    -i $OPERATORS\
     --version latest \
     --force-pattern \
         '^'$ROOT'/src/operators/'$DOMAIN'/opdomain_.*$' \
