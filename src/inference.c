@@ -77,7 +77,14 @@ Onnx__TensorProto** inference(Onnx__ModelProto *model, Onnx__TensorProto **input
   for (int nodeIdx = 0; nodeIdx < model->graph->n_node; nodeIdx++)
   {
     TRACE(1, true, "Running node %d, operator=%s", nodeIdx, model->graph->node[nodeIdx]->op_type);
-    all_context[nodeIdx].executer(&all_context[nodeIdx]);
+    for (node_context *ctx = &all_context[nodeIdx]; ctx; ctx=ctx->next) {
+      if (!ctx->threadsafe) {
+        // wait for all threads to finish
+      }
+      // issue new thread
+      ctx->executer(ctx);
+    }
+    // wait for all threads to finish
   }
 
   // TODO
