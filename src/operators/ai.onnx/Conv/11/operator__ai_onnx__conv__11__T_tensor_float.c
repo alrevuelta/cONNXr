@@ -7,7 +7,7 @@
 #include "utils.h"
 #include "tracing.h"
 #include "index.h"
-#include "operators/ai.onnx/Conv/11/operator__ai_onnx__conv__11.h"
+#include "operator__ai_onnx__conv__11.h"
 
 
 operator_status

@@ -16,7 +16,7 @@ HELP_FORMAT=which files to format (git wildcards)
 ifndef FORMAT
 FORMAT+=**/*.h
 FORMAT+=**/*.c
-FORMAT+=!**/pb/**/*
+FORMAT+=!**/protobuf/**/*
 FORMAT+=!**/third_party/**/*
 endif
 
@@ -73,12 +73,11 @@ LDLIBS+=-lcunit
 LDLIBS+=-lm
 
 INCDIR+=include
-INCDIR+=src
-INCDIR+=src/pb
+INCDIR+=protobuf
 CPPFLAGS+=$(foreach DIR, $(INCDIR),-I $(DIR) )
 
 SRCDIR+=src/operators
-SRCDIR+=src/pb
+SRCDIR+=protobuf
 SRCS+=$(foreach DIR, $(SRCDIR), $(shell find $(DIR) -type f -name '*.c'))
 SRCS+=src/inference.c
 SRCS+=src/trace.c
@@ -102,7 +101,7 @@ TARGET+=sharedlib
 sharedlib: CFLAGS += -fpic
 sharedlib: $(BUILDDIR)/sharedlib
 $(BUILDDIR)/sharedlib: $(OBJS)
-	$(CC) -shared -o $(BUILDDIR)/libconnxr.so -fpic $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $(LDLIBS) `find build/src/ -type f`
+	$(CC) -shared -o $(BUILDDIR)/libconnxr.so -fpic $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $(LDLIBS) `find build/ -iname '*.o' -type f`
 
 .phony: clean_build
 CLEAN+=clean_build
