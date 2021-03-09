@@ -25,6 +25,7 @@ def benchmark_model(id, path, io, n_inputs, n_outputs, n_runs=1):
         elif result == 0:
             print("[Warning] Measured time is 0. Perhaps trying to measure a very small time."+
                   "There is a known issue with time library in Windows.")
+            model_times.append(result)
         else:
             raise Exception("The output of the model doesn't match the expected")
 
