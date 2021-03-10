@@ -7,17 +7,17 @@
 int calcOutputSize(int inputSize, int kernelSize, int stride, int dilations, int padStart, int padEnd);
 
 //transformes a 2d pos into a 1d flat array pos
-int calcArrayPos2D(int x, int y, int width) {
+static inline int calcArrayPos2D(int x, int y, int width) {
     return y * width + x;
 }
 
 //transformes a 3d pos into a 1d flat array pos
-int calcArrayPos3D(int x, int y, int outputChannel, int width, int height) {
+static inline int calcArrayPos3D(int x, int y, int outputChannel, int width, int height) {
     return outputChannel * height * width + y * width + x;
 }
 
 //transformes a 4d pos into a 1d flat array pos
-int calcArrayPos4D(int x, int y, int outputChannel, int intputChannel, int width, int height, int nOfOutputChannels) {
+static inline int calcArrayPos4D(int x, int y, int outputChannel, int intputChannel, int width, int height, int nOfOutputChannels) {
     return intputChannel * nOfOutputChannels *height * width 
            + outputChannel * height * width 
            + y * width
@@ -39,9 +39,10 @@ execute_operator__ai_onnx__convtranspose__11__T_tensor_float(
     Onnx__TensorProto *i_W = searchInputByName(ctx, 1);
     Onnx__TensorProto *i_B = searchInputByName(ctx, 2);
 
-    // TRACE_TENSOR(2, true, i_X);
-    // TRACE_TENSOR(2, true, i_W);
-    // TRACE_TENSOR(2, B, i_B);
+    TRACE_TENSOR(2, true, i_X);
+    TRACE_TENSOR(2, true, i_W);
+    TRACE_TENSOR(2, B, i_B);
+
     Onnx__AttributeProto *a_dilations = searchAttributeNyName(ctx->onnx_node->n_attribute,ctx->onnx_node->attribute,"dilations");
     Onnx__AttributeProto *a_pads = searchAttributeNyName(ctx->onnx_node->n_attribute,ctx->onnx_node->attribute,"pads");
     Onnx__AttributeProto *a_strides = searchAttributeNyName(ctx->onnx_node->n_attribute,ctx->onnx_node->attribute,"strides");
@@ -120,35 +121,21 @@ execute_operator__ai_onnx__convtranspose__11__T_tensor_float(
         padEndX = a_pads->ints[3];
     }
 
-    const int outputSizeX = calcOutputSize(inputSizeX, kernelSizeX, strideX, dilationsX, 0, 0);
-    const int outputSizeY = calcOutputSize(inputSizeY, kernelSizeY, strideY, dilationsY, 0, 0);
+    const int outputSizeX = calcOutputSize(inputSizeX, kernelSizeX, strideX, dilationsX, padStartX, padEndX);
+    const int outputSizeY = calcOutputSize(inputSizeY, kernelSizeY, strideY, dilationsY, padStartY, padEndY);
 
-    const int outputSizePaddedX = calcOutputSize(inputSizeX, kernelSizeX, strideX, dilationsX, padStartX, padEndX);
-    const int outputSizePaddedY = calcOutputSize(inputSizeY, kernelSizeY, strideY, dilationsY, padStartY, padEndY);
-
-    //if badding is needed we need an extra tensor and applay padding later
-    float* output = NULL;
-    if(outputSizeX * outputSizeY != outputSizePaddedX * outputSizePaddedY) {
-        output = (float*)malloc(outputSizeX * outputSizeY * outputChannels * sizeof(float));
-    } else {
-        output = o_Y->float_data;
-    }
+    float* output = o_Y->float_data;
 
     //fill with bias
-    if(i_B == NULL) {
-        for(int c=0; c<outputChannels; c++) {
-            for(int y=0; y<outputSizeY; y++) {
-                for(int x=0; x<outputSizeX; x++) {
-                    output[calcArrayPos3D(x,y,c,outputSizeX, outputSizeY)] = 0;
-                }
-            }
+    for(int c=0; c<outputChannels; c++) {
+        float bias = 0;
+        if(i_B != NULL) {
+            bias = i_B->float_data[c];
         }
-    } else {
-        for(int c=0; c<outputChannels; c++) {
-            for(int y=0; y<outputSizeY; y++) {
-                for(int x=0; x<outputSizeX; x++) {
-                    output[calcArrayPos3D(x,y,c,outputSizeX, outputSizeY)] = i_B->float_data[c];
-                }
+        //float bias = i_B?i_B->float_data[c]:0;
+        for(int y=0; y<outputSizeY; y++) {
+            for(int x=0; x<outputSizeX; x++) {
+                output[calcArrayPos3D(x,y,c,outputSizeX, outputSizeY)] = bias;
             }
         }
     }
@@ -158,31 +145,32 @@ execute_operator__ai_onnx__convtranspose__11__T_tensor_float(
         for(int c=0; c<outputChannels; c++) {
             for(int inputPosY=0; inputPosY<inputSizeY; inputPosY++) {
                 for(int inputPosX=0; inputPosX<inputSizeX; inputPosX++) {
+                    float _input = input[calcArrayPos3D(inputPosX, inputPosY, i, inputSizeX, inputSizeY)];
+
                     for(int kernelPosX=0; kernelPosX<kernelSizeX; kernelPosX++) {
+                        int x = inputPosX*strideX+kernelPosX*dilationsX - padStartX;
+                        if(x < 0) {
+                            continue;
+                        } else if (x >= outputSizeX) {
+                            continue;
+                        }
+
                         for(int kernelPosY=0; kernelPosY<kernelSizeY; kernelPosY++) {
-                            float _input = input[calcArrayPos3D(inputPosX, inputPosY, i, inputSizeX, inputSizeY)];
-                            float _weight = weights[calcArrayPos4D(kernelPosX, kernelPosY, c, i, kernelSizeX, kernelSizeY, outputChannels)];
-                            output[calcArrayPos3D(inputPosX*strideX+kernelPosX*dilationsX, inputPosY*strideY+kernelPosY*dilationsY, c, outputSizeX, outputSizeY)] += _input * _weight;
+                            int y = inputPosY*strideY+kernelPosY*dilationsY - padStartY;
+
+                            if(y < 0) {
+                                continue;
+                            } else if (y >= outputSizeY) {
+                                continue;
+                            }
+
+                            const float _weight = weights[calcArrayPos4D(kernelPosX, kernelPosY, c, i, kernelSizeX, kernelSizeY, outputChannels)];
+                            output[calcArrayPos3D(x, y, c, outputSizeX, outputSizeY)] += _input * _weight;
                         }
                     }
                 }
             }
         }
-    }
-
-    //padding
-    if(outputSizeX * outputSizeY != outputSizePaddedX * outputSizePaddedY) {
-        for(int c=0; c<outputChannels; c++) {
-            for(int y=0; y<outputSizePaddedY; y++) {
-                //this could be a memcopy
-                for(int x=0; x<outputSizePaddedX; x++) {
-                    o_Y->float_data[calcArrayPos3D(x,y,c,outputSizePaddedX, outputSizePaddedY)] = output[calcArrayPos3D(x+padStartX,y+padStartY,c,outputSizeX, outputSizeY)];
-                }
-            }
-        }
-
-        free(output);
-        output = NULL;
     }
 
     TRACE_EXIT(1);
