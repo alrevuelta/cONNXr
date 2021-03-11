@@ -63,17 +63,17 @@ prepare_operator__ai_onnx__convtranspose__11(
 
     int inputSizeX = i_X->dims[3];
     int inputSizeY = i_X->dims[2];
-    int inputChannels = i_X->dims[1];
+    //int inputChannels = i_X->dims[1];
 
-    TRACE_FATAL(0, inputChannels != i_W->dims[0], "size of input channels needs to be qual with weights");
+    TRACE_FATAL(0, i_X->dims[1] != i_W->dims[0], "size of input channels needs to be qual with weights");
     
     int kernelSizeX = i_W->dims[3];
     int kernelSizeY = i_W->dims[2];
     int outputChannels = i_W->dims[1];
 
     if(i_B != NULL) {
-        int biasSize = i_B->dims[0];
-        TRACE_FATAL(0, biasSize != i_W->dims[1] * default_group, "size of input channels needs to be qual with bias");
+        //int biasSize = i_B->dims[0];
+        TRACE_FATAL(0, i_B->dims[0] != i_W->dims[1] * default_group, "size of input channels needs to be qual with bias");
     }
 
     //number of tensor axes minus batch minus channel 
