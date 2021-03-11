@@ -41,7 +41,7 @@ execute_operator__ai_onnx__convtranspose__11__T_tensor_float(
     context_operator__ai_onnx__convtranspose__11 *op_ctx = ctx->executer_context;
 
     // size is not needed, because this operator works for one fixed size only
-    
+
     // char* auto_pad = op_ctx->auto_pad;
     // size_t n_dilations = op_ctx->n_dilations;
     int64_t* dilations = op_ctx->dilations;
@@ -67,7 +67,6 @@ execute_operator__ai_onnx__convtranspose__11__T_tensor_float(
     TRACE_ARRAY(2, true, strides, , n_strides, "%" PRId64);
 
     Onnx__TensorProto *o_Y = searchOutputByName(ctx, 0);
-    printf("%p\n", o_Y->float_data);
 
     // TRACE_TENSOR(2, true, o_Y);
 
