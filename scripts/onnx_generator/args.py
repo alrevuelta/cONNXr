@@ -2,6 +2,8 @@
 onnx = []
 verbose = 0
 header = ["src/operators"]
+skip_pattern = []
+force_pattern = []
 no_header = 0
 force_header = 0
 resolve = ["src/operators/"]
