@@ -20,6 +20,7 @@ extern operator_set_opname opname_operator__ai_onnx__constant;
 extern operator_set_opname opname_operator__ai_onnx__batchnormalization;
 extern operator_set_opname opname_operator__ai_onnx__sigmoid;
 extern operator_set_opname opname_operator__ai_onnx__softmax;
+extern operator_set_opname opname_operator__ai_onnx__convtranspose;
 
 operator_set_opdomain opdomain_operator__ai_onnx = {
     .name = "ai.onnx",
@@ -42,6 +43,7 @@ operator_set_opdomain opdomain_operator__ai_onnx = {
         &opname_operator__ai_onnx__batchnormalization,
         &opname_operator__ai_onnx__sigmoid,
         &opname_operator__ai_onnx__softmax,
+        &opname_operator__ai_onnx__convtranspose,
         NULL
     }
 };
