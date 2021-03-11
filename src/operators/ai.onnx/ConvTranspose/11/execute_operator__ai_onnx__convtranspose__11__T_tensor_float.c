@@ -3,9 +3,6 @@
 #include "tracing.h"
 #include "utils.h"
 
-//defined in prepare
-int calcOutputSize(int inputSize, int kernelSize, int stride, int dilations, int padStart, int padEnd);
-
 //transformes a 3d pos into a 1d flat array pos
 static inline int calcArrayPos3D(int x, int y, int outputChannel, int width, int height) {
     return outputChannel * height * width + y * width + x;
@@ -91,11 +88,13 @@ execute_operator__ai_onnx__convtranspose__11__T_tensor_float(
 
     const int padStartY = pads[0];
     const int padStartX = pads[1];
-    const int padEndY = pads[2];
-    const int padEndX = pads[3];
 
-    const int outputSizeX = calcOutputSize(inputSizeX, kernelSizeX, strideX, dilationsX, padStartX, padEndX);
-    const int outputSizeY = calcOutputSize(inputSizeY, kernelSizeY, strideY, dilationsY, padStartY, padEndY);
+    //not used because outputSize is used to test for the padEnd
+    //const int padEndY = pads[2];
+    //const int padEndX = pads[3];
+
+    const int outputSizeX = o_Y->dims[2];
+    const int outputSizeY = o_Y->dims[3];
 
     float* output = o_Y->float_data;
 
@@ -118,18 +117,13 @@ execute_operator__ai_onnx__convtranspose__11__T_tensor_float(
 
                     for(int kernelPosX=0; kernelPosX<kernelSizeX; kernelPosX++) {
                         int x = inputPosX*strideX+kernelPosX*dilationsX - padStartX;
-                        if(x < 0) {
-                            continue;
-                        } else if (x >= outputSizeX) {
+                        if(x < 0 || x >= outputSizeX) {
                             continue;
                         }
 
                         for(int kernelPosY=0; kernelPosY<kernelSizeY; kernelPosY++) {
                             int y = inputPosY*strideY+kernelPosY*dilationsY - padStartY;
-
-                            if(y < 0) {
-                                continue;
-                            } else if (y >= outputSizeY) {
+                            if(y < 0 || y >= outputSizeY) {
                                 continue;
                             }
 

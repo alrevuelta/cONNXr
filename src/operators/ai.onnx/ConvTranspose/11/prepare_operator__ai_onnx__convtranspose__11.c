@@ -152,6 +152,7 @@ prepare_operator__ai_onnx__convtranspose__11(
 
     o_Y->n_dims       = i_X->n_dims;
     o_Y->dims         = malloc(o_Y->n_dims * sizeof(int64_t));
+    TRACE_FATAL(0, !op_ctx->dilations, "malloc failed");
     o_Y->has_raw_data = 0;
     o_Y->data_type    = ONNX__TENSOR_PROTO__DATA_TYPE__FLOAT;
     o_Y->n_float_data = outputSizeX * outputSizeY * outputChannels;
@@ -163,8 +164,7 @@ prepare_operator__ai_onnx__convtranspose__11(
 
     /* MALLOC OUTPUT TENSORS HERE */
 
-    //mallocTensorData(o_Y);
-    o_Y->float_data = (float*)malloc(outputSizeX * outputSizeY * outputChannels * sizeof(float));
+    mallocTensorData(o_Y);
 
     // TRACE_TENSOR(2, true, o_Y);
 
