@@ -123,14 +123,14 @@ $(BUILDDIR)/unittests: $(OBJS)
 HELP_test_operators=run onnx backend operator tests
 TARGET_test+=test_operators
 test_operators: sharedlib
-	python tests/test_operators.py
+	python3 tests/test_operators.py
 
 # Model tests
 .phony:test_models
 HELP_test_models=run model tests
 TARGET_test+=test_models
 test_models: sharedlib
-	python tests/test_models.py
+	python3 tests/test_models.py
 
 .phony: test
 HELP_test=run tests
@@ -141,7 +141,7 @@ test: $(TARGET_test)
 HELP_benchmark=run benchmarks of all MODELS
 TARGET+=benchmark
 benchmark: sharedlib
-	python tests/benchmarking.py
+	python3 tests/benchmarking.py
 
 .phony:connxr
 HELP_connxr=build connxr binary
@@ -170,9 +170,9 @@ format-check:
 HELP_onnx_generator=generate various onnx sources and headers
 TARGET+=onnx_generator
 onnx_generator:
-	python -m venv venv
+	python3 -m venv venv
 	. venv/bin/activate; pip install -r requirements.txt
-	cd scripts; python -m onnx_generator \
+	cd scripts; python3 -m onnx_generator \
 	$(if $(ONNX_INCLUDE), --include $(ONNX_INCLUDE)) \
 	$(if $(ONNX_EXCLUDE), --exclude $(ONNX_EXCLUDE)) \
 	$(if $(ONNX_VERSION), --version $(ONNX_VERSION)) \
@@ -192,6 +192,6 @@ distclean_venv:
 HELP_generate_custom_tests=generate the custom test models using the py scripts
 TARGET+=generate_custom_tests
 generate_custom_tests:
-	python test_data/generate_custom_tests.py generate-data -o test_data
+	python3 test_data/generate_custom_tests.py generate-data -o test_data
 
 include .Makefile.template
