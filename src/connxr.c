@@ -35,7 +35,7 @@ int main(int argc, char **argv){
   //debug_prettyprint_model(model);
   convertRawDataOfTensorProto(inp0set0);
 
-  printf("values = %d\n", inp0set0->data_type);
+  printf("values = %" PRId32 "\n", inp0set0->data_type);
 
   inp0set0->name = model->graph->input[0]->name;
 

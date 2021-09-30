@@ -18,7 +18,7 @@ int compareAlmostEqualTensorProto(Onnx__TensorProto *a, Onnx__TensorProto *b)
   TRACE_LEVEL1("Asserting tensors with name: %s, %s\n", a->name, b->name);
 
   ASSERT_TRUE(a->data_type == b->data_type);
-  TRACE_LEVEL1("data_type: %d,%d ok\n", a->data_type, b->data_type);
+  TRACE_LEVEL1("data_type: %" PRId32 ",%" PRId32 " ok\n", a->data_type, b->data_type);
 
   ASSERT_TRUE(a->n_dims == b->n_dims);
   TRACE_LEVEL1("n_dims: %zu,%zu ok\n", a->n_dims, b->n_dims);
@@ -50,7 +50,7 @@ int compareAlmostEqualTensorProto(Onnx__TensorProto *a, Onnx__TensorProto *b)
       ASSERT_TRUE(a->n_int32_data == b->n_int32_data);
       for(int i = 0; i < a->n_int32_data; i++)
       {
-        TRACE_LEVEL1("ASSERTING EQUAL: %d, %d\n", a->int32_data[i], b->int32_data[i]);
+        TRACE_LEVEL1("ASSERTING EQUAL: %" PRId32 ", %" PRId32 "\n", a->int32_data[i], b->int32_data[i]);
         ASSERT_TRUE(a->int32_data[i] == b->int32_data[i]);
       }
       break;
@@ -68,7 +68,7 @@ int compareAlmostEqualTensorProto(Onnx__TensorProto *a, Onnx__TensorProto *b)
       ASSERT_TRUE(a->n_int32_data == b->n_int32_data);
       for(int i = 0; i < a->n_int32_data; i++)
       {
-        TRACE_LEVEL1("ASSERTING EQUAL: %d, %d\n", a->int32_data[i], b->int32_data[i]);
+        TRACE_LEVEL1("ASSERTING EQUAL: %" PRId32 ", %" PRId32 "\n", a->int32_data[i], b->int32_data[i]);
         ASSERT_TRUE(a->int32_data[i] == b->int32_data[i]);
       }
       break;
