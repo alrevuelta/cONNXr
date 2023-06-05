@@ -2200,6 +2200,11 @@ merge_messages(ProtobufCMessage *earlier_msg,
 						sizeof_elt_in_repeated_array(fields[i].type);
 					uint8_t *new_field;
 
+					/* Check for integer overflow */
+					if (*n_earlier > SIZE_MAX - *n_latter
+						|| el_size > SIZE_MAX / (*n_earlier + *n_latter)) {
+						return FALSE;
+					}
 					new_field = do_alloc(allocator,
 						(*n_earlier + *n_latter) * el_size);
 					if (!new_field)
