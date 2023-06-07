@@ -129,19 +129,14 @@ int test_operator(char *outputName)
   TRACE_LEVEL1("\n\nTest %s:\n", outputName);
 
   char modelPath[200];
-  strcpy(modelPath, "test/node/");
-  strcat(modelPath, outputName);
-  strcat(modelPath, "/");
-  strcat(modelPath, "model.onnx");
+  snprintf(modelPath, sizeof(modelPath), "test/node/%s/model.onnx", outputName);
 
   TRACE_LEVEL1("Reading model %s ...", modelPath);
   Onnx__ModelProto *model = openOnnxFile(modelPath);
   TRACE_LEVEL1("ok\n");
 
   char inputPath[200];
-  strcpy(inputPath, "test/node/");
-  strcat(inputPath, outputName);
-  strcat(inputPath, "/test_data_set_0/input_*.pb");
+  snprintf(inputPath, sizeof(inputPath), "test/node/%s/test_data_set_0/input_*.pb", outputName);
 
   /* Lazy, just set a huge number of inputs */
   Onnx__TensorProto *inputs[10];
@@ -161,9 +156,7 @@ int test_operator(char *outputName)
   globfree(&globbuf);
 
   char outputPath[200];
-  strcpy(outputPath, "test/node/");
-  strcat(outputPath, outputName);
-  strcat(outputPath, "/test_data_set_0/output_0.pb");
+  snprintf(outputPath, sizeof(outputPath), "test/node/%s/test_data_set_0/output_0.pb", outputName);
 
   TRACE_LEVEL1("Reading output %s ...", outputPath);
   Onnx__TensorProto *out0set0 = openTensorProtoFile(outputPath);
